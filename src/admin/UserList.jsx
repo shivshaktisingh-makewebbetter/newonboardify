@@ -8,7 +8,7 @@ import {
 } from "../apiservice/ApiService";
 import { Button, Select, Table } from "antd";
 import { extractDateTime, roleData } from "../utils/helper";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, LeftOutlined } from "@ant-design/icons";
 import { SearchBox } from "../components/SearchBox";
 import { useNavigate } from "react-router-dom";
 import { CopyText } from "./components/CopyText";
@@ -25,13 +25,23 @@ export const UserList = () => {
   const [open, setOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState({});
 
+  const settingData = JSON.parse(sessionStorage.getItem("settings")) || {
+    image: "https://onboardify.tasc360.com/uploads/y22.png",
+    site_bg: "#ffffff",
+    button_bg: "#497ed8",
+    banner_bg: "#497ed8",
+    banner_content:
+      "Hire an attitude, not just experience and qualification. Greg Savage.",
+    header_bg: "#f7f7f7",
+    head_title_color: "#497ed8",
+  };
+
   const handleOpenModal = (item) => {
     setUserToDelete(item);
     setOpen(true);
   };
 
   const handleBoardChange = async (item, e) => {
-
     let tempData = JSON.stringify({
       user_id: item.id,
       board_id: e,
@@ -201,6 +211,10 @@ export const UserList = () => {
     }
   };
 
+  const handleBackNavigation = () => {
+    navigate(-1);
+  };
+
   useEffect(() => {
     fetchUserListing();
     fetchBoardListing();
@@ -229,6 +243,20 @@ export const UserList = () => {
         forHome={true}
       />
       <div>
+        <div style={{ marginTop: "10px", marginBottom: "10px" , display:"flex" , justifyContent:"start" }}>
+          <Button
+            icon={
+              <LeftOutlined
+                style={{
+                  color: settingData.button_bg,
+                  borderColor: settingData.button_bg,
+                }}
+              />
+            }
+            onClick={handleBackNavigation}
+          ></Button>
+        </div>
+
         <div style={{ marginBottom: "20px" }}>
           <SearchBox
             placeHolder={"Start Typing To Search By Name"}
