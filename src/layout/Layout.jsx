@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 
 export const Layout = () => {
   return (
-    <div>
+    <div >
       <Header />
       <div className="container d-flex flex-column h-100 text-center">
       <Outlet/>
