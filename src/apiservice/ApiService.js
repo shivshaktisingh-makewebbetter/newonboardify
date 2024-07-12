@@ -19,3 +19,17 @@ export const assignBoard = async (data) => {
 export const getBoardColorMapping = () => {
   return Services.GET(`newonboardify/admin/getBoardColourMapping`);
 };
+
+export const setAllColorMapping = (data) => {
+  return Services.POST("newonboardify/admin/boardColourMapping", data);
+};
+
+export const getBoardVisibilityData = (id) => {
+  return Services.GET(
+    `newonboardify/admin/getboardVisibilityMapping?board_id=${id}`
+  );
+};
+
+export const setBoardVisibilityData = (data) => {
+  return Services.POST("newonboardify/admin/boardColourMapping", data);
+};
