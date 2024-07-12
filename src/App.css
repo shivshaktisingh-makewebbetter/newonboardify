@@ -1202,4 +1202,11 @@ table tr:hover {
   } 
 }
 
+.bottom-blur {
+  backdrop-filter: blur(10px);
+  height: 50px;
+  position: absolute;
+  bottom: 6px;
+}
+
 
