@@ -2,23 +2,27 @@ import { LeftOutlined, UserAddOutlined } from "@ant-design/icons";
 import { Button, Select } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { setUser } from "../utils/authUtils";
+import { setUserOrAdmin } from "../apiservice/ApiService";
 
 export const CreateAdmin = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [btnLoading, setBtnLoading] = useState(false);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    role: "admin",
-    fullName: "",
+    role: 0,
+    name: "",
     email: "",
     password: "",
-    company: "",
+    company_name: "",
     phone: "",
   });
-  const [options, setOptions] = useState([
-    { label: "User", value: "user" },
-    { label: "Admin", value: "admin" },
-    { label: "Super Admin", value: "superadmin" },
-  ]);
+
+  const options = [
+    { label: "User", value: 0 },
+    { label: "Admin", value: 2 },
+    { label: "Super Admin", value: 1 },
+  ];
 
   const settingData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -32,11 +36,55 @@ export const CreateAdmin = () => {
   };
 
   const handleRole = (e) => {
-    setFormData({ ...formData, role: e });
+    if (e === 0) {
+      setFormData({ ...formData, role: e });
+    } else {
+      setFormData({ ...formData, phone: "", company_name: "", role: e });
+    }
   };
 
   const handleBackNavigation = () => {
     navigate(-1);
+  };
+
+  const handleInputChange = (e, filter) => {
+    const tempFormData = { ...formData };
+    tempFormData[filter] = e.target.value;
+    setFormData(tempFormData);
+  };
+
+  const handleSubmit = async () => {
+    setBtnLoading(true);
+    try {
+      const response = await setUserOrAdmin(JSON.stringify(formData));
+      if(response.success){
+
+      }else{
+
+      }
+    } catch (err) {
+      console.log(err);
+    }finally{
+      setBtnLoading(false);
+    }
+  };
+
+  const isFormValid = () => {
+    let flag = false;
+    if (formData.role === 0) {
+      flag =
+        formData.name.length > 0 &&
+        formData.company_name.length > 0 &&
+        formData.email.length > 0 &&
+        formData.password.length > 0 &&
+        formData.phone.length > 0;
+    } else {
+      flag =
+        formData.name.length > 0 &&
+        formData.email.length > 0 &&
+        formData.password.length > 0;
+    }
+    return flag;
   };
 
   return (
@@ -84,8 +132,8 @@ export const CreateAdmin = () => {
           <input
             type="text"
             placeholder="Full Name"
-            // value={formData.name}
-            // onChange={handleInputChange}
+            value={formData.name}
+            onChange={(e) => handleInputChange(e, "name")}
             style={{ background: "#e8f0fe" }}
             className="input-customer-focus form-control"
           />
@@ -93,8 +141,8 @@ export const CreateAdmin = () => {
             type="text"
             placeholder="Email*"
             name="email"
-            // value={formData.email}
-            // onChange={handleInputChange}
+            value={formData.email}
+            onChange={(e) => handleInputChange(e, "email")}
             style={{ background: "#e8f0fe" }}
             className="input-customer-focus form-control"
           />
@@ -105,8 +153,8 @@ export const CreateAdmin = () => {
               type={showPassword ? "text" : "password"}
               placeholder="Password"
               name="password"
-              // value={formData.password}
-              // onChange={handleInputChange}
+              value={formData.password}
+              onChange={(e) => handleInputChange(e, "password")}
               style={{ background: "#e8f0fe" }}
             />
             <span
@@ -126,14 +174,14 @@ export const CreateAdmin = () => {
               )}
             </span>
           </div>
-          {formData.role === "user" && (
+          {formData.role === 0 && (
             <>
               {" "}
               <input
                 type="text"
                 placeholder="Company Name*"
-                // value={formData.email}
-                // onChange={handleInputChange}
+                value={formData.company_name}
+                onChange={(e) => handleInputChange(e, "company_name")}
                 style={{ background: "#e8f0fe" }}
                 className="input-customer-focus form-control"
               />
@@ -141,15 +189,15 @@ export const CreateAdmin = () => {
                 type="text"
                 placeholder="+966 011 XXX XXXX"
                 name="phone"
-                // value={formData.phone}
-                // onChange={handleInputChange}
+                value={formData.phone}
+                onChange={(e) => handleInputChange(e, "phone")}
                 style={{ background: "#e8f0fe" }}
                 className="input-customer-focus form-control"
               />
             </>
           )}
 
-          <button
+          <Button
             id="login-button"
             className="btn  btn-to-link btn-secondary mt-4 d-flex align-items-center"
             type="button"
@@ -164,8 +212,9 @@ export const CreateAdmin = () => {
               height: "46px",
               background: settingData.button_bg,
             }}
-            // disabled={!isFormValid}
-            // onClick={handleSubmit}
+            disabled={!isFormValid()}
+            onClick={handleSubmit}
+            loading={btnLoading}
           >
             <span
               style={{
@@ -188,7 +237,7 @@ export const CreateAdmin = () => {
                 <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z" />
               </svg>
             </span>
-          </button>
+          </Button>
         </div>
       </div>
     </div>

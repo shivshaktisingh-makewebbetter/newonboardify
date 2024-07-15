@@ -19,15 +19,15 @@ export const UserHome = () =>{
 
 
     const data = [{
-        title:'Request Onboarding' , 
-        description:'Streamline your employee onboarding with TASC Outsourcing. Request here for a hassle-free experience, letting us handle the rest with care and efficiency.' , 
+        title:'Request a Service' , 
+        description:'Streamline your requests with Onboardify. Request here for a hassle-free experience, letting us handle the rest with care and efficiency.' , 
         icon:<RequestOnboardIcon/> ,
         buttonText:'Request' ,
         navigateKey: 'request'
     } ,
     {
-        title:'Track Onboarding' , 
-        description:'Track your onboarding requests seamlessly with us. Stay updated on the progress of your employee onboarding journey. Effortless tracking for a smoother onboarding experience.' , 
+        title:'Track Requests' , 
+        description:'Track your requests seamlessly with us. Stay updated on the progress of your employee onboarding journey.' , 
         icon:<TrackOnboardIcon/> ,
         buttonText:'Track' ,
         navigateKey: 'track'
@@ -36,7 +36,7 @@ export const UserHome = () =>{
     } ,
     {
         title:'Overall Status' , 
-        description:'Stay in the loop with ease! Check the overall status of your onboarding requests and keep tabs on your employee onboarding progress for a comprehensive overview of the entire process.' , 
+        description:'Stay informed effortlessly! Monitor the overall status of your requests and track their progress with ease.' , 
         icon:<OverallStatusIcon/>,
         buttonText:'Check' ,
         navigateKey: 'check'

@@ -1,14 +1,9 @@
 import axios from 'axios';
 
-
-
-
-
-
 // Create the Axios instance
 const BASE_URL = process.env.REACT_APP_BASE_API;
 const axiosInstance = axios.create({
-    baseURL:  BASE_URL,
+    baseURL: BASE_URL,
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -64,7 +59,14 @@ axiosInstance.interceptors.response.use(
 const handleResponse = async (request) => {
     try {
         const response = await request;
-        return { success: true, data: response.data, message: null };
+        const responseData = response.data;
+        
+        // Check the 'status' field in the response data
+        if (responseData.status === true) {
+            return { success: true, data: responseData, message: null };
+        } else {
+            return { success: false, data: responseData, message: responseData.message || 'Request failed' };
+        }
     } catch (error) {
         return error;
     }
@@ -72,7 +74,7 @@ const handleResponse = async (request) => {
 
 // Define the Services object
 export const Services = {
-    GET: (url , params = {}) => {
+    GET: (url, params = {}) => {
         let endpoint = url;
         if (Object.keys(params).length) {
             const paramsString = new URLSearchParams(params).toString();
@@ -89,9 +91,7 @@ export const Services = {
         return handleResponse(axiosInstance.put(url, data));
     },
 
-    DELETE: (url ,data = {}) => {
+    DELETE: (url, data = {}) => {
         return handleResponse(axiosInstance.delete(url, { data }));
     },
 };
-
-

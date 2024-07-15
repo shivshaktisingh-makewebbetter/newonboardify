@@ -30,6 +30,22 @@ export const getBoardVisibilityData = (id) => {
   );
 };
 
-export const setBoardVisibilityData = (data) => {
-  return Services.POST("newonboardify/admin/boardColourMapping", data);
+export const setBoardVisibilityDataEndpoint = (data) => {
+  return Services.POST("newonboardify/admin/boardVisibilityMapping", data);
 };
+
+export const getCompleteDataForBoardVisibility = (id) =>{
+  return Services.GET(`newonboardify/admin/get-board-columns/${id}`)
+}
+
+export const getGeneralSettingsData = () =>{
+  return Services.GET(`newonboardify/admin/getGeneralSettings`);
+}
+
+export const setGeneralSettings = (data) =>{
+   return Services.POST(`newonboardify/admin/generalSettings` , data);
+}
+
+export const setUserOrAdmin = (data) =>{
+  return Services.POST(`newonboardify/admin/addAdminOrUser` , data);
+}

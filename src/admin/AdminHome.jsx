@@ -40,6 +40,13 @@ export const AdminHome = () =>{
         icon:<ChangeRole/>,
         buttonText:'Manage Role' ,
         navigateKey: 'createAdmin'
+    } ,
+    {
+        title:'Services' , 
+        description:'Stay in the loop with ease! Check the overall status of your onboarding requests and keep tabs on your employee onboarding progress for a comprehensive overview of the entire process.' , 
+        icon:<ChangeRole/>,
+        buttonText:'Manage Services' ,
+        navigateKey: 'services'
 
     }
 ];

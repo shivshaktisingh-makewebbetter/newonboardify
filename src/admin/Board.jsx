@@ -5,132 +5,25 @@ import {
   getAllBoards,
   getBoardColorMapping,
   getBoardVisibilityData,
+  getCompleteDataForBoardVisibility,
   setAllColorMapping,
+  setBoardVisibilityDataEndpoint,
 } from "../apiservice/ApiService";
 import { Button, Card, Col, Input, Row, Select } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
-const tempData = {
-  board: "1522000947",
-  email: "",
-  onboarding_columns: [
-    {
-      id: "status7",
-      name: "Visa / E-wakala",
-      icon: "",
-      custom_title: "",
-    },
-    {
-      id: "status1",
-      name: "Medical Test",
-      icon: "",
-      custom_title: "",
-    },
-    {
-      id: "status6",
-      name: "Police Clearance",
-      icon: "",
-      custom_title: "",
-    },
-    {
-      id: "status4",
-      name: "Visa Issuance",
-      icon: "",
-      custom_title: "",
-    },
-    {
-      id: "status54",
-      name: "Degree Attestation",
-      icon: "",
-      custom_title: "",
-    },
-    {
-      id: "status__1",
-      name: "Profession Accreditation",
-      icon: "",
-      custom_title: "",
-    },
-    {
-      id: "status6__1",
-      name: "Embassy Appointment",
-      icon: "",
-      custom_title: "",
-    },
-  ],
-  candidate_coulmns: [
-    {
-      id: "country34",
-      name: "Nationality",
-      icon: "bi bi-flag-fill",
-      custom_title: "",
-    },
-    {
-      id: "country3",
-      name: "Country of Residency",
-      icon: "bi bi-geo-alt-fill",
-      custom_title: "",
-    },
-    {
-      id: "phone",
-      name: "Candidate Contact Number (Whatsapp Number)",
-      icon: "bi bi-telephone-fill",
-      custom_title: "",
-    },
-    {
-      id: "email",
-      name: "Candidate Email Address",
-      icon: "bi bi-envelope-fill",
-      custom_title: "",
-    },
-    {
-      id: "date",
-      name: "Joining Date",
-      icon: "bi bi-calendar-plus-fill",
-      custom_title: "Joining Date",
-    },
-  ],
-  sub_headings_column: [
-    {
-      id: "single_select",
-      name: "Hiring Type",
-      icon: "",
-      custom_title: "",
-    },
-    {
-      id: "short_text1",
-      name: "Profession",
-      icon: "",
-      custom_title: "",
-    },
-  ],
-  card_section: {
-    column1: "single_select",
-    column2: "short_text1",
-  },
-  required_columns: {
-    profession: "short_text1",
-    overall_status: "status8",
-  },
-  extra_details: {
-    key: "long_text3",
-    time_stamp: "",
-    chart_embed_code:
-      '<iframe src="https://view.monday.com/embed/1522000947-1ade433e75d418767a6f5de799269d2a?r=euc1" width=770 height=500 style="border: 0; box-shadow: 5px 5px 56px 0px rgba(0,0,0,0.25);"></iframe>',
-    form_embed_code:
-      '<iframe src="https://forms.monday.com/forms/embed/d9988af61b00bf456399fb8cbcc157cd?r=euc1" width="650" height="500" style="border: 0; box-shadow: 5px 5px 56px 0px rgba(0,0,0,0.25);"></iframe>',
-  },
-};
-
 export const Board = () => {
   const [boardListing, setBoardListing] = useState([]);
   const [selectedBoardId, setSelectedBoardId] = useState("");
   const [colorMappingData, setColorMappingData] = useState([]);
+  const [boardVisiblityData, setBoardVisibilityData] = useState();
   const colorObject = {
     STUCK: "#F4221F",
     "IN PROGRESS": "#F4981F",
     COMPLETED: "#29CF10",
   };
+  const [options, setOptions] = useState([]);
 
   const navigate = useNavigate();
 
@@ -168,7 +61,19 @@ export const Board = () => {
   const handleBoardChange = async (e) => {
     setSelectedBoardId(e);
     const response = await getBoardVisibilityData(e);
-    console.log(response, "response");
+
+    const response1 = await getCompleteDataForBoardVisibility(e);
+
+    if (response.success && response.data.response.length > 0) {
+      setBoardVisibilityData(JSON.parse(response.data.response[0].columns));
+    }
+    if (response1.success && response1.data.response.length > 0) {
+      let optionData = [];
+      response1.data.response.forEach((item) => {
+        optionData.push({ label: item.title, value: item.id });
+      });
+      setOptions(optionData);
+    }
   };
 
   const fetchAllColorMapping = async () => {
@@ -209,17 +114,134 @@ export const Board = () => {
       result[key] = values;
     });
     const response = await setAllColorMapping(JSON.stringify(result));
-    console.log(response, "response");
   };
 
-  const handleBoardSubmit = () =>{
+  const handleBoardSubmit = async() => {
+    const tempData = {...boardVisiblityData};
+    tempData.email = '';
+     const response = await setBoardVisibilityDataEndpoint(JSON.stringify(tempData));
+     console.log(response);
+  };
 
+  const handleChangeFormEmbedCode = (e) => {
+    const tempData = { ...boardVisiblityData };
+    tempData.extra_details.form_embed_code = e.target.value;
+    setBoardVisibilityData(tempData);
+  };
+
+  const handleChangeChartEmbedCode = (e) => {
+    const tempData = { ...boardVisiblityData };
+    tempData.extra_details.chart_embed_code = e.target.value;
+    setBoardVisibilityData(tempData);
+  };
+
+  const handleUserHeadingColumns = (e) => {
+    const tempData = { ...boardVisiblityData };
+    const selectedData = [];
+    options.forEach((item) => {
+      if (e.includes(item.value)) {
+        selectedData.push({
+          id: item.value,
+          name: item.label,
+          icon: "",
+          custom_title: "",
+        });
+      }
+    });
+    tempData.sub_headings_column = selectedData;
+    setBoardVisibilityData(tempData);
+  };
+
+  const handleChangeOnboardingStatusColumns = (e) => {
+    const tempData = { ...boardVisiblityData };
+    const selectedData = [];
+    options.forEach((item) => {
+      if (e.includes(item.value)) {
+        selectedData.push({
+          id: item.value,
+          name: item.label,
+          icon: "",
+          custom_title: "",
+        });
+      }
+    });
+    tempData.onboarding_columns = selectedData;
+    setBoardVisibilityData(tempData);
+  };
+
+  const handleChangeCandidateColumns = (e) => {
+    const tempData = { ...boardVisiblityData };
+    const selectedData = [];
+    options.forEach((item) => {
+      if (e.includes(item.value)) {
+        selectedData.push({
+          id: item.value,
+          name: item.label,
+          icon: "",
+          custom_title: "",
+        });
+      }
+    });
+    tempData.candidate_columns = selectedData;
+    setBoardVisibilityData(tempData);
+  };
+
+  const handleChangeIcon = (e, item) => {
+    const tempData = { ...boardVisiblityData };
+    tempData.candidate_columns.forEach((subItem) => {
+      if (subItem.id === item.id) {
+        subItem.icon = e.target.value;
+      }
+    });
+    setBoardVisibilityData(tempData);
+  };
+
+  const handleChangeCustomTitle = (e, item) => {
+    const tempData = { ...boardVisiblityData };
+    tempData.candidate_coulmns.forEach((subItem) => {
+      if (subItem.id === item.id) {
+        subItem.custom_title = e.target.value;
+      }
+    });
+    setBoardVisibilityData(tempData);
+  };
+
+  const handleChangeOnboardingUpdates = (e) => {
+    const tempData = { ...boardVisiblityData };
+    tempData.extra_details.key = e;
+    setBoardVisibilityData(tempData);
+  };
+
+  const handleChangeCardSectionColumn1 = (e) =>{
+    const tempData = { ...boardVisiblityData };
+    tempData.card_section.column1 = e;
+    setBoardVisibilityData(tempData);
+
+  }
+
+  const handleChangeCardSectionColumn2 = (e) =>{
+    const tempData = { ...boardVisiblityData };
+    tempData.card_section.column2 = e;
+    setBoardVisibilityData(tempData);
+  }
+
+  const handleChangeRequiredColumnProfession = (e) =>{
+    const tempData = { ...boardVisiblityData };
+    tempData.required_columns.profession = e;
+    setBoardVisibilityData(tempData);
+  }
+
+  const handleChangeRequiredColumnStatus = (e) =>{
+    const tempData = { ...boardVisiblityData };
+    tempData.required_columns.overall_status = e;
+    setBoardVisibilityData(tempData);
   }
 
   useEffect(() => {
     fetchAllBoards();
     fetchAllColorMapping();
   }, []);
+
 
   return (
     <div className="pt-84">
@@ -252,8 +274,19 @@ export const Board = () => {
       <div>
         <Row gutter={16}>
           <Col span={12}>
-            <Card title="Manage Board Settings" bordered={true} className="primary-shadow">
-              <div>
+            <Card
+              title="Manage Board Settings"
+              bordered={true}
+              className="primary-shadow"
+            >
+              <div
+                style={{
+                  marginTop: "10px",
+                  border: "1px solid #d9d9d9",
+                  padding: "10px",
+                  borderRadius: "10px",
+                }}
+              >
                 <p style={{ textAlign: "left" }}>Select Board</p>
                 <Select
                   placeholder={"Select Board"}
@@ -265,242 +298,333 @@ export const Board = () => {
                   value={selectedBoardId}
                 />
               </div>
-              <div style={{ marginTop: "10px" }}>
-                <Input addonBefore="Form Embed Code" />
-              </div>
-              <div style={{ marginTop: "10px" }}>
-                <Input addonBefore="Chart Embed Code" />
-              </div>
-              <div
-                style={{
-                  marginTop: "10px",
-                  border: "1px solid #d9d9d9",
-                  padding: "10px",
-                  borderRadius: "10px",
-                }}
-              >
-                <p style={{ textAlign: "left" }}>User SubHeading Columns</p>
-                <Select
-                  mode="multiple"
-                  allowClear
-                  style={{
-                    width: "100%",
-                  }}
-                  placeholder="Please select"
-                  defaultValue={["a10", "c12"]}
-                  onChange={() => {}}
-                  options={[{ label: "dsa", value: "asd" }]}
-                />
-              </div>
-              <div
-                style={{
-                  marginTop: "10px",
-                  border: "1px solid #d9d9d9",
-                  padding: "10px",
-                  borderRadius: "10px",
-                }}
-              >
-                <p style={{ textAlign: "left" }}>Onboarding Status Columns</p>
-                <Select
-                  mode="multiple"
-                  allowClear
-                  style={{
-                    width: "100%",
-                  }}
-                  placeholder="Please select"
-                  defaultValue={["a10", "c12"]}
-                  onChange={() => {}}
-                  options={[{ label: "dsa", value: "asd" }]}
-                />
-              </div>
-              <div
-                style={{
-                  marginTop: "10px",
-                  border: "1px solid #d9d9d9",
-                  padding: "10px",
-                  borderRadius: "10px",
-                }}
-              >
-                <p style={{ textAlign: "left" }}>
-                  Candidate Information Columns
-                </p>
-                <Select
-                  mode="multiple"
-                  allowClear
-                  style={{
-                    width: "100%",
-                  }}
-                  placeholder="Please select"
-                  defaultValue={["a10", "c12"]}
-                  onChange={() => {}}
-                  options={[{ label: "dsa", value: "asd" }]}
-                />
-              </div>
-              <div
-                style={{
-                  marginTop: "10px",
-                  border: "1px solid #d9d9d9",
-                  padding: "10px",
-                  borderRadius: "10px",
-                }}
-              >
-                <p style={{ textAlign: "left" }}>
-                  Provide candidate column details :{" "}
-                  <a href="https://icons.getbootstrap.com/" target="_blank">
-                    Go to icons library
-                  </a>
-                </p>
-                {tempData.candidate_coulmns.map((item, index) => {
-                  return (
+              {boardVisiblityData !== undefined &&
+                Object.keys(boardVisiblityData).length > 0 && (
+                  <div>
+                    <div style={{ marginTop: "10px" }}>
+                      <Input
+                        addonBefore="Form Embed Code"
+                        value={boardVisiblityData.extra_details.form_embed_code}
+                        onChange={handleChangeFormEmbedCode}
+                      />
+                    </div>
+                    <div style={{ marginTop: "10px" }}>
+                      <Input
+                        addonBefore="Chart Embed Code"
+                        value={
+                          boardVisiblityData.extra_details.chart_embed_code
+                        }
+                        onChange={handleChangeChartEmbedCode}
+                      />
+                    </div>
                     <div
                       style={{
+                        marginTop: "10px",
                         border: "1px solid #d9d9d9",
                         padding: "10px",
                         borderRadius: "10px",
-                        marginTop: "10px",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "10px",
                       }}
                     >
-                      <p style={{ textAlign: "left" }}>For {item.name}</p>
-                      <Input addonBefore="Column Icon" />
-                      <Input addonBefore="Column Title" />
+                      <p style={{ textAlign: "left" }}>
+                        User SubHeading Columns
+                      </p>
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        style={{
+                          width: "100%",
+                        }}
+                        placeholder="Please select"
+                        defaultValue={boardVisiblityData.sub_headings_column.map(
+                          (item) => {
+                            return item.id;
+                          }
+                        )}
+                        onChange={handleUserHeadingColumns}
+                        options={options}
+                        value={boardVisiblityData.sub_headings_column.map(
+                          (item) => {
+                            return item.id;
+                          }
+                        )}
+                      />
                     </div>
-                  );
-                })}
-              </div>
-              <div
-                style={{
-                  marginTop: "10px",
-                  border: "1px solid #d9d9d9",
-                  padding: "10px",
-                  borderRadius: "10px",
-                }}
-              >
-                <p style={{ textAlign: "left" }}>Onboarding Updates</p>
-                <Select
-                  allowClear
-                  style={{
-                    width: "100%",
-                  }}
-                  placeholder="Please select"
-                  onChange={() => {}}
-                  options={[{ label: "dsa", value: "asd" }]}
-                />
-              </div>
-              <div
-                style={{
-                  marginTop: "10px",
-                  border: "1px solid #d9d9d9",
-                  padding: "10px",
-                  borderRadius: "10px",
-                }}
-              >
-                <p style={{ textAlign: "left" }} className="border-bottom">
-                  Card Columns
-                </p>
-                <div
-                  style={{
-                    marginTop: "10px",
-                    border: "1px solid #d9d9d9",
-                    padding: "10px",
-                    borderRadius: "10px",
-                  }}
-                >
-                  <p style={{ textAlign: "left" }}>Top Details Columns</p>
-                  <Select
-                    style={{
-                      width: "100%",
-                    }}
-                    placeholder="Please select"
-                    onChange={() => {}}
-                    options={[{ label: "dsa", value: "asd" }]}
-                  />
-                </div>
-                <div
-                  style={{
-                    marginTop: "10px",
-                    border: "1px solid #d9d9d9",
-                    padding: "10px",
-                    borderRadius: "10px",
-                  }}
-                >
-                  <p style={{ textAlign: "left" }}>Mid Heading Columns</p>
-                  <Select
-                    style={{
-                      width: "100%",
-                    }}
-                    placeholder="Please select"
-                    onChange={() => {}}
-                    options={[{ label: "dsa", value: "asd" }]}
-                  />
-                </div>
-              </div>
-              <div
-                style={{
-                  marginTop: "10px",
-                  border: "1px solid #d9d9d9",
-                  padding: "10px",
-                  borderRadius: "10px",
-                }}
-              >
-                <p style={{ textAlign: "left" }} className="border-bottom">
-                  Required Columns ( For Search and Filter)
-                </p>
-                <div
-                  style={{
-                    marginTop: "10px",
-                    border: "1px solid #d9d9d9",
-                    padding: "10px",
-                    borderRadius: "10px",
-                  }}
-                >
-                  <p style={{ textAlign: "left" }}>Profession column</p>
-                  <Select
-                    style={{
-                      width: "100%",
-                    }}
-                    placeholder="Please select"
-                    onChange={() => {}}
-                    options={[{ label: "dsa", value: "asd" }]}
-                  />
-                </div>
-                <div
-                  style={{
-                    marginTop: "10px",
-                    border: "1px solid #d9d9d9",
-                    padding: "10px",
-                    borderRadius: "10px",
-                  }}
-                >
-                  <p style={{ textAlign: "left" }}>Overall Status column</p>
-                  <Select
-                    style={{
-                      width: "100%",
-                    }}
-                    placeholder="Please select"
-                    onChange={() => {}}
-                    options={[{ label: "dsa", value: "asd" }]}
-                  />
-                </div>
-              </div>
-              <div style={{marginTop:"10px"}}>
-                <Button
-                  style={{
-                    width: "100%",
-                    background: settingData.button_bg,
-                    color: "white",
-                  }}
-                  onClick={handleBoardSubmit}
-                >
-                  Submit
-                </Button>
-              </div>
+                    <div
+                      style={{
+                        marginTop: "10px",
+                        border: "1px solid #d9d9d9",
+                        padding: "10px",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      <p style={{ textAlign: "left" }}>
+                        Onboarding Status Columns
+                      </p>
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        style={{
+                          width: "100%",
+                        }}
+                        placeholder="Please select"
+                        defaultValue={boardVisiblityData.onboarding_columns.map(
+                          (item) => {
+                            return item.id;
+                          }
+                        )}
+                        onChange={handleChangeOnboardingStatusColumns}
+                        options={options}
+                        value={boardVisiblityData.onboarding_columns.map(
+                          (item) => {
+                            return item.id;
+                          }
+                        )}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "10px",
+                        border: "1px solid #d9d9d9",
+                        padding: "10px",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      <p style={{ textAlign: "left" }}>
+                        Candidate Information Columns
+                      </p>
+                      <Select
+                        mode="multiple"
+                        allowClear
+                        style={{
+                          width: "100%",
+                        }}
+                        placeholder="Please select"
+                        defaultValue={boardVisiblityData.candidate_coulmns.map(
+                          (item) => {
+                            return item.id;
+                          }
+                        )}
+                        options={options}
+                        onChange={handleChangeCandidateColumns}
+                        value={boardVisiblityData.candidate_coulmns.map(
+                          (item) => {
+                            return item.id;
+                          }
+                        )}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "10px",
+                        border: "1px solid #d9d9d9",
+                        padding: "10px",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      <p style={{ textAlign: "left" }}>
+                        Provide candidate column details :{" "}
+                        <a
+                          href="https://icons.getbootstrap.com/"
+                          target="_blank"
+                        >
+                          Go to icons library
+                        </a>
+                      </p>
+                      {boardVisiblityData.candidate_coulmns.map(
+                        (item, index) => {
+                          return (
+                            <div
+                              style={{
+                                border: "1px solid #d9d9d9",
+                                padding: "10px",
+                                borderRadius: "10px",
+                                marginTop: "10px",
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "10px",
+                              }}
+                            >
+                              <p style={{ textAlign: "left" }}>
+                                For {item.name}
+                              </p>
+                              <Input
+                                addonBefore="Column Icon"
+                                value={item.icon}
+                                onChange={(e) => handleChangeIcon(e, item)}
+                              />
+                              <Input
+                                addonBefore="Column Title"
+                                value={item.custom_title}
+                                onChange={(e) =>
+                                  handleChangeCustomTitle(e, item)
+                                }
+                              />
+                            </div>
+                          );
+                        }
+                      )}
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "10px",
+                        border: "1px solid #d9d9d9",
+                        padding: "10px",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      <p style={{ textAlign: "left" }}>Onboarding Updates</p>
+                      <Select
+                        style={{
+                          width: "100%",
+                        }}
+                        placeholder="Please select"
+                        defaultValue={boardVisiblityData.extra_details.key}
+                        onChange={handleChangeOnboardingUpdates}
+                        options={options}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "10px",
+                        border: "1px solid #d9d9d9",
+                        padding: "10px",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      <p
+                        style={{ textAlign: "left" }}
+                        className="border-bottom"
+                      >
+                        Card Columns
+                      </p>
+                      <div
+                        style={{
+                          marginTop: "10px",
+                          border: "1px solid #d9d9d9",
+                          padding: "10px",
+                          borderRadius: "10px",
+                        }}
+                      >
+                        <p style={{ textAlign: "left" }}>Top Details Columns</p>
+                        <Select
+                          style={{
+                            width: "100%",
+                          }}
+                          placeholder="Please select"
+                          defaultValue={boardVisiblityData.card_section.column1}
+                          onChange={handleChangeCardSectionColumn1}
+                          options={options}
+                          value={boardVisiblityData.card_section.column1}
+                        />
+                      </div>
+                      <div
+                        style={{
+                          marginTop: "10px",
+                          border: "1px solid #d9d9d9",
+                          padding: "10px",
+                          borderRadius: "10px",
+                        }}
+                      >
+                        <p style={{ textAlign: "left" }}>Mid Heading Columns</p>
+                        <Select
+                          style={{
+                            width: "100%",
+                          }}
+                          defaultValue={boardVisiblityData.card_section.column2}
+                          placeholder="Please select"
+                          onChange={handleChangeCardSectionColumn2}
+                          options={options}
+                          value={boardVisiblityData.card_section.column2}
+                        />
+                      </div>
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "10px",
+                        border: "1px solid #d9d9d9",
+                        padding: "10px",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      <p
+                        style={{ textAlign: "left" }}
+                        className="border-bottom"
+                      >
+                        Required Columns ( For Search and Filter)
+                      </p>
+                      <div
+                        style={{
+                          marginTop: "10px",
+                          border: "1px solid #d9d9d9",
+                          padding: "10px",
+                          borderRadius: "10px",
+                        }}
+                      >
+                        <p style={{ textAlign: "left" }}>Profession column</p>
+                        <Select
+                          style={{
+                            width: "100%",
+                          }}
+                          placeholder="Please select"
+                          defaultValue={
+                            boardVisiblityData.required_columns.profession
+                          }
+                          onChange={handleChangeRequiredColumnProfession}
+                          options={options}
+                          value={
+                            boardVisiblityData.required_columns.profession
+                          }
+                        />
+                      </div>
+                      <div
+                        style={{
+                          marginTop: "10px",
+                          border: "1px solid #d9d9d9",
+                          padding: "10px",
+                          borderRadius: "10px",
+                        }}
+                      >
+                        <p style={{ textAlign: "left" }}>
+                          Overall Status column
+                        </p>
+                        <Select
+                          style={{
+                            width: "100%",
+                          }}
+                          defaultValue={
+                            boardVisiblityData.required_columns.overall_status
+                          }
+                          placeholder="Please select"
+                          onChange={handleChangeRequiredColumnStatus}
+                          options={options}
+                          value={
+                            boardVisiblityData.required_columns.profession
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div style={{ marginTop: "10px" }}>
+                      <Button
+                        style={{
+                          width: "100%",
+                          background: settingData.button_bg,
+                          color: "white",
+                        }}
+                        onClick={handleBoardSubmit}
+                      >
+                        Submit
+                      </Button>
+                    </div>
+                  </div>
+                )}
             </Card>
           </Col>
           <Col span={12}>
-            <Card title="Manage Status Background" bordered={true} className="primary-shadow">
+            <Card
+              title="Manage Status Background"
+              bordered={true}
+              className="primary-shadow"
+            >
               {colorMappingData.map((item, index) => {
                 return (
                   <div key={index} style={{ paddingBottom: "20px" }}>
