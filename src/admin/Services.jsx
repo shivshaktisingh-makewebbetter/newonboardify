@@ -8,17 +8,20 @@ import { LeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 // import { SwitchServices } from "./SwitchServices";
 import { ToastContainer } from "react-toastify";
+import { CreateServices } from "./CreateServices";
+import {
+  deleteServiceRequest,
+  getServiceRequestListing,
+} from "../apiservice/ApiService";
+import { EditServices } from "./EditServices";
 
 export const Services = () => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [showSkeleton, setShowSkeleton] = useState(true);
-  const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
   const [editData, setEditData] = useState({});
-  const [deleteFormData, setDeleteFormData] = useState({});
-  const [swapModal, setSwapModal] = useState(false);
+  const [createServiceModal, setCreateServiceModal] = useState(false);
+  const [editServiceModal, setEditServiceModal] = useState(false);
+  const [deleteServiceModal, setDeleteServiceModal] = useState(false);
+  const [deleteData, setDeleteData] = useState({});
 
   const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -33,6 +36,27 @@ export const Services = () => {
 
   const navigate = useNavigate();
 
+  const handleEditService = (item) => {
+    setEditData(item);
+    setEditServiceModal(true);
+  };
+
+  const handleDeleteService = (item) => {
+    setDeleteData(item);
+    setDeleteServiceModal(true);
+  };
+
+  const handleDeleteServiceApi = async () => {
+    try {
+      const response = await deleteServiceRequest(deleteData.id);
+      if (response.success) {
+        setDeleteServiceModal(false);
+      }
+    } catch (err) {
+    } finally {
+    }
+  };
+
   const columns = [
     {
       title: "Title",
@@ -40,37 +64,24 @@ export const Services = () => {
       key: "title",
       width: "15%",
     },
-
     {
       title: "Linked Form",
-      dataIndex: "form",
+      dataIndex: "form_embed_code",
       key: "form",
       width: "25%",
-      render: (_, record) => (
-        <>
-          <span>{record.service_categorie?.title}</span>
-        </>
-      ),
     },
     {
-        title: "Linked Board",
-        dataIndex: "board",
-        key: "board",
-        width: "20%",
-        render: (_, record) => (
-          <>
-            <span>{record.service_categorie?.title}</span>
-          </>
-        ),
-      },
-
+      title: "Linked Board",
+      dataIndex: "board_id",
+      key: "board",
+      width: "20%",
+    },
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
       width: "30%",
     },
-
     {
       title: (
         <div style={{ display: "flex", justifyContent: "center" }}>Action</div>
@@ -82,13 +93,13 @@ export const Services = () => {
             className="governify-edit-icon"
             type="plain"
             icon={<EditOutlined />}
-            onClick={() => {}}
+            onClick={() => handleEditService(record)}
           ></Button>
           <Button
             className="governify-delete-icon"
             type="plain"
             icon={<DeleteOutlined />}
-            onClick={() => {}}
+            onClick={() => handleDeleteService(record)}
           ></Button>
         </div>
       ),
@@ -131,12 +142,6 @@ export const Services = () => {
   //     }
   //   };
 
-  //   const handleEditCategory = async (item) => {
-  //     const data = { ...item };
-  //     setEditData(data);
-  //     setEditModalOpen(true);
-  //   };
-
   //   const getForms = async () => {
   //     let url = "governify/admin/serviceRequests";
   //     let method = "GET";
@@ -156,6 +161,29 @@ export const Services = () => {
     navigate(-1);
   };
 
+  const handleChangeCreateServiceModal = () => {
+    setCreateServiceModal(!createServiceModal);
+  };
+
+  const handleChangeEditServiceModal = () => {
+    setEditServiceModal(!editServiceModal);
+  };
+
+  const handleChangeDeleteServiceModal = () => {
+    setDeleteServiceModal(!deleteServiceModal);
+  };
+
+  const getAllServices = async () => {
+    try {
+      const response = await getServiceRequestListing();
+      if (response.success) {
+        setDataSource(response.data.response);
+      }
+    } catch (err) {
+    } finally {
+    }
+  };
+
   //   const handleSwitchCategory = () => {
   //     setSwapModal(!swapModal);
   //   };
@@ -169,6 +197,10 @@ export const Services = () => {
   //       getForms();
   //     }
   //   }, [showSkeleton]);
+
+  useEffect(() => {
+    getAllServices();
+  }, []);
 
   return (
     <div className="mt-100">
@@ -198,7 +230,7 @@ export const Services = () => {
               borderColor: settingsData.button_bg,
               color: settingsData.button_bg,
             }}
-            onClick={() => {}}
+            onClick={handleChangeCreateServiceModal}
           >
             + Create Services
           </Button>
@@ -222,37 +254,31 @@ export const Services = () => {
           defaultCurrent: 1,
         }}
       />
-      {/* <Modal
-        open={modalOpen}
+      <Modal
+        open={createServiceModal}
         centered
         footer={(_) => <></>}
-        onCancel={() => setModalOpen(false)}
+        onCancel={handleChangeCreateServiceModal}
         className="width-80"
       >
         <CreateServices
-          setShowSkeleton={setShowSkeleton}
-          setLoading={setLoading}
-          loading={loading}
-          setModalOpen={setModalOpen}
+          handleChangeCreateServiceModal={handleChangeCreateServiceModal}
         />
       </Modal>
       <Modal
-        open={editModalOpen}
+        open={editServiceModal}
         centered
         footer={(_) => <></>}
-        onCancel={() => setEditModalOpen(false)}
+        onCancel={handleChangeEditServiceModal}
       >
         <EditServices
           data={editData}
           key={editData.id}
-          setShowSkeleton={setShowSkeleton}
-          setLoading={setLoading}
-          loading={loading}
-          setEditModalOpen={setEditModalOpen}
+          handleChangeEditServiceModal={handleChangeEditServiceModal}
         />
       </Modal>
 
-      <Modal
+      {/*     <Modal
         open={swapModal}
         centered
         footer={(_) => <></>}
@@ -268,9 +294,9 @@ export const Services = () => {
         />
       </Modal> */}
 
-      {/* <Modal
-        open={deleteModalOpen}
-        title="Delete Form"
+      <Modal
+        open={deleteServiceModal}
+        title="Delete Service"
         centered
         footer={(_, record) => (
           <>
@@ -280,19 +306,22 @@ export const Services = () => {
                 color: "#fff",
                 border: "none",
               }}
-              onClick={deleteCategory}
+              onClick={handleDeleteServiceApi}
             >
               Delete
             </Button>
-            <Button style={{ border: "none" }} onClick={handleCancelDelete}>
+            <Button
+              style={{ border: "none" }}
+              onClick={handleChangeDeleteServiceModal}
+            >
               Cancel
             </Button>
           </>
         )}
-        onCancel={() => setDeleteModalOpen(false)}
+        onCancel={handleChangeDeleteServiceModal}
       >
         <Typography>Are you sure you want to delete this Service?</Typography>
-      </Modal> */}
+      </Modal>
       <ToastContainer position="bottom-right" />
     </div>
   );

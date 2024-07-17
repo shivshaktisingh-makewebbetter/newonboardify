@@ -39,18 +39,19 @@ export const Board = () => {
   };
 
   const fetchAllBoards = async () => {
+    
     try {
       const response = await getAllBoards();
       if (response.success) {
-        const tempData = [];
-        response.data.response.data.boards.forEach((item) => {
+        let tempData = [];
+        response.data.response.boards.forEach((item) => {
+          console.log(item , 'item')
           tempData.push({
             key: item.id,
             label: item.name,
             value: item.id,
           });
         });
-        // console.log(tempData)
         setBoardListing(tempData);
       }
     } catch (err) {

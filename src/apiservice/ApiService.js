@@ -1,7 +1,7 @@
 import { Services } from "./axios";
 
 export const getAllBoards = async () => {
-  return Services.GET(`governify/admin/fetchAllBoards`);
+  return Services.GET(`newonboardify/admin/fetchAllBoards`);
 };
 
 export const getUserList = async () => {
@@ -34,18 +34,35 @@ export const setBoardVisibilityDataEndpoint = (data) => {
   return Services.POST("newonboardify/admin/boardVisibilityMapping", data);
 };
 
-export const getCompleteDataForBoardVisibility = (id) =>{
-  return Services.GET(`newonboardify/admin/get-board-columns/${id}`)
-}
+export const getCompleteDataForBoardVisibility = (id) => {
+  return Services.GET(`newonboardify/admin/get-board-columns/${id}`);
+};
 
-export const getGeneralSettingsData = () =>{
+export const getGeneralSettingsData = () => {
   return Services.GET(`newonboardify/admin/getGeneralSettings`);
+};
+
+export const setGeneralSettings = (data) => {
+  return Services.POST(`newonboardify/admin/generalSettings`, data);
+};
+
+export const setUserOrAdmin = (data) => {
+  return Services.POST(`newonboardify/admin/addAdminOrUser`, data);
+};
+
+export const createService = (data) => {
+  return Services.POST(`newonboardify/admin/createServiceRequests`, data);
+};
+
+export const getServiceRequestListing = () => {
+  return Services.GET(`newonboardify/admin/serviceRequests`);
+};
+
+export const updateServiceRequest = ({id , data}) =>{
+  return Services.PUT(`newonboardify/admin/serviceRequests/${id}` , data)
 }
 
-export const setGeneralSettings = (data) =>{
-   return Services.POST(`newonboardify/admin/generalSettings` , data);
+export const deleteServiceRequest = (id) =>{
+  return Services.DELETE(`newonboardify/admin/serviceRequests/${id}`)
 }
 
-export const setUserOrAdmin = (data) =>{
-  return Services.POST(`newonboardify/admin/addAdminOrUser` , data);
-}

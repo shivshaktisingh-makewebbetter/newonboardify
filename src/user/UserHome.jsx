@@ -58,7 +58,7 @@ const handleAdminRoute = (title) =>{
         <div className='governify-option-list'>
         {data.map((item)=>{
             return (
-                <div className='governify-option-list-repetitive' style={{position:'relative' ,paddingBottom:"40px"}}>
+                <div className='governify-option-list-repetitive' style={{position:'relative' ,paddingBottom:"40px"}} key={item.navigateKey}>
                    <div style={{height:"6rem"}} >{item.icon}</div>
                    <div className='governify-option-list-title font-family-hind fs-28 fw-700 mt-16 mb-16'>{item.title}</div>
                    <div className='governify-option-list-description font-family-hind fs-19 text-color-928f8f mb-16' style={{minHeight:"114px" , paddingBottom:"20px"}}>{item.description}</div>
