@@ -40,14 +40,7 @@ export const AdminHome = () => {
       buttonText: "Manage Role",
       navigateKey: "createAdmin",
     },
-    {
-      title: "Services",
-      description:
-        "Stay in the loop with ease! Check the overall status of your onboarding requests and keep tabs on your employee onboarding progress for a comprehensive overview of the entire process.",
-      icon: <i className="bi bi-window-stack" style={{ fontSize: "70px" }}></i>,
-      buttonText: "Manage Services",
-      navigateKey: "services",
-    },
+  
   ];
 
   const navigate = useNavigate();

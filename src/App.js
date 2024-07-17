@@ -20,7 +20,6 @@ import { ErrorPage } from "./error/ErrorPage";
 import { Register } from "./auth/Register";
 import { Layout } from "./layout/Layout";
 import { UserList } from "./admin/UserList";
-import { Services } from "./admin/Services";
 
 function App() {
   const router = createBrowserRouter([
@@ -51,7 +50,6 @@ function App() {
         { path: "createAdmin", element: <ProtectedRoute element={<CreateAdmin />} roles={['admin']} /> },
         { path: "settings", element: <ProtectedRoute element={<Settings />} roles={['admin']} /> },
         { path: "userList", element: <ProtectedRoute element={<UserList />} roles={['admin']} /> },
-        { path: "services", element: <ProtectedRoute element={<Services />} roles={['admin']} /> },
 
       ],
     },
