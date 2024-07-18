@@ -30,6 +30,13 @@ export const getBoardVisibilityData = (id) => {
   );
 };
 
+export const getBoardVisibilityDataWithEmail = (id , email) => {
+  return Services.GET(
+    `newonboardify/admin/getboardVisibilityMapping?board_id=${id}&email=${email}`
+  );
+};
+
+
 export const setBoardVisibilityDataEndpoint = (data) => {
   return Services.POST("newonboardify/admin/boardVisibilityMapping", data);
 };
@@ -64,5 +71,9 @@ export const updateServiceRequest = ({id , data}) =>{
 
 export const deleteServiceRequest = (id) =>{
   return Services.DELETE(`newonboardify/admin/serviceRequests/${id}`)
+}
+
+export const getAllUsers = () =>{
+  return Services.GET(`newonboardify/admin/getAllUsers`);
 }
 

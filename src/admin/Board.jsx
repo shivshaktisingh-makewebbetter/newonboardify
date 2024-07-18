@@ -3,8 +3,10 @@ import { Loader } from "../common/Loader";
 import { Hero } from "../components/Hero";
 import {
   getAllBoards,
+  getAllUsers,
   getBoardColorMapping,
   getBoardVisibilityData,
+  getBoardVisibilityDataWithEmail,
   getCompleteDataForBoardVisibility,
   setAllColorMapping,
   setBoardVisibilityDataEndpoint,
@@ -12,10 +14,13 @@ import {
 import { Button, Card, Col, Input, Row, Select } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import { setUser } from "../utils/authUtils";
 
 export const Board = () => {
   const [boardListing, setBoardListing] = useState([]);
+  const [userListing, setUserListing] = useState([]);
   const [selectedBoardId, setSelectedBoardId] = useState("");
+  const [selectedUser, setSelectedUser] = useState("");
   const [colorMappingData, setColorMappingData] = useState([]);
   const [boardVisiblityData, setBoardVisibilityData] = useState();
   const colorObject = {
@@ -39,13 +44,12 @@ export const Board = () => {
   };
 
   const fetchAllBoards = async () => {
-    
     try {
       const response = await getAllBoards();
       if (response.success) {
         let tempData = [];
         response.data.response.boards.forEach((item) => {
-          console.log(item , 'item')
+          console.log(item, "item");
           tempData.push({
             key: item.id,
             label: item.name,
@@ -53,6 +57,26 @@ export const Board = () => {
           });
         });
         setBoardListing(tempData);
+      }
+    } catch (err) {
+    } finally {
+    }
+  };
+
+  const fetchAllUsers = async () => {
+    try {
+      const response = await getAllUsers();
+      console.log(response, "response");
+      if (response.success) {
+        let tempData = [];
+        response.data.response.forEach((item) => {
+          tempData.push({
+            key: item.id,
+            label: item.name,
+            value: item.email,
+          });
+        });
+        setUserListing(tempData);
       }
     } catch (err) {
     } finally {
@@ -68,6 +92,28 @@ export const Board = () => {
     if (response.success && response.data.response.length > 0) {
       setBoardVisibilityData(JSON.parse(response.data.response[0].columns));
     }
+    if (response1.success && response1.data.response.length > 0) {
+      let optionData = [];
+      response1.data.response.forEach((item) => {
+        optionData.push({ label: item.title, value: item.id });
+      });
+      setOptions(optionData);
+    }
+  };
+
+  const handleUserChange = async (e) => {
+    setSelectedUser(e);
+    const response = await getBoardVisibilityDataWithEmail(selectedBoardId, e);
+
+    const response1 = await getCompleteDataForBoardVisibility(e);
+
+    if (response.success && response.data.response.length > 0) {
+      setBoardVisibilityData(JSON.parse(response.data.response[0].columns));
+    }
+    if (response.success && response.data.response.length === 0) {
+      setBoardVisibilityData({});
+    }
+
     if (response1.success && response1.data.response.length > 0) {
       let optionData = [];
       response1.data.response.forEach((item) => {
@@ -117,11 +163,13 @@ export const Board = () => {
     const response = await setAllColorMapping(JSON.stringify(result));
   };
 
-  const handleBoardSubmit = async() => {
-    const tempData = {...boardVisiblityData};
-    tempData.email = '';
-     const response = await setBoardVisibilityDataEndpoint(JSON.stringify(tempData));
-     console.log(response);
+  const handleBoardSubmit = async () => {
+    const tempData = { ...boardVisiblityData };
+    tempData.email = "";
+    const response = await setBoardVisibilityDataEndpoint(
+      JSON.stringify(tempData)
+    );
+    console.log(response);
   };
 
   const handleChangeFormEmbedCode = (e) => {
@@ -213,36 +261,35 @@ export const Board = () => {
     setBoardVisibilityData(tempData);
   };
 
-  const handleChangeCardSectionColumn1 = (e) =>{
+  const handleChangeCardSectionColumn1 = (e) => {
     const tempData = { ...boardVisiblityData };
     tempData.card_section.column1 = e;
     setBoardVisibilityData(tempData);
+  };
 
-  }
-
-  const handleChangeCardSectionColumn2 = (e) =>{
+  const handleChangeCardSectionColumn2 = (e) => {
     const tempData = { ...boardVisiblityData };
     tempData.card_section.column2 = e;
     setBoardVisibilityData(tempData);
-  }
+  };
 
-  const handleChangeRequiredColumnProfession = (e) =>{
+  const handleChangeRequiredColumnProfession = (e) => {
     const tempData = { ...boardVisiblityData };
     tempData.required_columns.profession = e;
     setBoardVisibilityData(tempData);
-  }
+  };
 
-  const handleChangeRequiredColumnStatus = (e) =>{
+  const handleChangeRequiredColumnStatus = (e) => {
     const tempData = { ...boardVisiblityData };
     tempData.required_columns.overall_status = e;
     setBoardVisibilityData(tempData);
-  }
+  };
 
   useEffect(() => {
     fetchAllBoards();
     fetchAllColorMapping();
+    fetchAllUsers();
   }, []);
-
 
   return (
     <div className="pt-84">
@@ -297,6 +344,26 @@ export const Board = () => {
                   onChange={handleBoardChange}
                   options={boardListing}
                   value={selectedBoardId}
+                />
+              </div>
+              <div
+                style={{
+                  marginTop: "10px",
+                  border: "1px solid #d9d9d9",
+                  padding: "10px",
+                  borderRadius: "10px",
+                }}
+              >
+                <p style={{ textAlign: "left" }}>Select User</p>
+                <Select
+                  placeholder={"Select User"}
+                  style={{ width: "100%", borderRadius: "10px" }}
+                  popupMatchSelectWidth={false}
+                  placement="bottomLeft"
+                  onChange={handleUserChange}
+                  options={userListing}
+                  value={selectedUser}
+                  disabled={selectedBoardId.length === 0}
                 />
               </div>
               {boardVisiblityData !== undefined &&
@@ -572,9 +639,7 @@ export const Board = () => {
                           }
                           onChange={handleChangeRequiredColumnProfession}
                           options={options}
-                          value={
-                            boardVisiblityData.required_columns.profession
-                          }
+                          value={boardVisiblityData.required_columns.profession}
                         />
                       </div>
                       <div
@@ -598,9 +663,7 @@ export const Board = () => {
                           placeholder="Please select"
                           onChange={handleChangeRequiredColumnStatus}
                           options={options}
-                          value={
-                            boardVisiblityData.required_columns.profession
-                          }
+                          value={boardVisiblityData.required_columns.profession}
                         />
                       </div>
                     </div>
