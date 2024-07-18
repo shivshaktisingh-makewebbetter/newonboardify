@@ -1,19 +1,55 @@
+import { useEffect, useState } from "react";
 import { Hero } from "../components/Hero";
+import { getUserFormAndChart } from "../apiservice/ApiService";
 
 export const Check = () => {
+  const [chartCode, setChartCode] = useState("");
+  const fetchChart = async () => {
+    const response = await getUserFormAndChart();
+    console.log(response, "response");
+    if (response.success) {
+      const columns = JSON.parse(response.data.response?.columns);
+      if (
+        columns.hasOwnProperty("extra_details") &&
+        columns.extra_details.hasOwnProperty("chart_embed_code") &&
+        columns.extra_details.chart_embed_code
+      ) {
+        setChartCode(columns.extra_details.chart_embed_code);
+        let element = document.getElementById("iframe-chart");
+        element.innerHTML =
+          columns.extra_details.chart_embed_code +
+          `<div class="w-100 bottom-blur" style="height:50px;"></div>`;
+      } else {
+        setChartCode("");
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchChart();
+  }, []);
+
   return (
-    <div style={{padding:"1rem"}}>
-      <div style={{marginTop:"3rem" , marginBottom:"1rem"}}>
-      <Hero
-        heading={"Overall Status"}
-        subheading="Stay informed and in control of the overall status of your onboarding requests"
-        forHome={true}
-      />
+    <div style={{ padding: "1rem" }}>
+      <div style={{ marginTop: "3rem", marginBottom: "1rem" }}>
+        <Hero
+          heading={"Overall Status"}
+          subheading="Stay informed and in control of the overall status of your onboarding requests"
+          forHome={true}
+        />
       </div>
-     
-      <div style={{margin:"0px",height:"130vh",position:"relative" }} className="w-100"  id="iframe-chart">
-      <iframe src="https://view.monday.com/embed/1393670128-0951f4e4e230111c651e55e9ecb28980?r=euc1" width="100%" height="100%" style={{border: "0" , boxShadow: "5px 5px 56px 0px rgba(0,0,0,0.25)"}}></iframe>
-      <div class="w-100 bottom-blur" style={{height: "50px"}}></div>
+
+      <div className="w-100 mt-5" style={{ position: "relative" }}>
+        <div
+          id="loader"
+          className="blurry w-100"
+          style={{ height: "100vh", display: "none" }}
+        ></div>
+        <div
+          style={{ margin: "0px", height: "130vh", position: "relative" }}
+          className="w-100"
+          id="iframe-chart"
+        ></div>
       </div>
     </div>
   );

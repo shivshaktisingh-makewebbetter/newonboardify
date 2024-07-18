@@ -77,3 +77,11 @@ export const getAllUsers = () =>{
   return Services.GET(`newonboardify/admin/getAllUsers`);
 }
 
+export const getAllUsersWithBoardId = (id) =>{
+  return Services.GET(`newonboardify/admin/getAllUsers/${id}`);
+}
+
+export const getUserFormAndChart = () =>{
+  return Services.GET(`newonboardify/customer/getUserFormAndChart`);
+}
+

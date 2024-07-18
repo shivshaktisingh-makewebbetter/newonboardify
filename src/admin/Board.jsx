@@ -4,6 +4,7 @@ import { Hero } from "../components/Hero";
 import {
   getAllBoards,
   getAllUsers,
+  getAllUsersWithBoardId,
   getBoardColorMapping,
   getBoardVisibilityData,
   getBoardVisibilityDataWithEmail,
@@ -69,9 +70,9 @@ export const Board = () => {
     }
   };
 
-  const fetchAllUsers = async () => {
+  const fetchAllUsers = async (id) => {
     try {
-      const response = await getAllUsers();
+      const response = await getAllUsersWithBoardId(id);
       if (response.success) {
         let tempData = [];
         response.data.response.forEach((item) => {
@@ -95,6 +96,7 @@ export const Board = () => {
     const response = await getBoardVisibilityData(e);
 
     const response1 = await getCompleteDataForBoardVisibility(e);
+    await fetchAllUsers(e);
 
     if (response.success && response.data.response.length > 0) {
       let tempData = JSON.parse(response.data.response[0].columns);
@@ -333,7 +335,6 @@ export const Board = () => {
   useEffect(() => {
     fetchAllBoards();
     fetchAllColorMapping();
-    fetchAllUsers();
   }, []);
 
   return (

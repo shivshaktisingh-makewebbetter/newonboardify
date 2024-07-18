@@ -175,7 +175,7 @@ export const UserList = () => {
     const response = await getAllBoards();
     if (response.success) {
       const tempData = [];
-      response.data.response.data.boards.forEach((item) => {
+      response.data.response.boards.forEach((item) => {
         tempData.push({
           key: item.id,
           label: item.name,

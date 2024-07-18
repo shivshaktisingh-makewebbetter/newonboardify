@@ -49,8 +49,9 @@ const navigate = useNavigate();
 
 const handleAdminRoute = (title) =>{
     navigate(title);
-
 }
+
+
 
     return (
         <>

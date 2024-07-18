@@ -39,7 +39,7 @@ export const Hero = ({ heading, subheading, ...props }) => {
         <div className="d-flex flex-column justify-content-center align-items-center secondaryHeading">
           <p
             className="secondry-heading header-heading3 mb-0  fs-19"
-            style={{ color: "#928f8f" }}
+            style={{ color: "#928f8f" , maxWidth:"800px" }}
           >
             {subheading}
           </p>

@@ -7,20 +7,22 @@ import { ToastContainer } from "react-toastify";
 import { Loader } from "../common/Loader";
 import { Collapse } from "antd";
 import { fetcher } from "../utils/helper";
-import { getGeneralSettingsData, setGeneralSettings } from "../apiservice/ApiService";
+import {
+  getGeneralSettingsData,
+  setGeneralSettings,
+} from "../apiservice/ApiService";
 
 export const Settings = () => {
   const data = JSON.parse(sessionStorage.getItem("settings")) || {
-		image:
-		  "https://onboardify.tasc360.com/uploads/y22.png",
-		site_bg: "#ffffff",
-		button_bg: "#497ed8",
-		banner_bg: "#497ed8",
-		banner_content:
-		  "Hire an attitude, not just experience and qualification. Greg Savage.",
-		header_bg: "#f7f7f7",
-		head_title_color: "#497ed8",
-	  };	
+    image: "https://onboardify.tasc360.com/uploads/y22.png",
+    site_bg: "#ffffff",
+    button_bg: "#497ed8",
+    banner_bg: "#497ed8",
+    banner_content:
+      "Hire an attitude, not just experience and qualification. Greg Savage.",
+    header_bg: "#f7f7f7",
+    head_title_color: "#497ed8",
+  };
   const [uiData, setUiData] = useState({
     site_bg: "",
     button_bg: "",
@@ -111,8 +113,6 @@ export const Settings = () => {
   };
 
   const handleSubmit = async () => {
- 
-
     let payload = JSON.stringify({
       ui_settings: uiData,
       logo_name: startsWithHttp(logoData.logo_name) ? "" : logoData.logo_name,
@@ -124,10 +124,11 @@ export const Settings = () => {
     setLoading(true);
     try {
       let response = await setGeneralSettings(payload);
-      console.log(response , 'sdfsdfsd')
-      if (response.status) {
-        // toast.success("Settings Updated.");
-        // userSettingData();
+      console.log(response, "sdfsdfsd");
+      if (response.success) {
+        toast.success("Settings Updated.");
+      } else {
+        toast.error("Settings Not Updated.");
       }
     } catch (err) {
       console.log(err);
@@ -139,27 +140,27 @@ export const Settings = () => {
     }
   };
 
-
   const handleBackNavigation = () => {
     navigate(-1);
   };
 
-  const fetchGeneralSettings = async() =>{
+  const fetchGeneralSettings = async () => {
     const response = await getGeneralSettingsData();
-    if(response.success){
+    if (response.success) {
       const tempData = JSON.parse(response.data.response.ui_settings);
-      tempData.banner_content = 'Hire an attitude, not just experience and qualification. Greg Savage.';
-      setUiData(tempData) 
-      setLogoData({logo_name : response.data.response.logo , logo_image:response.data.response.logo_location})
+      tempData.banner_content =
+        "Hire an attitude, not just experience and qualification. Greg Savage.";
+      setUiData(tempData);
+      setLogoData({
+        logo_name: response.data.response.logo,
+        logo_image: response.data.response.logo_location,
+      });
     }
-  }
+  };
 
-  useEffect(()=>{
-  fetchGeneralSettings();
-  } ,[])
-
-  
-
+  useEffect(() => {
+    fetchGeneralSettings();
+  }, []);
 
   return (
     <>
@@ -326,10 +327,12 @@ export const Settings = () => {
               <small className="text-danger text-start ms-2"></small>
             </div>
 
-           
-
             <Button
-              style={{ background: data.button_bg, color: "white", border: "none" }}
+              style={{
+                background: data.button_bg,
+                color: "white",
+                border: "none",
+              }}
               onClick={handleSubmit}
             >
               SAVE SETTINGS

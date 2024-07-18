@@ -914,9 +914,6 @@ body,
   padding: 20px;
 }
 
-table tr:hover {
-  background-color: #5ac063;
-}
 
 .customer-form-container {
   /* border: 1px solid #ccc; */
@@ -1207,6 +1204,15 @@ table tr:hover {
   height: 50px;
   position: absolute;
   bottom: 6px;
+}
+
+#iframe-chart>iframe {
+  border: 0;
+  border-radius: 0.5rem;
+  box-shadow: 5px 5px 56px 0px rgba(0, 0, 0, 0.25);
+  width: 100% !important;
+  height: 100% !important;
+  transform: scale(1) !important;
 }
 
 
