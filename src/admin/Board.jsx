@@ -15,12 +15,15 @@ import { Button, Card, Col, Input, Row, Select } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../utils/authUtils";
+import { toast, ToastContainer } from "react-toastify";
 
 export const Board = () => {
+  const [loading, setLoading] = useState(false);
   const [boardListing, setBoardListing] = useState([]);
   const [userListing, setUserListing] = useState([]);
   const [selectedBoardId, setSelectedBoardId] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
+  const [emailKey, setEmailKey] = useState("");
   const [colorMappingData, setColorMappingData] = useState([]);
   const [boardVisiblityData, setBoardVisibilityData] = useState();
   const [flterUserSpecific, setFilterUserSpecific] = useState({
@@ -94,7 +97,10 @@ export const Board = () => {
     const response1 = await getCompleteDataForBoardVisibility(e);
 
     if (response.success && response.data.response.length > 0) {
-      setBoardVisibilityData(JSON.parse(response.data.response[0].columns));
+      let tempData = JSON.parse(response.data.response[0].columns);
+      let tempEmailKey = tempData?.email_key || "";
+      setBoardVisibilityData(tempData);
+      setEmailKey(tempEmailKey);
     }
     if (response1.success && response1.data.response.length > 0) {
       let optionData = [];
@@ -166,21 +172,48 @@ export const Board = () => {
       const [key, values] = Object.entries(item)[0];
       result[key] = values;
     });
-    const response = await setAllColorMapping(JSON.stringify(result));
+
+    try {
+      setLoading(true);
+      const response = await setAllColorMapping(JSON.stringify(result));
+      if (response.success) {
+        toast.success("Status Updated Successfully.");
+      }
+    } catch (err) {
+      toast.error("Status NOt Updated.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleBoardSubmit = async () => {
     const tempData = { ...boardVisiblityData };
-    tempData.email = "";
-    const response = await setBoardVisibilityDataEndpoint(
-      JSON.stringify(tempData)
-    );
+    tempData.email = selectedUser;
+    tempData.filterByUser = flterUserSpecific;
+    setLoading(true);
+    try {
+      const response = await setBoardVisibilityDataEndpoint(
+        JSON.stringify(tempData)
+      );
+
+      if (response.success) {
+        toast.success("Board Settings Updated Successfully.");
+      }
+    } catch (err) {
+      toast.error("Board Settings Not Updated.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChangeFormEmbedCode = (e) => {
     const tempData = { ...boardVisiblityData };
     tempData.extra_details.form_embed_code = e.target.value;
     setBoardVisibilityData(tempData);
+  };
+
+  const handleChangeForUserFilterValue = (e) => {
+    setFilterUserSpecific({ ...flterUserSpecific, value: e.target.value });
   };
 
   const handleChangeChartEmbedCode = (e) => {
@@ -227,7 +260,6 @@ export const Board = () => {
     const tempData = { ...boardVisiblityData };
     const selectedData = [];
     options.forEach((item) => {
-
       if (e.includes(item.value)) {
         selectedData.push({
           id: item.value,
@@ -291,6 +323,13 @@ export const Board = () => {
     setBoardVisibilityData(tempData);
   };
 
+  const handleChangeEmailColumn = (e) => {
+    const tempData = { ...boardVisiblityData };
+    tempData.email_key = e;
+    setEmailKey(e);
+    setBoardVisibilityData(tempData);
+  };
+
   useEffect(() => {
     fetchAllBoards();
     fetchAllColorMapping();
@@ -299,7 +338,7 @@ export const Board = () => {
 
   return (
     <div className="pt-84">
-      {/* {loading && <Loader />} */}
+      {loading && <Loader />}
       <Hero
         heading={"Board Visibility"}
         subheading="Column restrictions can be set per board by selecting respective column boards."
@@ -400,7 +439,7 @@ export const Board = () => {
                   <Input
                     addonBefore="Filter Value"
                     value={flterUserSpecific.value}
-                    onChange={handleChangeFormEmbedCode}
+                    onChange={handleChangeForUserFilterValue}
                     disabled={flterUserSpecific.key.length === 0}
                   />
                 </div>
@@ -707,6 +746,27 @@ export const Board = () => {
                         />
                       </div>
                     </div>
+                    <div
+                      style={{
+                        marginTop: "10px",
+                        border: "1px solid #d9d9d9",
+                        padding: "10px",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      <p style={{ textAlign: "left" }}>
+                        Required Column For Email
+                      </p>
+                      <Select
+                        style={{
+                          width: "100%",
+                        }}
+                        placeholder="Please select Email Column"
+                        value={emailKey}
+                        onChange={handleChangeEmailColumn}
+                        options={options}
+                      />
+                    </div>
                     <div style={{ marginTop: "10px" }}>
                       <Button
                         style={{
@@ -774,6 +834,7 @@ export const Board = () => {
           </Col>
         </Row>
       </div>
+      <ToastContainer position="bottom-right" />
     </div>
   );
 };

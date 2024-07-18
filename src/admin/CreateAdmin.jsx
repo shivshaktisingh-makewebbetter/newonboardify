@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { setUser } from "../utils/authUtils";
 import { setUserOrAdmin } from "../apiservice/ApiService";
+import { toast, ToastContainer } from "react-toastify";
+import { Loader } from "../common/Loader";
 
 export const CreateAdmin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -57,14 +59,14 @@ export const CreateAdmin = () => {
     setBtnLoading(true);
     try {
       const response = await setUserOrAdmin(JSON.stringify(formData));
-      if(response.success){
-
-      }else{
-
+      if (response.success) {
+        toast.success("Updated Succesfully");
+      } else {
+        toast.error(response.message);
       }
     } catch (err) {
-      console.log(err);
-    }finally{
+      toast.error("Not Created.");
+    } finally {
       setBtnLoading(false);
     }
   };
@@ -89,6 +91,7 @@ export const CreateAdmin = () => {
 
   return (
     <div className="pt-84">
+      {btnLoading && <Loader />}
       <div
         className="border-bottom"
         style={{
@@ -240,6 +243,7 @@ export const CreateAdmin = () => {
           </Button>
         </div>
       </div>
+      <ToastContainer position="bottom-right" />
     </div>
   );
 };
