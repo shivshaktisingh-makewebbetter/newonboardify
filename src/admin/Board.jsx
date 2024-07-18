@@ -23,6 +23,10 @@ export const Board = () => {
   const [selectedUser, setSelectedUser] = useState("");
   const [colorMappingData, setColorMappingData] = useState([]);
   const [boardVisiblityData, setBoardVisibilityData] = useState();
+  const [flterUserSpecific, setFilterUserSpecific] = useState({
+    key: "",
+    value: "",
+  });
   const colorObject = {
     STUCK: "#F4221F",
     "IN PROGRESS": "#F4981F",
@@ -49,7 +53,6 @@ export const Board = () => {
       if (response.success) {
         let tempData = [];
         response.data.response.boards.forEach((item) => {
-          console.log(item, "item");
           tempData.push({
             key: item.id,
             label: item.name,
@@ -66,7 +69,6 @@ export const Board = () => {
   const fetchAllUsers = async () => {
     try {
       const response = await getAllUsers();
-      console.log(response, "response");
       if (response.success) {
         let tempData = [];
         response.data.response.forEach((item) => {
@@ -85,6 +87,8 @@ export const Board = () => {
 
   const handleBoardChange = async (e) => {
     setSelectedBoardId(e);
+    setSelectedUser("");
+    setFilterUserSpecific({ key: "", value: "" });
     const response = await getBoardVisibilityData(e);
 
     const response1 = await getCompleteDataForBoardVisibility(e);
@@ -102,6 +106,7 @@ export const Board = () => {
   };
 
   const handleUserChange = async (e) => {
+    setFilterUserSpecific({ key: "", value: "" });
     setSelectedUser(e);
     const response = await getBoardVisibilityDataWithEmail(selectedBoardId, e);
 
@@ -109,9 +114,6 @@ export const Board = () => {
 
     if (response.success && response.data.response.length > 0) {
       setBoardVisibilityData(JSON.parse(response.data.response[0].columns));
-    }
-    if (response.success && response.data.response.length === 0) {
-      setBoardVisibilityData({});
     }
 
     if (response1.success && response1.data.response.length > 0) {
@@ -121,6 +123,10 @@ export const Board = () => {
       });
       setOptions(optionData);
     }
+  };
+
+  const handleUserSpecifiFilter = (e) => {
+    setFilterUserSpecific({ key: e, value: "" });
   };
 
   const fetchAllColorMapping = async () => {
@@ -169,7 +175,6 @@ export const Board = () => {
     const response = await setBoardVisibilityDataEndpoint(
       JSON.stringify(tempData)
     );
-    console.log(response);
   };
 
   const handleChangeFormEmbedCode = (e) => {
@@ -222,6 +227,7 @@ export const Board = () => {
     const tempData = { ...boardVisiblityData };
     const selectedData = [];
     options.forEach((item) => {
+
       if (e.includes(item.value)) {
         selectedData.push({
           id: item.value,
@@ -231,7 +237,7 @@ export const Board = () => {
         });
       }
     });
-    tempData.candidate_columns = selectedData;
+    tempData.candidate_coulmns = selectedData;
     setBoardVisibilityData(tempData);
   };
 
@@ -366,6 +372,40 @@ export const Board = () => {
                   disabled={selectedBoardId.length === 0}
                 />
               </div>
+
+              <div
+                style={{
+                  marginTop: "10px",
+                  border: "1px solid #d9d9d9",
+                  padding: "10px",
+                  borderRadius: "10px",
+                }}
+              >
+                <div>
+                  <p style={{ textAlign: "left" }}>Select Filter</p>
+                  <Select
+                    placeholder={"Select Column"}
+                    style={{ width: "100%", borderRadius: "10px" }}
+                    popupMatchSelectWidth={false}
+                    placement="bottomLeft"
+                    onChange={handleUserSpecifiFilter}
+                    options={options}
+                    value={flterUserSpecific.key}
+                    disabled={
+                      selectedUser.length === 0 || selectedBoardId.length === 0
+                    }
+                  />
+                </div>
+                <div style={{ marginTop: "10px" }}>
+                  <Input
+                    addonBefore="Filter Value"
+                    value={flterUserSpecific.value}
+                    onChange={handleChangeFormEmbedCode}
+                    disabled={flterUserSpecific.key.length === 0}
+                  />
+                </div>
+              </div>
+
               {boardVisiblityData !== undefined &&
                 Object.keys(boardVisiblityData).length > 0 && (
                   <div>
