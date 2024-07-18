@@ -1,6 +1,13 @@
 import { Button, Card, Typography } from "antd";
+import { formatDate } from "../../utils/helper";
 
-export const RequestComponent = ({ data, boardId, filterOption }) => {
+export const RequestComponent = ({
+  data,
+  boardId,
+  filterOption,
+  columnIdData,
+  allColumns,
+}) => {
   const settingData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
     site_bg: "#ffffff",
@@ -12,6 +19,70 @@ export const RequestComponent = ({ data, boardId, filterOption }) => {
     head_title_color: "#497ed8",
   };
 
+  const getHeadData = (item) => {
+    let key = columnIdData.card_section.column1;
+    let value;
+    item.column_values.forEach((subItem) => {
+      if (subItem.id === key) {
+        value = subItem.text;
+      }
+    });
+    return value;
+  };
+
+  const getMidData = (item) => {
+    let key = columnIdData.card_section.column2;
+    let value;
+    item.column_values.forEach((subItem) => {
+      if (subItem.id === key) {
+        value = subItem.text;
+      }
+    });
+    return value;
+  };
+
+  const getStatusText = (item) => {
+    let tempId = "";
+    allColumns.forEach((subItem) => {
+      if (subItem.title === "Overall Status") {
+        tempId = subItem.id;
+      }
+    });
+    let value;
+    item.column_values.forEach((subItem) => {
+      if (subItem.id === tempId) {
+        value = subItem.text;
+      }
+    });
+    return value.toUpperCase();
+  };
+
+  const getStatusColor = (item) => {
+    let tempId = "";
+    let tempData = "";
+    allColumns.forEach((subItem) => {
+      if (subItem.title === "Overall Status") {
+        tempId = subItem.id;
+        tempData = JSON.parse(subItem.settings_str);
+      }
+    });
+    let value;
+    item.column_values.forEach((subItem) => {
+      if (subItem.id === tempId) {
+        value = subItem.text;
+      }
+    });
+
+    let index = "";
+    for (const key in tempData.labels) {
+      if (tempData.labels[key] === value) {
+        index = key;
+      }
+    }
+
+    return tempData.labels_colors[index].color;
+  };
+
   const openTrackRequest = () => {};
 
   return (
@@ -19,12 +90,13 @@ export const RequestComponent = ({ data, boardId, filterOption }) => {
       {data.map((item, index) => {
         // const getKey = getStatusKey(item);
         // const bgColor = getBgColor(getKey);
-        // const statusColor = getStatusColor(getKey);
-        // const statusText = getStatusText(getKey);
+        const statusText = getStatusText(item);
+        const statusColor = getStatusColor(item);
+
         // const createdDate = getCreatedDate(item.created_at);
         // const categoryName = getCategoryName(item);
-        // const head = getHeadData(item);
-        // const mid = getMidData(item);
+        const head = getHeadData(item);
+        const mid = getMidData(item);
 
         return (
           <Card
@@ -33,11 +105,11 @@ export const RequestComponent = ({ data, boardId, filterOption }) => {
           >
             <Typography style={{ textAlign: "left" }}>
               <span className="fs-15" style={{ color: "#6c757d" }}>
-                {item.topHead}
+                {head}
               </span>{" "}
               <span style={{ color: "#212529bf" }}>|</span>{" "}
               <span className="text-color-928f8f fs-15">
-                {item.createdDate}
+                {formatDate(item.created_at)}
               </span>
             </Typography>
 
@@ -47,8 +119,18 @@ export const RequestComponent = ({ data, boardId, filterOption }) => {
             >
               {item.name}
             </h4>
-            <h5 style={{color: "#434343", fontSize: "21px"}} className="text-start mt-4 onboarding-margin-top-16">{item.subName}</h5>
-            <h6 class="card-status text-start mt-3 track-profession fw-bold" style={{fontSize: "17px" ,color: settingData.button_bg }}>{item.status}</h6>
+            <h5
+              style={{ color: "#434343", fontSize: "21px" }}
+              className="text-start mt-4 onboarding-margin-top-16"
+            >
+              {mid}
+            </h5>
+            <h6
+              className="card-status text-start mt-3 track-profession fw-bold"
+              style={{ fontSize: "17px", color: statusColor }}
+            >
+              {statusText}
+            </h6>
             <div
               className="mt-24"
               style={{ display: "flex", justifyContent: "start", gap: "10px" }}

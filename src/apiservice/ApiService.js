@@ -85,3 +85,15 @@ export const getUserFormAndChart = () =>{
   return Services.GET(`newonboardify/customer/getUserFormAndChart`);
 }
 
+export const getRequestTrackingData = () =>{
+  return Services.POST(`newonboardify/customer/requestTracking`)
+}
+
+export const getBoardSettingDataCustomerByID = (id) =>{
+  return Services.GET(`newonboardify/customer/getboardVisibilityMapping?board_id=1393670128&email=userone@gmail.com`)
+}
+
+
+export const getBoardSettingDataCustomerByIdAndEmail = (id , email) =>{
+  return Services.GET(`newonboardify/customer/getboardVisibilityMapping?board_id=${id}&email=${email}`)
+}
