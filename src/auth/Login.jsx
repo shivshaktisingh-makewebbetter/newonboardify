@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../common/Loader";
 import { fetcher } from "../utils/helper";
+import { getLoginUserDetails, loginApi } from "../apiservice/ApiService";
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,30 +14,34 @@ export const Login = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    let url = "commom-login";
-    let method = "POST";
     let payload = JSON.stringify({
       email: userDetails.email,
       password: userDetails.password,
       domain: window.location.origin,
     });
 
+  
+
     try {
       setLoading(true);
-      const response = await fetcher(url, method, payload);
-      if (response.status) {
+      const response = await loginApi(payload);
+      console.log(response)
+      if (response.success) {
+        const response1 = getLoginUserDetails(response.data.token);
+        console.log(response1 , 'sdf')
+    
         toast.success("Logged In Successfull.");
-        sessionStorage.setItem("token", response.token);
-        sessionStorage.setItem("role", response.role);
-        if (response.role === "customer") {
+        sessionStorage.setItem("token", response.data.token);
+        sessionStorage.setItem("role", response.data.role);
+        if (response.data.role === "customer") {
           setTimeout(() => {
-            navigate("/");
+            navigate("/user");
           }, 1000);
         } else {
           navigate("/admin");
         }
       } else {
-        toast.error("Login Failed.");
+        toast.error(response.message);
       }
     } catch (err) {
       console.log(err, "error");
@@ -102,17 +107,13 @@ export const Login = () => {
                 Onboardify
               </div>
             </div>
-            {/* <div class="d-flex justify-content-center">
-        <div class="alert alert-{{ status }}" style={{maxWidth:"400px"}}>
-        </div>
-      </div> */}
+
             <div
               className="form-container mx-auto"
               style={{ maxWidth: "440px" }}
             >
               <div>
                 <div>
-                  {/* <span className="inc-tasc-gradient-btn">TASC</span><span className="fs-48 ff-ws"> 360</span> */}
                   <img
                     src="/tasc.svg"
                     alt="TASC logo"
@@ -178,7 +179,7 @@ export const Login = () => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                   
+
                     transition: "0.5s",
                     height: "46px",
                     opacity:
@@ -255,4 +256,3 @@ export const Login = () => {
     </div>
   );
 };
-

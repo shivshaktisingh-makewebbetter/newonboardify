@@ -12,6 +12,8 @@ import {
   getBoardSettingDataCustomerByID,
   getRequestTrackingData,
 } from "../apiservice/ApiService";
+import { useDispatch } from "react-redux";
+import { setColumnData, setTrackBoardData } from "../redux/slices/trackBoardData";
 
 export const Track = () => {
   const location = useLocation();
@@ -29,6 +31,7 @@ export const Track = () => {
   const [limit, setLimit] = useState(10);
   const [originalArray, setOriginalArray] = useState([]);
   const [clonedData, setClonedData] = useState([]);
+  const dispatch = useDispatch();
 
   const onChangeRadio = (item) => {
     console.log(item);
@@ -73,6 +76,7 @@ export const Track = () => {
     const response = await getRequestTrackingData();
     const response1 = await getBoardSettingDataCustomerByID();
     if (response.success) {
+      dispatch(setTrackBoardData(response.data.response.data.boards[0].items_page.items));
       setOriginalArray(response.data.response.data.boards[0].items_page.items);
       setClonedData(response.data.response.data.boards[0].items_page.items);
       setData(response.data.response.data.boards[0].items_page.items.slice(0, 10));
@@ -81,9 +85,10 @@ export const Track = () => {
 
     if (response1.success) {
       setColumnIdData(JSON.parse(response1.data.response[0].columns));
+      dispatch(setColumnData(JSON.parse(response1.data.response[0].columns)));
     }
 
-    console.log(JSON.parse(response1.data.response[0].columns));
+
   };
 
   useEffect(() => {

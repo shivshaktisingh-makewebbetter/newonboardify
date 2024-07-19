@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import { fetcher } from "../utils/helper";
 import { useLocation } from "react-router-dom";
+import { forgotPasswordApi } from "../apiservice/ApiService";
 
 export const ForgotPassword = () => {
   const [animation, setAnimation] = useState(true);
@@ -16,16 +17,15 @@ export const ForgotPassword = () => {
   };
 
   const handleSubmit = async () => {
-    let url = "onboardify/common-forgot";
-    let method = "POST";
+  
     let payload = JSON.stringify({
       email: email,
       domain: window.location.origin,
     });
     try {
       setLoading(true);
-      const response = await fetcher(url, method, payload);
-      if (response.status) {
+      const response = await forgotPasswordApi(payload);
+      if (response.success) {
         toast.success("Mail Sent Successfully.");
       } else {
         toast.error(response.message);

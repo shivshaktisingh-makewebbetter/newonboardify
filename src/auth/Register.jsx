@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import { Loader } from "../common/Loader";
 import { fetcher } from "../utils/helper";
+import { registerApi } from "../apiservice/ApiService";
 
 export const Register = () => {
   const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,6}$/;
@@ -53,13 +54,12 @@ export const Register = () => {
       return;
     }
     formData.domain = "governify";
-    let url = "onboardify/newSignup";
-    let method = "POST";
     let payload = JSON.stringify(formData);
     try {
       setLoading(true);
-      const response = await fetcher(url, method, payload);
-      if (response.status) {
+      const response = await registerApi(payload);
+      console.log(response)
+      if (response.success) {
         toast.success(response.message);
       } else {
         toast.error(response.message);

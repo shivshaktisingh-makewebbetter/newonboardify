@@ -52,8 +52,13 @@ export const Board = () => {
   };
 
   const fetchAllBoards = async () => {
+    setLoading(true);
     try {
       const response = await getAllBoards();
+      const response1 = await getBoardColorMapping();
+      if (response1.success) {
+        setColorMappingData(response1.data.response);
+      }
       if (response.success) {
         let tempData = [];
         response.data.response.boards.forEach((item) => {
@@ -67,6 +72,7 @@ export const Board = () => {
       }
     } catch (err) {
     } finally {
+      setLoading(false);
     }
   };
 
@@ -332,6 +338,13 @@ export const Board = () => {
     setBoardVisibilityData(tempData);
   };
 
+  const filterOption = (input, option) => {
+    return (
+      option.label.toLowerCase().includes(input.toLowerCase()) ||
+      option.value.toString().toLowerCase().includes(input.toLowerCase())
+    );
+  };
+
   useEffect(() => {
     fetchAllBoards();
     fetchAllColorMapping();
@@ -383,6 +396,7 @@ export const Board = () => {
               >
                 <p style={{ textAlign: "left" }}>Select Board</p>
                 <Select
+                  showSearch
                   placeholder={"Select Board"}
                   style={{ width: "100%", borderRadius: "10px" }}
                   popupMatchSelectWidth={false}
@@ -390,6 +404,7 @@ export const Board = () => {
                   onChange={handleBoardChange}
                   options={boardListing}
                   value={selectedBoardId}
+                  filterOption={filterOption}
                 />
               </div>
               <div
@@ -789,6 +804,11 @@ export const Board = () => {
               title="Manage Status Background"
               bordered={true}
               className="primary-shadow"
+              style={{
+                minHeight: "494px",
+                position: "relative",
+                padingBottom: "30px",
+              }}
             >
               {colorMappingData.map((item, index) => {
                 return (
@@ -826,6 +846,9 @@ export const Board = () => {
                   width: "100%",
                   background: settingData.button_bg,
                   color: "white",
+                  position: "absolute",
+                  bottom: "0px",
+                  left: "0",
                 }}
                 onClick={handleColorSubmit}
               >

@@ -1,5 +1,8 @@
 import { Button, Card, Typography } from "antd";
 import { formatDate } from "../../utils/helper";
+import { useNavigate } from "react-router-dom";
+import { setNameOfItem } from "../../redux/slices/trackBoardData";
+import { useDispatch } from "react-redux";
 
 export const RequestComponent = ({
   data,
@@ -18,6 +21,8 @@ export const RequestComponent = ({
     header_bg: "#f7f7f7",
     head_title_color: "#497ed8",
   };
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const getHeadData = (item) => {
     let key = columnIdData.card_section.column1;
@@ -83,7 +88,15 @@ export const RequestComponent = ({
     return tempData.labels_colors[index].color;
   };
 
-  const openTrackRequest = () => {};
+  const openTrackRequest = (name, id, statusText, statusColor) => {
+    const dataToPass = {
+      id: id,
+      name: name,
+      status: statusText,
+      color: statusColor,
+    }; // Replace with your data
+    navigate("details", { state: dataToPass });
+  };
 
   return (
     <div>
@@ -148,7 +161,9 @@ export const RequestComponent = ({
                   border: "none",
                 }}
                 className="border-radius-10"
-                onClick={() => openTrackRequest(item)}
+                onClick={() =>
+                  openTrackRequest(item.name, item.id, statusText, statusColor)
+                }
               >
                 <span className="fs-12 fw-700 font-family-montse">
                   Track Request

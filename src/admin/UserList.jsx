@@ -73,14 +73,14 @@ export const UserList = () => {
     {
       title: "Name",
       dataIndex: "name",
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortDirections: ["descend"],
+      // sorter: (a, b) => a.name.length - b.name.length,
+      // sortDirections: ["descend"],
     },
     {
       title: "Company Name",
       dataIndex: "company",
-      sorter: (a, b) => a.age - b.age,
-      sortDirections: ["descend"],
+      // sorter: (a, b) => a.age - b.age,
+      // sortDirections: ["descend"],
     },
     {
       title: "Phone",
@@ -89,8 +89,8 @@ export const UserList = () => {
     {
       title: "Email",
       dataIndex: "email",
-      sorter: (a, b) => a.age - b.age,
-      sortDirections: ["descend"],
+      // sorter: (a, b) => a.age - b.age,
+      // sortDirections: ["descend"],
       render: (_, record) => <CopyText email={record.email} />,
     },
     {
@@ -113,14 +113,14 @@ export const UserList = () => {
     {
       title: "Created Date",
       dataIndex: "createdAt",
-      sorter: (a, b) => a.age - b.age,
-      sortDirections: ["descend"],
+      // sorter: (a, b) => a.age - b.age,
+      // sortDirections: ["descend"],
     },
     {
       title: "Role",
       dataIndex: "role",
-      sorter: (a, b) => a.age - b.age,
-      sortDirections: ["descend"],
+      // sorter: (a, b) => a.age - b.age,
+      // sortDirections: ["descend"],
     },
     {
       title: "Forgot Pass",
@@ -150,24 +150,43 @@ export const UserList = () => {
   ];
 
   const fetchUserListing = async () => {
-    const response = await getUserList();
-    if (response.success) {
-      const tempData = [];
-      response.data.response.forEach((item) => {
-        tempData.push({
-          key: item.id,
-          id: item.id,
-          name: item.name,
-          email: item.email,
-          company: item.company_name,
-          createdAt: extractDateTime(item.created_at),
-          role: roleData[item.role],
-          phone: item.phone,
-          boardId: item.board_id,
+    setLoading(true);
+    try {
+      const response = await getUserList();
+      const response1 = await getAllBoards();
+      if (response.success) {
+        const tempData = [];
+        response.data.response.forEach((item) => {
+          tempData.push({
+            key: item.id,
+            id: item.id,
+            name: item.name,
+            email: item.email,
+            company: item.company_name,
+            createdAt: extractDateTime(item.created_at),
+            role: roleData[item.role],
+            phone: item.phone,
+            boardId: item.board_id,
+          });
         });
-      });
-      setDataSource(tempData);
-      setCloneDataSource(tempData);
+        setDataSource(tempData);
+        setCloneDataSource(tempData);
+      }
+      if (response1.success) {
+        const tempData = [];
+        response1.data.response.boards.forEach((item) => {
+          tempData.push({
+            key: item.id,
+            label: item.name,
+            value: item.id,
+          });
+        });
+  
+        setBoardListing(tempData);
+      }
+    } catch {
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -182,7 +201,7 @@ export const UserList = () => {
           value: item.id,
         });
       });
-      // console.log(tempData)
+
       setBoardListing(tempData);
     }
   };
@@ -200,7 +219,7 @@ export const UserList = () => {
     try {
       setLoading(true);
       const response = await deleteUser(userToDelete.id);
-      if (response.status) {
+      if (response.success) {
         setOpen(false);
         setUserToDelete({});
         fetchUserListing();
@@ -243,7 +262,14 @@ export const UserList = () => {
         forHome={true}
       />
       <div>
-        <div style={{ marginTop: "10px", marginBottom: "10px" , display:"flex" , justifyContent:"start" }}>
+        <div
+          style={{
+            marginTop: "10px",
+            marginBottom: "10px",
+            display: "flex",
+            justifyContent: "start",
+          }}
+        >
           <Button
             icon={
               <LeftOutlined

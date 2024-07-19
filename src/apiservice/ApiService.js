@@ -30,12 +30,11 @@ export const getBoardVisibilityData = (id) => {
   );
 };
 
-export const getBoardVisibilityDataWithEmail = (id , email) => {
+export const getBoardVisibilityDataWithEmail = (id, email) => {
   return Services.GET(
     `newonboardify/admin/getboardVisibilityMapping?board_id=${id}&email=${email}`
   );
 };
-
 
 export const setBoardVisibilityDataEndpoint = (data) => {
   return Services.POST("newonboardify/admin/boardVisibilityMapping", data);
@@ -65,35 +64,58 @@ export const getServiceRequestListing = () => {
   return Services.GET(`newonboardify/admin/serviceRequests`);
 };
 
-export const updateServiceRequest = ({id , data}) =>{
-  return Services.PUT(`newonboardify/admin/serviceRequests/${id}` , data)
-}
+export const updateServiceRequest = ({ id, data }) => {
+  return Services.PUT(`newonboardify/admin/serviceRequests/${id}`, data);
+};
 
-export const deleteServiceRequest = (id) =>{
-  return Services.DELETE(`newonboardify/admin/serviceRequests/${id}`)
-}
+export const deleteServiceRequest = (id) => {
+  return Services.DELETE(`newonboardify/admin/serviceRequests/${id}`);
+};
 
-export const getAllUsers = () =>{
+export const getAllUsers = () => {
   return Services.GET(`newonboardify/admin/getAllUsers`);
-}
+};
 
-export const getAllUsersWithBoardId = (id) =>{
+export const getAllUsersWithBoardId = (id) => {
   return Services.GET(`newonboardify/admin/getAllUsers/${id}`);
-}
+};
 
-export const getUserFormAndChart = () =>{
+export const getUserFormAndChart = () => {
   return Services.GET(`newonboardify/customer/getUserFormAndChart`);
+};
+
+export const getRequestTrackingData = () => {
+  return Services.POST(`newonboardify/customer/requestTracking`);
+};
+
+export const getBoardSettingDataCustomerByID = (id) => {
+  return Services.GET(
+    `newonboardify/customer/getboardVisibilityMapping?board_id=1393670128&email=userone@gmail.com`
+  );
+};
+
+export const getBoardSettingDataCustomerByIdAndEmail = (id, email) => {
+  return Services.GET(
+    `newonboardify/customer/getboardVisibilityMapping?board_id=${id}&email=${email}`
+  );
+};
+
+export const getSubItemDetails = (id) => {
+  return Services.GET(`newonboardify/customer/requestTrackingActivity/${id}`);
+};
+
+export const loginApi = (data) =>{
+  return Services.POST(`commom-login` , data);
 }
 
-export const getRequestTrackingData = () =>{
-  return Services.POST(`newonboardify/customer/requestTracking`)
+export const registerApi = (data) =>{
+  return Services.POST(`onboardify/newSignup` , data);
 }
 
-export const getBoardSettingDataCustomerByID = (id) =>{
-  return Services.GET(`newonboardify/customer/getboardVisibilityMapping?board_id=1393670128&email=userone@gmail.com`)
+export const forgotPasswordApi = (data) =>{
+  return Services.POST(`common-forgot` , data);
 }
 
-
-export const getBoardSettingDataCustomerByIdAndEmail = (id , email) =>{
-  return Services.GET(`newonboardify/customer/getboardVisibilityMapping?board_id=${id}&email=${email}`)
+export const getLoginUserDetails = (data) =>{
+  return Services.GET(`https://onboardify.tasc360.com/loginUserDetails/${data}`);
 }
