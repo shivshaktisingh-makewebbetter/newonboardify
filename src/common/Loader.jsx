@@ -1,13 +1,14 @@
-import { Onboard } from "../utils/icons"
-
-export const Loader = () =>{
-
-    return (
-<div id="loading-overlay">
-      <div className="spinner">
-        <Onboard />
+export const Loader = () => {
+  return (
+    <div className="loading-overlay full-loader d-flex align-items-center justify-content-center">
+      <div className="  spinner">
+        <img
+          height="90"
+          className="rotating-img"
+          src="https://onboardify.tasc360.com/asset/loader.png"
+          alt=""
+        />
       </div>
     </div>
-    )
-    
-}
+  );
+};

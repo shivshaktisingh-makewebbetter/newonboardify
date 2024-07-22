@@ -10,6 +10,7 @@ export const RequestComponent = ({
   filterOption,
   columnIdData,
   allColumns,
+  colorData,
 }) => {
   const settingData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -20,6 +21,12 @@ export const RequestComponent = ({
       "Hire an attitude, not just experience and qualification. Greg Savage.",
     header_bg: "#f7f7f7",
     head_title_color: "#497ed8",
+  };
+
+  const bgColorSet = {
+    STUCK: "#f4bab6",
+    COMPLETED: "#d5f9e2",
+    "IN PROGRESS": "#fcefbe",
   };
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -85,6 +92,8 @@ export const RequestComponent = ({
       }
     }
 
+    // console.log(value , tempData.labels_colors[index].color)
+
     return tempData.labels_colors[index].color;
   };
 
@@ -98,22 +107,46 @@ export const RequestComponent = ({
     navigate("details", { state: dataToPass });
   };
 
+  const getBgColor = (item) => {
+    let tempId = "";
+    allColumns.forEach((subItem) => {
+      if (subItem.title === "Overall Status") {
+        tempId = subItem.id;
+      }
+    });
+    let value;
+    item.column_values.forEach((subItem) => {
+      if (subItem.id === tempId) {
+        value = subItem.text;
+      }
+    });
+    let bgColor = "";
+
+    colorData.forEach((subItem) => {
+      for (const [status, tasks] of Object.entries(subItem)) {
+        if (tasks.includes(value.toLowerCase())) {
+          bgColor = bgColorSet[status];
+        }
+      }
+    });
+    if (bgColor === "") {
+      bgColor = "#8080803b";
+    }
+    return bgColor;
+  };
+
   return (
     <div>
       {data.map((item, index) => {
-        // const getKey = getStatusKey(item);
-        // const bgColor = getBgColor(getKey);
+        const bgColor = getBgColor(item);
         const statusText = getStatusText(item);
         const statusColor = getStatusColor(item);
-
-        // const createdDate = getCreatedDate(item.created_at);
-        // const categoryName = getCategoryName(item);
         const head = getHeadData(item);
         const mid = getMidData(item);
 
         return (
           <Card
-            style={{ background: "#fcefbe", marginBottom: "24px" }}
+            style={{ background: bgColor, marginBottom: "24px" }}
             key={index}
           >
             <Typography style={{ textAlign: "left" }}>
@@ -150,7 +183,7 @@ export const RequestComponent = ({
             >
               <Button
                 style={{
-                  background: settingData.button_bg,
+                  background: statusColor,
                   color: "#fff",
                   display: "flex",
                   alignItems: "center",

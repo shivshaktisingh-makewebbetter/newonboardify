@@ -6,7 +6,7 @@ export const Check = () => {
   const [chartCode, setChartCode] = useState("");
   const fetchChart = async () => {
     const response = await getUserFormAndChart();
-    console.log(response, "response");
+
     if (response.success) {
       const columns = JSON.parse(response.data.response?.columns);
       if (

@@ -88,9 +88,9 @@ export const getRequestTrackingData = () => {
   return Services.POST(`newonboardify/customer/requestTracking`);
 };
 
-export const getBoardSettingDataCustomerByID = (id) => {
+export const getBoardSettingDataCustomerByID = (id, email) => {
   return Services.GET(
-    `newonboardify/customer/getboardVisibilityMapping?board_id=1393670128&email=userone@gmail.com`
+    `newonboardify/customer/getboardVisibilityMapping?board_id=${id}&email=${email}`
   );
 };
 
@@ -104,18 +104,32 @@ export const getSubItemDetails = (id) => {
   return Services.GET(`newonboardify/customer/requestTrackingActivity/${id}`);
 };
 
-export const loginApi = (data) =>{
-  return Services.POST(`commom-login` , data);
-}
+export const loginApi = (data) => {
+  return Services.POST(`commom-login`, data);
+};
 
-export const registerApi = (data) =>{
-  return Services.POST(`onboardify/newSignup` , data);
-}
+export const registerApi = (data) => {
+  return Services.POST(`onboardify/newSignup`, data);
+};
 
-export const forgotPasswordApi = (data) =>{
-  return Services.POST(`common-forgot` , data);
-}
+export const forgotPasswordApi = (data) => {
+  return Services.POST(`common-forgot`, data);
+};
 
-export const getLoginUserDetails = (data) =>{
-  return Services.GET(`https://onboardify.tasc360.com/loginUserDetails/${data}`);
-}
+export const getLoginUserDetails = (data) => {
+  return Services.GET(
+    `https://onboardify.tasc360.com/loginUserDetails/${data}`
+  );
+};
+
+export const getColorMappingForUser = () => {
+  return Services.GET(`newonboardify/customer/getBoardColourMapping`);
+};
+
+export const geAllLikesUser = () => {
+  return Services.GET(`incorpify/listAllLikes`);
+};
+
+export const getCurrentUserDetails = (token) => {
+  return Services.GET(`http://127.0.0.1:8000/loginUserDetails/${token}`);
+};

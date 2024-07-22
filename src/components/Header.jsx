@@ -33,7 +33,7 @@ export const Header = () => {
   };
 
   const navigateToHome = () => {
-    navigate("/");
+    navigate("/user");
   };
 
   const handleSetNotification = () => {
@@ -118,7 +118,7 @@ export const Header = () => {
               </Typography>
               <div className="governify-header-buttons">
                 {role === "customer" ? (
-                  location.pathname === "/track-request" ? (
+                  location.pathname.includes('user') ? (
                     <Button
                       className="governify-secondary-btn border-radius-10"
                       style={{

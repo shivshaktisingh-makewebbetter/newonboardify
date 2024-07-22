@@ -2,6 +2,8 @@ import { Button } from "antd"
 import { useNavigate } from "react-router-dom";
 import { OverallStatusIcon, RequestOnboardIcon, TrackOnboardIcon } from "../utils/icons";
 import { SubHeader } from "../components/SubHeader";
+import { useEffect } from "react";
+import { getCurrentUserDetails } from "../apiservice/ApiService";
 
 
 export const UserHome = () =>{
@@ -50,6 +52,20 @@ const navigate = useNavigate();
 const handleAdminRoute = (title) =>{
     navigate(title);
 }
+
+const newHelper = async() =>{
+    const response = await getCurrentUserDetails(sessionStorage.getItem('token'))
+    console.log(response , 'response');
+    sessionStorage.setItem('userEmail' , 'userone@gmail.com');
+    sessionStorage.setItem('userName' , 'user');
+    sessionStorage.setItem('userId' , 34)
+}
+
+useEffect(()=>{
+   newHelper()
+} , [])
+
+
 
 
 

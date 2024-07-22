@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import { BreadcrumbComponent } from "./component/BreadCrumbComponent";
 
 import {
+  geAllLikesUser,
   getBoardSettingDataCustomerByID,
   getBoardSettingDataCustomerByIdAndEmail,
   getRequestTrackingData,
@@ -10,12 +11,14 @@ import {
 import { useEffect, useState } from "react";
 import { countries } from "../utils/assets";
 import { formatDate, formatDateNew } from "../utils/helper";
+import { UpdateComponent } from "./component/UpdateComponent";
 
 export const TrackDetails = () => {
   const [columnData, setColumnData] = useState({});
   const [allColumns, setAllColumns] = useState();
   const [itemDetails, setItemDetails] = useState({});
   const location = useLocation();
+  const [likeIds, setLikeIds] = useState([]);
   const { state } = location;
   const breadCrumbData = location.pathname.split("/");
 
@@ -32,18 +35,28 @@ export const TrackDetails = () => {
     }
     if (response.success) {
       setItemDetails(response.data.response.data);
-      // console.log(response.data.response.data, "itemDetails");
-      // console.log(
-      //   JSON.parse(response.data.response.data.boards[0].activity_logs[0].data),
-      //   "activity"
-      // );
-      response.data.response.data.boards[0].activity_logs.forEach((testI) => {
-        const tempD = JSON.parse(testI.data);
-        if (tempD.column_title === "Muqeem Generated") {
-          console.log(tempD);
-        }
-      });
+     
+      // response.data.response.data.boards[0].activity_logs.forEach((testI) => {
+      //   const tempD = JSON.parse(testI.data);
+      //   if (tempD.column_title === "Muqeem Generated") {
+      //     console.log(tempD);
+      //   }
+      // });
     }
+  };
+
+  const getAllLikes = async () => {
+    let ids = [];
+    let likes = await geAllLikesUser();
+    if (likes.success) {
+      likes.data.map((item) => {
+        ids.push(item.item_type_id);
+      });
+    } else {
+      ids = [];
+    }
+
+    setLikeIds(ids);
   };
 
   const getCountryCode = (item) => {
@@ -114,14 +127,11 @@ export const TrackDetails = () => {
     return tempColor;
   };
 
-
-
   const getInitialDate = () => {
     return formatDateNew(itemDetails.items[0].created_at);
   };
 
   const getUpdatedDate = (item) => {
-
     let updatedDate = "";
     const activityLogs = itemDetails.boards[0].activity_logs;
 
@@ -132,17 +142,21 @@ export const TrackDetails = () => {
       if (item.id === tempData.column_id) {
         // console.log(tempData)
         if (tempData.hasOwnProperty("value") && tempData.value !== null) {
-          updatedDate = formatDateNew(new Date(subItem.created_at/10000));
+          updatedDate = formatDateNew(new Date(subItem.created_at / 10000));
         }
         break;
       }
     }
-  console.log(updatedDate)
+    // console.log(updatedDate);
     return updatedDate;
   };
 
   useEffect(() => {
     fetchSubItemsDetails();
+  }, []);
+
+  useEffect(() => {
+    getAllLikes();
   }, []);
 
   return (
@@ -384,6 +398,12 @@ export const TrackDetails = () => {
                 for July 31st. He is currently still in the country and will be
                 continuing his work visa process in the United Arab Emirates.
               </p>
+              <UpdateComponent
+                id={state.id}
+                likeIds={likeIds}
+                getAllLikes={getAllLikes}
+                description={''}
+              />
             </div>
           </div>
         )}
