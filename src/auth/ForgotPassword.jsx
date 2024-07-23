@@ -20,7 +20,7 @@ export const ForgotPassword = () => {
   
     let payload = JSON.stringify({
       email: email,
-      domain: window.location.origin,
+      domain: 'onboardify',
     });
     try {
       setLoading(true);

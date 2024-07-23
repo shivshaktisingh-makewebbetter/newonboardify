@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { CopyText } from "./components/CopyText";
 import { DeleteModal } from "./components/DeleteModal";
 import { Loader } from "../common/Loader";
+import { ToastContainer } from "react-toastify";
 
 export const UserList = () => {
   const navigate = useNavigate();
@@ -67,8 +68,8 @@ export const UserList = () => {
     {
       title: "#",
       dataIndex: "id",
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortDirections: ["descend"],
+      // sorter: (a, b) => a.name.length - b.name.length,
+      // sortDirections: ["descend"],
     },
     {
       title: "Name",
@@ -319,6 +320,7 @@ export const UserList = () => {
           handleDelete={handleDelete}
         />
       )}
+         <ToastContainer position="bottom-right" />
     </div>
   );
 };

@@ -113,7 +113,7 @@ export const registerApi = (data) => {
 };
 
 export const forgotPasswordApi = (data) => {
-  return Services.POST(`common-forgot`, data);
+  return Services.POST(`commom-forgot`, data);
 };
 
 export const getLoginUserDetails = (data) => {

@@ -237,7 +237,7 @@ export const Track = () => {
     setLoading(true);
     try {
       const response = await getRequestTrackingData();
-  
+
       const response1 = await getBoardSettingDataCustomerByID(
         response.data.response.data.boards[0].id,
         sessionStorage.getItem("userEmail")

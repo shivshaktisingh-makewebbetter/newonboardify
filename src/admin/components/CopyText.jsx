@@ -1,5 +1,6 @@
 import React from "react";
 import { CopyIcon } from "../../utils/icons";
+import { toast } from "react-toastify";
 
 export const CopyText = ({ email }) => {
   const handleTextClick = async () => {
@@ -7,6 +8,8 @@ export const CopyText = ({ email }) => {
       await navigator.clipboard.writeText(email);
     } catch (err) {
       console.error("Failed to copy text: ", err);
+    }finally{
+      toast.success('Email Copied');
     }
   };
 

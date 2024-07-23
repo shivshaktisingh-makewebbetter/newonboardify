@@ -36,7 +36,7 @@ export const DeleteModal = ({open ,handleCancel , handleDelete}) => {
       )}
       onCancel={handleCancel}
     >
-      <Typography>Are you sure you want to delete this Form?</Typography>
+      <Typography>Are you sure you want to delete this User?</Typography>
     </Modal>
   );
 };
