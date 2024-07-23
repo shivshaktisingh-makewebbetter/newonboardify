@@ -30,7 +30,7 @@ export const TrackDetails = () => {
       sessionStorage.getItem("userEmail")
     );
     const response2 = await getRequestTrackingData();
-    console.log(response1);
+
 
     if (response1.success) {
       setColumnData(JSON.parse(response1.data.response[0].columns));
