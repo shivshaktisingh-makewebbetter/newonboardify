@@ -245,7 +245,7 @@ export const UserList = () => {
     const tempSearchData = [];
     if (searchData.length > 0) {
       cloneData.forEach((item) => {
-        if (item.name.toLowerCase().includes(searchData.toLowerCase())) {
+        if (item.name.toLowerCase().includes(searchData.toLowerCase()) || item.email.toLowerCase().includes(searchData.toLowerCase())) {
           tempSearchData.push(item);
         }
       });
