@@ -45,7 +45,8 @@ export const AdminHome = () => {
     },
   ];
 
-  const filteredData = role === 'superAdmin' ? data : data.filter(item => item.title !== "Change Role");
+
+  const filteredData = role === 'superAdmin' ? data : data.filter(item => item.title !== "Create User");
 
   const navigate = useNavigate();
 
