@@ -7,7 +7,7 @@ export const ProtectedRoute = ({ element, allowedRoles }) => {
   const role = getRole();
   const navigate = useNavigate()
 
-console.log(role , 'role')
+// console.log(role , 'role')
 //  if (!role) {
 //   alert(1)
 //   // If user is not logged in, redirect to the login page

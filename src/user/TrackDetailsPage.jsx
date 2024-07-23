@@ -22,24 +22,39 @@ export const TrackDetails = () => {
   const [likeIds, setLikeIds] = useState([]);
   const [loading, setLoading] = useState(false);
   const { state } = location;
+  const [subHeadingString, setSubHeadingString] = useState("");
   const breadCrumbData = location.pathname.split("/");
 
   const fetchSubItemsDetails = async () => {
     setLoading(true);
 
     try {
-      const response4 = await getRequestTrackingData();
+      const response2 = await getRequestTrackingData();
       const response = await getSubItemDetails(state.id);
       const response1 = await getBoardSettingDataCustomerByID(
-        response4.data.response.data.boards[0].id,
+        response2.data.response.data.boards[0].id
       );
-      const response2 = await getRequestTrackingData();
 
       if (response1.success) {
         setColumnData(JSON.parse(response1.data.response[0].columns));
+     
       }
       if (response2.success) {
+        let tempText = '';
         setAllColumns(response2.data.response.data.boards[0].columns);
+ 
+        state.subHeadingColumn.forEach((item, index) => {
+          response.data.response.data.items[0].column_values.forEach((subItem) => {
+            if (subItem.id === item.id) {
+              tempText = tempText + subItem.text;
+              if (index < state.subHeadingColumn.length - 1) {
+                tempText = tempText + ' | ';
+              }
+            }
+          });
+        });
+        setSubHeadingString(tempText);
+        
       }
       if (response.success) {
         setItemDetails(response.data.response.data);
@@ -101,7 +116,6 @@ export const TrackDetails = () => {
       const tempData = JSON.parse(subItem.data);
 
       if (item.id === tempData.column_id) {
-        // console.log(tempData)
         if (tempData.hasOwnProperty("value") && tempData.value !== null) {
           tempInitialAction = tempData.value.label.text;
         }
@@ -122,13 +136,11 @@ export const TrackDetails = () => {
 
       if (item.id === tempData.column_id) {
         if (tempData.hasOwnProperty("value") && tempData.value !== null) {
-          // console.log(tempData.label)
           tempColor = tempData.value.label.style.color;
         }
         break;
       }
     }
-    // console.log(tempColor , 'tempo')
     return tempColor;
   };
 
@@ -145,16 +157,17 @@ export const TrackDetails = () => {
       const tempData = JSON.parse(subItem.data);
 
       if (item.id === tempData.column_id) {
-        // console.log(tempData)
         if (tempData.hasOwnProperty("value") && tempData.value !== null) {
           updatedDate = formatDateNew(new Date(subItem.created_at / 10000));
         }
         break;
       }
     }
-    // console.log(updatedDate);
+
     return updatedDate;
   };
+
+
 
   useEffect(() => {
     fetchSubItemsDetails();
@@ -181,7 +194,10 @@ export const TrackDetails = () => {
             className="d-flex mb-2 onboardin-padding-24"
             style={{ gap: "16px" }}
           >
-            <div className="rounded-circle bg-warning p-4 onboarding-rounded-circle">
+            <div
+              className="rounded-circle p-4 onboarding-rounded-circle"
+              style={{ background: state.color }}
+            >
               <div
                 className="icon-size text-light"
                 style={{ height: "50px", width: "50px" }}
@@ -245,10 +261,14 @@ export const TrackDetails = () => {
                   color: "#928f8f",
                 }}
               >
-                Expat Outside KSA | ARFF Training Officer | United States
+             
+                {!loading && subHeadingString}
               </p>
-              <h6 className="fs-17 status m-0 text-start text-warning fw-bold">
-                IN PROGRESS
+              <h6
+                className="fs-17 status m-0 text-start fw-bold"
+                style={{ color: state.color }}
+              >
+                {state.status}
               </h6>
             </div>
           </div>

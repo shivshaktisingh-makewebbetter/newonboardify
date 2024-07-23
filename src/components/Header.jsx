@@ -107,7 +107,7 @@ export const Header = () => {
                 className="text-decoration-none"
               >
                 <span className="header-logo float-md-start">
-                  <img height="80" alt="TASC logo" src={data.image} />
+                  <img height="80" alt="TASC logo" src={sessionStorage.getItem('logo_location')} />
                 </span>
               </a>
             </div>

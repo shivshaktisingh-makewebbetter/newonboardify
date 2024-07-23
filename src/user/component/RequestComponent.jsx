@@ -103,6 +103,7 @@ export const RequestComponent = ({
       name: name,
       status: statusText,
       color: statusColor,
+      subHeadingColumn:columnIdData.sub_headings_column
     }; // Replace with your data
     navigate("details", { state: dataToPass });
   };

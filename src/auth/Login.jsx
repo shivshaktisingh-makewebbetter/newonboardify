@@ -27,10 +27,12 @@ export const Login = () => {
         toast.success("Logged In Successfull.");
         sessionStorage.setItem("token", response.data.token);
         const response2 = await getCustomerGeneralSettings(response.data.role);
-        // const response1 = await getLoginUserDetails(response.data.token);
+        const response1 = await getLoginUserDetails(response.data.token);
+        // console.log(response1)
         if(response2.success){
-          console.log(response2)
-          sessionStorage.setItem('settings' , response2.data.response.ui_settings)
+          // console.log(response2)
+          sessionStorage.setItem('settings' , response2.data.response.ui_settings);
+          sessionStorage.setItem('logo_location' , response2.data.response.logo_location);
         }
       
         sessionStorage.setItem("role", response.data.role);
