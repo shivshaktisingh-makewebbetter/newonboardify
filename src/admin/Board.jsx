@@ -822,19 +822,24 @@ export const Board = () => {
                     </div>
                   );
                 })}
-                <Button
+                 <div style={{ marginTop: "10px" }}>
+                 <Button
                   style={{
-                    width: "100%",
+                    width: "94%",
                     background: settingData.button_bg,
                     color: "white",
                     position: "absolute",
-                    bottom: "0px",
-                    left: "0",
+                   
+                    bottom: "10px",
+                    left: "20px",
+                    
                   }}
                   onClick={handleColorSubmit}
                 >
                   Submit
                 </Button>
+                    </div>
+                
               </Card>
             </Col>
           )}
