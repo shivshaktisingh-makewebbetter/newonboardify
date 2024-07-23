@@ -25,7 +25,7 @@ export const Board = () => {
   const [selectedBoardId, setSelectedBoardId] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
   const [emailKey, setEmailKey] = useState("");
-  const [imageKey , setImageKey] = useState("");
+  const [imageKey, setImageKey] = useState("");
   const [colorMappingData, setColorMappingData] = useState([]);
   const [boardVisiblityData, setBoardVisibilityData] = useState();
   const [flterUserSpecific, setFilterUserSpecific] = useState({
@@ -270,16 +270,26 @@ export const Board = () => {
   const handleChangeCandidateColumns = (e) => {
     const tempData = { ...boardVisiblityData };
     const selectedData = [];
+
     options.forEach((item) => {
       if (e.includes(item.value)) {
-        selectedData.push({
-          id: item.value,
-          name: item.label,
-          icon: "",
-          custom_title: "",
-        });
+        const existingItem = tempData.candidate_coulmns.find(
+          (column) => column.id === item.value
+        );
+
+        if (existingItem !== undefined) {
+          selectedData.push(existingItem);
+        } else {
+          selectedData.push({
+            id: item.value,
+            name: item.label,
+            icon: "",
+            custom_title: "",
+          });
+        }
       }
     });
+
     tempData.candidate_coulmns = selectedData;
     setBoardVisibilityData(tempData);
   };
@@ -341,12 +351,12 @@ export const Board = () => {
     setBoardVisibilityData(tempData);
   };
 
-  const handleChangeDocumentColumn = (e) =>{
+  const handleChangeDocumentColumn = (e) => {
     const tempData = { ...boardVisiblityData };
     tempData.image_key = e;
     setImageKey(e);
     setBoardVisibilityData(tempData);
-  }
+  };
 
   const filterOption = (input, option) => {
     return (
@@ -390,7 +400,7 @@ export const Board = () => {
       </div>
       <div>
         <Row gutter={16}>
-          <Col span={role==='superAdmin' ? 12 :24}>
+          <Col span={role === "superAdmin" ? 12 : 24}>
             <Card
               title="Manage Board Settings"
               bordered={true}
@@ -822,24 +832,22 @@ export const Board = () => {
                     </div>
                   );
                 })}
-                 <div style={{ marginTop: "10px" }}>
-                 <Button
-                  style={{
-                    width: "94%",
-                    background: settingData.button_bg,
-                    color: "white",
-                    position: "absolute",
-                   
-                    bottom: "10px",
-                    left: "20px",
-                    
-                  }}
-                  onClick={handleColorSubmit}
-                >
-                  Submit
-                </Button>
-                    </div>
-                
+                <div style={{ marginTop: "10px" }}>
+                  <Button
+                    style={{
+                      width: "94%",
+                      background: settingData.button_bg,
+                      color: "white",
+                      position: "absolute",
+
+                      bottom: "10px",
+                      left: "20px",
+                    }}
+                    onClick={handleColorSubmit}
+                  >
+                    Submit
+                  </Button>
+                </div>
               </Card>
             </Col>
           )}
