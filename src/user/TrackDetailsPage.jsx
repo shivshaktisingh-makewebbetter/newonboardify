@@ -23,9 +23,14 @@ export const TrackDetails = () => {
   const breadCrumbData = location.pathname.split("/");
 
   const fetchSubItemsDetails = async () => {
+    const response4 = await getRequestTrackingData();
     const response = await getSubItemDetails(state.id);
-    const response1 = await getBoardSettingDataCustomerByID();
+    const response1 = await getBoardSettingDataCustomerByID(
+      response4.data.response.data.boards[0].id,
+      sessionStorage.getItem("userEmail")
+    );
     const response2 = await getRequestTrackingData();
+    console.log(response1);
 
     if (response1.success) {
       setColumnData(JSON.parse(response1.data.response[0].columns));
@@ -35,7 +40,7 @@ export const TrackDetails = () => {
     }
     if (response.success) {
       setItemDetails(response.data.response.data);
-     
+
       // response.data.response.data.boards[0].activity_logs.forEach((testI) => {
       //   const tempD = JSON.parse(testI.data);
       //   if (tempD.column_title === "Muqeem Generated") {
@@ -402,7 +407,7 @@ export const TrackDetails = () => {
                 id={state.id}
                 likeIds={likeIds}
                 getAllLikes={getAllLikes}
-                description={''}
+                description={""}
               />
             </div>
           </div>

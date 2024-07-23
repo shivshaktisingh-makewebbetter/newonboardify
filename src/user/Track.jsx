@@ -237,11 +237,14 @@ export const Track = () => {
     setLoading(true);
     try {
       const response = await getRequestTrackingData();
-      const response1 = await getBoardSettingDataCustomerByID(response.data.response.data.boards[0].id , sessionStorage.getItem('userEmail'));
+  
+      const response1 = await getBoardSettingDataCustomerByID(
+        response.data.response.data.boards[0].id,
+        sessionStorage.getItem("userEmail")
+      );
       const response2 = await getColorMappingForUser();
 
       if (response.success) {
-      
         dispatch(
           setTrackBoardData(
             response.data.response.data.boards[0].items_page.items
@@ -314,7 +317,7 @@ export const Track = () => {
       <BreadcrumbComponent data={breadCrumbData} />
       <SearchBox
         placeHolder={"Search By name or profession"}
-        searchData={searchData}
+        setSearchData={setSearchData}
       />
       <div
         style={{
