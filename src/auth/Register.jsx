@@ -58,9 +58,9 @@ export const Register = () => {
     try {
       setLoading(true);
       const response = await registerApi(payload);
-      console.log(response)
+      console.log(response.success , 'response')
       if (response.success) {
-        toast.success(response.message);
+        toast.success('Just verify your email address to confirm that you want to use this email');
       } else {
         toast.error(response.message);
       }
