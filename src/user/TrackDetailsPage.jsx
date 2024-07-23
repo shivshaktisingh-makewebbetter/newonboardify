@@ -4,7 +4,6 @@ import { BreadcrumbComponent } from "./component/BreadCrumbComponent";
 import {
   geAllLikesUser,
   getBoardSettingDataCustomerByID,
-  getBoardSettingDataCustomerByIdAndEmail,
   getRequestTrackingData,
   getSubItemDetails,
 } from "../apiservice/ApiService";

@@ -185,23 +185,7 @@ export const Settings = () => {
 
           <div className="row g-3">
             <div className="col-sm-6">
-              <div className="col-sm-12 mb-5">
-                <label className="form-label">
-                  Background-color<i className="bi bi-pen"></i>
-                </label>
-                <br />
-                <input
-                  type="color"
-                  className="w-100"
-                  name="site_bg"
-                  id="site_bg"
-                  value={uiData.site_bg}
-                  required
-                  onChange={handleChangeBg}
-                />
-
-                <small className="text-danger text-start ms-2"></small>
-              </div>
+             
               <div className="col-sm-12">
                 <label className="form-label">
                   Button background-color&nbsp;<i className="bi bi-pen"></i>
