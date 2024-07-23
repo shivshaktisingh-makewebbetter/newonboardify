@@ -16,7 +16,7 @@ const VerifyUser = () => {
     });
     try {
       let res = await commonVerifyUser(payload);
-      if(res.status) {
+      if(res.success) {
         setTimeout(() => {
             navigate('/');
         }, 2000)
