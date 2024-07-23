@@ -94,8 +94,28 @@ export const Track = () => {
   ];
 
   const filterDataBySearchString = (data, searchString) => {
-    console.log(allColumns , columnIdData)
-    return data.filter((item) => item.name.includes(searchString));
+    
+    let tempArray = [];
+    originalArray.forEach((item) => {
+      item.column_values.forEach((subItem) => {
+        if (
+          subItem.id === columnIdData.required_columns.profession && subItem.text.includes(searchString)
+        ) {
+          tempArray.push(item);
+        }
+      });
+    });
+
+    originalArray.forEach((item) => {
+      item.column_values.forEach((subItem) => {
+        if (
+          subItem.id === columnIdData.required_columns.overall_status && subItem.text.includes(searchString)
+        ) {
+          tempArray.push(item);
+        }
+      });
+    });
+    return tempArray;
   };
 
   const handleFilter = (data, filter) => {
@@ -240,10 +260,9 @@ export const Track = () => {
       const response = await getRequestTrackingData();
 
       const response1 = await getBoardSettingDataCustomerByID(
-        response.data.response.data.boards[0].id,
+        response.data.response.data.boards[0].id
       );
 
-      console.log(response1 ,'res')
       const response2 = await getColorMappingForUser();
 
       if (response.success) {
