@@ -283,7 +283,7 @@ export const Board = () => {
 
   const handleChangeIcon = (e, item) => {
     const tempData = { ...boardVisiblityData };
-    tempData.candidate_columns.forEach((subItem) => {
+    tempData.candidate_coulmns.forEach((subItem) => {
       if (subItem.id === item.id) {
         subItem.icon = e.target.value;
       }
