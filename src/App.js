@@ -1,12 +1,11 @@
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import React, { useEffect } from "react";
+import React from "react";
 import { ConfigProvider } from "antd";
 import "react-quill/dist/quill.snow.css";
 import "react-toastify/dist/ReactToastify.css";
 import { Login } from "./auth/Login";
 import { ForgotPassword } from "./auth/ForgotPassword";
-import { CreatePassword } from "./auth/CreatePassword";
 import { UserHome } from "./user/UserHome";
 import { Track } from "./user/Track";
 import { Check } from "./user/Check";
@@ -16,7 +15,7 @@ import { Board } from "./admin/Board";
 import { CreateAdmin } from "./admin/CreateAdmin";
 import { Settings } from "./admin/Settings";
 import { ProtectedRoute } from "./routeWrapper/ProtectedRoute";
-import { ErrorPage } from "./error/ErrorPage";
+
 import { Register } from "./auth/Register";
 import { Layout } from "./layout/Layout";
 import { UserList } from "./admin/UserList";
@@ -25,20 +24,17 @@ import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import ResetPassword from "./auth/ResetPassword";
 import VerifyUser from "./auth/VerifyUser";
+import ErrorBoundary from "./error/ErrorBoundary";
+import ErrorPage from "./common/ErrorPage";
+
 
 function App() {
-  // useEffect(() => {
-  //   sessionStorage.setItem(
-  //     "token",
-  //     "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvY29tbW9tLWxvZ2luIiwiaWF0IjoxNzIxMzkwMDU1LCJleHAiOjE3MjE2NDkyNTUsIm5iZiI6MTcyMTM5MDA1NSwianRpIjoiY2NYa1lZQzZab2pJUVRyYSIsInN1YiI6IjEzIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.Tftfw_9Mca_2C_ctCR6spHFCg2oc_b32EiXyA7-1D9k"
-  //   );
-  // }, []);
   const router = createBrowserRouter([
-    { path: "", element: <Login /> },
-    { path: "register", element: <Register /> },
-    { path: "forgot", element: <ForgotPassword /> },
-    { path: "reset-password", element: <ResetPassword /> },
-    { path: "onboardify/verify", element: <VerifyUser /> },
+    { path: "", element: <ErrorBoundary><Login /></ErrorBoundary> },
+    { path: "register", element: <ErrorBoundary><Register /></ErrorBoundary> },
+    { path: "forgot", element: <ErrorBoundary><ForgotPassword /></ErrorBoundary> },
+    { path: "reset-password", element: <ErrorBoundary><ResetPassword /></ErrorBoundary> },
+    { path: "onboardify/verify", element: <ErrorBoundary><VerifyUser /></ErrorBoundary> },
     {
       path: "user",
       element: <Layout />,
@@ -46,34 +42,31 @@ function App() {
         {
           path: "",
           element: (
-            <ProtectedRoute element={<UserHome />} allowedRoles={["user"]} />
+            <ProtectedRoute element={<ErrorBoundary><UserHome /></ErrorBoundary>} allowedRoles={["user"]} />
           ),
         },
         {
           path: "track",
           element: (
-            <ProtectedRoute element={<Track />} allowedRoles={["user"]} />
+            <ProtectedRoute element={<ErrorBoundary><Track /></ErrorBoundary>} allowedRoles={["user"]} />
           ),
         },
         {
           path: "track/details",
           element: (
-            <ProtectedRoute
-              element={<TrackDetails />}
-              allowedRoles={["user"]}
-            />
+            <ProtectedRoute element={<ErrorBoundary><TrackDetails /></ErrorBoundary>} allowedRoles={["user"]} />
           ),
         },
         {
           path: "check",
           element: (
-            <ProtectedRoute element={<Check />} allowedRoles={["user"]} />
+            <ProtectedRoute element={<ErrorBoundary><Check /></ErrorBoundary>} allowedRoles={["user"]} />
           ),
         },
         {
           path: "request",
           element: (
-            <ProtectedRoute element={<Request />} allowedRoles={["user"]} />
+            <ProtectedRoute element={<ErrorBoundary><Request /></ErrorBoundary>} allowedRoles={["user"]} />
           ),
         },
       ],
@@ -84,25 +77,23 @@ function App() {
       children: [
         {
           path: "",
-          element: <ProtectedRoute element={<AdminHome />} roles={["admin"]} />,
+          element: <ProtectedRoute element={<ErrorBoundary><AdminHome /></ErrorBoundary>} roles={["admin"]} />,
         },
         {
           path: "board",
-          element: <ProtectedRoute element={<Board />} roles={["admin"]} />,
+          element: <ProtectedRoute element={<ErrorBoundary><Board /></ErrorBoundary>} roles={["admin"]} />,
         },
         {
           path: "createAdmin",
-          element: (
-            <ProtectedRoute element={<CreateAdmin />} roles={["admin"]} />
-          ),
+          element: <ProtectedRoute element={<ErrorBoundary><CreateAdmin /></ErrorBoundary>} roles={["admin"]} />,
         },
         {
           path: "settings",
-          element: <ProtectedRoute element={<Settings />} roles={["admin"]} />,
+          element: <ProtectedRoute element={<ErrorBoundary><Settings /></ErrorBoundary>} roles={["admin"]} />,
         },
         {
           path: "userList",
-          element: <ProtectedRoute element={<UserList />} roles={["admin"]} />,
+          element: <ProtectedRoute element={<ErrorBoundary><UserList /></ErrorBoundary>} roles={["admin"]} />,
         },
       ],
     },
@@ -123,8 +114,8 @@ function App() {
         },
       }}
     >
-      <Provider  store={store}>
-      <RouterProvider router={router} />
+      <Provider store={store}>
+        <RouterProvider router={router} />
       </Provider>
     </ConfigProvider>
   );
