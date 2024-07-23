@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetcher } from "../../utils/helper";
+
 import { ToastContainer, toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Loader } from "../common/Loader";
