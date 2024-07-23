@@ -183,7 +183,7 @@ export const countries = [
     { countryname: "Ukraine", countrycode: "UA" },
     { countryname: "United Arab Emirates", countrycode: "AE" },
     { countryname: "United Kingdom", countrycode: "GB" },
-    { countryname: "United States of America", countrycode: "US" },
+    { countryname: "United States", countrycode: "US" },
     { countryname: "Uruguay", countrycode: "UY" },
     { countryname: "Uzbekistan", countrycode: "UZ" },
     { countryname: "Vanuatu", countrycode: "VU" },
