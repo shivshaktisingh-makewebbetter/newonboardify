@@ -23,6 +23,7 @@ import { UserList } from "./admin/UserList";
 import { TrackDetails } from "./user/TrackDetailsPage";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import ResetPassword from "./auth/ResetPassword";
 
 function App() {
   // useEffect(() => {
@@ -35,7 +36,7 @@ function App() {
     { path: "", element: <Login /> },
     { path: "register", element: <Register /> },
     { path: "forgot", element: <ForgotPassword /> },
-    { path: "create", element: <CreatePassword /> },
+    { path: "reset-password", element: <ResetPassword /> },
     {
       path: "user",
       element: <Layout />,

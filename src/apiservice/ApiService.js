@@ -133,3 +133,7 @@ export const geAllLikesUser = () => {
 export const getCurrentUserDetails = (token) => {
   return Services.GET(`http://127.0.0.1:8000/loginUserDetails/${token}`);
 };
+
+export const updateNewPassword = (data) =>{
+  return Services.POST(`common/updateNewPassword` , data);
+}
