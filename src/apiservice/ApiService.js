@@ -141,3 +141,7 @@ export const updateNewPassword = (data) =>{
 export const getCustomerGeneralSettings = () =>{
   return Services.GET(`newonboardify/customer/getGeneralSettings`);
 }
+
+export const commonVerifyUser = (data) =>{
+  return Services.POST(`common/verifyUser` , data);
+}

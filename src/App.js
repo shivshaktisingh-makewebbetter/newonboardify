@@ -24,6 +24,7 @@ import { TrackDetails } from "./user/TrackDetailsPage";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import ResetPassword from "./auth/ResetPassword";
+import VerifyUser from "./auth/VerifyUser";
 
 function App() {
   // useEffect(() => {
@@ -37,6 +38,7 @@ function App() {
     { path: "register", element: <Register /> },
     { path: "forgot", element: <ForgotPassword /> },
     { path: "reset-password", element: <ResetPassword /> },
+    { path: "onboardify/verify", element: <VerifyUser /> },
     {
       path: "user",
       element: <Layout />,
