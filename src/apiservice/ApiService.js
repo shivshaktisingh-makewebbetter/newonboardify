@@ -117,9 +117,7 @@ export const forgotPasswordApi = (data) => {
 };
 
 export const getLoginUserDetails = (data) => {
-  return Services.GET(
-    `https://onboardify.tasc360.com/loginUserDetails/${data}`
-  );
+  return Services.GET(`loginUserDetails/${data}`);
 };
 
 export const getColorMappingForUser = () => {
@@ -130,18 +128,15 @@ export const geAllLikesUser = () => {
   return Services.GET(`incorpify/listAllLikes`);
 };
 
-export const getCurrentUserDetails = (token) => {
-  return Services.GET(`http://127.0.0.1:8000/loginUserDetails/${token}`);
+export const updateNewPassword = (data) => {
+  return Services.POST(`common/updateNewPassword`, data);
 };
 
-export const updateNewPassword = (data) =>{
-  return Services.POST(`common/updateNewPassword` , data);
-}
+export const getCustomerGeneralSettings = (data) => {
+  const role = data === "superAdmin" || data === "admin" ? "admin" : "customer";
+  return Services.GET(`newonboardify/${role}/getGeneralSettings`);
+};
 
-export const getCustomerGeneralSettings = () =>{
-  return Services.GET(`newonboardify/customer/getGeneralSettings`);
-}
-
-export const commonVerifyUser = (data) =>{
-  return Services.POST(`common/verifyUser` , data);
-}
+export const commonVerifyUser = (data) => {
+  return Services.POST(`common/verifyUser`, data);
+};

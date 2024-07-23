@@ -4,7 +4,7 @@ import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../common/Loader";
 import { fetcher } from "../utils/helper";
-import { getLoginUserDetails, loginApi } from "../apiservice/ApiService";
+import { getCustomerGeneralSettings, getGeneralSettingsData, getLoginUserDetails, loginApi } from "../apiservice/ApiService";
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -20,18 +20,19 @@ export const Login = () => {
       domain: window.location.origin,
     });
 
-  
-
     try {
       setLoading(true);
       const response = await loginApi(payload);
-      console.log(response)
       if (response.success) {
-        const response1 = getLoginUserDetails(response.data.token);
-        console.log(response1 , 'sdf')
-    
         toast.success("Logged In Successfull.");
         sessionStorage.setItem("token", response.data.token);
+        const response2 = await getCustomerGeneralSettings(response.data.role);
+        // const response1 = await getLoginUserDetails(response.data.token);
+        if(response2.success){
+          console.log(response2)
+          sessionStorage.setItem('settings' , response2.data.response.ui_settings)
+        }
+      
         sessionStorage.setItem("role", response.data.role);
         if (response.data.role === "customer") {
           setTimeout(() => {
@@ -45,7 +46,7 @@ export const Login = () => {
       }
     } catch (err) {
       console.log(err, "error");
-      toast.error("Login Failed.");
+  
     } finally {
       setLoading(false);
     }
