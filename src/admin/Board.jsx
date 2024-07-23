@@ -25,6 +25,7 @@ export const Board = () => {
   const [selectedBoardId, setSelectedBoardId] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
   const [emailKey, setEmailKey] = useState("");
+  const [imageKey , setImageKey] = useState("");
   const [colorMappingData, setColorMappingData] = useState([]);
   const [boardVisiblityData, setBoardVisibilityData] = useState();
   const [flterUserSpecific, setFilterUserSpecific] = useState({
@@ -107,8 +108,10 @@ export const Board = () => {
     if (response.success && response.data.response.length > 0) {
       let tempData = JSON.parse(response.data.response[0].columns);
       let tempEmailKey = tempData?.email_key || "";
+      let tempImageKey = tempData?.image_key || "";
       setBoardVisibilityData(tempData);
       setEmailKey(tempEmailKey);
+      setImageKey(tempImageKey);
     }
     if (response1.success && response1.data.response.length > 0) {
       let optionData = [];
@@ -119,29 +122,29 @@ export const Board = () => {
     }
   };
 
-  const handleUserChange = async (e) => {
-    setFilterUserSpecific({ key: "", value: "" });
-    setSelectedUser(e);
-    const response = await getBoardVisibilityDataWithEmail(selectedBoardId, e);
+  // const handleUserChange = async (e) => {
+  //   setFilterUserSpecific({ key: "", value: "" });
+  //   setSelectedUser(e);
+  //   const response = await getBoardVisibilityDataWithEmail(selectedBoardId, e);
 
-    const response1 = await getCompleteDataForBoardVisibility(e);
+  //   const response1 = await getCompleteDataForBoardVisibility(e);
 
-    if (response.success && response.data.response.length > 0) {
-      setBoardVisibilityData(JSON.parse(response.data.response[0].columns));
-    }
+  //   if (response.success && response.data.response.length > 0) {
+  //     setBoardVisibilityData(JSON.parse(response.data.response[0].columns));
+  //   }
 
-    if (response1.success && response1.data.response.length > 0) {
-      let optionData = [];
-      response1.data.response.forEach((item) => {
-        optionData.push({ label: item.title, value: item.id });
-      });
-      setOptions(optionData);
-    }
-  };
+  //   if (response1.success && response1.data.response.length > 0) {
+  //     let optionData = [];
+  //     response1.data.response.forEach((item) => {
+  //       optionData.push({ label: item.title, value: item.id });
+  //     });
+  //     setOptions(optionData);
+  //   }
+  // };
 
-  const handleUserSpecifiFilter = (e) => {
-    setFilterUserSpecific({ key: e, value: "" });
-  };
+  // const handleUserSpecifiFilter = (e) => {
+  //   setFilterUserSpecific({ key: e, value: "" });
+  // };
 
   const fetchAllColorMapping = async () => {
     try {
@@ -220,9 +223,9 @@ export const Board = () => {
     setBoardVisibilityData(tempData);
   };
 
-  const handleChangeForUserFilterValue = (e) => {
-    setFilterUserSpecific({ ...flterUserSpecific, value: e.target.value });
-  };
+  // const handleChangeForUserFilterValue = (e) => {
+  //   setFilterUserSpecific({ ...flterUserSpecific, value: e.target.value });
+  // };
 
   const handleChangeChartEmbedCode = (e) => {
     const tempData = { ...boardVisiblityData };
@@ -337,6 +340,13 @@ export const Board = () => {
     setEmailKey(e);
     setBoardVisibilityData(tempData);
   };
+
+  const handleChangeDocumentColumn = (e) =>{
+    const tempData = { ...boardVisiblityData };
+    tempData.image_key = e;
+    setImageKey(e);
+    setBoardVisibilityData(tempData);
+  }
 
   const filterOption = (input, option) => {
     return (
@@ -729,6 +739,27 @@ export const Board = () => {
                         placeholder="Please select Email Column"
                         value={emailKey}
                         onChange={handleChangeEmailColumn}
+                        options={options}
+                      />
+                    </div>
+                    <div
+                      style={{
+                        marginTop: "10px",
+                        border: "1px solid #d9d9d9",
+                        padding: "10px",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      <p style={{ textAlign: "left" }}>
+                        Column For Document Upload
+                      </p>
+                      <Select
+                        style={{
+                          width: "100%",
+                        }}
+                        placeholder="Please select Document Column"
+                        value={imageKey}
+                        onChange={handleChangeDocumentColumn}
                         options={options}
                       />
                     </div>

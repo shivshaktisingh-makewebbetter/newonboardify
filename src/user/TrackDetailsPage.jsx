@@ -424,6 +424,7 @@ export const TrackDetails = () => {
                 likeIds={likeIds}
                 getAllLikes={getAllLikes}
                 description={""}
+                imageKey={columnData.image_key}
               />
             </div>
           </div>

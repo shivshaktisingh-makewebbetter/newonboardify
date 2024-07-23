@@ -34,7 +34,7 @@ import { toast } from "react-toastify";
 import UserTextEditor from "./UserTextEditor";
 import { Loader } from "../../common/Loader";
 
-export const UpdateComponent = ({ id, likeIds, getAllLikes, description }) => {
+export const UpdateComponent = ({ id, likeIds, getAllLikes, description  , imageKey}) => {
   const [data, setData] = useState("");
   const [showTextEditor, setShowTextEditor] = useState(false);
   const [updateValue, setUpdateValue] = useState("");
@@ -223,12 +223,13 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, description }) => {
           formData.append("item_id", id);
           formData.append("file_name", files.name);
           formData.append("file", files);
+          formData.append("column_id", imageKey);
           //   formData.append("column_id", settingsData.selectedColumn.update);
           let token = sessionStorage.getItem("token");
           try {
             setLoading(true);
             const response = await axios.post(
-              "https://onboardify.tasc360.com/incorpify/uploadMondayFiles",
+              "http://127.0.0.1:8000/incorpify/uploadMondayFiles",
               formData,
               {
                 headers: {
