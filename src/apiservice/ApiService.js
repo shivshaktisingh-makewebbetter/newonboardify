@@ -137,3 +137,7 @@ export const getCurrentUserDetails = (token) => {
 export const updateNewPassword = (data) =>{
   return Services.POST(`common/updateNewPassword` , data);
 }
+
+export const getCustomerGeneralSettings = () =>{
+  return Services.GET(`newonboardify/customer/getGeneralSettings`);
+}

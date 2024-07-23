@@ -3,7 +3,6 @@ import { Loader } from "../common/Loader";
 import { Hero } from "../components/Hero";
 import {
   getAllBoards,
-  getAllUsers,
   getAllUsersWithBoardId,
   getBoardColorMapping,
   getBoardVisibilityData,
@@ -15,10 +14,11 @@ import {
 import { Button, Card, Col, Input, Row, Select } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { setUser } from "../utils/authUtils";
 import { toast, ToastContainer } from "react-toastify";
+import { getRole } from "../utils/helper";
 
 export const Board = () => {
+  const role = getRole();
   const [loading, setLoading] = useState(false);
   const [boardListing, setBoardListing] = useState([]);
   const [userListing, setUserListing] = useState([]);
@@ -76,24 +76,24 @@ export const Board = () => {
     }
   };
 
-  const fetchAllUsers = async (id) => {
-    try {
-      const response = await getAllUsersWithBoardId(id);
-      if (response.success) {
-        let tempData = [];
-        response.data.response.forEach((item) => {
-          tempData.push({
-            key: item.id,
-            label: item.name,
-            value: item.email,
-          });
-        });
-        setUserListing(tempData);
-      }
-    } catch (err) {
-    } finally {
-    }
-  };
+  // const fetchAllUsers = async (id) => {
+  //   try {
+  //     const response = await getAllUsersWithBoardId(id);
+  //     if (response.success) {
+  //       let tempData = [];
+  //       response.data.response.forEach((item) => {
+  //         tempData.push({
+  //           key: item.id,
+  //           label: item.name,
+  //           value: item.email,
+  //         });
+  //       });
+  //       setUserListing(tempData);
+  //     }
+  //   } catch (err) {
+  //   } finally {
+  //   }
+  // };
 
   const handleBoardChange = async (e) => {
     setSelectedBoardId(e);
@@ -102,7 +102,7 @@ export const Board = () => {
     const response = await getBoardVisibilityData(e);
 
     const response1 = await getCompleteDataForBoardVisibility(e);
-    await fetchAllUsers(e);
+    // await fetchAllUsers(e);
 
     if (response.success && response.data.response.length > 0) {
       let tempData = JSON.parse(response.data.response[0].columns);
@@ -380,7 +380,7 @@ export const Board = () => {
       </div>
       <div>
         <Row gutter={16}>
-          <Col span={12}>
+          <Col span={role==='superAdmin' ? 12 :24}>
             <Card
               title="Manage Board Settings"
               bordered={true}
@@ -705,7 +705,9 @@ export const Board = () => {
                           placeholder="Please select"
                           onChange={handleChangeRequiredColumnStatus}
                           options={options}
-                          value={boardVisiblityData.required_columns.overall_status}
+                          value={
+                            boardVisiblityData.required_columns.overall_status
+                          }
                         />
                       </div>
                     </div>
@@ -746,63 +748,65 @@ export const Board = () => {
                 )}
             </Card>
           </Col>
-          <Col span={12}>
-            <Card
-              title="Manage Status Background"
-              bordered={true}
-              className="primary-shadow"
-              style={{
-                minHeight: "494px",
-                position: "relative",
-                padingBottom: "30px",
-              }}
-            >
-              {colorMappingData.map((item, index) => {
-                return (
-                  <div key={index} style={{ paddingBottom: "20px" }}>
-                    {Object.keys(item).map((key) => {
-                      return (
-                        <div key={key}>
-                          <h5
-                            className="p-2 "
-                            style={{
-                              borderRadius: "20%",
-                              borderLeft: `10px solid ${colorObject[key]}`,
-                              textAlign: "left",
-                            }}
-                          >
-                            Color: {key}
-                          </h5>
-
-                          <textarea
-                            className="form-control"
-                            style={{ padding: "10px" }}
-                            value={formattedData(item[key])}
-                            onChange={(e) =>
-                              handleChangeColorMappingStatus(e, key)
-                            }
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })}
-              <Button
+          {role === "superAdmin" && (
+            <Col span={12}>
+              <Card
+                title="Manage Status Background"
+                bordered={true}
+                className="primary-shadow"
                 style={{
-                  width: "100%",
-                  background: settingData.button_bg,
-                  color: "white",
-                  position: "absolute",
-                  bottom: "0px",
-                  left: "0",
+                  minHeight: "494px",
+                  position: "relative",
+                  padingBottom: "30px",
                 }}
-                onClick={handleColorSubmit}
               >
-                Submit
-              </Button>
-            </Card>
-          </Col>
+                {colorMappingData.map((item, index) => {
+                  return (
+                    <div key={index} style={{ paddingBottom: "20px" }}>
+                      {Object.keys(item).map((key) => {
+                        return (
+                          <div key={key}>
+                            <h5
+                              className="p-2 "
+                              style={{
+                                borderRadius: "20%",
+                                borderLeft: `10px solid ${colorObject[key]}`,
+                                textAlign: "left",
+                              }}
+                            >
+                              Color: {key}
+                            </h5>
+
+                            <textarea
+                              className="form-control"
+                              style={{ padding: "10px" }}
+                              value={formattedData(item[key])}
+                              onChange={(e) =>
+                                handleChangeColorMappingStatus(e, key)
+                              }
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+                <Button
+                  style={{
+                    width: "100%",
+                    background: settingData.button_bg,
+                    color: "white",
+                    position: "absolute",
+                    bottom: "0px",
+                    left: "0",
+                  }}
+                  onClick={handleColorSubmit}
+                >
+                  Submit
+                </Button>
+              </Card>
+            </Col>
+          )}
         </Row>
       </div>
       <ToastContainer position="bottom-right" />

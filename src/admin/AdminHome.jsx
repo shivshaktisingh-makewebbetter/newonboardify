@@ -2,8 +2,11 @@ import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import { BoardSetting, ChangeRole } from "../utils/icons";
 import { UserOutlined } from "@ant-design/icons";
+import { getRole } from "../utils/helper";
 
 export const AdminHome = () => {
+  const role = getRole();
+
   const settingData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
     site_bg: "#ffffff",
@@ -40,8 +43,9 @@ export const AdminHome = () => {
       buttonText: "Manage Role",
       navigateKey: "createAdmin",
     },
-  
   ];
+
+  const filteredData = role === 'superAdmin' ? data : data.filter(item => item.title !== "Change Role");
 
   const navigate = useNavigate();
 
@@ -52,7 +56,7 @@ export const AdminHome = () => {
   return (
     <>
       <div className="governify-option-list" style={{ paddingTop: "100px" }}>
-        {data.map((item) => {
+        {filteredData.map((item) => {
           return (
             <div
               className="governify-option-list-repetitive"

@@ -60,7 +60,7 @@ export const CreateAdmin = () => {
     try {
       const response = await setUserOrAdmin(JSON.stringify(formData));
       if (response.success) {
-        toast.success("Updated Succesfully");
+        toast.success("Created Succesfully");
       } else {
         toast.error(response.message);
       }
