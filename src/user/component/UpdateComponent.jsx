@@ -42,15 +42,14 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, description }) => {
   const [replyValue, setReplyValue] = useState("");
 
   const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
-    image:
-    "https://onboardify.tasc360.com/uploads/y22.png",
-  site_bg: "#ffffff",
-  button_bg: "#497ed8",
-  banner_bg: "#497ed8",
-  banner_content:
-    "Hire an attitude, not just experience and qualification. Greg Savage.",
-  header_bg: "#f7f7f7",
-  head_title_color: "#497ed8",
+    image: "https://onboardify.tasc360.com/uploads/y22.png",
+    site_bg: "#ffffff",
+    button_bg: "#497ed8",
+    banner_bg: "#497ed8",
+    banner_content:
+      "Hire an attitude, not just experience and qualification. Greg Savage.",
+    header_bg: "#f7f7f7",
+    head_title_color: "#497ed8",
   };
 
   const unlikeComment = async (commentId) => {
@@ -224,7 +223,7 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, description }) => {
           formData.append("item_id", id);
           formData.append("file_name", files.name);
           formData.append("file", files);
-        //   formData.append("column_id", settingsData.selectedColumn.update);
+          //   formData.append("column_id", settingsData.selectedColumn.update);
           let token = sessionStorage.getItem("token");
           try {
             setLoading(true);
@@ -294,20 +293,6 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, description }) => {
               className="text-start inc-detail-container"
               style={{ borderRadius: "10px" }}
             >
-              <div
-                style={{
-                  color: "#6F7490",
-                  fontWeight: "bold",
-                  display: "flex",
-                  justifyContent: "start",
-                  fontSize: "23px",
-                  paddingTop: "10px",
-                  paddingBottom: "27px",
-                }}
-              >
-                {data.name}
-              </div>
-
               <div
                 className="d-flex flex-column border-bottom py-3 p-10"
                 style={{ gap: "20px" }}

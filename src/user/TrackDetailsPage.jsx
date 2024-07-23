@@ -36,24 +36,24 @@ export const TrackDetails = () => {
 
       if (response1.success) {
         setColumnData(JSON.parse(response1.data.response[0].columns));
-     
       }
       if (response2.success) {
-        let tempText = '';
+        let tempText = "";
         setAllColumns(response2.data.response.data.boards[0].columns);
- 
+
         state.subHeadingColumn.forEach((item, index) => {
-          response.data.response.data.items[0].column_values.forEach((subItem) => {
-            if (subItem.id === item.id) {
-              tempText = tempText + subItem.text;
-              if (index < state.subHeadingColumn.length - 1) {
-                tempText = tempText + ' | ';
+          response.data.response.data.items[0].column_values.forEach(
+            (subItem) => {
+              if (subItem.id === item.id) {
+                tempText = tempText + subItem.text;
+                if (index < state.subHeadingColumn.length - 1) {
+                  tempText = tempText + " | ";
+                }
               }
             }
-          });
+          );
         });
         setSubHeadingString(tempText);
-        
       }
       if (response.success) {
         setItemDetails(response.data.response.data);
@@ -166,8 +166,6 @@ export const TrackDetails = () => {
     return updatedDate;
   };
 
-
-
   useEffect(() => {
     fetchSubItemsDetails();
   }, []);
@@ -260,7 +258,6 @@ export const TrackDetails = () => {
                   color: "#928f8f",
                 }}
               >
-             
                 {!loading && subHeadingString}
               </p>
               <h6
@@ -304,12 +301,14 @@ export const TrackDetails = () => {
                       {(item.name === "Nationality" ||
                         item.name === "Country of Residency") && (
                         <span>
-                          <img
-                            height="20"
-                            width="22"
-                            src={`http://localhost:3000/flags/${countryCode.toLowerCase()}.svg`}
-                            alt={`${countryCode.toUpperCase()} Flag`}
-                          />
+                          {countryCode.length > 0 && (
+                            <img
+                              height="20"
+                              width="22"
+                              src={`http://localhost:3000/flags/${countryCode.toLowerCase()}.svg`}
+                              alt={`${countryCode.toUpperCase()} Flag`}
+                            />
+                          )}
                         </span>
                       )}
                     </li>
@@ -330,7 +329,6 @@ export const TrackDetails = () => {
                   const color = getColor(item);
                   const updatedDate = getUpdatedDate(item);
 
-                  // console.log(initialAction , item.name)
                   return (
                     <li
                       className="list-group-item d-flex align-items-start border-0 text-start mb-1"
@@ -415,14 +413,7 @@ export const TrackDetails = () => {
               <p className="second-heading text-start head-color fw-bold pb-4 border-bottom">
                 Onboarding Updates
               </p>
-              <h6 className="text-start mt-2 mb-4 fw-bold text-secondary">
-                {getInitialDate()}
-              </h6>
-              <p className="text-start text-secondary">
-                Stephen's final day of work in the United States is scheduled
-                for July 31st. He is currently still in the country and will be
-                continuing his work visa process in the United Arab Emirates.
-              </p>
+
               <UpdateComponent
                 id={state.id}
                 likeIds={likeIds}
