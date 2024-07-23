@@ -115,9 +115,12 @@ export const TrackDetails = () => {
       const tempData = JSON.parse(subItem.data);
 
       if (item.id === tempData.column_id) {
+       if(!tempData.column_type === 'long_text'){
         if (tempData.hasOwnProperty("value") && tempData.value !== null) {
           tempInitialAction = tempData.value.label.text;
         }
+       }
+        
         break;
       }
     }
@@ -134,9 +137,11 @@ export const TrackDetails = () => {
       const tempData = JSON.parse(subItem.data);
 
       if (item.id === tempData.column_id) {
+        if(!tempData.column_type === 'long_text'){
         if (tempData.hasOwnProperty("value") && tempData.value !== null) {
           tempColor = tempData.value.label.style.color;
         }
+      }
         break;
       }
     }
