@@ -407,59 +407,6 @@ export const Board = () => {
                   filterOption={filterOption}
                 />
               </div>
-              {/* <div
-                style={{
-                  marginTop: "10px",
-                  border: "1px solid #d9d9d9",
-                  padding: "10px",
-                  borderRadius: "10px",
-                }}
-              >
-                <p style={{ textAlign: "left" }}>Select User</p>
-                <Select
-                  placeholder={"Select User"}
-                  style={{ width: "100%", borderRadius: "10px" }}
-                  popupMatchSelectWidth={false}
-                  placement="bottomLeft"
-                  onChange={handleUserChange}
-                  options={userListing}
-                  value={selectedUser}
-                  disabled={selectedBoardId.length === 0}
-                />
-              </div> */}
-{/* 
-              <div
-                style={{
-                  marginTop: "10px",
-                  border: "1px solid #d9d9d9",
-                  padding: "10px",
-                  borderRadius: "10px",
-                }}
-              >
-                <div>
-                  <p style={{ textAlign: "left" }}>Select Filter</p>
-                  <Select
-                    placeholder={"Select Column"}
-                    style={{ width: "100%", borderRadius: "10px" }}
-                    popupMatchSelectWidth={false}
-                    placement="bottomLeft"
-                    onChange={handleUserSpecifiFilter}
-                    options={options}
-                    value={flterUserSpecific.key}
-                    disabled={
-                      selectedUser.length === 0 || selectedBoardId.length === 0
-                    }
-                  />
-                </div>
-                <div style={{ marginTop: "10px" }}>
-                  <Input
-                    addonBefore="Filter Value"
-                    value={flterUserSpecific.value}
-                    onChange={handleChangeForUserFilterValue}
-                    disabled={flterUserSpecific.key.length === 0}
-                  />
-                </div>
-              </div> */}
 
               {boardVisiblityData !== undefined &&
                 Object.keys(boardVisiblityData).length > 0 && (
@@ -758,7 +705,7 @@ export const Board = () => {
                           placeholder="Please select"
                           onChange={handleChangeRequiredColumnStatus}
                           options={options}
-                          value={boardVisiblityData.required_columns.profession}
+                          value={boardVisiblityData.required_columns.overall_status}
                         />
                       </div>
                     </div>

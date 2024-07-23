@@ -88,9 +88,9 @@ export const getRequestTrackingData = () => {
   return Services.POST(`newonboardify/customer/requestTracking`);
 };
 
-export const getBoardSettingDataCustomerByID = (id, email) => {
+export const getBoardSettingDataCustomerByID = (id) => {
   return Services.GET(
-    `newonboardify/customer/getboardVisibilityMapping?board_id=${id}&email=${email}`
+    `newonboardify/customer/getboardVisibilityMapping?board_id=${id}`
   );
 };
 

@@ -242,6 +242,8 @@ export const Track = () => {
       const response1 = await getBoardSettingDataCustomerByID(
         response.data.response.data.boards[0].id,
       );
+
+      console.log(response1 ,'res')
       const response2 = await getColorMappingForUser();
 
       if (response.success) {
