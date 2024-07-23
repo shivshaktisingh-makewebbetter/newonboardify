@@ -43,7 +43,7 @@ const ResetPassword = () => {
           "Password changed Successfully, Redirecting to the login Page."
         );
         setTimeout(() => {
-          navigate("/signin");
+          navigate("/");
         }, 2000);
       } else {
         toast.error(response.message);
