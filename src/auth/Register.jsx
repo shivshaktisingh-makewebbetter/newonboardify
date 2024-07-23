@@ -53,7 +53,7 @@ export const Register = () => {
     if (!isFormValid) {
       return;
     }
-    formData.domain = "governify";
+    formData.domain = "onboardify";
     let payload = JSON.stringify(formData);
     try {
       setLoading(true);

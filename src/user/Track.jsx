@@ -94,6 +94,7 @@ export const Track = () => {
   ];
 
   const filterDataBySearchString = (data, searchString) => {
+    console.log(allColumns , columnIdData)
     return data.filter((item) => item.name.includes(searchString));
   };
 
@@ -240,7 +241,6 @@ export const Track = () => {
 
       const response1 = await getBoardSettingDataCustomerByID(
         response.data.response.data.boards[0].id,
-        sessionStorage.getItem("userEmail")
       );
       const response2 = await getColorMappingForUser();
 

@@ -10,8 +10,9 @@ import {
 } from "../apiservice/ApiService";
 import { useEffect, useState } from "react";
 import { countries } from "../utils/assets";
-import { formatDate, formatDateNew } from "../utils/helper";
+import { formatDateNew } from "../utils/helper";
 import { UpdateComponent } from "./component/UpdateComponent";
+import { Loader } from "../common/Loader";
 
 export const TrackDetails = () => {
   const [columnData, setColumnData] = useState({});
@@ -19,34 +20,34 @@ export const TrackDetails = () => {
   const [itemDetails, setItemDetails] = useState({});
   const location = useLocation();
   const [likeIds, setLikeIds] = useState([]);
+  const [loading, setLoading] = useState(false);
   const { state } = location;
   const breadCrumbData = location.pathname.split("/");
 
   const fetchSubItemsDetails = async () => {
-    const response4 = await getRequestTrackingData();
-    const response = await getSubItemDetails(state.id);
-    const response1 = await getBoardSettingDataCustomerByID(
-      response4.data.response.data.boards[0].id,
-      sessionStorage.getItem("userEmail")
-    );
-    const response2 = await getRequestTrackingData();
+    setLoading(true);
 
+    try {
+      const response4 = await getRequestTrackingData();
+      const response = await getSubItemDetails(state.id);
+      const response1 = await getBoardSettingDataCustomerByID(
+        response4.data.response.data.boards[0].id,
+        sessionStorage.getItem("userEmail")
+      );
+      const response2 = await getRequestTrackingData();
 
-    if (response1.success) {
-      setColumnData(JSON.parse(response1.data.response[0].columns));
-    }
-    if (response2.success) {
-      setAllColumns(response2.data.response.data.boards[0].columns);
-    }
-    if (response.success) {
-      setItemDetails(response.data.response.data);
-
-      // response.data.response.data.boards[0].activity_logs.forEach((testI) => {
-      //   const tempD = JSON.parse(testI.data);
-      //   if (tempD.column_title === "Muqeem Generated") {
-      //     console.log(tempD);
-      //   }
-      // });
+      if (response1.success) {
+        setColumnData(JSON.parse(response1.data.response[0].columns));
+      }
+      if (response2.success) {
+        setAllColumns(response2.data.response.data.boards[0].columns);
+      }
+      if (response.success) {
+        setItemDetails(response.data.response.data);
+      }
+    } catch (err) {
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -166,6 +167,7 @@ export const TrackDetails = () => {
 
   return (
     <div style={{ padding: "2rem" }}>
+      {loading && <Loader />}
       <BreadcrumbComponent data={breadCrumbData} name={state.name} />
       <div
         style={{
