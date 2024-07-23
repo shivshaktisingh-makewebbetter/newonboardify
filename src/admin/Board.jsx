@@ -407,7 +407,7 @@ export const Board = () => {
                   filterOption={filterOption}
                 />
               </div>
-              <div
+              {/* <div
                 style={{
                   marginTop: "10px",
                   border: "1px solid #d9d9d9",
@@ -426,8 +426,8 @@ export const Board = () => {
                   value={selectedUser}
                   disabled={selectedBoardId.length === 0}
                 />
-              </div>
-
+              </div> */}
+{/* 
               <div
                 style={{
                   marginTop: "10px",
@@ -459,7 +459,7 @@ export const Board = () => {
                     disabled={flterUserSpecific.key.length === 0}
                   />
                 </div>
-              </div>
+              </div> */}
 
               {boardVisiblityData !== undefined &&
                 Object.keys(boardVisiblityData).length > 0 && (
