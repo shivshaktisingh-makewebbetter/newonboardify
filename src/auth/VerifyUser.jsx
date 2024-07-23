@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { fetcher } from "../../utils/helper";
 import { Loader } from "../common/Loader";
 import { commonVerifyUser } from "../apiservice/ApiService";
 
