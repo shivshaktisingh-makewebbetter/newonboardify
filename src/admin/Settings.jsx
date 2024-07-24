@@ -165,8 +165,8 @@ export const Settings = () => {
   return (
     <>
       {loading && <Loader />}
-      <div className="w-100 d-flex flex-column align-items-center p-2">
-        <div className="col-md-7 col-lg-8 text-start">
+      <div className="w-100 d-flex flex-column align-items-center p-3">
+        <div className="col-md-7 col-lg-8 text-start" style={{paddingTop:"10px"}}>
           <h4 className="mb-3">
             <Button
               icon={

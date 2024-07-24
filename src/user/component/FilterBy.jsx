@@ -19,7 +19,7 @@ export const FilterBy = ({setSelectedFilter , items}) =>{
     return (
         
             <Dropdown menu={menuProps}>
-            <Button type="text" style={{fontSize:"16px" , color:"#928f8f" , padding:"0px" , marginRight:"14px"}} icon={<FilterIcon/>} iconPosition="start">
+            <Button type="text" style={{fontSize:"16px" , color:"#928f8f" , padding:"0px" , marginRight:"14px"}} icon={<FilterIcon style={{color:'#497ed8'}}/>} iconPosition="start">
               <Space>
                 Filter
               </Space>

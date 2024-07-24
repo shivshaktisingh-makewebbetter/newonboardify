@@ -504,7 +504,7 @@ export const CopyIcon = () => {
 
 export const FilterIcon = () => {
   return (
-    <span className="text-color-5AC063">
+    <span className="text-color-497ed8">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -521,7 +521,7 @@ export const FilterIcon = () => {
 
 export const ExportIcon = () => {
   return (
-    <span className="text-color-5AC063">
+    <span className="text-color-497ed8">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
