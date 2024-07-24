@@ -110,7 +110,6 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, description  , image
         "POST",
         JSON.stringify(payload)
       );
-      console.log(reply , 'reply')
       if (reply.success) {
         // getSubItemData();
         setReplyValue("");

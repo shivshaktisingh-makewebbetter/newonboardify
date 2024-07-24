@@ -144,7 +144,7 @@ const UpdateAndReply = ({
           <div className="d-flex align-items-center">
             <span
               className="rounded-circle fw-bold text-white d-flex align-items-center justify-content-center"
-              style={{ width: "35px", height: "35px", background: "#5AC063" , paddingTop:"4px" }}
+              style={{ width: "35px", height: "35px", background: "#497ed8" , paddingTop:"4px" }}
             >
               {getFirstLettersOfName(sessionStorage.getItem("userName"))}
             </span>
@@ -168,7 +168,7 @@ const UpdateAndReply = ({
           <div
             className="rounded-circle fw-bold text-white d-flex align-items-center justify-content-center"
             style={{
-              background: "#5AC063",
+              background: "#497ed8",
               width: "38px",
               height: "35px",
               fontSize: "15px",
