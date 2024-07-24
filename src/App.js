@@ -26,6 +26,7 @@ import ResetPassword from "./auth/ResetPassword";
 import VerifyUser from "./auth/VerifyUser";
 import ErrorBoundary from "./error/ErrorBoundary";
 import ErrorPage from "./common/ErrorPage";
+import { Profile } from "./admin/Profile";
 
 
 function App() {
@@ -94,6 +95,10 @@ function App() {
         {
           path: "userList",
           element: <ProtectedRoute element={<ErrorBoundary><UserList /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
+        },
+        {
+          path: "profile",
+          element: <ProtectedRoute element={<ErrorBoundary><Profile /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
         },
       ],
     },

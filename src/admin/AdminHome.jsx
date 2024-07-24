@@ -1,7 +1,7 @@
 import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import { BoardSetting, ChangeRole } from "../utils/icons";
-import { UserOutlined } from "@ant-design/icons";
+import { ProfileOutlined, UserOutlined } from "@ant-design/icons";
 import { getRole } from "../utils/helper";
 
 export const AdminHome = () => {
@@ -27,13 +27,21 @@ export const AdminHome = () => {
       buttonText: "Manage User",
       navigateKey: "userList",
     },
+    // {
+    //   title: "Board Visibility",
+    //   description:
+    //     "Track your onboarding requests seamlessly with us. Stay updated on the progress of your employee onboarding journey. Effortless tracking for a smoother onboarding experience.",
+    //   icon: <BoardSetting style={{ fontSize: "60px" }} />,
+    //   buttonText: "Manage Board",
+    //   navigateKey: "board",
+    // },
     {
-      title: "Board Visibility",
+      title: "Profile Setting",
       description:
         "Track your onboarding requests seamlessly with us. Stay updated on the progress of your employee onboarding journey. Effortless tracking for a smoother onboarding experience.",
-      icon: <BoardSetting style={{ fontSize: "60px" }} />,
-      buttonText: "Manage Board",
-      navigateKey: "board",
+      icon: <ProfileOutlined  style={{ fontSize: "60px" }} />,
+      buttonText: "Manage Profile",
+      navigateKey: "profile",
     },
     {
       title: "Create User",
