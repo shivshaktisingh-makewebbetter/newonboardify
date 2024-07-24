@@ -200,8 +200,7 @@ export const Login = () => {
       const intercomScript = document.getElementById("intercom-script");
       if (
         intercomScript &&
-        location.pathname !== "/track-request" &&
-        location.pathname !== "/"
+        location.pathname === "/admin"
       ) {
         intercomScript.remove();
       }
