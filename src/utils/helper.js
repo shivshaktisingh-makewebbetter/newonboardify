@@ -159,7 +159,7 @@ export function showUserName(value) {
     if (value.includes(sessionStorage.getItem("userEmail"))) {
       userName = sessionStorage.getItem("userName");
     } else {
-      userName = "Governify Team";
+      userName = "Onboardify Team";
     }
 
     return userName;

@@ -10,9 +10,9 @@ const Replies = ({ item }) => {
       <div>
         <span
           className="rounded-circle fw-bold text-white d-flex align-items-center justify-content-center"
-          style={{width: "35px", height: "35px" , background:"#5AC063" , paddingTop:userName !== "Governify Team"?"3px":"0px" }}
+          style={{width: "35px", height: "35px" , background:"#497ed8" , paddingTop:userName !== "Onboardify Team"?"3px":"0px" }}
         >
-          {userName === "Governify Team" ? <GovernifyTeam /> : getFirstLettersOfName(userName)}
+          {userName === "Onboardify Team" ? <img src="/loader.png" alt="No Preview"/>  : getFirstLettersOfName(userName)}
         </span>
       </div>
       <div className="rounded-2 px-3 py-2" style={{ background: "#6f74900f" }}>
