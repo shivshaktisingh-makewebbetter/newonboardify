@@ -128,6 +128,10 @@ export const Login = () => {
 
   useEffect(() => {
     const loadIntercom = () => {
+      const userPresentOnSession = sessionStorage.getItem('userId');
+      if(userPresentOnSession === null){
+        sessionStorage.setItem('userId' ,  Math.floor(100000 + Math.random() * 900000));
+      }
       if (
         location.pathname !== "/admin" &&
         location.pathname !== "/admin/settings" &&
@@ -142,9 +146,8 @@ export const Login = () => {
           name: sessionStorage.getItem("userName")
             ? sessionStorage.getItem("userName")
             : "", // Full name
-          user_id: sessionStorage.getItem("userId")
-            ? sessionStorage.getItem("userId")
-            : Math.floor(100000 + Math.random() * 900000),
+          user_id: sessionStorage.getItem("userId") ,
+           
           email: sessionStorage.getItem("userEmail")
             ? sessionStorage.getItem("userEmail")
             : "",

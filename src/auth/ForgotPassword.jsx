@@ -17,10 +17,9 @@ export const ForgotPassword = () => {
   };
 
   const handleSubmit = async () => {
-  
     let payload = JSON.stringify({
       email: email,
-      domain: 'onboardify',
+      domain: "onboardify",
     });
     try {
       setLoading(true);
@@ -48,16 +47,21 @@ export const ForgotPassword = () => {
     setTimeout(() => {
       setAnimation(false);
     }, 300);
-   if(location.search.length > 0){
-    const tempData = location.search.split('=');
-    setEmail(tempData[1]);
-   }
-
+    if (location.search.length > 0) {
+      const tempData = location.search.split("=");
+      setEmail(tempData[1]);
+    }
   }, []);
-
 
   useEffect(() => {
     const loadIntercom = () => {
+      const userPresentOnSession = sessionStorage.getItem("userId");
+      if (userPresentOnSession === null) {
+        sessionStorage.setItem(
+          "userId",
+          Math.floor(100000 + Math.random() * 900000)
+        );
+      }
       if (
         location.pathname !== "/admin" &&
         location.pathname !== "/admin/settings" &&
@@ -72,9 +76,7 @@ export const ForgotPassword = () => {
           name: sessionStorage.getItem("userName")
             ? sessionStorage.getItem("userName")
             : "", // Full name
-          user_id: sessionStorage.getItem("userId")
-            ? sessionStorage.getItem("userId")
-            : Math.floor(100000 + Math.random() * 900000),
+          user_id: sessionStorage.getItem("userId"),
           email: sessionStorage.getItem("userEmail")
             ? sessionStorage.getItem("userEmail")
             : "",
@@ -128,10 +130,7 @@ export const ForgotPassword = () => {
     // Cleanup function to remove Intercom script
     return () => {
       const intercomScript = document.getElementById("intercom-script");
-      if (
-        intercomScript &&
-        location.pathname === "/admin"
-      ) {
+      if (intercomScript && location.pathname === "/admin") {
         intercomScript.remove();
       }
       if (typeof window.Intercom === "function") {
@@ -185,7 +184,7 @@ export const ForgotPassword = () => {
                   style={{ background: "#e8f0fe" }}
                   className="input-customer-focus form-control"
                 />
-               <button
+                <button
                   id="login-button"
                   className="btn btn-gradiant btn-to-link btn-secondary mt-4 d-flex align-items-center"
                   type="button"
@@ -202,7 +201,6 @@ export const ForgotPassword = () => {
                   }}
                   onClick={handleSubmit}
                   disabled={buttonDisable()}
-                  
                 >
                   <span
                     style={{
@@ -230,11 +228,7 @@ export const ForgotPassword = () => {
                   </span>
                 </button>
                 <div className="d-flex justify-content-center w-100 mt-2">
-                  <a
-                    href="/"
-                    className="fs-13"
-                    style={{ color: "#434343" }}
-                  >
+                  <a href="/" className="fs-13" style={{ color: "#434343" }}>
                     Back to login?
                   </a>
                 </div>
@@ -253,4 +247,3 @@ export const ForgotPassword = () => {
     </div>
   );
 };
-

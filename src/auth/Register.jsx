@@ -60,7 +60,9 @@ export const Register = () => {
       setLoading(true);
       const response = await registerApi(payload);
       if (response.success) {
-        toast.success('Just verify your email address to confirm that you want to use this email');
+        toast.success(
+          "Just verify your email address to confirm that you want to use this email"
+        );
       } else {
         toast.error(response.message);
       }
@@ -86,10 +88,15 @@ export const Register = () => {
     }, 300);
   }, []);
 
-
-
   useEffect(() => {
     const loadIntercom = () => {
+      const userPresentOnSession = sessionStorage.getItem("userId");
+      if (userPresentOnSession === null) {
+        sessionStorage.setItem(
+          "userId",
+          Math.floor(100000 + Math.random() * 900000)
+        );
+      }
       if (
         location.pathname !== "/admin" &&
         location.pathname !== "/admin/settings" &&
@@ -104,9 +111,7 @@ export const Register = () => {
           name: sessionStorage.getItem("userName")
             ? sessionStorage.getItem("userName")
             : "", // Full name
-          user_id: sessionStorage.getItem("userId")
-            ? sessionStorage.getItem("userId")
-            : Math.floor(100000 + Math.random() * 900000),
+          user_id: sessionStorage.getItem("userId"),
           email: sessionStorage.getItem("userEmail")
             ? sessionStorage.getItem("userEmail")
             : "",
@@ -160,10 +165,7 @@ export const Register = () => {
     // Cleanup function to remove Intercom script
     return () => {
       const intercomScript = document.getElementById("intercom-script");
-      if (
-        intercomScript &&
-        location.pathname === "/admin"
-      ) {
+      if (intercomScript && location.pathname === "/admin") {
         intercomScript.remove();
       }
       if (typeof window.Intercom === "function") {
@@ -262,16 +264,16 @@ export const Register = () => {
                   style={{ cursor: "pointer", borderRadius: "0 50px 50px 0" }}
                 >
                   {showPassword ? (
-                      <i
-                        className="bi bi-eye-fill"
-                        onClick={() => setShowPassword(false)}
-                      ></i>
-                    ) : (
-                      <i
-                        className="bi bi-eye-slash-fill"
-                        onClick={() => setShowPassword(true)}
-                      ></i>
-                    )}
+                    <i
+                      className="bi bi-eye-fill"
+                      onClick={() => setShowPassword(false)}
+                    ></i>
+                  ) : (
+                    <i
+                      className="bi bi-eye-slash-fill"
+                      onClick={() => setShowPassword(true)}
+                    ></i>
+                  )}
                 </span>
               </div>
               <div className="w-100 d-flex justify-content-center">
@@ -286,17 +288,15 @@ export const Register = () => {
                 className="btn btn-gradiant btn-to-link btn-secondary mt-4 d-flex align-items-center"
                 type="button"
                 style={{
-   
                   border: "0",
                   borderRadius: "50px",
                   gap: "10px",
                   padding: "15px",
                   display: "flex",
                   alignItems: "center",
-             
+
                   transition: "0.5s",
                   height: "46px",
-                  
                 }}
                 disabled={!isFormValid}
                 onClick={handleSubmit}
@@ -342,5 +342,3 @@ export const Register = () => {
     </div>
   );
 };
-
-
