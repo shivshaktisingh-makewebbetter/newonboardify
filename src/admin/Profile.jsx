@@ -8,7 +8,7 @@ import {
 } from "../apiservice/ApiService";
 import { Button, Select, Table } from "antd";
 import { extractDateTime, roleData } from "../utils/helper";
-import { DeleteOutlined, LeftOutlined } from "@ant-design/icons";
+import { DeleteOutlined, LeftOutlined, PlusOutlined } from "@ant-design/icons";
 import { SearchBox } from "../components/SearchBox";
 import { useNavigate } from "react-router-dom";
 import { CopyText } from "./components/CopyText";
@@ -68,14 +68,10 @@ export const Profile = () => {
     {
       title: "#",
       dataIndex: "id",
-      // sorter: (a, b) => a.name.length - b.name.length,
-      // sortDirections: ["descend"],
     },
     {
       title: "Name",
       dataIndex: "name",
-      // sorter: (a, b) => a.name.length - b.name.length,
-      // sortDirections: ["descend"],
     },
     {
       title: "Company Name",
@@ -182,7 +178,7 @@ export const Profile = () => {
             value: item.id,
           });
         });
-  
+
         setBoardListing(tempData);
       }
     } catch {
@@ -245,7 +241,10 @@ export const Profile = () => {
     const tempSearchData = [];
     if (searchData.length > 0) {
       cloneData.forEach((item) => {
-        if (item.name.toLowerCase().includes(searchData.toLowerCase()) || item.email.toLowerCase().includes(searchData.toLowerCase())) {
+        if (
+          item.name.toLowerCase().includes(searchData.toLowerCase()) ||
+          item.email.toLowerCase().includes(searchData.toLowerCase())
+        ) {
           tempSearchData.push(item);
         }
       });
@@ -257,17 +256,17 @@ export const Profile = () => {
   return (
     <div className="pt-84">
       {loading && <Loader />}
-      
+
       <div>
         <div
           style={{
             marginTop: "10px",
             marginBottom: "10px",
             display: "flex",
-            justifyContent: "start",
+            justifyContent: "space-between",
           }}
         >
-          <Button
+            <Button
             icon={
               <LeftOutlined
                 style={{
@@ -277,7 +276,22 @@ export const Profile = () => {
               />
             }
             onClick={handleBackNavigation}
+            style={{border:`1px solid ${settingData.button_bg}`}}
           ></Button>
+          <Button
+            icon={
+              <PlusOutlined
+                style={{
+                  color: settingData.button_bg,
+                  borderColor: settingData.button_bg,
+                }}
+              />
+            }
+            onClick={handleBackNavigation}
+            style={{border:`1px solid ${settingData.button_bg}`}}
+          >Create Profile</Button>
+
+          
         </div>
 
         <div style={{ marginBottom: "20px" }}>
@@ -316,7 +330,7 @@ export const Profile = () => {
           handleDelete={handleDelete}
         />
       )}
-         <ToastContainer position="bottom-right" />
+      <ToastContainer position="bottom-right" />
     </div>
   );
 };
