@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Select } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import { Loader } from "../common/Loader";
@@ -23,6 +23,7 @@ export const Settings = () => {
     header_bg: "#f7f7f7",
     head_title_color: "#497ed8",
   };
+
   const [uiData, setUiData] = useState({
     site_bg: "",
     button_bg: "",

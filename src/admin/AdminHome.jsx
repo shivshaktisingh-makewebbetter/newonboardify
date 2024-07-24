@@ -101,6 +101,7 @@ export const AdminHome = () => {
                     alignItems: "center",
                     position: "absolute",
                     bottom: "0px",
+                    cursor:"pointer"
                   }}
                   onClick={() => handleAdminRoute(item.navigateKey)}
                 >
