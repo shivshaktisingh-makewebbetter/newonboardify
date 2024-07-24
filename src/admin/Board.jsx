@@ -564,6 +564,7 @@ export const Board = () => {
                         (item, index) => {
                           return (
                             <div
+                            key = {index}
                               style={{
                                 border: "1px solid #d9d9d9",
                                 padding: "10px",
