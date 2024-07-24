@@ -9,7 +9,7 @@ import {
 } from "../apiservice/ApiService";
 import { useEffect, useState } from "react";
 import { countries } from "../utils/assets";
-import { formatDateNew } from "../utils/helper";
+import { fetcher, formatDateNew } from "../utils/helper";
 import { UpdateComponent } from "./component/UpdateComponent";
 import { Loader } from "../common/Loader";
 
@@ -66,7 +66,7 @@ export const TrackDetails = () => {
 
   const getAllLikes = async () => {
     let ids = [];
-    let likes = await geAllLikesUser();
+    let likes = await fetcher(`incorpify/listAllLikes` , 'GET');
     if (likes.success) {
       likes.data.map((item) => {
         ids.push(item.item_type_id);
@@ -115,7 +115,6 @@ export const TrackDetails = () => {
       const tempData = JSON.parse(subItem.data);
 
       if (item.id === tempData.column_id) {
-        console.log(tempData)
       //  if(!tempData.column_type === 'long_text'){
         if (tempData.hasOwnProperty("value") && tempData.value !== null) {
           tempInitialAction = tempData.value.label.text;
