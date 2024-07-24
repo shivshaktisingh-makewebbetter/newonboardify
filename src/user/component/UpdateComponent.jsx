@@ -286,7 +286,7 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight
       ) {
-        if (data.updates.length > showComments) {
+        if (data!==undefined && data.updates.length > showComments) {
           setCommentLoad(true);
           setTimeout(() => {
             setCommentLoad(false);
