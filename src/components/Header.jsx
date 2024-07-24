@@ -114,7 +114,7 @@ export const Header = () => {
             <div className="governify-header-major-div-buttons">
               <Typography>
                 <span className="onboardify-welcome">Welcome</span>{" "}
-                <span className="onboardify-welcome-text-hani">dasdf</span>
+                <span className="onboardify-welcome-text-hani">{sessionStorage.getItem('userName')}</span>
               </Typography>
               <div className="governify-header-buttons">
                 {role === "customer" ? (

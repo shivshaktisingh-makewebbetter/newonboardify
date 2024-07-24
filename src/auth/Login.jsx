@@ -4,7 +4,12 @@ import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../common/Loader";
 import { fetcher } from "../utils/helper";
-import { getCustomerGeneralSettings, getGeneralSettingsData, getLoginUserDetails, loginApi } from "../apiservice/ApiService";
+import {
+  getCustomerGeneralSettings,
+  getGeneralSettingsData,
+  getLoginUserDetails,
+  loginApi,
+} from "../apiservice/ApiService";
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -27,16 +32,27 @@ export const Login = () => {
         toast.success("Logged In Successfull.");
         sessionStorage.setItem("token", response.data.token);
         const response2 = await getCustomerGeneralSettings(response.data.role);
-      
+
         // console.log(response1)
-        if(response2.success){
+        if (response2.success) {
           // console.log(response2)
-          sessionStorage.setItem('settings' , response2.data.response.ui_settings);
-          sessionStorage.setItem('logo_location' , response2.data.response.logo_location);
+          sessionStorage.setItem(
+            "settings",
+            response2.data.response.ui_settings
+          );
+          sessionStorage.setItem(
+            "logo_location",
+            response2.data.response.logo_location
+          );
         }
-      
+
         sessionStorage.setItem("role", response.data.role);
         const response1 = await getLoginUserDetails(response.data.token);
+        if (response1.success) {
+          sessionStorage.setItem("userEmail", response1.data.data.email);
+          sessionStorage.setItem("userName", response1.data.data.name);
+          sessionStorage.setItem("userId", response1.data.data.user_id);
+        }
         if (response.data.role === "customer") {
           setTimeout(() => {
             navigate("/user");
@@ -49,7 +65,6 @@ export const Login = () => {
       }
     } catch (err) {
       console.log(err, "error");
-  
     } finally {
       setLoading(false);
     }
@@ -81,15 +96,33 @@ export const Login = () => {
       setAnimation(false);
     }, 300);
   }, []);
-  useEffect(() => {
+
+  const handleNavigate = async () => {
+   
+
     let role = sessionStorage.getItem("role");
     if (role === "customer") {
-      navigate("/");
+      const response1 = await getLoginUserDetails(sessionStorage.getItem('token'));
+      if (response1.success) {
+        sessionStorage.setItem("userEmail", response1.data.data.email);
+        sessionStorage.setItem("userName", response1.data.data.name);
+        sessionStorage.setItem("userId", response1.data.data.user_id);
+      }
+      navigate("/user");
     }
 
-    if (role === "superAdmin") {
+    if (role === "superAdmin" || role === "admin") {
+      const response1 = await getLoginUserDetails(sessionStorage.getItem('token'));
+      if (response1.success) {
+        sessionStorage.setItem("userEmail", response1.data.data.email);
+        sessionStorage.setItem("userName", response1.data.data.name);
+        sessionStorage.setItem("userId", response1.data.data.user_id);
+      }
       navigate("/admin");
     }
+  };
+  useEffect(() => {
+    handleNavigate();
   }, []);
   return (
     <div className="inc-auth-container">
