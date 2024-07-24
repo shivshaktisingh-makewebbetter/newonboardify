@@ -94,12 +94,12 @@ export const Track = () => {
   ];
 
   const filterDataBySearchString = (data, searchString) => {
-    
     let tempArray = [];
     originalArray.forEach((item) => {
       item.column_values.forEach((subItem) => {
         if (
-          subItem.id === columnIdData.required_columns.profession && subItem.text.includes(searchString)
+          subItem.id === columnIdData.required_columns.profession &&
+          subItem.text.includes(searchString)
         ) {
           tempArray.push(item);
         }
@@ -109,7 +109,8 @@ export const Track = () => {
     originalArray.forEach((item) => {
       item.column_values.forEach((subItem) => {
         if (
-          subItem.id === columnIdData.required_columns.overall_status && subItem.text.includes(searchString)
+          subItem.id === columnIdData.required_columns.overall_status &&
+          subItem.text.includes(searchString)
         ) {
           tempArray.push(item);
         }
@@ -193,7 +194,7 @@ export const Track = () => {
   const handleExport = () => {
     let tempAllColumns = ["Name"];
     let tempAllColumnsIds = ["name"];
-    if(columnIdData.candidate_coulmns === undefined){
+    if (columnIdData.candidate_coulmns === undefined) {
       return;
     }
 

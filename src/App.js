@@ -42,31 +42,31 @@ function App() {
         {
           path: "",
           element: (
-            <ProtectedRoute element={<ErrorBoundary><UserHome /></ErrorBoundary>} allowedRoles={["user"]} />
+            <ProtectedRoute element={<ErrorBoundary><UserHome /></ErrorBoundary>} allowedRoles={["customer"]} />
           ),
         },
         {
           path: "track",
           element: (
-            <ProtectedRoute element={<ErrorBoundary><Track /></ErrorBoundary>} allowedRoles={["user"]} />
+            <ProtectedRoute element={<ErrorBoundary><Track /></ErrorBoundary>} allowedRoles={["customer"]} />
           ),
         },
         {
           path: "track/details",
           element: (
-            <ProtectedRoute element={<ErrorBoundary><TrackDetails /></ErrorBoundary>} allowedRoles={["user"]} />
+            <ProtectedRoute element={<ErrorBoundary><TrackDetails /></ErrorBoundary>} allowedRoles={["customer"]} />
           ),
         },
         {
           path: "check",
           element: (
-            <ProtectedRoute element={<ErrorBoundary><Check /></ErrorBoundary>} allowedRoles={["user"]} />
+            <ProtectedRoute element={<ErrorBoundary><Check /></ErrorBoundary>} allowedRoles={["customer"]} />
           ),
         },
         {
           path: "request",
           element: (
-            <ProtectedRoute element={<ErrorBoundary><Request /></ErrorBoundary>} allowedRoles={["user"]} />
+            <ProtectedRoute element={<ErrorBoundary><Request /></ErrorBoundary>} allowedRoles={["customer"]} />
           ),
         },
       ],
@@ -77,23 +77,23 @@ function App() {
       children: [
         {
           path: "",
-          element: <ProtectedRoute element={<ErrorBoundary><AdminHome /></ErrorBoundary>} roles={["admin"]} />,
+          element: <ProtectedRoute element={<ErrorBoundary><AdminHome /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
         },
         {
           path: "board",
-          element: <ProtectedRoute element={<ErrorBoundary><Board /></ErrorBoundary>} roles={["admin"]} />,
+          element: <ProtectedRoute element={<ErrorBoundary><Board /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
         },
         {
           path: "createAdmin",
-          element: <ProtectedRoute element={<ErrorBoundary><CreateAdmin /></ErrorBoundary>} roles={["admin"]} />,
+          element: <ProtectedRoute element={<ErrorBoundary><CreateAdmin /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
         },
         {
           path: "settings",
-          element: <ProtectedRoute element={<ErrorBoundary><Settings /></ErrorBoundary>} roles={["admin"]} />,
+          element: <ProtectedRoute element={<ErrorBoundary><Settings /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
         },
         {
           path: "userList",
-          element: <ProtectedRoute element={<ErrorBoundary><UserList /></ErrorBoundary>} roles={["admin"]} />,
+          element: <ProtectedRoute element={<ErrorBoundary><UserList /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
         },
       ],
     },
