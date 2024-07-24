@@ -340,7 +340,7 @@ export const Track = () => {
       </div>
       <BreadcrumbComponent data={breadCrumbData} />
       <SearchBox
-        placeHolder={"Search By name or profession"}
+        placeHolder={"Search By profession"}
         setSearchData={setSearchData}
       />
       <div
