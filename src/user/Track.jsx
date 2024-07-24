@@ -193,6 +193,9 @@ export const Track = () => {
   const handleExport = () => {
     let tempAllColumns = ["Name"];
     let tempAllColumnsIds = ["name"];
+    if(columnIdData.candidate_coulmns === undefined){
+      return;
+    }
 
     let tempData = [...originalArray];
     columnIdData.candidate_coulmns.forEach((subItem) => {
