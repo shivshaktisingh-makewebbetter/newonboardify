@@ -286,12 +286,18 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight
       ) {
-        if (data!==undefined && data.updates.length > showComments) {
-          setCommentLoad(true);
-          setTimeout(() => {
-            setCommentLoad(false);
-            setShowComments((prev) => prev + 5);
-          }, 1000);
+        if (data !== undefined) {
+          if (
+            data !== undefined &&
+            data.hasOwnProperty("updates") &&
+            data.updates.length > showComments
+          ) {
+            setCommentLoad(true);
+            setTimeout(() => {
+              setCommentLoad(false);
+              setShowComments((prev) => prev + 5);
+            }, 1000);
+          }
         }
       }
     };
