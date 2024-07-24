@@ -1,4 +1,4 @@
-import { Button, Flex, Popover, Upload } from "antd";
+import { Button, Flex, Popover, Skeleton, Upload } from "antd";
 import {
   AdobeAcrobat,
   AiIcon,
@@ -34,12 +34,14 @@ import { toast } from "react-toastify";
 import UserTextEditor from "./UserTextEditor";
 import { Loader } from "../../common/Loader";
 
-export const UpdateComponent = ({ id, likeIds, getAllLikes, description  , imageKey}) => {
+export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
   const [data, setData] = useState("");
   const [showTextEditor, setShowTextEditor] = useState(false);
   const [updateValue, setUpdateValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [replyValue, setReplyValue] = useState("");
+  const [showComments, setShowComments] = useState(5);
+  const [commentLoad, setCommentLoad] = useState(false);
 
   const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -278,6 +280,26 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, description  , image
     newFetchData();
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight
+      ) {
+        if (data.updates.length > showComments) {
+          setCommentLoad(true);
+          setTimeout(() => {
+            setCommentLoad(false);
+            setShowComments((prev) => prev + 5);
+          }, 1000);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [commentLoad, data]);
+
   return (
     <>
       {loading && (
@@ -289,7 +311,7 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, description  , image
         <div style={{ height: "600px" }}></div>
       ) : (
         <div className="mt-24">
-          <div style={{ overflowY: "auto", maxHeight: "600px" }}>
+          <div style={{ minHeight: "500px" }}>
             <div
               className="text-start inc-detail-container"
               style={{ borderRadius: "10px" }}
@@ -402,22 +424,38 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, description  , image
                   )}
                   {data.updates.length > 0 &&
                     data.updates.map((item, i) => {
-                      return (
-                        <UpdateAndReply
-                          item={item}
-                          key={i}
-                          reply={reply}
-                          handleChangeReplyValue={handleChangeReplyValue}
-                          replyValue={replyValue}
-                          handleFileChange={handleFileChange}
-                          handleChangeEmoji={handleChangeEmoji}
-                          isUpdated={true}
-                          likeIds={likeIds.includes(item.id)}
-                          unlikeComment={unlikeComment}
-                          props={props}
-                        />
-                      );
+                      if (i < showComments) {
+                        return (
+                          <UpdateAndReply
+                            item={item}
+                            key={i}
+                            reply={reply}
+                            handleChangeReplyValue={handleChangeReplyValue}
+                            replyValue={replyValue}
+                            handleFileChange={handleFileChange}
+                            handleChangeEmoji={handleChangeEmoji}
+                            isUpdated={true}
+                            likeIds={likeIds.includes(item.id)}
+                            unlikeComment={unlikeComment}
+                            props={props}
+                          />
+                        );
+                      }
                     })}
+                  <Flex justify="center" className="mt-4">
+                    {commentLoad && (
+                      // <span className="spinner">
+                      //   <Loading width="30px" height="30px" />
+                      // </span>
+                      <Skeleton avatar paragraph={{ rows: 3 }} />
+                    )}
+                    {/* {showComments < data.updates.length && (<button
+                className="btn-outline-Show-more"
+                onClick={() => setShowComments((prev) => prev + 5)}
+              >
+                Load more
+              </button>)} */}
+                  </Flex>
                 </div>
               </div>
             </div>
