@@ -69,9 +69,9 @@ export const Settings = () => {
 
   const navigate = useNavigate();
 
-  const handleChangeBg = (e) => {
-    setUiData({ ...uiData, site_bg: e.target.value });
-  };
+  // const handleChangeBg = (e) => {
+  //   setUiData({ ...uiData, site_bg: e.target.value });
+  // };
 
   const handleChangeBgBtn = (e) => {
     setUiData({ ...uiData, button_bg: e.target.value });
@@ -149,8 +149,7 @@ export const Settings = () => {
     const response = await getGeneralSettingsData();
     if (response.success) {
       const tempData = JSON.parse(response.data.response.ui_settings);
-      tempData.banner_content =
-        "Hire an attitude, not just experience and qualification. Greg Savage.";
+      tempData.banner_content = tempData.banner_content
       setUiData(tempData);
       setLogoData({
         logo_name: response.data.response.logo,

@@ -343,7 +343,7 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, description  , image
                       size="large"
                       iconPosition="end"
                       style={{
-                        background: "#00B34D",
+                        background: settingsData.button_bg,
                         color: "#ffffff",
                         border: "none",
                         borderRadius: "10px",
