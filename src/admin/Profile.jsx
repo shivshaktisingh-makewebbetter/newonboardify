@@ -288,7 +288,7 @@ export const Profile = () => {
               />
             }
             onClick={handleBackNavigation}
-            style={{border:`1px solid ${settingData.button_bg}`}}
+            style={{border:`1px solid ${settingData.button_bg}` , color:settingData.button_bg}}
           >Create Profile</Button>
 
           
