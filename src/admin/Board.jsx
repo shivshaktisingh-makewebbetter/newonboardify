@@ -24,7 +24,7 @@ export const Board = () => {
   const [userListing, setUserListing] = useState([]);
   const [selectedBoardId, setSelectedBoardId] = useState("");
   const [selectedUser, setSelectedUser] = useState("");
-  const [emailKey, setEmailKey] = useState("");
+  const [documentFetchKey, setDocumentFetchKey] = useState([]);
   const [imageKey, setImageKey] = useState("");
   const [colorMappingData, setColorMappingData] = useState([]);
   const [boardVisiblityData, setBoardVisibilityData] = useState();
@@ -107,10 +107,10 @@ export const Board = () => {
 
     if (response.success && response.data.response.length > 0) {
       let tempData = JSON.parse(response.data.response[0].columns);
-      let tempEmailKey = tempData?.email_key || "";
+      let tempEmailKey = tempData?.document_fetch_key || [];
       let tempImageKey = tempData?.image_key || "";
       setBoardVisibilityData(tempData);
-      setEmailKey(tempEmailKey);
+      setDocumentFetchKey(tempEmailKey);
       setImageKey(tempImageKey);
     }
     if (response1.success && response1.data.response.length > 0) {
@@ -121,30 +121,6 @@ export const Board = () => {
       setOptions(optionData);
     }
   };
-
-  // const handleUserChange = async (e) => {
-  //   setFilterUserSpecific({ key: "", value: "" });
-  //   setSelectedUser(e);
-  //   const response = await getBoardVisibilityDataWithEmail(selectedBoardId, e);
-
-  //   const response1 = await getCompleteDataForBoardVisibility(e);
-
-  //   if (response.success && response.data.response.length > 0) {
-  //     setBoardVisibilityData(JSON.parse(response.data.response[0].columns));
-  //   }
-
-  //   if (response1.success && response1.data.response.length > 0) {
-  //     let optionData = [];
-  //     response1.data.response.forEach((item) => {
-  //       optionData.push({ label: item.title, value: item.id });
-  //     });
-  //     setOptions(optionData);
-  //   }
-  // };
-
-  // const handleUserSpecifiFilter = (e) => {
-  //   setFilterUserSpecific({ key: e, value: "" });
-  // };
 
   const fetchAllColorMapping = async () => {
     try {
@@ -344,10 +320,10 @@ export const Board = () => {
     setBoardVisibilityData(tempData);
   };
 
-  const handleChangeEmailColumn = (e) => {
+  const handleChangColumnDocumentFetch = (e) => {
     const tempData = { ...boardVisiblityData };
-    tempData.email_key = e;
-    setEmailKey(e);
+    tempData.document_fetch_key = e;
+    setDocumentFetchKey(e);
     setBoardVisibilityData(tempData);
   };
 
@@ -564,7 +540,7 @@ export const Board = () => {
                         (item, index) => {
                           return (
                             <div
-                            key = {index}
+                              key={index}
                               style={{
                                 border: "1px solid #d9d9d9",
                                 padding: "10px",
@@ -741,15 +717,17 @@ export const Board = () => {
                       }}
                     >
                       <p style={{ textAlign: "left" }}>
-                        Required Column For Email
+                        Columns For Document Fetch
                       </p>
                       <Select
+                        allowClear
+                        mode="multiple"
                         style={{
                           width: "100%",
                         }}
-                        placeholder="Please select Email Column"
-                        value={emailKey}
-                        onChange={handleChangeEmailColumn}
+                        placeholder="Please select Document Column"
+                        value={documentFetchKey}
+                        onChange={handleChangColumnDocumentFetch}
                         options={options}
                       />
                     </div>
