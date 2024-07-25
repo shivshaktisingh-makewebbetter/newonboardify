@@ -231,7 +231,7 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
           try {
             setLoading(true);
             const response = await axios.post(
-              "http://127.0.0.1:8000/incorpify/uploadMondayFiles",
+              "https://onboardifyapi.tasc360.com/incorpify/uploadMondayFiles",
               formData,
               {
                 headers: {
