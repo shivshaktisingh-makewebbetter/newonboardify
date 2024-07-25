@@ -92,8 +92,6 @@ export const RequestComponent = ({
       }
     }
 
-    // console.log(value , tempData.labels_colors[index].color)
-
     return tempData.labels_colors[index].color;
   };
 
@@ -125,6 +123,7 @@ export const RequestComponent = ({
 
     colorData.forEach((subItem) => {
       for (const [status, tasks] of Object.entries(subItem)) {
+        console.log(tasks , value)
         if (tasks.includes(value.toLowerCase())) {
           bgColor = bgColorSet[status];
         }

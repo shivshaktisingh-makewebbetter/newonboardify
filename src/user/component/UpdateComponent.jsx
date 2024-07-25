@@ -316,7 +316,7 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
       {data === "" ? (
         <div style={{ height: "600px" }}></div>
       ) : (
-        <div className="mt-24">
+        <div>
           <div style={{ minHeight: "500px" }}>
             <div
               className="text-start inc-detail-container"
