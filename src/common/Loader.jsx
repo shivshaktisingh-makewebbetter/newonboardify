@@ -5,7 +5,7 @@ export const Loader = () => {
         <img
           height="90"
           className="rotating-img"
-          src="https://onboardify.tasc360.com/asset/loader.png"
+          src="https://onboardifyapi.tasc360.com/asset/loader.png"
           alt=""
         />
       </div>
