@@ -77,24 +77,7 @@ export const Board = () => {
     }
   };
 
-  // const fetchAllUsers = async (id) => {
-  //   try {
-  //     const response = await getAllUsersWithBoardId(id);
-  //     if (response.success) {
-  //       let tempData = [];
-  //       response.data.response.forEach((item) => {
-  //         tempData.push({
-  //           key: item.id,
-  //           label: item.name,
-  //           value: item.email,
-  //         });
-  //       });
-  //       setUserListing(tempData);
-  //     }
-  //   } catch (err) {
-  //   } finally {
-  //   }
-  // };
+
 
   const handleBoardChange = async (e) => {
     setSelectedBoardId(e);

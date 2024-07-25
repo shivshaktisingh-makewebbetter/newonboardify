@@ -144,3 +144,7 @@ export const commonVerifyUser = (data) => {
 export const getAllCustomers = () => {
   return Services.GET(`/newonboardify/admin/getAllCustomer`);
 };
+
+export const createProfileEndPoint = (data) => {
+  return Services.POST(`newonboardify/admin/onboardifyProfile`, data);
+};

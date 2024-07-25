@@ -1,8 +1,7 @@
-import { Button, Card, Input, Select, Switch, Dropdown, Space } from "antd";
+import { Button, Input, Select, Dropdown, Space, Table } from "antd";
 import { useEffect, useState } from "react";
 import { fetcher } from "../../utils/helper";
-import { DeleteOutlined } from "@ant-design/icons";
-import { PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
 import { getAllCustomers } from "../../apiservice/ApiService";
 
@@ -20,25 +19,46 @@ export const CreateProfile = ({ setLoading, loading, setModalOpen }) => {
 
   const [field, setField] = useState([]);
   const [formDetail, setFormDetail] = useState({ formName: "" });
-  const [categoryListing, setCategoryListing] = useState([]);
-  const [userListing , setUserListing] = useState([]);
+  const [userListing, setUserListing] = useState([]);
+  const [dataSource, setDataSource] = useState([]);
   const [categoryServicesMapping, setCategoryServicesMapping] = useState([
     {
       category_id: "",
       services_id: "",
     },
   ]);
+  const [profileData, setProfileData] = useState({
+    name: "",
+    users: [],
+  });
 
-  const handleDeleteField = (subItem) => {
-    let tempField = field.filter((item) => item.key !== subItem.key);
-    setField(tempField);
-  };
-
-  const handleChangeLabel = (event, index) => {
-    const tempField = [...field];
-    tempField[index].label = event.target.value;
-    setField(tempField);
-  };
+  const columns = [
+    {
+      title: "#",
+      dataIndex: "id",
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+    },
+    {
+      title: "Action",
+      dataIndex: "",
+      key: "x",
+      render: (_, record) => (
+        <Button
+          className="governify-delete-icon"
+          type="plain"
+          icon={<DeleteOutlined />}
+          onClick={() => {}}
+        ></Button>
+      ),
+    },
+  ];
 
   const publishForm = async () => {
     let flag = false;
@@ -110,88 +130,24 @@ export const CreateProfile = ({ setLoading, loading, setModalOpen }) => {
     setFormDetail({ ...formDetail, formName: event.target.value });
   };
 
-  const onChangeUploadSettingsEnabled = (index) => {
-    const updatedFields = field.map((item, idx) => {
-      if (idx === index) {
-        if (item.enabled) {
-          return { ...item, type: "textArea", enabled: false };
-        } else {
-          return { ...item, type: "image", enabled: true };
-        }
-      } else {
-        if (item.type === "CheckBox") {
-          return item;
-        } else {
-          return { ...item, type: "textArea", enabled: false };
-        }
-      }
-    });
-    setField(updatedFields);
-  };
-
-  const onChangeRequiredSettingsEnabled = (index) => {
-    const updatedField = [...field];
-    updatedField[index].required = !updatedField[index].required;
-    setField(updatedField);
-  };
-
-  const onChangeSingleSelectEnabled = (index) => {
-    const updatedField = [...field];
-    updatedField[index].singleSelect = !updatedField[index].singleSelect;
-    setField(updatedField);
-  };
-
-  const handleChangeLabelOfDocuments = (event, index) => {
-    let tempField = [...field];
-    tempField[index].subLabel = event.target.value;
-    setField(tempField);
-  };
-
-
- 
-  const handleCategoryChange = (e, index) => {
-    const tempData = [...categoryServicesMapping];
-    let tempSelectedServices = [];
-    tempData[index].category_id = e;
-    tempData[index].services_id = "";
-    tempData.forEach((item) => {
-      tempSelectedServices.push(item.services_id);
-    });
-    
-
-    setCategoryServicesMapping(tempData);
-  };
-
-
-  const getListOfAllCustomers = async() =>{
+  const getListOfAllCustomers = async () => {
     const tempUser = [];
-    try{
+    try {
       const response = await getAllCustomers();
-      if(response.success){
-        response.data.response.forEach((item)=>{
-           tempUser.push({label:item.name , value:item.email});
-        })
+      if (response.success) {
+        response.data.response.forEach((item) => {
+          tempUser.push({ label: item.name, value: item.email });
+        });
         setUserListing(tempUser);
       }
-    }catch(err){
-
-    }finally{
-
+    } catch (err) {
+    } finally {
     }
-   
-  }
-
-
-
-  
-
-
+  };
 
   useEffect(() => {
-    getListOfAllCustomers()
-  
+    getListOfAllCustomers();
   }, []);
-
 
   const handleMenuClick = (e) => {
     let newField = {
@@ -243,6 +199,10 @@ export const CreateProfile = ({ setLoading, loading, setModalOpen }) => {
     onClick: handleMenuClick,
   };
 
+  const handleUserChange = (e) => {
+    setProfileData({ ...profileData, users: e });
+  };
+
   return (
     <>
       <div style={{ width: "100%", marginTop: "25px" }}>
@@ -269,209 +229,65 @@ export const CreateProfile = ({ setLoading, loading, setModalOpen }) => {
               </Dropdown>
             </p>
           </div>
-          <div
-            className="form_wrapper border border-success p-4 primary-shadow"
-            style={{ height: "600px", overflowY: "auto" }}
-          >
+          <div className="form_wrapper border border-success p-4 primary-shadow">
             <Input
               placeholder="Profile name"
               className="mt-10"
               onChange={(e) => handleChangeFormName(e)}
               addonBefore="Profile Name"
-              value={formDetail.formName}
+              value={profileData.name}
             />
 
             <div className="mt-10">
-              {categoryServicesMapping.map((item, index) => {
-                return (
-                  <div key={index}>
-                    <div className="mt-10">
-                      <Select
-                        showSearch
-                        placeholder={"Select User"}
-                        style={{ width: "100%", borderRadius: "10px" }}
-                        popupMatchSelectWidth={false}
-                        placement="bottomLeft"
-                        onChange={(e) => handleCategoryChange(e, index)}
-                        options={categoryListing}
-                        value={""}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
+              <Select
+                mode="multiple"
+                allowClear
+                showSearch
+                placeholder={"Select User"}
+                style={{ width: "100%", borderRadius: "10px" }}
+                popupMatchSelectWidth={false}
+                placement="bottomLeft"
+                onChange={handleUserChange}
+                options={userListing}
+                value={profileData.users}
+              />
             </div>
 
-            <div className="mt-10">
-              {field.map((item, index) => {
-                if (item.type === "textArea") {
-                  return (
-                    <Card className="mt-10" key={index}>
-                      <Input
-                        className="mt-10"
-                        placeholder="Label"
-                        value={item.label}
-                        onChange={(event) => handleChangeLabel(event, index)}
-                        addonBefore="Label"
-                      />
-                      <div className="mt-10">
-                        <span>Enable Documents Upload</span>
-                        <Switch
-                          className="ml-10"
-                          onChange={() => onChangeUploadSettingsEnabled(index)}
-                          value={item.enabled}
-                        />
-                      </div>
-                      <div className="mt-10">
-                        <span>Make Field Required</span>
-                        <Switch
-                          className="ml-10"
-                          onChange={() =>
-                            onChangeRequiredSettingsEnabled(index)
-                          }
-                          value={item.required}
-                        />
-                      </div>
-                      <div className="mt-10">
-                        {item.enabled && (
-                          <textarea
-                            style={{ width: "100%" }}
-                            value={item.subLabel}
-                            onChange={(event) =>
-                              handleChangeLabelOfDocuments(event, index)
-                            }
-                            placeholder="Enter points (one per line)"
-                            rows={5}
-                            cols={50}
-                          />
-                        )}
-                      </div>
-                      <Button
-                        className="mt-10"
-                        onClick={() => handleDeleteField(item)}
-                      >
-                        Delete
-                      </Button>
-                    </Card>
-                  );
-                } else if (item.type === "CheckBox") {
-                  return (
-                    <Card className="mt-10" key={index}>
-                      <Input
-                        className="mt-10"
-                        placeholder="Label"
-                        value={item.label}
-                        onChange={(event) => handleChangeLabel(event, index)}
-                        addonBefore="Label"
-                      />
-
-                      <div className="mt-10">
-                        <span>Make Field Required</span>
-                        <Switch
-                          className="ml-10"
-                          onChange={() =>
-                            onChangeRequiredSettingsEnabled(index)
-                          }
-                          value={item.required}
-                        />
-                      </div>
-                      <div className="mt-10">
-                        <span>Enable Single Select</span>
-                        <Switch
-                          className="ml-10"
-                          onChange={() => onChangeSingleSelectEnabled(index)}
-                          value={item.singleSelect}
-                        />
-                      </div>
-                      <div className="mt-10">
-                        <textarea
-                          style={{ width: "100%" }}
-                          value={item.subLabel}
-                          onChange={(event) =>
-                            handleChangeLabelOfDocuments(event, index)
-                          }
-                          placeholder="Enter options for checkbox separated by comma"
-                          rows={5}
-                          cols={50}
-                        />
-                      </div>
-                      <Button
-                        className="mt-10"
-                        onClick={() => handleDeleteField(item)}
-                      >
-                        Delete
-                      </Button>
-                    </Card>
-                  );
-                } else {
-                  return (
-                    <Card className="mt-10" key={index}>
-                      <Input
-                        className="mt-10"
-                        placeholder="Label"
-                        value={item.label}
-                        onChange={(event) => handleChangeLabel(event, index)}
-                        addonBefore="Label"
-                      />
-                      <div className="mt-10">
-                        <span>Enable Documents Upload</span>
-                        <Switch
-                          className="ml-10"
-                          onChange={() => onChangeUploadSettingsEnabled(index)}
-                          value={item.enabled}
-                        />
-                      </div>
-                      <div className="mt-10">
-                        <span>Make Field Required</span>
-                        <Switch
-                          className="ml-10"
-                          onChange={() =>
-                            onChangeRequiredSettingsEnabled(index)
-                          }
-                          value={item.required}
-                        />
-                      </div>
-                      <div className="mt-10">
-                        {item.enabled && (
-                          <textarea
-                            style={{ width: "100%" }}
-                            value={item.subLabel}
-                            onChange={(event) =>
-                              handleChangeLabelOfDocuments(event, index)
-                            }
-                            placeholder="Enter points (one per line)"
-                            rows={5}
-                            cols={50}
-                          />
-                        )}
-                      </div>
-                      <Button
-                        className="mt-10"
-                        onClick={() => handleDeleteField(item)}
-                      >
-                        Delete
-                      </Button>
-                    </Card>
-                  );
-                }
-              })}
-            </div>
-            <div style={{ display: "flex", justifyContent: "end" }}>
-              {field.length > 0 && (
-                <Button
-                  className="mt-10"
-                  style={{
-                    background: data.button_bg,
-                    color: "#fff",
-                    border: "none",
-                  }}
-                  onClick={publishForm}
-                >
-                  Publish
-                </Button>
-              )}
-            </div>
+            <Button
+              className="mt-10"
+              style={{
+                background: data.button_bg,
+                color: "#fff",
+                border: "none",
+              }}
+              onClick={publishForm}
+            >
+              Save
+            </Button>
           </div>
+        </div>
+        <div style={{ marginTop: "20px" }}>
+          <Table
+            columns={columns}
+            dataSource={dataSource}
+            showSorterTooltip={{
+              target: "sorter-icon",
+            }}
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              maxWidth: "1320px",
+              overflowX: "auto",
+            }}
+            pagination={{
+              showTotal: (total) => `Total ${total} items`,
+              defaultPageSize: 5,
+              showQuickJumper: true,
+              showSizeChanger: true,
+              pageSizeOptions: [5, 10, 15, 20],
+              defaultCurrent: 1,
+            }}
+          />
         </div>
       </div>
     </>
