@@ -1,30 +1,16 @@
-import { useEffect, useState } from "react";
-import { Hero } from "../components/Hero";
-import {
-  assignBoard,
-  deleteUser,
-  getAllBoards,
-  getUserList,
-} from "../apiservice/ApiService";
-import { Button, Select, Table } from "antd";
-import { extractDateTime, roleData } from "../utils/helper";
+import { useState } from "react";
+import { Button,  Table } from "antd";
 import { DeleteOutlined, LeftOutlined, PlusOutlined } from "@ant-design/icons";
-import { SearchBox } from "../components/SearchBox";
 import { useNavigate } from "react-router-dom";
-import { CopyText } from "./components/CopyText";
-import { DeleteModal } from "./components/DeleteModal";
 import { Loader } from "../common/Loader";
 import { ToastContainer } from "react-toastify";
+
 
 export const Profile = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [cloneDataSource, setCloneDataSource] = useState([]);
   const [dataSource, setDataSource] = useState([]);
-  const [boardListing, setBoardListing] = useState([]);
-  const [searchData, setSearchData] = useState("");
-  const [open, setOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState({});
+  
 
   const settingData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -37,31 +23,8 @@ export const Profile = () => {
     head_title_color: "#497ed8",
   };
 
-  const handleOpenModal = (item) => {
-    setUserToDelete(item);
-    setOpen(true);
-  };
-
-  const handleBoardChange = async (item, e) => {
-    let tempData = JSON.stringify({
-      user_id: item.id,
-      board_id: e,
-      email_id: item.email,
-    });
-    try {
-      setLoading(true);
-      const response = await assignBoard(tempData);
-      if (response.success) {
-        await fetchUserListing();
-      }
-    } catch (err) {
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleForgotPassword = (item) => {
-    navigate(`/forgot?email=${item.email}`);
+  const handleNavigateToCreateProfile = () => {
+    navigate('/admin/createprofile');
   };
 
   const columns = [
@@ -74,62 +37,8 @@ export const Profile = () => {
       dataIndex: "name",
     },
     {
-      title: "Company Name",
-      dataIndex: "company",
-      // sorter: (a, b) => a.age - b.age,
-      // sortDirections: ["descend"],
-    },
-    {
-      title: "Phone",
-      dataIndex: "phone",
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      // sorter: (a, b) => a.age - b.age,
-      // sortDirections: ["descend"],
-      render: (_, record) => <CopyText email={record.email} />,
-    },
-    {
-      title: "Assign Board",
-      dataIndex: "boardId",
-      render: (_, record) => (
-        <>
-          <Select
-            placeholder={"Select Board"}
-            style={{ width: "100%", borderRadius: "10px" }}
-            popupMatchSelectWidth={false}
-            placement="bottomLeft"
-            onChange={(e) => handleBoardChange(record, e)}
-            options={boardListing}
-            value={record.boardId}
-          />
-        </>
-      ),
-    },
-    {
-      title: "Created Date",
-      dataIndex: "createdAt",
-      // sorter: (a, b) => a.age - b.age,
-      // sortDirections: ["descend"],
-    },
-    {
-      title: "Role",
-      dataIndex: "role",
-      // sorter: (a, b) => a.age - b.age,
-      // sortDirections: ["descend"],
-    },
-    {
-      title: "Forgot Pass",
-      dataIndex: "",
-      render: (_, record) => (
-        <Button
-          className="governify-delete-icon"
-          type="plain"
-          icon={<i className="bi bi-send-arrow-up-fill"></i>}
-          onClick={() => handleForgotPassword(record)}
-        ></Button>
-      ),
+      title: "User List",
+      dataIndex: "users",
     },
     {
       title: "Action",
@@ -140,119 +49,16 @@ export const Profile = () => {
           className="governify-delete-icon"
           type="plain"
           icon={<DeleteOutlined />}
-          onClick={() => handleOpenModal(record)}
+          onClick={() => {}}
         ></Button>
       ),
     },
   ];
 
-  const fetchUserListing = async () => {
-    setLoading(true);
-    try {
-      const response = await getUserList();
-      const response1 = await getAllBoards();
-      if (response.success) {
-        const tempData = [];
-        response.data.response.forEach((item) => {
-          tempData.push({
-            key: item.id,
-            id: item.id,
-            name: item.name,
-            email: item.email,
-            company: item.company_name,
-            createdAt: extractDateTime(item.created_at),
-            role: roleData[item.role],
-            phone: item.phone,
-            boardId: item.board_id,
-          });
-        });
-        setDataSource(tempData);
-        setCloneDataSource(tempData);
-      }
-      if (response1.success) {
-        const tempData = [];
-        response1.data.response.boards.forEach((item) => {
-          tempData.push({
-            key: item.id,
-            label: item.name,
-            value: item.id,
-          });
-        });
+  const handleBackNavigation = () =>{
+    navigate('/admin')
+  }
 
-        setBoardListing(tempData);
-      }
-    } catch {
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchBoardListing = async () => {
-    const response = await getAllBoards();
-    if (response.success) {
-      const tempData = [];
-      response.data.response.boards.forEach((item) => {
-        tempData.push({
-          key: item.id,
-          label: item.name,
-          value: item.id,
-        });
-      });
-
-      setBoardListing(tempData);
-    }
-  };
-
-  const onChange = (pagination, filters, sorter, extra) => {
-    // console.log("params", pagination, filters, sorter, extra);
-  };
-
-  const handleCancel = () => {
-    setOpen(false);
-    setUserToDelete({});
-  };
-
-  const handleDelete = async () => {
-    try {
-      setLoading(true);
-      const response = await deleteUser(userToDelete.id);
-      if (response.success) {
-        setOpen(false);
-        setUserToDelete({});
-        fetchUserListing();
-      }
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleBackNavigation = () => {
-    navigate(-1);
-  };
-
-  useEffect(() => {
-    fetchUserListing();
-    fetchBoardListing();
-  }, []);
-
-  useEffect(() => {
-    const cloneData = [...cloneDataSource];
-    const tempSearchData = [];
-    if (searchData.length > 0) {
-      cloneData.forEach((item) => {
-        if (
-          item.name.toLowerCase().includes(searchData.toLowerCase()) ||
-          item.email.toLowerCase().includes(searchData.toLowerCase())
-        ) {
-          tempSearchData.push(item);
-        }
-      });
-      setDataSource(tempSearchData);
-    } else {
-      setDataSource(cloneData);
-    }
-  }, [searchData]);
   return (
     <div className="pt-84">
       {loading && <Loader />}
@@ -266,7 +72,7 @@ export const Profile = () => {
             justifyContent: "space-between",
           }}
         >
-            <Button
+          <Button
             icon={
               <LeftOutlined
                 style={{
@@ -276,7 +82,7 @@ export const Profile = () => {
               />
             }
             onClick={handleBackNavigation}
-            style={{border:`1px solid ${settingData.button_bg}`}}
+            style={{ border: `1px solid ${settingData.button_bg}` }}
           ></Button>
           <Button
             icon={
@@ -287,23 +93,19 @@ export const Profile = () => {
                 }}
               />
             }
-            onClick={handleBackNavigation}
-            style={{border:`1px solid ${settingData.button_bg}` , color:settingData.button_bg}}
-          >Create Profile</Button>
-
-          
+            onClick={handleNavigateToCreateProfile}
+            style={{
+              border: `1px solid ${settingData.button_bg}`,
+              color: settingData.button_bg,
+            }}
+          >
+            Create Profile
+          </Button>
         </div>
 
-        <div style={{ marginBottom: "20px" }}>
-          <SearchBox
-            placeHolder={"Start Typing To Search By Name"}
-            setSearchData={setSearchData}
-          />
-        </div>
         <Table
           columns={columns}
           dataSource={dataSource}
-          onChange={onChange}
           showSorterTooltip={{
             target: "sorter-icon",
           }}
@@ -323,13 +125,8 @@ export const Profile = () => {
           }}
         />
       </div>
-      {open && (
-        <DeleteModal
-          open={open}
-          handleCancel={handleCancel}
-          handleDelete={handleDelete}
-        />
-      )}
+
+    
       <ToastContainer position="bottom-right" />
     </div>
   );

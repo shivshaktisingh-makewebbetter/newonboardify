@@ -140,3 +140,7 @@ export const getCustomerGeneralSettings = (data) => {
 export const commonVerifyUser = (data) => {
   return Services.POST(`common/verifyUser`, data);
 };
+
+export const getAllCustomers = () => {
+  return Services.GET(`/newonboardify/admin/getAllCustomer`);
+};
