@@ -310,7 +310,7 @@ export const TrackDetails = () => {
                             <img
                               height="20"
                               width="22"
-                              src={`http://localhost:3000/flags/${countryCode.toLowerCase()}.svg`}
+                              src={`https://onboardify.tasc360.com/flags/${countryCode.toLowerCase()}.svg`}
                               alt={`${countryCode.toUpperCase()} Flag`}
                             />
                           )}
