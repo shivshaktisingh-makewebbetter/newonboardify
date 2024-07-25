@@ -231,7 +231,7 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
           try {
             setLoading(true);
             const response = await axios.post(
-              "http://127.0.0.1:8000/incorpify/uploadMondayFiles",
+              "https://onboardifyapi.tasc360.com/incorpify/uploadMondayFiles",
               formData,
               {
                 headers: {
@@ -286,12 +286,18 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight
       ) {
-        if (data!==undefined && data.updates.length > showComments) {
-          setCommentLoad(true);
-          setTimeout(() => {
-            setCommentLoad(false);
-            setShowComments((prev) => prev + 5);
-          }, 1000);
+        if (data !== undefined) {
+          if (
+            data !== undefined &&
+            data.hasOwnProperty("updates") &&
+            data.updates.length > showComments
+          ) {
+            setCommentLoad(true);
+            setTimeout(() => {
+              setCommentLoad(false);
+              setShowComments((prev) => prev + 5);
+            }, 1000);
+          }
         }
       }
     };
@@ -329,7 +335,7 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
                 {data.assets.length > 0 && (
                   <Flex gap={10} wrap>
                     {data.assets.map((item, i) => {
-                      const urlList = getUrlArray(data.column_values);
+                      // const urlList = getUrlArray(data.column_values);
 
                       return (
                         <>

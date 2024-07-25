@@ -33,7 +33,11 @@ export const Header = () => {
   };
 
   const navigateToHome = () => {
-    navigate("/user");
+    if(role === 'customer'){
+      navigate("/user");
+    }else{
+      navigate("/admin")
+    }
   };
 
   const handleSetNotification = () => {
