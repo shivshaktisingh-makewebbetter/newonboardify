@@ -335,7 +335,7 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
                 {data.assets.length > 0 && (
                   <Flex gap={10} wrap>
                     {data.assets.map((item, i) => {
-                      const urlList = getUrlArray(data.column_values);
+                      // const urlList = getUrlArray(data.column_values);
 
                       return (
                         <>
