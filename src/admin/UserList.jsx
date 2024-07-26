@@ -318,6 +318,7 @@ export const UserList = () => {
           open={open}
           handleCancel={handleCancel}
           handleDelete={handleDelete}
+          message={'Are you sure you want to delete this User?'}
         />
       )}
          <ToastContainer position="bottom-right" />

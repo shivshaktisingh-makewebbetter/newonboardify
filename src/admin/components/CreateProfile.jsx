@@ -1,13 +1,19 @@
-import { Button, Input, Select, Dropdown, Space, Table } from "antd";
+import { Button, Input, Select, Dropdown, Space, Table, Modal } from "antd";
 import { useEffect, useState } from "react";
 import { fetcher } from "../../utils/helper";
-import { DeleteOutlined, LeftOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  LeftOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { toast, ToastContainer } from "react-toastify";
 import {
   createProfileEndPoint,
   getAllCustomers,
 } from "../../apiservice/ApiService";
 import { Loader } from "../../common/Loader";
+import { CreateServices } from "./CreateServices";
 
 export const CreateProfile = ({ setModalOpen }) => {
   const data = JSON.parse(sessionStorage.getItem("settings")) || {
@@ -26,6 +32,7 @@ export const CreateProfile = ({ setModalOpen }) => {
   const [formDetail, setFormDetail] = useState({ formName: "" });
   const [userListing, setUserListing] = useState([]);
   const [dataSource, setDataSource] = useState([]);
+  const [openService, setOpenService] = useState(false);
   const [isProfileCreated, setIsProfileCreated] = useState({
     flag: false,
     profileId: "",
@@ -40,100 +47,6 @@ export const CreateProfile = ({ setModalOpen }) => {
     title: "",
     users: [],
   });
-
-  const columns = [
-    {
-      title: "#",
-      dataIndex: "id",
-    },
-    {
-      title: "Name",
-      dataIndex: "name",
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
-    },
-    {
-      title: "Action",
-      dataIndex: "",
-      key: "x",
-      render: (_, record) => (
-        <Button
-          className="governify-delete-icon"
-          type="plain"
-          icon={<DeleteOutlined />}
-          onClick={() => {}}
-        ></Button>
-      ),
-    },
-  ];
-
-  const publishForm = async () => {
-    let flag = false;
-    let method = "POST";
-    let url = "governify/admin/serviceRequestForms";
-    let message = "";
-    let categoryData = {
-      name: formDetail.formName,
-      form_data: field,
-      category_services_mapping: categoryServicesMapping,
-    };
-
-    field.forEach((item) => {
-      if (item.label === "") {
-        flag = true;
-        message = "Please Enter all the label of Form";
-        return;
-      }
-      if (
-        (item.type === "image" || item.type === "Document") &&
-        item.subLabel === ""
-      ) {
-        flag = true;
-        message = "Please Enter the SubLabel for Document";
-        return;
-      }
-    });
-
-    if (flag) {
-      toast.error(message);
-      return;
-    }
-
-    field.forEach((item) => {
-      if (item.type === "CheckBox") {
-        if (item.subLabel === "") {
-          flag = true;
-          message = "Please Enter Options for Checkbox";
-          return;
-        }
-      }
-    });
-
-    if (flag) {
-      toast.error(message);
-      return;
-    }
-
-    let payload = JSON.stringify(categoryData);
-
-    try {
-      const response = await fetcher(url, method, payload);
-      if (response.status) {
-        setModalOpen(false);
-        toast.success("Form Created Successfully.");
-        setField([]);
-        setCategoryServicesMapping([{ category_id: "", services_id: "" }]);
-        setFormDetail({ formName: "" });
-      } else {
-        toast.error(response.message);
-      }
-    } catch (err) {
-      toast.error("Error");
-      console.log(err, "error");
-    }
-  };
 
   const handleChangeProfileTitle = (event) => {
     setProfileData({ ...profileData, title: event.target.value });
@@ -187,27 +100,6 @@ export const CreateProfile = ({ setModalOpen }) => {
     setField(fields);
   };
 
-  const items = [
-    // {
-    //   label: "Text Box",
-    //   key: "0",
-    // },
-    // {
-    //   label: "CheckBox",
-    //   key: "1",
-    // },
-    // {
-    //   label: "Document",
-    //   key: "2",
-    // },
-  ];
-  const menuProps = {
-    items,
-    selectable: true,
-    defaultSelectedKeys: ["9"],
-    onClick: handleMenuClick,
-  };
-
   const handleUserChange = (e) => {
     setProfileData({ ...profileData, users: e });
   };
@@ -223,7 +115,7 @@ export const CreateProfile = ({ setModalOpen }) => {
         JSON.stringify(tempProfileData)
       );
       if (response.success) {
-        setIsProfileCreated(true);
+        setIsProfileCreated({ flag: true, id: "" });
         toast.success(response.message);
       } else {
         toast.error(response.message);
@@ -233,6 +125,8 @@ export const CreateProfile = ({ setModalOpen }) => {
       setLoading(false);
     }
   };
+
+  const handleCreateService = async () => {};
 
   return (
     <>
@@ -269,18 +163,6 @@ export const CreateProfile = ({ setModalOpen }) => {
               style={{ display: "flex", justifyContent: "space-between" }}
             >
               <strong>Create Profile</strong>
-
-              <Dropdown menu={menuProps}>
-                <Button
-                  type="text"
-                  style={{ border: "none", background: "white" }}
-                  icon={<PlusOutlined />}
-                  iconPosition="start"
-                  disabled={!isProfileCreated.flag}
-                >
-                  <Space>Add Services</Space>
-                </Button>
-              </Dropdown>
             </p>
           </div>
           <div className="form_wrapper border border-success p-4 primary-shadow">
@@ -320,29 +202,21 @@ export const CreateProfile = ({ setModalOpen }) => {
             </Button>
           </div>
         </div>
-        <div style={{ marginTop: "20px" }}>
-          <Table
-            columns={columns}
-            dataSource={dataSource}
-            showSorterTooltip={{
-              target: "sorter-icon",
-            }}
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              maxWidth: "1320px",
-              overflowX: "auto",
-            }}
-            pagination={{
-              showTotal: (total) => `Total ${total} items`,
-              defaultPageSize: 5,
-              showQuickJumper: true,
-              showSizeChanger: true,
-              pageSizeOptions: [5, 10, 15, 20],
-              defaultCurrent: 1,
-            }}
+
+        <Modal
+          open={openService}
+          centered
+          footer={(_) => <></>}
+          onCancel={() => {
+            setOpenService(false);
+          }}
+          className="width-80"
+        >
+          <CreateServices
+            handleChangeCreateServiceModal={handleCreateService}
+            profileId={isProfileCreated.id}
           />
-        </div>
+        </Modal>
         <ToastContainer position="bottom-right" />
       </div>
     </>

@@ -1,16 +1,29 @@
-import { useState } from "react";
-import { Button,  Table } from "antd";
-import { DeleteOutlined, LeftOutlined, PlusOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import { Button, Switch, Table } from "antd";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  LeftOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { Loader } from "../common/Loader";
-import { ToastContainer } from "react-toastify";
-
+import { toast, ToastContainer } from "react-toastify";
+import {
+  deleteProfile,
+  getProfileListing,
+  makeProfileDefault,
+} from "../apiservice/ApiService";
+import { DeleteModal } from "./components/DeleteModal";
 
 export const Profile = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
-  
+  const [deleteModalOpen, setDeleteMOdalOpen] = useState({
+    flag: false,
+    id: "",
+  });
 
   const settingData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -24,7 +37,53 @@ export const Profile = () => {
   };
 
   const handleNavigateToCreateProfile = () => {
-    navigate('/admin/createprofile');
+    navigate("/admin/createprofile");
+  };
+
+  const onChangeSwitch = async (e, id) => {
+    const tempDataSource = [...dataSource];
+
+    let payload = {
+      profile_id: id,
+      value: e,
+    };
+    setLoading(true);
+    try {
+      const response = await makeProfileDefault(JSON.stringify(payload));
+      if (response.success) {
+        tempDataSource.forEach((item) => {
+          item.default = item.id === id ? true : false;
+        });
+        toast.success(response.message);
+        setDataSource(tempDataSource);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (err) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteProfile = async () => {
+    setLoading(true);
+    try {
+      const response = await deleteProfile(deleteModalOpen.id);
+      if (response.success) {
+        toast.success(response.message);
+        setDeleteMOdalOpen({ flag: false, id: "" });
+        await getListOfAllProfiles();
+      } else {
+        toast.error(response.message);
+      }
+    } catch (err) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteModal = (id) => {
+    setDeleteMOdalOpen({ flag: true, id: id });
   };
 
   const columns = [
@@ -34,30 +93,76 @@ export const Profile = () => {
     },
     {
       title: "Name",
-      dataIndex: "name",
+      dataIndex: "title",
     },
     {
       title: "User List",
       dataIndex: "users",
     },
     {
+      title: "Default Profile",
+      dataIndex: "default",
+      render: (_, record) => (
+        <Switch
+          checked={record.default}
+          onChange={(e) => onChangeSwitch(e, record.id)}
+        />
+      ),
+    },
+    {
       title: "Action",
       dataIndex: "",
       key: "x",
       render: (_, record) => (
-        <Button
-          className="governify-delete-icon"
-          type="plain"
-          icon={<DeleteOutlined />}
-          onClick={() => {}}
-        ></Button>
+        <>
+          <Button
+            className="governify-delete-icon"
+            type="plain"
+            icon={<EditOutlined />}
+            onClick={() => {}}
+          ></Button>
+
+          <Button
+            className="governify-delete-icon"
+            type="plain"
+            icon={<DeleteOutlined />}
+            onClick={() => handleDeleteModal(record.id)}
+          ></Button>
+        </>
       ),
     },
   ];
 
-  const handleBackNavigation = () =>{
-    navigate('/admin')
-  }
+  const handleBackNavigation = () => {
+    navigate("/admin");
+  };
+
+  const getListOfAllProfiles = async () => {
+    let tempListing = [];
+    try {
+      const response = await getProfileListing();
+
+      if (response.success) {
+        // console.log(response.data.response)
+        response.data.response.forEach((item) => {
+          tempListing.push({
+            id: item.id,
+            title: item.title,
+            users: item.users.split(",").map((user) => user),
+            default: item.make_default === 0 ? false : true,
+          });
+        });
+        // console.log(tempListing , 'tempListing')
+        setDataSource(tempListing);
+      }
+    } catch (err) {
+    } finally {
+    }
+  };
+
+  useEffect(() => {
+    getListOfAllProfiles();
+  }, []);
 
   return (
     <div className="pt-84">
@@ -126,8 +231,18 @@ export const Profile = () => {
         />
       </div>
 
-    
       <ToastContainer position="bottom-right" />
+
+      {deleteModalOpen.flag && (
+        <DeleteModal
+          open={deleteModalOpen.flag}
+          handleCancel={() => {
+            setDeleteMOdalOpen({ flag: false, id: "" });
+          }}
+          handleDelete={handleDeleteProfile}
+          message={"Are you sure you want to delete this Profile?"}
+        />
+      )}
     </div>
   );
 };

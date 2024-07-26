@@ -1,6 +1,6 @@
 import { Button, Modal, Typography } from "antd";
 
-export const DeleteModal = ({open ,handleCancel , handleDelete}) => {
+export const DeleteModal = ({open ,handleCancel , handleDelete  ,message}) => {
     const settingData = JSON.parse(sessionStorage.getItem("settings")) || {
 		image:
 		  "https://onboardify.tasc360.com/uploads/y22.png",
@@ -36,7 +36,7 @@ export const DeleteModal = ({open ,handleCancel , handleDelete}) => {
       )}
       onCancel={handleCancel}
     >
-      <Typography>Are you sure you want to delete this User?</Typography>
+      <Typography>{message}</Typography>
     </Modal>
   );
 };
