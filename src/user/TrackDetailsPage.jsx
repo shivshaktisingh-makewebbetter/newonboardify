@@ -415,7 +415,7 @@ export const TrackDetails = () => {
               className="card border-0 border-1 p-4"
               style={{ background: "rgba(111, 116, 144, 0.06)" }}
             >
-              <p className="second-heading text-start head-color fw-bold pb-4 border-bottom">
+              <p className="second-heading text-start head-color fw-bold pb-4 border-bottom" style={{fontSize:"26px"}}>
                 Progress Updates
               </p>
 
