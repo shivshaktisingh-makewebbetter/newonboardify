@@ -2,13 +2,14 @@ import { Button, Input, Select, Dropdown, Space, Table } from "antd";
 import { useEffect, useState } from "react";
 import { fetcher } from "../../utils/helper";
 import { DeleteOutlined, LeftOutlined, PlusOutlined } from "@ant-design/icons";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import {
   createProfileEndPoint,
   getAllCustomers,
 } from "../../apiservice/ApiService";
+import { Loader } from "../../common/Loader";
 
-export const CreateProfile = ({ setLoading, loading, setModalOpen }) => {
+export const CreateProfile = ({ setModalOpen }) => {
   const data = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
     site_bg: "#ffffff",
@@ -21,9 +22,14 @@ export const CreateProfile = ({ setLoading, loading, setModalOpen }) => {
   };
 
   const [field, setField] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [formDetail, setFormDetail] = useState({ formName: "" });
   const [userListing, setUserListing] = useState([]);
   const [dataSource, setDataSource] = useState([]);
+  const [isProfileCreated, setIsProfileCreated] = useState({
+    flag: false,
+    profileId: "",
+  });
   const [categoryServicesMapping, setCategoryServicesMapping] = useState([
     {
       category_id: "",
@@ -207,6 +213,7 @@ export const CreateProfile = ({ setLoading, loading, setModalOpen }) => {
   };
 
   const handleCreateProfile = async () => {
+    setLoading(true);
     try {
       let tempProfileData = {
         title: profileData.title,
@@ -216,17 +223,20 @@ export const CreateProfile = ({ setLoading, loading, setModalOpen }) => {
         JSON.stringify(tempProfileData)
       );
       if (response.success) {
-        toast.success('New profile Created.')
-      }else{
+        setIsProfileCreated(true);
+        toast.success(response.message);
+      } else {
         toast.error(response.message);
       }
     } catch (err) {
     } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
+      {loading && <Loader />}
       <div style={{ width: "100%", marginTop: "25px" }}>
         <div>
           <div
@@ -266,6 +276,7 @@ export const CreateProfile = ({ setLoading, loading, setModalOpen }) => {
                   style={{ border: "none", background: "white" }}
                   icon={<PlusOutlined />}
                   iconPosition="start"
+                  disabled={!isProfileCreated.flag}
                 >
                   <Space>Add Services</Space>
                 </Button>
@@ -332,6 +343,7 @@ export const CreateProfile = ({ setLoading, loading, setModalOpen }) => {
             }}
           />
         </div>
+        <ToastContainer position="bottom-right" />
       </div>
     </>
   );

@@ -59,11 +59,12 @@ axiosInstance.interceptors.response.use(
 const handleResponse = async (request) => {
     try {
         const response = await request;
+        
         const responseData = response.data;
         
         // Check the 'status' field in the response data
         if (responseData.status === true) {
-            return { success: true, data: responseData, message: null };
+            return { success: true, data: responseData, message: responseData.message || '' };
         } else {
             return { success: false, data: responseData, message: responseData.message || 'Request failed' };
         }
