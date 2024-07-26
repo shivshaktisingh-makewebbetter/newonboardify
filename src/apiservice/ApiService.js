@@ -148,3 +148,19 @@ export const getAllCustomers = () => {
 export const createProfileEndPoint = (data) => {
   return Services.POST(`newonboardify/admin/onboardifyProfile`, data);
 };
+
+export const getProfileListing = () => {
+  return Services.GET(`/newonboardify/admin/onboardifyProfile`);
+};
+
+export const updateProfile = (id, data) => {
+  return Services.PUT(`/newonboardify/admin/onboardifyProfile/${id}`, data);
+};
+
+export const deleteProfile = (id) => {
+  return Services.DELETE(`/newonboardify/admin/onboardifyProfile/${id}`);
+};
+
+export const makeProfileDefault = (data) => {
+  return Services.POST(`/newonboardify/admin/updateProfileSetting`, data);
+};
