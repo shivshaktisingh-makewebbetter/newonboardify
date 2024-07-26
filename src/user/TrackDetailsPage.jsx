@@ -66,7 +66,7 @@ export const TrackDetails = () => {
 
   const getAllLikes = async () => {
     let ids = [];
-    let likes = await fetcher(`incorpify/listAllLikes` , 'GET');
+    let likes = await fetcher(`incorpify/listAllLikes`, "GET");
     if (likes.success) {
       likes.data.map((item) => {
         ids.push(item.item_type_id);
@@ -115,12 +115,12 @@ export const TrackDetails = () => {
       const tempData = JSON.parse(subItem.data);
 
       if (item.id === tempData.column_id) {
-      //  if(!tempData.column_type === 'long_text'){
+        //  if(!tempData.column_type === 'long_text'){
         if (tempData.hasOwnProperty("value") && tempData.value !== null) {
           tempInitialAction = tempData.value.label.text;
         }
-      //  }
-        
+        //  }
+
         break;
       }
     }
@@ -141,7 +141,7 @@ export const TrackDetails = () => {
         if (tempData.hasOwnProperty("value") && tempData.value !== null) {
           tempColor = tempData.value.label.style.color;
         }
-      // }
+        // }
         break;
       }
     }
@@ -415,7 +415,10 @@ export const TrackDetails = () => {
               className="card border-0 border-1 p-4"
               style={{ background: "rgba(111, 116, 144, 0.06)" }}
             >
-              <p className="second-heading text-start head-color fw-bold pb-4 border-bottom" style={{fontSize:"26px"}}>
+              <p
+                className="second-heading text-start head-color fw-bold pb-4 border-bottom"
+                style={{ fontSize: "26px" }}
+              >
                 Progress Updates
               </p>
 
