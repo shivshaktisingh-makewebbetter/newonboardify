@@ -56,9 +56,6 @@ export const setUserOrAdmin = (data) => {
   return Services.POST(`newonboardify/admin/addAdminOrUser`, data);
 };
 
-export const getServiceRequestListing = () => {
-  return Services.GET(`newonboardify/admin/serviceRequests`);
-};
 
 export const updateServiceRequest = ({ id, data }) => {
   return Services.PUT(`newonboardify/admin/serviceRequests/${id}`, data);

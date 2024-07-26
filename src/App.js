@@ -28,6 +28,7 @@ import ErrorBoundary from "./error/ErrorBoundary";
 import ErrorPage from "./common/ErrorPage";
 import { Profile } from "./admin/Profile";
 import { CreateProfile } from "./admin/components/CreateProfile";
+import { EditProfile } from "./admin/components/EditProfile";
 
 
 function App() {
@@ -104,6 +105,10 @@ function App() {
         {
           path: "createprofile",
           element: <ProtectedRoute element={<ErrorBoundary><CreateProfile /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
+        },
+        {
+          path: "editprofile",
+          element: <ProtectedRoute element={<ErrorBoundary><EditProfile /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
         },
       ],
     },

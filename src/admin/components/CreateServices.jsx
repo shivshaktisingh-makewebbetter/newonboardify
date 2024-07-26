@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { ImageUpload } from "../../common/ImageUpload";
 import { createService, getAllBoards } from "../../apiservice/ApiService";
 
-export const CreateServices = ({ handleChangeCreateServiceModal , profileId }) => {
+export const CreateServices = ({ closeModal, profileId }) => {
   const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
     site_bg: "#ffffff",
@@ -22,21 +22,22 @@ export const CreateServices = ({ handleChangeCreateServiceModal , profileId }) =
     image: "",
     image_name: "",
     board_id: "",
-    profile_id: profileId || ''
+    profile_id: profileId.toString() || "",
   });
   const [boardIdOptions, setBoardIdOptions] = useState([]);
 
   const handleCreateServices = async () => {
-
-    try{
+    try {
       const response = await createService(JSON.stringify(serviceData));
-      console.log(response, "response");
-    }catch(err){
-
-    }finally{
-      
+      if (response.success) {
+        toast.success(response.message);
+        closeModal();
+      } else {
+        toast.error(response.message);
+      }
+    } catch (err) {
+    } finally {
     }
-    
   };
 
   const getAllBoardIds = async () => {
