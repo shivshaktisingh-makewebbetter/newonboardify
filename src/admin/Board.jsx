@@ -90,6 +90,28 @@ export const Board = () => {
 
     if (response.success && response.data.response.length > 0) {
       let tempData = JSON.parse(response.data.response[0].columns);
+      console.log(tempData);
+      let tempEmailKey = tempData?.document_fetch_key || [];
+      let tempImageKey = tempData?.image_key || "";
+      setBoardVisibilityData(tempData);
+      setDocumentFetchKey(tempEmailKey);
+      setImageKey(tempImageKey);
+    }
+    if (response.success && response.data.response.length === 0) {
+      let tempData = {
+        candidate_coulmns: [],
+        card_section: { column1: "", column2: "" },
+        document_fetch_key: [],
+        email: "",
+        email_key: [],
+        extra_details: { chart_embed_code: "", form_embed_code: "", key: "" },
+        filterByUser: { key: "", value: "" },
+        image_key: "",
+        onboarding_columns: [],
+        required_columns: { profession: "", overall_status: "" },
+        sub_headings_column: [],
+      };
+      console.log(tempData);
       let tempEmailKey = tempData?.document_fetch_key || [];
       let tempImageKey = tempData?.image_key || "";
       setBoardVisibilityData(tempData);
