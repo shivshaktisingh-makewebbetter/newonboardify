@@ -416,7 +416,7 @@ export const TrackDetails = () => {
               style={{ background: "rgba(111, 116, 144, 0.06)" }}
             >
               <p className="second-heading text-start head-color fw-bold pb-4 border-bottom">
-                Onboarding Updates
+                Progress Updates
               </p>
 
               <UpdateComponent
