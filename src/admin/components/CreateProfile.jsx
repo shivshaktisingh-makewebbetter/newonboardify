@@ -1,9 +1,12 @@
 import { Button, Input, Select, Dropdown, Space, Table } from "antd";
 import { useEffect, useState } from "react";
 import { fetcher } from "../../utils/helper";
-import { DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, LeftOutlined, PlusOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
-import { getAllCustomers } from "../../apiservice/ApiService";
+import {
+  createProfileEndPoint,
+  getAllCustomers,
+} from "../../apiservice/ApiService";
 
 export const CreateProfile = ({ setLoading, loading, setModalOpen }) => {
   const data = JSON.parse(sessionStorage.getItem("settings")) || {
@@ -28,7 +31,7 @@ export const CreateProfile = ({ setLoading, loading, setModalOpen }) => {
     },
   ]);
   const [profileData, setProfileData] = useState({
-    name: "",
+    title: "",
     users: [],
   });
 
@@ -126,8 +129,8 @@ export const CreateProfile = ({ setLoading, loading, setModalOpen }) => {
     }
   };
 
-  const handleChangeFormName = (event) => {
-    setFormDetail({ ...formDetail, formName: event.target.value });
+  const handleChangeProfileTitle = (event) => {
+    setProfileData({ ...profileData, title: event.target.value });
   };
 
   const getListOfAllCustomers = async () => {
@@ -203,10 +206,50 @@ export const CreateProfile = ({ setLoading, loading, setModalOpen }) => {
     setProfileData({ ...profileData, users: e });
   };
 
+  const handleCreateProfile = async () => {
+    try {
+      let tempProfileData = {
+        title: profileData.title,
+        users: profileData.users.join(","),
+      };
+      const response = await createProfileEndPoint(
+        JSON.stringify(tempProfileData)
+      );
+      if (response.success) {
+        toast.success('New profile Created.')
+      }else{
+        toast.error(response.message);
+      }
+    } catch (err) {
+    } finally {
+    }
+  };
+
   return (
     <>
       <div style={{ width: "100%", marginTop: "25px" }}>
         <div>
+          <div
+            style={{
+              marginTop: "10px",
+              marginBottom: "10px",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <Button
+              icon={
+                <LeftOutlined
+                  style={{
+                    color: data.button_bg,
+                    borderColor: data.button_bg,
+                  }}
+                />
+              }
+              onClick={() => {}}
+              style={{ border: `1px solid ${data.button_bg}` }}
+            ></Button>
+          </div>
           <div
             className="text-white"
             style={{ backgroundColor: data.head_title_color }}
@@ -233,9 +276,9 @@ export const CreateProfile = ({ setLoading, loading, setModalOpen }) => {
             <Input
               placeholder="Profile name"
               className="mt-10"
-              onChange={(e) => handleChangeFormName(e)}
+              onChange={(e) => handleChangeProfileTitle(e)}
               addonBefore="Profile Name"
-              value={profileData.name}
+              value={profileData.title}
             />
 
             <div className="mt-10">
@@ -260,7 +303,7 @@ export const CreateProfile = ({ setLoading, loading, setModalOpen }) => {
                 color: "#fff",
                 border: "none",
               }}
-              onClick={publishForm}
+              onClick={handleCreateProfile}
             >
               Save
             </Button>
