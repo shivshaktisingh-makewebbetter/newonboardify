@@ -5,7 +5,11 @@ import { toast } from "react-toastify";
 import { ImageUpload } from "../../common/ImageUpload";
 import { createService, getAllBoards } from "../../apiservice/ApiService";
 
-export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) => {
+export const CreateServices = ({
+  closeModal,
+  profileId,
+  getAllServiceListing,
+}) => {
   const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
     site_bg: "#ffffff",
@@ -33,7 +37,14 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
         toast.success(response.message);
         getAllServiceListing();
         closeModal();
-
+        setServiceData({
+          title: "",
+          description: "",
+          image: "",
+          image_name: "",
+          board_id: "",
+          profile_id: profileId.toString() || "",
+        });
       } else {
         toast.error(response.message);
       }
@@ -90,8 +101,6 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
     getAllBoardIds();
   }, []);
 
-
-
   return (
     <>
       <div
@@ -114,8 +123,8 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
             <div>
               <ImageUpload
                 onFileSelect={handleFileSelect}
-                imageName={""}
-                imageUrl={""}
+                imageName={serviceData.image_name}
+                imageUrl={serviceData.image}
               />
             </div>
             <Input
@@ -124,6 +133,7 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
               onChange={handleTitleChange}
               addonBefore="Title"
               style={{ borderRadius: "10px" }}
+              value={serviceData.title}
             />
             <Input
               placeholder="Service description"
@@ -131,6 +141,7 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
               onChange={handleDescriptionChange}
               addonBefore="Description"
               style={{ borderRadius: "10px" }}
+              value={serviceData.description}
             />
 
             <div className="mt-10">
@@ -143,6 +154,7 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
                 onChange={handleChangeBoardId}
                 options={boardIdOptions}
                 filterOption={filterOption}
+                value={serviceData.board_id}
               />
             </div>
 
