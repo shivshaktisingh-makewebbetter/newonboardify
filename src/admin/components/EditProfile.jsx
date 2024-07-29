@@ -358,6 +358,7 @@ export const EditProfile = () => {
             closeModal={() => {
               setEditService(false);
             }}
+            key={editServiceData.id}
             profileId={location.state.profileId}
             getAllServiceListing={getAllServiceListing}
             editServiceData={editServiceData}
