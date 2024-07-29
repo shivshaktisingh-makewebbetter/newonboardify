@@ -67,7 +67,17 @@ export const CreateProfile = () => {
         JSON.stringify(tempProfileData)
       );
       if (response.success) {
+
         tempProfileId = response.data.response[0].id;
+        setTimeout(() => {
+          navigate("/admin/editprofile", {
+            state: {
+              profileId: tempProfileId,
+              profileTitle: profileData.title,
+              users: profileData.users.join(","),
+            },
+          });
+        }, 2000);
         toast.success(response.message);
       } else {
         toast.error(response.message);
@@ -75,15 +85,7 @@ export const CreateProfile = () => {
     } catch (err) {
     } finally {
       setLoading(false);
-      setTimeout(() => {
-        navigate("/admin/editprofile", {
-          state: {
-            profileId: tempProfileId,
-            profileTitle: profileData.title,
-            users: profileData.users.join(","),
-          },
-        });
-      }, 2000);
+     
     }
   };
 
