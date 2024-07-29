@@ -158,7 +158,9 @@ export const Profile = () => {
           tempListing.push({
             id: item.id,
             title: item.title,
-            users: item.users.split(",").map((user) => user),
+            users: item.users.split(",").map((user) => {
+              return <p>{user}</p>
+            }),
             default: item.make_default === 0 ? false : true,
           });
         });
