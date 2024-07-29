@@ -110,16 +110,16 @@ export const Profile = () => {
       title: "User List",
       dataIndex: "users",
     },
-    {
-      title: "Default Profile",
-      dataIndex: "default",
-      render: (_, record) => (
-        <Switch
-          checked={record.default}
-          onChange={(e) => onChangeSwitch(e, record.id)}
-        />
-      ),
-    },
+    // {
+    //   title: "Default Profile",
+    //   dataIndex: "default",
+    //   render: (_, record) => (
+    //     <Switch
+    //       checked={record.default}
+    //       onChange={(e) => onChangeSwitch(e, record.id)}
+    //     />
+    //   ),
+    // },
     {
       title: "Action",
       dataIndex: "",
