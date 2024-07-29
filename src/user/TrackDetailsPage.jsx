@@ -279,7 +279,7 @@ export const TrackDetails = () => {
               className="column-head text-start head-color fw-bold pb-4 border-bottom onboarding-fs-20"
               style={{ fontSize: "26px" }}
             >
-              Candidate Information
+              Basic Information
             </p>
             <ul className="list-group list-group-flush">
               {Object.keys(columnData).length > 0 &&
@@ -324,7 +324,7 @@ export const TrackDetails = () => {
 
           <div className="card border-0 border-1 p-4">
             <h4 className="text-start head-color fw-bold pb-4 border-bottom onboarding-fs-20">
-              Onboarding Status
+              Status Update
             </h4>
             <ul className="list-group list-group-flush">
               {Object.keys(columnData).length > 0 &&
