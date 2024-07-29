@@ -79,11 +79,18 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
     setServiceData({ ...serviceData, board_id: e });
   };
 
+  const filterOption = (input, option) => {
+    return (
+      option.label.toLowerCase().includes(input.toLowerCase()) ||
+      option.value.toString().toLowerCase().includes(input.toLowerCase())
+    );
+  };
+
   useEffect(() => {
     getAllBoardIds();
   }, []);
 
-  console.log(serviceData, "sdaf");
+
 
   return (
     <>
@@ -135,6 +142,7 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
                 placement="bottomLeft"
                 onChange={handleChangeBoardId}
                 options={boardIdOptions}
+                filterOption={filterOption}
               />
             </div>
 

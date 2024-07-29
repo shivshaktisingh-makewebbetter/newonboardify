@@ -88,6 +88,13 @@ export const EditServices = ({ closeModal, profileId ,getAllServiceListing , edi
     setServiceData({ ...serviceData, board_id: e });
   };
 
+  const filterOption = (input, option) => {
+    return (
+      option.label.toLowerCase().includes(input.toLowerCase()) ||
+      option.value.toString().toLowerCase().includes(input.toLowerCase())
+    );
+  };
+
   useEffect(() => {
     getAllBoardIds();
   }, []);
@@ -145,6 +152,7 @@ export const EditServices = ({ closeModal, profileId ,getAllServiceListing , edi
                 onChange={handleChangeBoardId}
                 value={serviceData.board_id}
                 options={boardIdOptions}
+                filterOption={filterOption}
               />
             </div>
 
