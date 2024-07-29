@@ -1,6 +1,5 @@
 import { Button, Input, Select } from "antd";
 import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
 import { ImageUpload } from "../../common/ImageUpload";
 import { createService, getAllBoards } from "../../apiservice/ApiService";
@@ -125,7 +124,7 @@ export const CreateServices = ({
                 onFileSelect={handleFileSelect}
                 imageName={serviceData.image_name}
                 imageUrl={serviceData.image}
-                key={uuidv4()}
+
               />
             </div>
             <Input
