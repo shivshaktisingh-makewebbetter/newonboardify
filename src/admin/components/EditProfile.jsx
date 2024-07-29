@@ -2,11 +2,11 @@ import { Button, Input, Modal, Select, Table } from "antd";
 import { useEffect, useState } from "react";
 import { DeleteOutlined, EditOutlined, LeftOutlined } from "@ant-design/icons";
 import { toast, ToastContainer } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
 import {
   deleteServices,
   getAllBoards,
   getAllCustomers,
-  getServiceListing,
   getServicesByProfileId,
   updateProfile,
 } from "../../apiservice/ApiService";
@@ -343,6 +343,7 @@ export const EditProfile = () => {
             }}
             profileId={location.state.profileId}
             getAllServiceListing={getAllServiceListing}
+            key={uuidv4()}
           />
         </Modal>
         <Modal
