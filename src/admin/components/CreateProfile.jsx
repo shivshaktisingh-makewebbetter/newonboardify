@@ -56,7 +56,7 @@ export const CreateProfile = () => {
   };
 
   const handleCreateProfile = async () => {
-    let tempProfileId ='';
+    let tempProfileId = "";
     setLoading(true);
     try {
       let tempProfileData = {
@@ -75,13 +75,15 @@ export const CreateProfile = () => {
     } catch (err) {
     } finally {
       setLoading(false);
-      navigate("/admin/editprofile", {
-        state: {
-          profileId: tempProfileId,
-          profileTitle: profileData.title,
-          users: profileData.users.join(","),
-        },
-      });
+      setTimeout(() => {
+        navigate("/admin/editprofile", {
+          state: {
+            profileId: tempProfileId,
+            profileTitle: profileData.title,
+            users: profileData.users.join(","),
+          },
+        });
+      }, 2000);
     }
   };
 
