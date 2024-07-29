@@ -419,7 +419,7 @@ export const TrackDetails = () => {
                 className="second-heading text-start head-color fw-bold pb-4 border-bottom"
                 style={{ fontSize: "26px" }}
               >
-                Progress Updates
+                Request Updates
               </p>
 
               <UpdateComponent
