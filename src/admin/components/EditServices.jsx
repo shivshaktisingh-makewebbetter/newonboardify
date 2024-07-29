@@ -3,9 +3,19 @@ import { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
 import { ImageUpload } from "../../common/ImageUpload";
-import { createService, editServices, getAllBoards } from "../../apiservice/ApiService";
+import {
+  createService,
+  editServices,
+  getAllBoards,
+} from "../../apiservice/ApiService";
 
-export const EditServices = ({ closeModal, profileId ,getAllServiceListing , editServiceData}) => {
+export const EditServices = ({
+  closeModal,
+  profileId,
+  getAllServiceListing,
+  editServiceData,
+  boardIdOptions,
+}) => {
   const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
     site_bg: "#ffffff",
@@ -17,14 +27,13 @@ export const EditServices = ({ closeModal, profileId ,getAllServiceListing , edi
     head_title_color: "#497ed8",
   };
   const [serviceData, setServiceData] = useState({
-    title: editServiceData.title || '',
-    description: editServiceData.description || '',
-    image: editServiceData.file_location || '',
-    image_name:editServiceData.image || '',
-    board_id: editServiceData.board_id || '',
+    title: editServiceData.title || "",
+    description: editServiceData.description || "",
+    image: editServiceData.file_location || "",
+    image_name: editServiceData.image || "",
+    board_id: editServiceData.board_id || "",
     profile_id: profileId.toString() || "",
   });
-  const [boardIdOptions, setBoardIdOptions] = useState([]);
 
   function startsWithHttp(url) {
     return (
@@ -40,7 +49,10 @@ export const EditServices = ({ closeModal, profileId ,getAllServiceListing , edi
       : serviceData.image_name;
     payload.image = startsWithHttp(serviceData.image) ? "" : serviceData.image;
     try {
-      const response = await editServices(editServiceData.id , JSON.stringify(payload));
+      const response = await editServices(
+        editServiceData.id,
+        JSON.stringify(payload)
+      );
       if (response.success) {
         toast.success(response.message);
         getAllServiceListing();
@@ -50,25 +62,6 @@ export const EditServices = ({ closeModal, profileId ,getAllServiceListing , edi
       }
     } catch (err) {
     } finally {
-    }
-  };
-
-  const getAllBoardIds = async () => {
-    try {
-      const response = await getAllBoards();
-      if (response.success) {
-        let tempData = [];
-        response.data.response.boards.forEach((item) => {
-          tempData.push({
-            key: item.id,
-            label: item.name,
-            value: item.id,
-          });
-        });
-        setBoardIdOptions(tempData);
-      }
-    } catch (err) {
-      throw new Error("Network response was not ok ", err);
     }
   };
 
@@ -94,11 +87,6 @@ export const EditServices = ({ closeModal, profileId ,getAllServiceListing , edi
       option.value.toString().toLowerCase().includes(input.toLowerCase())
     );
   };
-
-  useEffect(() => {
-    getAllBoardIds();
-  }, []);
-
 
   return (
     <>

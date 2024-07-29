@@ -149,10 +149,9 @@ export const EditProfile = () => {
     }
   };
 
-  useEffect(() => {
-    getListOfAllCustomers();
-    getAllBoardIds();
-  }, []);
+  // useEffect(() => {
+  //   getAllBoardIds();
+  // }, []);
 
   const handleUserChange = (e) => {
     setProfileData({ ...profileData, users: e });
@@ -186,13 +185,31 @@ export const EditProfile = () => {
   };
 
   const getAllServiceListing = async () => {
+    const allAlreadyAssignedBoard = [];
+    
     try {
       const response = await getServicesByProfileId(location.state.profileId);
       if (response.success && response.data.response[0].services.length > 0) {
         setDataSource(response.data.response[0].services);
+        response.data.response[0].services.forEach((item)=>{
+          allAlreadyAssignedBoard.push(item.board_id);
+        })
       }
-      if(response.success && response.data.response[0].services.length === 0){
+      if (response.success && response.data.response[0].services.length === 0) {
         setDataSource([]);
+      }
+      const response1 = await getAllBoards();
+      if (response1.success) {
+        let tempData = [];
+        response1.data.response.boards.forEach((item) => {
+          tempData.push({
+            key: item.id,
+            label: item.name,
+            value: item.id,
+            disabled : allAlreadyAssignedBoard.includes(item.id)
+          });
+        });
+        setBoardIdOptions(tempData);
       }
     } catch (err) {
     } finally {
@@ -222,7 +239,9 @@ export const EditProfile = () => {
 
   useEffect(() => {
     getAllServiceListing();
+    getListOfAllCustomers();
   }, []);
+
 
   return (
     <>
@@ -347,6 +366,7 @@ export const EditProfile = () => {
             profileId={location.state.profileId}
             getAllServiceListing={getAllServiceListing}
             key={uuidv4()}
+            boardIdOptions={boardIdOptions}
           />
         </Modal>
         <Modal
@@ -366,6 +386,7 @@ export const EditProfile = () => {
             profileId={location.state.profileId}
             getAllServiceListing={getAllServiceListing}
             editServiceData={editServiceData}
+            boardIdOptions={boardIdOptions}
           />
         </Modal>
         {deleteModalOpen.flag && (

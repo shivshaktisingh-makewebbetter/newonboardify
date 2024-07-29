@@ -8,6 +8,7 @@ export const CreateServices = ({
   closeModal,
   profileId,
   getAllServiceListing,
+  boardIdOptions
 }) => {
   const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -27,7 +28,7 @@ export const CreateServices = ({
     board_id: "",
     profile_id: profileId.toString() || "",
   });
-  const [boardIdOptions, setBoardIdOptions] = useState([]);
+
 
   const handleCreateServices = async () => {
     try {
@@ -52,26 +53,6 @@ export const CreateServices = ({
     }
   };
 
-  const getAllBoardIds = async () => {
-    try {
-      const response = await getAllBoards();
-      // console.log(response)
-      if (response.success) {
-        let tempData = [];
-        response.data.response.boards.forEach((item) => {
-          // console.log(item , 'item')
-          tempData.push({
-            key: item.id,
-            label: item.name,
-            value: item.id,
-          });
-        });
-        setBoardIdOptions(tempData);
-      }
-    } catch (err) {
-      throw new Error("Network response was not ok ", err);
-    }
-  };
 
   const handleTitleChange = (e) => {
     setServiceData({ ...serviceData, title: e.target.value });
@@ -96,9 +77,7 @@ export const CreateServices = ({
     );
   };
 
-  useEffect(() => {
-    getAllBoardIds();
-  }, []);
+
 
   return (
     <>

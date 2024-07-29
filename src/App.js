@@ -15,7 +15,6 @@ import { Board } from "./admin/Board";
 import { CreateAdmin } from "./admin/CreateAdmin";
 import { Settings } from "./admin/Settings";
 import { ProtectedRoute } from "./routeWrapper/ProtectedRoute";
-
 import { Register } from "./auth/Register";
 import { Layout } from "./layout/Layout";
 import { UserList } from "./admin/UserList";
