@@ -87,13 +87,14 @@ export const Profile = () => {
   };
 
   const handleEditProfile = (item) => {
- 
+    const dataToPass = {
+      profileId: item.id,
+      profileTitle: item.title,
+      users: item.users,
+    };
+
     navigate("/admin/editprofile", {
-      state: {
-        profileId: item.id,
-        profileTitle: item.title,
-        users: item.users,
-      },
+      state: dataToPass,
     });
   };
 
@@ -158,9 +159,10 @@ export const Profile = () => {
           tempListing.push({
             id: item.id,
             title: item.title,
-            users: item.users.split(",").map((user) => {
-              return <p>{user}</p>
-            }),
+            users: item.users
+              .split(",")
+              .map((user) => user.trim())
+              .join(" , "),
             default: item.make_default === 0 ? false : true,
           });
         });
