@@ -8,7 +8,7 @@ export const CreateServices = ({
   closeModal,
   profileId,
   getAllServiceListing,
-  boardIdOptions
+  boardIdOptions,
 }) => {
   const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -28,7 +28,6 @@ export const CreateServices = ({
     board_id: "",
     profile_id: profileId.toString() || "",
   });
-
 
   const handleCreateServices = async () => {
     try {
@@ -53,7 +52,6 @@ export const CreateServices = ({
     }
   };
 
-
   const handleTitleChange = (e) => {
     setServiceData({ ...serviceData, title: e.target.value });
   };
@@ -76,8 +74,6 @@ export const CreateServices = ({
       option.value.toString().toLowerCase().includes(input.toLowerCase())
     );
   };
-
-
 
   return (
     <>
@@ -103,7 +99,6 @@ export const CreateServices = ({
                 onFileSelect={handleFileSelect}
                 imageName={serviceData.image_name}
                 imageUrl={serviceData.image}
-
               />
             </div>
             <Input
@@ -126,14 +121,15 @@ export const CreateServices = ({
             <div className="mt-10">
               <Select
                 showSearch
-                placeholder="Select BoardId"
+                placeholder={"Please Select BoardId"}
                 style={{ width: "100%" }}
                 popupMatchSelectWidth={false}
                 placement="bottomLeft"
                 onChange={handleChangeBoardId}
                 options={boardIdOptions}
                 filterOption={filterOption}
-                value={serviceData.board_id}
+                value={serviceData.board_id || undefined}
+                allowClear
               />
             </div>
 

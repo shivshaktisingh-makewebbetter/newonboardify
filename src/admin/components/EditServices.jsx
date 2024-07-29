@@ -138,9 +138,10 @@ export const EditServices = ({
                 popupMatchSelectWidth={false}
                 placement="bottomLeft"
                 onChange={handleChangeBoardId}
-                value={serviceData.board_id}
+                allowClear
                 options={boardIdOptions}
                 filterOption={filterOption}
+                value={serviceData.board_id || undefined}
               />
             </div>
 
