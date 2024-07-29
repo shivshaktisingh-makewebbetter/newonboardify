@@ -1,8 +1,7 @@
 import { Button, Card, Typography } from "antd";
 import { formatDate } from "../../utils/helper";
 import { useNavigate } from "react-router-dom";
-import { setNameOfItem } from "../../redux/slices/trackBoardData";
-import { useDispatch } from "react-redux";
+
 
 export const RequestComponent = ({
   data,
@@ -26,7 +25,7 @@ export const RequestComponent = ({
     COMPLETED: "#d5f9e2",
     "IN PROGRESS": "#fcefbe",
   };
-  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   const getHeadData = (item) => {

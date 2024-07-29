@@ -63,7 +63,7 @@ export const EditProfile = () => {
     },
     {
       title: "Title",
-      dataIndex: "name",
+      dataIndex: "title",
     },
     {
       title: "Description",
