@@ -38,7 +38,7 @@ export const EditProfile = () => {
   const [editServiceData, setEditServiceData] = useState({});
   const [profileData, setProfileData] = useState({
     title: location.state.profileTitle || "",
-    users: location.state.users || [],
+    users: location.state.users.split(',')  || [],
   });
   const [deleteModalOpen, setDeleteMOdalOpen] = useState({
     flag: false,
@@ -55,6 +55,8 @@ export const EditProfile = () => {
   const handleDeleteModal = (id) => {
     setDeleteMOdalOpen({ flag: true, id: id });
   };
+
+
 
   const columns = [
     {

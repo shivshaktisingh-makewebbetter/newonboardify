@@ -79,7 +79,7 @@ export const CreateProfile = () => {
         state: {
           profileId: tempProfileId,
           profileTitle: profileData.title,
-          users: profileData.users,
+          users: profileData.users.join(","),
         },
       });
     }
