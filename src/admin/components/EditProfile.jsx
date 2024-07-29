@@ -191,6 +191,9 @@ export const EditProfile = () => {
       if (response.success && response.data.response[0].services.length > 0) {
         setDataSource(response.data.response[0].services);
       }
+      if(response.success && response.data.response[0].services.length === 0){
+        setDataSource([]);
+      }
     } catch (err) {
     } finally {
     }
