@@ -56,7 +56,6 @@ export const setUserOrAdmin = (data) => {
   return Services.POST(`newonboardify/admin/addAdminOrUser`, data);
 };
 
-
 export const updateServiceRequest = ({ id, data }) => {
   return Services.PUT(`newonboardify/admin/serviceRequests/${id}`, data);
 };
@@ -159,9 +158,21 @@ export const makeProfileDefault = (data) => {
 };
 
 export const getServiceListing = () => {
-  return Services.POST(`/newonboardify/admin/serviceRequests`);
+  return Services.GET(`/newonboardify/admin/serviceRequests`);
 };
 
 export const createService = (data) => {
   return Services.POST(`/newonboardify/admin/createServiceRequests`, data);
 };
+
+export const getServicesByProfileId = (id) => {
+  return Services.GET(`newonboardify/admin/getProfileWithServicesById/${id}`);
+};
+
+export const editServices = (id , data) =>{
+  return Services.PUT(`newonboardify/admin/serviceRequests/${id}` , data);
+}
+
+export const deleteServices = (id) =>{
+  return Services.DELETE(`newonboardify/admin/serviceRequests/${id}`);
+}

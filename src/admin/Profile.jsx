@@ -86,6 +86,17 @@ export const Profile = () => {
     setDeleteMOdalOpen({ flag: true, id: id });
   };
 
+  const handleEditProfile = (item) => {
+ 
+    navigate("/admin/editprofile", {
+      state: {
+        profileId: item.id,
+        profileTitle: item.title,
+        users: item.users,
+      },
+    });
+  };
+
   const columns = [
     {
       title: "#",
@@ -119,7 +130,7 @@ export const Profile = () => {
             className="governify-delete-icon"
             type="plain"
             icon={<EditOutlined />}
-            onClick={() => {}}
+            onClick={() => handleEditProfile(record)}
           ></Button>
 
           <Button
@@ -143,7 +154,6 @@ export const Profile = () => {
       const response = await getProfileListing();
 
       if (response.success) {
-        // console.log(response.data.response)
         response.data.response.forEach((item) => {
           tempListing.push({
             id: item.id,
@@ -152,7 +162,6 @@ export const Profile = () => {
             default: item.make_default === 0 ? false : true,
           });
         });
-        // console.log(tempListing , 'tempListing')
         setDataSource(tempListing);
       }
     } catch (err) {

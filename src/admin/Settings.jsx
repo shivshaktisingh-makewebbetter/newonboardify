@@ -125,7 +125,6 @@ export const Settings = () => {
     setLoading(true);
     try {
       let response = await setGeneralSettings(payload);
-      // console.log(response, "sdfsdfsd");
       if (response.success) {
         toast.success("Settings Updated.");
       } else {

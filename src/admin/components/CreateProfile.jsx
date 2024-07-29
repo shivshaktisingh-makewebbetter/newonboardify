@@ -23,7 +23,6 @@ export const CreateProfile = () => {
 
   const [loading, setLoading] = useState(false);
   const [userListing, setUserListing] = useState([]);
-  const [profileId, setProfileId] = useState("");
   const [profileData, setProfileData] = useState({
     title: "",
     users: [],
@@ -68,9 +67,7 @@ export const CreateProfile = () => {
         JSON.stringify(tempProfileData)
       );
       if (response.success) {
-        setProfileId(response.data.response[0].id);
         tempProfileId = response.data.response[0].id;
-        console.log(response.data.response[0].id)
         toast.success(response.message);
       } else {
         toast.error(response.message);

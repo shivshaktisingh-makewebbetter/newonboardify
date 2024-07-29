@@ -6,8 +6,6 @@ import { useDispatch } from "react-redux";
 
 export const RequestComponent = ({
   data,
-  boardId,
-  filterOption,
   columnIdData,
   allColumns,
   colorData,
@@ -101,7 +99,7 @@ export const RequestComponent = ({
       name: name,
       status: statusText,
       color: statusColor,
-      subHeadingColumn:columnIdData.sub_headings_column
+      subHeadingColumn: columnIdData.sub_headings_column,
     }; // Replace with your data
     navigate("details", { state: dataToPass });
   };
@@ -123,7 +121,6 @@ export const RequestComponent = ({
 
     colorData.forEach((subItem) => {
       for (const [status, tasks] of Object.entries(subItem)) {
-        console.log(tasks , value)
         if (tasks.includes(value.toLowerCase())) {
           bgColor = bgColorSet[status];
         }

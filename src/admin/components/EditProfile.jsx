@@ -3,13 +3,18 @@ import { useEffect, useState } from "react";
 import { DeleteOutlined, EditOutlined, LeftOutlined } from "@ant-design/icons";
 import { toast, ToastContainer } from "react-toastify";
 import {
-  createProfileEndPoint,
+  deleteServices,
   getAllBoards,
   getAllCustomers,
+  getServiceListing,
+  getServicesByProfileId,
+  updateProfile,
 } from "../../apiservice/ApiService";
 import { Loader } from "../../common/Loader";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CreateServices } from "./CreateServices";
+import { EditServices } from "./EditServices";
+import { DeleteModal } from "./DeleteModal";
 
 export const EditProfile = () => {
   const location = useLocation();
@@ -27,15 +32,29 @@ export const EditProfile = () => {
 
   const [loading, setLoading] = useState(false);
   const [userListing, setUserListing] = useState([]);
-  const [profileId, setProfileId] = useState(location.state.profileId);
   const [dataSource, setDataSource] = useState([]);
   const [openService, setOpenService] = useState(false);
+  const [editService, setEditService] = useState(false);
+  const [editServiceData, setEditServiceData] = useState({});
   const [profileData, setProfileData] = useState({
     title: location.state.profileTitle || "",
     users: location.state.users || [],
   });
+  const [deleteModalOpen, setDeleteMOdalOpen] = useState({
+    flag: false,
+    id: "",
+  });
   const [boardIdOptions, setBoardIdOptions] = useState([]);
   const navigate = useNavigate();
+
+  const handleEditModal = (item) => {
+    setEditServiceData(item);
+    setEditService(true);
+  };
+
+  const handleDeleteModal = (id) => {
+    setDeleteMOdalOpen({ flag: true, id: id });
+  };
 
   const columns = [
     {
@@ -63,7 +82,7 @@ export const EditProfile = () => {
             placement="bottomLeft"
             onChange={() => {}}
             options={boardIdOptions}
-            value={record.boardId}
+            value={record.board_id}
           />
         </>
       ),
@@ -79,13 +98,13 @@ export const EditProfile = () => {
             className="governify-delete-icon"
             type="plain"
             icon={<EditOutlined />}
-            onClick={() => {}}
+            onClick={() => handleEditModal(record)}
           ></Button>
           <Button
             className="governify-delete-icon"
             type="plain"
             icon={<DeleteOutlined />}
-            onClick={() => {}}
+            onClick={() => handleDeleteModal(record.id)}
           ></Button>
         </>
       ),
@@ -95,11 +114,9 @@ export const EditProfile = () => {
   const getAllBoardIds = async () => {
     try {
       const response = await getAllBoards();
-      console.log(response);
       if (response.success) {
         let tempData = [];
         response.data.response.boards.forEach((item) => {
-          console.log(item, "item");
           tempData.push({
             key: item.id,
             label: item.name,
@@ -141,18 +158,19 @@ export const EditProfile = () => {
     setProfileData({ ...profileData, users: e });
   };
 
-  const handleCreateProfile = async () => {
+  const handleUpdateProfile = async () => {
     setLoading(true);
     try {
       let tempProfileData = {
         title: profileData.title,
         users: profileData.users.join(","),
       };
-      const response = await createProfileEndPoint(
+
+      const response = await updateProfile(
+        location.state.profileId,
         JSON.stringify(tempProfileData)
       );
       if (response.success) {
-        setProfileId(response.data.response[0].id);
         toast.success(response.message);
       } else {
         toast.error(response.message);
@@ -163,23 +181,44 @@ export const EditProfile = () => {
     }
   };
 
-  const handleCreateService = async () => {};
-
   const handleOpenService = () => {
     setOpenService(true);
   };
 
-  const getServiceListing = async () => {
+  const getAllServiceListing = async () => {
     try {
-      const response = await getServiceListing();
-      console.log(response);
+      const response = await getServicesByProfileId(location.state.profileId);
+      if (response.success && response.data.response[0].services.length > 0) {
+        setDataSource(response.data.response[0].services);
+      }
     } catch (err) {
     } finally {
     }
   };
 
+  const handleDeleteService = async () => {
+    setLoading(true);
+    try {
+      const response = await deleteServices(deleteModalOpen.id);
+      if (response.success) {
+        toast.success(response.message);
+        setDeleteMOdalOpen({ flag: false, id: "" });
+        await getAllServiceListing();
+      } else {
+        toast.error(response.message);
+      }
+    } catch (err) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleBackNavigation = () => {
+    navigate("/admin/profile");
+  };
+
   useEffect(() => {
-    getServiceListing();
+    getAllServiceListing();
   }, []);
 
   return (
@@ -204,7 +243,7 @@ export const EditProfile = () => {
                   }}
                 />
               }
-              onClick={() => {}}
+              onClick={handleBackNavigation}
               style={{ border: `1px solid ${data.button_bg}` }}
             ></Button>
             <Button
@@ -259,9 +298,9 @@ export const EditProfile = () => {
                 color: "#fff",
                 border: "none",
               }}
-              onClick={handleCreateProfile}
+              onClick={handleUpdateProfile}
             >
-              Save
+              Update
             </Button>
           </div>
         </div>
@@ -303,8 +342,37 @@ export const EditProfile = () => {
               setOpenService(false);
             }}
             profileId={location.state.profileId}
+            getAllServiceListing={getAllServiceListing}
           />
         </Modal>
+        <Modal
+          open={editService}
+          centered
+          footer={(_) => <></>}
+          onCancel={() => {
+            setEditService(false);
+          }}
+          className="width-80"
+        >
+          <EditServices
+            closeModal={() => {
+              setEditService(false);
+            }}
+            profileId={location.state.profileId}
+            getAllServiceListing={getAllServiceListing}
+            editServiceData={editServiceData}
+          />
+        </Modal>
+        {deleteModalOpen.flag && (
+          <DeleteModal
+            open={deleteModalOpen.flag}
+            handleCancel={() => {
+              setDeleteMOdalOpen({ flag: false, id: "" });
+            }}
+            handleDelete={handleDeleteService}
+            message={"Are you sure you want to delete this Service?"}
+          />
+        )}
 
         <ToastContainer position="bottom-right" />
       </div>

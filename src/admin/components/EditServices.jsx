@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
 import { ImageUpload } from "../../common/ImageUpload";
-import { createService, getAllBoards } from "../../apiservice/ApiService";
+import { createService, editServices, getAllBoards } from "../../apiservice/ApiService";
 
-export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) => {
+export const EditServices = ({ closeModal, profileId ,getAllServiceListing , editServiceData}) => {
   const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
     site_bg: "#ffffff",
@@ -17,23 +17,34 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
     head_title_color: "#497ed8",
   };
   const [serviceData, setServiceData] = useState({
-    title: "",
-    description: "",
-    image: "",
-    image_name: "",
-    board_id: "",
+    title: editServiceData.title || '',
+    description: editServiceData.description || '',
+    image: editServiceData.file_location || '',
+    image_name:editServiceData.image || '',
+    board_id: editServiceData.board_id || '',
     profile_id: profileId.toString() || "",
   });
   const [boardIdOptions, setBoardIdOptions] = useState([]);
 
-  const handleCreateServices = async () => {
+  function startsWithHttp(url) {
+    return (
+      url.toLowerCase().startsWith("http://") ||
+      url.toLowerCase().startsWith("https://")
+    );
+  }
+
+  const handleUpdateServices = async () => {
+    let payload = { ...serviceData };
+    payload.image_name = startsWithHttp(serviceData.image)
+      ? ""
+      : serviceData.image_name;
+    payload.image = startsWithHttp(serviceData.image) ? "" : serviceData.image;
     try {
-      const response = await createService(JSON.stringify(serviceData));
+      const response = await editServices(editServiceData.id , JSON.stringify(payload));
       if (response.success) {
         toast.success(response.message);
         getAllServiceListing();
         closeModal();
-
       } else {
         toast.error(response.message);
       }
@@ -45,11 +56,9 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
   const getAllBoardIds = async () => {
     try {
       const response = await getAllBoards();
-      // console.log(response)
       if (response.success) {
         let tempData = [];
         response.data.response.boards.forEach((item) => {
-          // console.log(item , 'item')
           tempData.push({
             key: item.id,
             label: item.name,
@@ -83,7 +92,6 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
     getAllBoardIds();
   }, []);
 
-  console.log(serviceData, "sdaf");
 
   return (
     <>
@@ -97,7 +105,7 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
             style={{ backgroundColor: settingsData.button_bg }}
           >
             <p className="p-2 m-0 fs-5">
-              <strong>Create Services</strong>
+              <strong>Edit Services</strong>
             </p>
           </div>
           <div
@@ -107,8 +115,8 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
             <div>
               <ImageUpload
                 onFileSelect={handleFileSelect}
-                imageName={""}
-                imageUrl={""}
+                imageName={serviceData.image_name}
+                imageUrl={serviceData.image}
               />
             </div>
             <Input
@@ -117,6 +125,7 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
               onChange={handleTitleChange}
               addonBefore="Title"
               style={{ borderRadius: "10px" }}
+              value={serviceData.title}
             />
             <Input
               placeholder="Service description"
@@ -124,8 +133,8 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
               onChange={handleDescriptionChange}
               addonBefore="Description"
               style={{ borderRadius: "10px" }}
+              value={serviceData.description}
             />
-
             <div className="mt-10">
               <Select
                 showSearch
@@ -134,6 +143,7 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
                 popupMatchSelectWidth={false}
                 placement="bottomLeft"
                 onChange={handleChangeBoardId}
+                value={serviceData.board_id}
                 options={boardIdOptions}
               />
             </div>
@@ -149,9 +159,9 @@ export const CreateServices = ({ closeModal, profileId ,getAllServiceListing }) 
                   color: "#fff",
                   border: "none",
                 }}
-                onClick={handleCreateServices}
+                onClick={handleUpdateServices}
               >
-                Create
+                Update
               </Button>
             </div>
           </div>
