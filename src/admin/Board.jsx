@@ -3,6 +3,7 @@ import { Loader } from "../common/Loader";
 import { Hero } from "../components/Hero";
 import {
   getAllBoards,
+  getAllColumnsOfBoard,
   getAllUsersWithBoardId,
   getBoardColorMapping,
   getBoardVisibilityData,
@@ -85,8 +86,7 @@ export const Board = () => {
     setFilterUserSpecific({ key: "", value: "" });
     const response = await getBoardVisibilityData(e);
 
-    const response1 = await getCompleteDataForBoardVisibility(e);
-    // await fetchAllUsers(e);
+    const response1 = await getAllColumnsOfBoard(e);
 
     if (response.success && response.data.response.length > 0) {
       let tempData = JSON.parse(response.data.response[0].columns);

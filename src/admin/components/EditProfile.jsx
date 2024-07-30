@@ -357,7 +357,8 @@ export const EditProfile = () => {
           onCancel={() => {
             setOpenService(false);
           }}
-          className="width-80"
+          style={{overflowY:"auto" , maxHeight:"600"}}
+          width={800}
         >
           <CreateServices
             closeModal={() => {
@@ -376,7 +377,7 @@ export const EditProfile = () => {
           onCancel={() => {
             setEditService(false);
           }}
-          className="width-80"
+          width={800}
         >
           <EditServices
             closeModal={() => {

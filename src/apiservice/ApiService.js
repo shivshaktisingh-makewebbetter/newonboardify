@@ -40,7 +40,7 @@ export const setBoardVisibilityDataEndpoint = (data) => {
   return Services.POST("newonboardify/admin/boardVisibilityMapping", data);
 };
 
-export const getCompleteDataForBoardVisibility = (id) => {
+export const getAllColumnsOfBoard = (id) => {
   return Services.GET(`newonboardify/admin/get-board-columns/${id}`);
 };
 
