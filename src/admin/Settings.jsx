@@ -34,6 +34,11 @@ export const Settings = () => {
   const [loading, setLoading] = useState(false);
   const [statusFields, setStatusFields] = useState([]);
   const [userOptions, setUserOptions] = useState([]);
+  const [homeSettingData, setHomeSettingData] = useState([
+    { key: "Request", icon: "", title: "", description: "" },
+    { key: "Track", icon: "", title: "", description: "" },
+    { key: "Status", icon: "", title: "", description: "" },
+  ]);
 
   const addField = () => {
     let fields = statusFields;
@@ -429,12 +434,12 @@ export const Settings = () => {
                 width: "100%",
                 border: statusFields.length > 0 ? "1px solid #dee2e6" : "",
                 borderRadius: "8px",
-               
+
                 backgroundColor: "#f8f9fa",
-                marginBottom:"10px"
+                marginBottom: "10px",
               }}
             >
-              <div style={{ padding: statusFields.length > 0 ? "1rem" : ""}}>
+              <div style={{ padding: statusFields.length > 0 ? "1rem" : "" }}>
                 {statusFields.map((item, i) => (
                   <div
                     style={{
@@ -557,7 +562,11 @@ export const Settings = () => {
               </span>
             </h5>
 
-            <Collapse size="large" items={userOptions}  style={{marginTop:"0px" , marginBottom:"10px"}}/>
+            <Collapse
+              size="large"
+              items={userOptions}
+              style={{ marginTop: "0px", marginBottom: "10px" }}
+            />
 
             <Button
               style={{
