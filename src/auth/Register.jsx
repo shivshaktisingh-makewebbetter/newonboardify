@@ -196,7 +196,7 @@ export const Register = () => {
           <div className="form-container mx-auto" style={{ maxWidth: "440px" }}>
             <div>
               <img
-                src="/tasc.svg"
+                 src="/1.png"
                 alt="TASC logo"
                 style={{ maxWidth: "220px" }}
               />
