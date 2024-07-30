@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react";
-import { Button, Select } from "antd";
+import { useCallback, useEffect, useState } from "react";
+import { Button, Collapse } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import { Loader } from "../common/Loader";
-import { Collapse } from "antd";
-import { fetcher } from "../utils/helper";
 import {
   getGeneralSettingsData,
   setGeneralSettings,
@@ -34,38 +32,53 @@ export const Settings = () => {
   });
   const [logoData, setLogoData] = useState({ logo_name: "", logo_image: "" });
   const [loading, setLoading] = useState(false);
-  const [buttonData, setButtonData] = useState([
-    {
-      type: "In Progress",
-      bg: "#fdecb9",
-      buttonBg: "#f4992d",
-      value: 0,
+  const [statusFields, setStatusFields] = useState([]);
+  const [userOptions, setUserOptions] = useState([]);
+
+  const addField = () => {
+    let fields = statusFields;
+    fields.push({ status: "", color: "", bgcolor: "" });
+    setStatusFields([...fields]);
+  };
+
+  const removeField = (key) => {
+    let fields = statusFields;
+    fields.splice(key, 1);
+    setStatusFields([...fields]);
+  };
+
+  const changeStatus = useCallback(
+    (key, value) => {
+      setStatusFields(
+        statusFields.map((field, index) =>
+          index === key ? { ...field, status: value } : field
+        )
+      );
     },
-    {
-      type: "Completed",
-      bg: "#d5f9e2",
-      buttonBg: "#55b44e",
-      value: 1,
+    [statusFields]
+  );
+
+  const changeColor = useCallback(
+    (key, value) => {
+      setStatusFields(
+        statusFields.map((field, index) =>
+          index === key ? { ...field, color: value } : field
+        )
+      );
     },
-    {
-      type: "Pending",
-      bg: "#f4bab6",
-      buttonBg: "#e14120",
-      value: 2,
+    [statusFields]
+  );
+
+  const changeBackgroundColorStatus = useCallback(
+    (key, value) => {
+      setStatusFields(
+        statusFields.map((field, index) =>
+          index === key ? { ...field, bgcolor: value } : field
+        )
+      );
     },
-    {
-      type: "Canceled",
-      bg: "#b6b6ba",
-      buttonBg: "#757575",
-      value: 3,
-    },
-    {
-      type: "Awaiting Action",
-      bg: "#e7e7e8",
-      buttonBg: "#939498",
-      value: 5,
-    },
-  ]);
+    [statusFields]
+  );
 
   const navigate = useNavigate();
 
@@ -148,7 +161,7 @@ export const Settings = () => {
     const response = await getGeneralSettingsData();
     if (response.success) {
       const tempData = JSON.parse(response.data.response.ui_settings);
-      tempData.banner_content = tempData.banner_content
+      tempData.banner_content = tempData.banner_content;
       setUiData(tempData);
       setLogoData({
         logo_name: response.data.response.logo,
@@ -161,11 +174,88 @@ export const Settings = () => {
     fetchGeneralSettings();
   }, []);
 
+  useEffect(() => {
+    setUserOptions([
+      {
+        key: "Request",
+        label: "Request Setting",
+        children: (
+          <div className="option-content">
+            <label className="option-label">
+              Icon:
+              <input type="text" name="requestIcon" className="option-input" />
+            </label>
+            <label className="option-label">
+              Title:
+              <input type="text" name="requestTitle" className="option-input" />
+            </label>
+            <label className="option-label">
+              Description:
+              <textarea
+                name="requestDescription"
+                className="option-textarea"
+              ></textarea>
+            </label>
+          </div>
+        ),
+      },
+      {
+        key: "Track",
+        label: "Track Setting",
+        children: (
+          <div className="option-content">
+            <label className="option-label">
+              Icon:
+              <input type="text" name="trackIcon" className="option-input" />
+            </label>
+            <label className="option-label">
+              Title:
+              <input type="text" name="trackTitle" className="option-input" />
+            </label>
+            <label className="option-label">
+              Description:
+              <textarea
+                name="trackDescription"
+                className="option-textarea"
+              ></textarea>
+            </label>
+          </div>
+        ),
+      },
+      {
+        key: "Status",
+        label: "Overall Status Setting",
+        children: (
+          <div className="option-content">
+            <label className="option-label">
+              Icon:
+              <input type="text" name="statusIcon" className="option-input" />
+            </label>
+            <label className="option-label">
+              Title:
+              <input type="text" name="statusTitle" className="option-input" />
+            </label>
+            <label className="option-label">
+              Description:
+              <textarea
+                name="statusDescription"
+                className="option-textarea"
+              ></textarea>
+            </label>
+          </div>
+        ),
+      },
+    ]);
+  }, []);
+
   return (
     <>
       {loading && <Loader />}
       <div className="w-100 d-flex flex-column align-items-center p-3">
-        <div className="col-md-7 col-lg-8 text-start" style={{paddingTop:"10px"}}>
+        <div
+          className="col-md-7 col-lg-8 text-start"
+          style={{ paddingTop: "10px" }}
+        >
           <h4 className="mb-3">
             <Button
               icon={
@@ -184,7 +274,6 @@ export const Settings = () => {
 
           <div className="row g-3">
             <div className="col-sm-6">
-             
               <div className="col-sm-12">
                 <label className="form-label">
                   Button background-color&nbsp;<i className="bi bi-pen"></i>
@@ -309,6 +398,166 @@ export const Settings = () => {
 
               <small className="text-danger text-start ms-2"></small>
             </div>
+            <h5
+              style={{
+                color: "#343a40",
+                margin: 0,
+                padding: "0.75rem 1rem",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderBottom: "1px solid #dee2e6",
+                backgroundColor: "#e9ecef",
+                borderTopLeftRadius: "8px",
+                borderTopRightRadius: "8px",
+              }}
+            >
+              <span style={{ fontWeight: 600, fontSize: "18px" }}>
+                Status Color Settings:
+              </span>
+              <Button
+                type="text"
+                onClick={() => addField()}
+                style={{ color: "#007bff", fontWeight: 600 }}
+              >
+                + Add Field
+              </Button>
+            </h5>
+
+            <div
+              style={{
+                width: "100%",
+                border: statusFields.length > 0 ? "1px solid #dee2e6" : "",
+                borderRadius: "8px",
+               
+                backgroundColor: "#f8f9fa",
+                marginBottom:"10px"
+              }}
+            >
+              <div style={{ padding: statusFields.length > 0 ? "1rem" : ""}}>
+                {statusFields.map((item, i) => (
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "1rem",
+                      alignItems: "flex-end",
+                      marginBottom: "1rem",
+                      flexWrap: "wrap",
+                    }}
+                    key={i}
+                  >
+                    <div style={{ flex: 1, minWidth: "200px" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          fontWeight: 600,
+                          fontSize: "14px",
+                          marginBottom: "0.5rem",
+                        }}
+                      >
+                        Status
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter Label"
+                        style={{
+                          width: "100%",
+                          padding: "0.5rem",
+                          border: "1px solid #ced4da",
+                          borderRadius: "4px",
+                        }}
+                        value={item.status}
+                        onChange={(e) => changeStatus(i, e.target.value)}
+                      />
+                    </div>
+                    <div style={{ flex: 1, minWidth: "200px" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          fontWeight: 600,
+                          fontSize: "14px",
+                          marginBottom: "0.5rem",
+                        }}
+                      >
+                        Color
+                      </label>
+                      <input
+                        type="color"
+                        value={item.color}
+                        style={{
+                          width: "100%",
+                          padding: "0.5rem",
+                          border: "none",
+                          height: "38px",
+                        }}
+                        onChange={(e) => changeColor(i, e.target.value)}
+                      />
+                    </div>
+                    <div style={{ flex: 1, minWidth: "200px" }}>
+                      <label
+                        style={{
+                          display: "block",
+                          fontWeight: 600,
+                          fontSize: "14px",
+                          marginBottom: "0.5rem",
+                        }}
+                      >
+                        Background
+                      </label>
+                      <input
+                        type="color"
+                        value={item.backgroundColor}
+                        style={{
+                          width: "100%",
+                          padding: "0.5rem",
+                          border: "none",
+                          height: "38px",
+                        }}
+                        onChange={(e) =>
+                          changeBackgroundColorStatus(i, e.target.value)
+                        }
+                      />
+                    </div>
+                    <Button
+                      type="text"
+                      onClick={() => removeField(i)}
+                      style={{
+                        color: "#dc3545",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                        padding: "0.5rem 1rem",
+                        backgroundColor: "transparent",
+                        border: "none",
+                        marginLeft: "auto",
+                      }}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <h5
+              style={{
+                color: "#343a40",
+                margin: 0,
+                padding: "0.75rem 1rem",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderBottom: "1px solid #dee2e6",
+                backgroundColor: "#e9ecef",
+                borderTopLeftRadius: "8px",
+                borderTopRightRadius: "8px",
+              }}
+            >
+              <span style={{ fontWeight: 600, fontSize: "18px" }}>
+                Home Page Setting
+              </span>
+            </h5>
+
+            <Collapse size="large" items={userOptions}  style={{marginTop:"0px" , marginBottom:"10px"}}/>
 
             <Button
               style={{

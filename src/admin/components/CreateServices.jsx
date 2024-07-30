@@ -292,10 +292,7 @@ export const CreateServices = ({
   return (
     <div style={{ width: "100%", marginTop: "25px" }}>
       <div>
-        <div
-          className="text-white"
-          style={{ backgroundColor: settingsData.button_bg }}
-        >
+        <div className="text-white" style={{ backgroundColor: "#497ed8" }}>
           <p className="p-2 m-0 fs-5">
             <strong>Create Services</strong>
           </p>
@@ -344,20 +341,43 @@ export const CreateServices = ({
             style={{ borderRadius: "10px" }}
             value={serviceData.service_chart_link}
           />
-          <div className="mt-10">
-            <Select
-              showSearch
-              placeholder={"Please Select BoardId"}
-              style={{ width: "100%" }}
-              popupMatchSelectWidth={false}
-              placement="bottomLeft"
-              onChange={handleChangeBoardId}
-              options={boardIdOptions}
-              filterOption={filterOption}
-              value={serviceData.board_id || undefined}
-              allowClear
-            />
+          <div
+            style={{
+              marginTop: "10px",
+              border: "1px solid #d9d9d9",
+              padding: "10px",
+              borderRadius: "10px",
+            }}
+          >
+            <p style={{ textAlign: "left" }} className="border-bottom">
+             Please Select BoardID
+            </p>
+            <div className="mt-10">
+              <Select
+                showSearch
+                placeholder={"Please Select BoardId"}
+                style={{ width: "100%" }}
+                popupMatchSelectWidth={false}
+                placement="bottomLeft"
+                onChange={handleChangeBoardId}
+                options={boardIdOptions}
+                filterOption={filterOption}
+                value={serviceData.board_id || undefined}
+                allowClear
+              />
+            </div>
           </div>
+          <div
+            style={{
+              marginTop: "10px",
+              border: "1px solid #d9d9d9",
+              padding: "10px",
+              borderRadius: "10px",
+            }}
+          >
+            <p style={{ textAlign: "left" }} className="border-bottom">
+             Please Select Column Filter
+            </p>
           <div className="mt-10">
             <Select
               showSearch
@@ -373,6 +393,7 @@ export const CreateServices = ({
               allowClear
             />
           </div>
+         
 
           {serviceColumnValueFilter.key !== undefined &&
             serviceColumnValueFilter.key.length > 0 && (
@@ -380,11 +401,12 @@ export const CreateServices = ({
                 placeholder="Filter Value"
                 className="mt-10"
                 onChange={handleFilterValueChange}
-                addonBefore="Filter Value"
+                addonBefore="Select Filter Value"
                 style={{ borderRadius: "10px" }}
                 value={serviceColumnValueFilter.value}
               />
             )}
+             </div>
 
           {boardVisiblityData !== undefined &&
             Object.keys(boardVisiblityData).length > 0 && (
@@ -485,7 +507,7 @@ export const CreateServices = ({
                     borderRadius: "10px",
                   }}
                 >
-                  <p style={{ textAlign: "left" }}>
+                  <p style={{ textAlign: "left" }} className="border-bottom">
                     Provide candidate column details :{" "}
                     <a href="https://icons.getbootstrap.com/" target="_blank">
                       Go to icons library
@@ -496,48 +518,30 @@ export const CreateServices = ({
                       <div
                         key={index}
                         style={{
-                          border: "1px solid #d9d9d9",
-                          padding: "10px",
-                          borderRadius: "10px",
-                          marginTop: "10px",
                           display: "flex",
                           flexDirection: "column",
-                          gap: "10px",
+                          gap: "20px",
                         }}
                       >
-                        <p style={{ textAlign: "left" }}>For {item.name}</p>
-                        <Input
-                          addonBefore="Column Icon"
-                          value={item.icon}
-                          onChange={(e) => handleChangeIcon(e, item)}
-                        />
-                        <Input
-                          addonBefore="Column Title"
-                          value={item.custom_title}
-                          onChange={(e) => handleChangeCustomTitle(e, item)}
-                        />
+                        <div style={{ marginBottom: "10px" }}>
+                          <p style={{ textAlign: "left", marginBottom: "5px" }}>
+                            For {item.name}
+                          </p>
+                          <Input
+                            addonBefore="Column Icon"
+                            value={item.icon}
+                            onChange={(e) => handleChangeIcon(e, item)}
+                          />
+                          <Input
+                            addonBefore="Column Title"
+                            value={item.custom_title}
+                            onChange={(e) => handleChangeCustomTitle(e, item)}
+                            style={{ marginTop: "10px" }}
+                          />
+                        </div>
                       </div>
                     );
                   })}
-                </div>
-                <div
-                  style={{
-                    marginTop: "10px",
-                    border: "1px solid #d9d9d9",
-                    padding: "10px",
-                    borderRadius: "10px",
-                  }}
-                >
-                  <p style={{ textAlign: "left" }}>Onboarding Updates</p>
-                  <Select
-                    style={{
-                      width: "100%",
-                    }}
-                    placeholder="Please select"
-                    defaultValue={boardVisiblityData.extra_details.key}
-                    onChange={handleChangeOnboardingUpdates}
-                    options={options}
-                  />
                 </div>
                 <div
                   style={{
@@ -552,13 +556,12 @@ export const CreateServices = ({
                   </p>
                   <div
                     style={{
-                      marginTop: "10px",
-                      border: "1px solid #d9d9d9",
-                      padding: "10px",
-                      borderRadius: "10px",
+                      marginBottom: "10px",
                     }}
                   >
-                    <p style={{ textAlign: "left" }}>Top Details Columns</p>
+                    <p style={{ textAlign: "left", marginBottom: "5px" }}>
+                      Top Details Columns
+                    </p>
                     <Select
                       style={{
                         width: "100%",
@@ -572,13 +575,12 @@ export const CreateServices = ({
                   </div>
                   <div
                     style={{
-                      marginTop: "10px",
-                      border: "1px solid #d9d9d9",
-                      padding: "10px",
-                      borderRadius: "10px",
+                      marginBottom: "10px",
                     }}
                   >
-                    <p style={{ textAlign: "left" }}>Mid Heading Columns</p>
+                    <p style={{ textAlign: "left", marginBottom: "5px" }}>
+                      Mid Heading Columns
+                    </p>
                     <Select
                       style={{
                         width: "100%",
@@ -604,13 +606,12 @@ export const CreateServices = ({
                   </p>
                   <div
                     style={{
-                      marginTop: "10px",
-                      border: "1px solid #d9d9d9",
-                      padding: "10px",
-                      borderRadius: "10px",
+                      marginBottom: "10px",
                     }}
                   >
-                    <p style={{ textAlign: "left" }}>Profession column</p>
+                    <p style={{ textAlign: "left", marginBottom: "5px" }}>
+                      Profession column
+                    </p>
                     <Select
                       style={{
                         width: "100%",
@@ -626,13 +627,12 @@ export const CreateServices = ({
                   </div>
                   <div
                     style={{
-                      marginTop: "10px",
-                      border: "1px solid #d9d9d9",
-                      padding: "10px",
-                      borderRadius: "10px",
+                      marginBottom: "10px",
                     }}
                   >
-                    <p style={{ textAlign: "left" }}>Overall Status column</p>
+                    <p style={{ textAlign: "left", marginBottom: "5px" }}>
+                      Overall Status column
+                    </p>
                     <Select
                       style={{
                         width: "100%",

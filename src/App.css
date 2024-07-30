@@ -1260,4 +1260,50 @@ body,
 }
 
 
+.option-container {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.option-heading {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.option-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.option-label {
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #555;
+}
+
+.option-input,
+.option-textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.option-input:focus,
+.option-textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.option-textarea {
+  height: 100px;
+}
+
+
+
 
