@@ -5,6 +5,7 @@ import { toast, ToastContainer } from "react-toastify";
 import {
   createProfileEndPoint,
   getAllCustomers,
+  getProfileListing,
 } from "../../apiservice/ApiService";
 import { Loader } from "../../common/Loader";
 import { useNavigate } from "react-router-dom";
@@ -92,6 +93,8 @@ export const CreateProfile = () => {
   const handleBackNavigation = () => {
     navigate("/admin/profile");
   };
+
+
 
   return (
     <>
