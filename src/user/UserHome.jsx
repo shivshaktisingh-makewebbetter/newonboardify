@@ -15,32 +15,6 @@ export const UserHome = () => {
     head_title_color: "#497ed8",
   };
 
-  // const data = [
-  //   {
-  //     title: "Request Onboarding",
-  //     description:
-  //       "Streamline your employee onboarding with TASC Outsourcing. Request here for a hassle-free experience, letting us handle the rest with care and efficiency.",
-  //     icon: <RequestOnboardIcon />,
-  //     buttonText: "Request",
-  //     navigateKey: "request",
-  //   },
-  //   {
-  //     title: "Track Onboarding",
-  //     description:
-  //       "Track your onboarding requests seamlessly with us. Stay updated on the progress of your employee onboarding journey. Effortless tracking for a smoother onboarding experience.",
-  //     icon: <TrackOnboardIcon />,
-  //     buttonText: "Track",
-  //     navigateKey: "track",
-  //   },
-  //   {
-  //     title: "Overall Status",
-  //     description:
-  //       "Stay in the loop with ease! Check the overall status of your onboarding requests and keep tabs on your employee onboarding progress for a comprehensive overview of the entire process.",
-  //     icon: <OverallStatusIcon />,
-  //     buttonText: "Check",
-  //     navigateKey: "check",
-  //   },
-  // ];
 
   const data = useMemo(() => {
     return settingData.homePageSetting.map((item) => ({

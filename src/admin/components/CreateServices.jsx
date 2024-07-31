@@ -478,7 +478,7 @@ export const CreateServices = ({
                   }}
                 >
                   <p style={{ textAlign: "left" }}>
-                    Candidate Information Columns
+                    Basic Information Columns
                   </p>
                   <Select
                     mode="multiple"

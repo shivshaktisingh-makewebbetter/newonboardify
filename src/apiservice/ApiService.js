@@ -169,10 +169,14 @@ export const getServicesByProfileId = (id) => {
   return Services.GET(`newonboardify/admin/getProfileWithServicesById/${id}`);
 };
 
-export const editServices = (id , data) =>{
-  return Services.PUT(`newonboardify/admin/serviceRequests/${id}` , data);
-}
+export const editServices = (id, data) => {
+  return Services.PUT(`newonboardify/admin/serviceRequests/${id}`, data);
+};
 
-export const deleteServices = (id) =>{
+export const deleteServices = (id) => {
   return Services.DELETE(`newonboardify/admin/serviceRequests/${id}`);
-}
+};
+
+export const getAllProfileDataByUser = () => {
+  return Services.GET(`newonboardify/customer/allProfileWithServicesByUser`);
+};

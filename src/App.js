@@ -1,4 +1,5 @@
 import "./App.css";
+import "react-multi-carousel/lib/styles.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import React from "react";
 import { ConfigProvider } from "antd";
