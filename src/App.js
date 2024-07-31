@@ -81,10 +81,7 @@ function App() {
           path: "",
           element: <ProtectedRoute element={<ErrorBoundary><AdminHome /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
         },
-        {
-          path: "board",
-          element: <ProtectedRoute element={<ErrorBoundary><Board /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
-        },
+        
         {
           path: "createAdmin",
           element: <ProtectedRoute element={<ErrorBoundary><CreateAdmin /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,

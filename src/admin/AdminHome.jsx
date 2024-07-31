@@ -28,14 +28,6 @@ export const AdminHome = () => {
       navigateKey: "userList",
     },
     {
-      title: "Board Visibility",
-      description:
-        "Track your onboarding requests seamlessly with us. Stay updated on the progress of your employee onboarding journey. Effortless tracking for a smoother onboarding experience.",
-      icon: <BoardSetting style={{ fontSize: "60px" }} />,
-      buttonText: "Manage Board",
-      navigateKey: "board",
-    },
-    {
       title: "Profile Setting",
       description:
         "Track your onboarding requests seamlessly with us. Stay updated on the progress of your employee onboarding journey. Effortless tracking for a smoother onboarding experience.",
