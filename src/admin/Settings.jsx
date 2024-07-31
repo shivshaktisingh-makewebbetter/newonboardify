@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { Button, Collapse } from "antd";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Button, Collapse, Input } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -33,11 +33,28 @@ export const Settings = () => {
   const [logoData, setLogoData] = useState({ logo_name: "", logo_image: "" });
   const [loading, setLoading] = useState(false);
   const [statusFields, setStatusFields] = useState([]);
-  const [userOptions, setUserOptions] = useState([]);
   const [homeSettingData, setHomeSettingData] = useState([
-    { key: "Request", icon: "", title: "", description: "" },
-    { key: "Track", icon: "", title: "", description: "" },
-    { key: "Status", icon: "", title: "", description: "" },
+    {
+      key: "Request",
+      icon: "",
+      title: "",
+      description: "",
+      label: "Request Setting",
+    },
+    {
+      key: "Track",
+      icon: "",
+      title: "",
+      description: "",
+      label: "Track Setting",
+    },
+    {
+      key: "Status",
+      icon: "",
+      title: "",
+      description: "",
+      label: "Overall Status Setting",
+    },
   ]);
 
   const addField = () => {
@@ -132,8 +149,11 @@ export const Settings = () => {
   };
 
   const handleSubmit = async () => {
+    let tempUiData = { ...uiData };
+    tempUiData.homePageSetting = homeSettingData;
+    tempUiData.statusColorSetting = statusFields;
     let payload = JSON.stringify({
-      ui_settings: uiData,
+      ui_settings: tempUiData,
       logo_name: startsWithHttp(logoData.logo_name) ? "" : logoData.logo_name,
       logo_image: startsWithHttp(logoData.logo_image)
         ? ""
@@ -168,6 +188,8 @@ export const Settings = () => {
       const tempData = JSON.parse(response.data.response.ui_settings);
       tempData.banner_content = tempData.banner_content;
       setUiData(tempData);
+      setHomeSettingData(tempData.homePageSetting);
+      setStatusFields(tempData.statusColorSetting);
       setLogoData({
         logo_name: response.data.response.logo,
         logo_image: response.data.response.logo_location,
@@ -175,83 +197,75 @@ export const Settings = () => {
     }
   };
 
+  const handleIconChangeSetting = (e, key) => {
+    const tempArr = [...homeSettingData];
+    tempArr.forEach((item) => {
+      if (item.key === key) {
+        item.icon = e.target.value;
+      }
+    });
+    setHomeSettingData(tempArr);
+  };
+
+  const handleTitleChangeSetting = (e, key) => {
+    const tempArr = [...homeSettingData];
+    tempArr.forEach((item) => {
+      if (item.key === key) {
+        item.title = e.target.value;
+      }
+    });
+    setHomeSettingData(tempArr);
+  };
+
+  const handleDescriptionChangeSetting = (e, key) => {
+    const tempArr = [...homeSettingData];
+    tempArr.forEach((item) => {
+      if (item.key === key) {
+        item.description = e.target.value;
+      }
+    });
+    setHomeSettingData(tempArr);
+  };
+
   useEffect(() => {
     fetchGeneralSettings();
   }, []);
 
-  useEffect(() => {
-    setUserOptions([
-      {
-        key: "Request",
-        label: "Request Setting",
-        children: (
-          <div className="option-content">
-            <label className="option-label">
-              Icon:
-              <input type="text" name="requestIcon" className="option-input" />
-            </label>
-            <label className="option-label">
-              Title:
-              <input type="text" name="requestTitle" className="option-input" />
-            </label>
-            <label className="option-label">
-              Description:
-              <textarea
-                name="requestDescription"
-                className="option-textarea"
-              ></textarea>
-            </label>
-          </div>
-        ),
-      },
-      {
-        key: "Track",
-        label: "Track Setting",
-        children: (
-          <div className="option-content">
-            <label className="option-label">
-              Icon:
-              <input type="text" name="trackIcon" className="option-input" />
-            </label>
-            <label className="option-label">
-              Title:
-              <input type="text" name="trackTitle" className="option-input" />
-            </label>
-            <label className="option-label">
-              Description:
-              <textarea
-                name="trackDescription"
-                className="option-textarea"
-              ></textarea>
-            </label>
-          </div>
-        ),
-      },
-      {
-        key: "Status",
-        label: "Overall Status Setting",
-        children: (
-          <div className="option-content">
-            <label className="option-label">
-              Icon:
-              <input type="text" name="statusIcon" className="option-input" />
-            </label>
-            <label className="option-label">
-              Title:
-              <input type="text" name="statusTitle" className="option-input" />
-            </label>
-            <label className="option-label">
-              Description:
-              <textarea
-                name="statusDescription"
-                className="option-textarea"
-              ></textarea>
-            </label>
-          </div>
-        ),
-      },
-    ]);
-  }, []);
+
+
+  const items = useMemo(() => {
+    return homeSettingData.map((item) => ({
+      key: item.key,
+      label: item.label,
+      children: (
+        <div key={item.key}>
+          <Input
+            placeholder="Add Icon Class"
+            onChange={(e) => handleIconChangeSetting(e, item.key)}
+            addonBefore="Icon"
+            style={{ borderRadius: "10px" }}
+            value={item.icon}
+          />
+          <Input
+            placeholder="Add Title"
+            className="mt-30"
+            onChange={(e) => handleTitleChangeSetting(e, item.key)}
+            addonBefore="Title"
+            style={{ borderRadius: "10px" }}
+            value={item.title}
+          />
+          <Input
+            placeholder="Add Description"
+            className="mt-30"
+            onChange={(e) => handleDescriptionChangeSetting(e, item.key)}
+            addonBefore="Description"
+            style={{ borderRadius: "10px" }}
+            value={item.description}
+          />
+        </div>
+      ),
+    }));
+  }, [homeSettingData]);
 
   return (
     <>
@@ -403,6 +417,31 @@ export const Settings = () => {
 
               <small className="text-danger text-start ms-2"></small>
             </div>
+
+            <h5
+              style={{
+                color: "#343a40",
+                margin: 0,
+                padding: "0.75rem 1rem",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                borderBottom: "1px solid #dee2e6",
+                backgroundColor: "#e9ecef",
+                borderTopLeftRadius: "8px",
+                borderTopRightRadius: "8px",
+              }}
+            >
+              <span style={{ fontWeight: 600, fontSize: "18px" }}>
+                Home Page Setting
+              </span>
+            </h5>
+
+            <Collapse
+              size="large"
+              items={items}
+              style={{ marginTop: "0px", marginBottom: "10px" }}
+            />
             <h5
               style={{
                 color: "#343a40",
@@ -511,7 +550,7 @@ export const Settings = () => {
                       </label>
                       <input
                         type="color"
-                        value={item.backgroundColor}
+                        value={item.bgcolor}
                         style={{
                           width: "100%",
                           padding: "0.5rem",
@@ -542,31 +581,6 @@ export const Settings = () => {
                 ))}
               </div>
             </div>
-
-            <h5
-              style={{
-                color: "#343a40",
-                margin: 0,
-                padding: "0.75rem 1rem",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                borderBottom: "1px solid #dee2e6",
-                backgroundColor: "#e9ecef",
-                borderTopLeftRadius: "8px",
-                borderTopRightRadius: "8px",
-              }}
-            >
-              <span style={{ fontWeight: 600, fontSize: "18px" }}>
-                Home Page Setting
-              </span>
-            </h5>
-
-            <Collapse
-              size="large"
-              items={userOptions}
-              style={{ marginTop: "0px", marginBottom: "10px" }}
-            />
 
             <Button
               style={{
