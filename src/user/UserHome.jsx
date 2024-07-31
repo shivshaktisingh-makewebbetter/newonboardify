@@ -69,7 +69,7 @@ export const UserHome = () => {
               style={{ position: "relative", paddingBottom: "40px" }}
               key={item.navigateKey}
             >
-              <div style={{ height: "6rem" }}>
+              <div style={{ display: "flex", justifyContent:"center" , alignItems:"center" ,width: "100%", height: "90px" }}>
                 <img
                   src={item.icon}
                   alt="No Preview"
