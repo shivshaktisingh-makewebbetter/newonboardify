@@ -9,6 +9,7 @@ import {
   getGeneralSettingsData,
   setGeneralSettings,
 } from "../apiservice/ApiService";
+import { ImageUpload } from "../common/ImageUpload";
 
 export const Settings = () => {
   const data = JSON.parse(sessionStorage.getItem("settings")) || {
@@ -36,24 +37,33 @@ export const Settings = () => {
   const [homeSettingData, setHomeSettingData] = useState([
     {
       key: "Request",
-      icon: "",
+      icon_name: "",
+      icon_url: "",
       title: "",
       description: "",
       label: "Request Setting",
+      btnText: "Request",
+      navigateKey: "request",
     },
     {
       key: "Track",
-      icon: "",
+      icon_name: "",
+      icon_url: "",
       title: "",
       description: "",
       label: "Track Setting",
+      btnText: "Track",
+      navigateKey: "track",
     },
     {
       key: "Status",
-      icon: "",
+      icon_name: "",
+      icon_url: "",
       title: "",
       description: "",
       label: "Overall Status Setting",
+      btnText: "Check",
+      navigateKey: "check",
     },
   ]);
 
@@ -103,10 +113,6 @@ export const Settings = () => {
   );
 
   const navigate = useNavigate();
-
-  // const handleChangeBg = (e) => {
-  //   setUiData({ ...uiData, site_bg: e.target.value });
-  // };
 
   const handleChangeBgBtn = (e) => {
     setUiData({ ...uiData, button_bg: e.target.value });
@@ -188,7 +194,7 @@ export const Settings = () => {
       const tempData = JSON.parse(response.data.response.ui_settings);
       tempData.banner_content = tempData.banner_content;
       setUiData(tempData);
-      setHomeSettingData(tempData.homePageSetting);
+      // setHomeSettingData(tempData.homePageSetting);
       setStatusFields(tempData.statusColorSetting);
       setLogoData({
         logo_name: response.data.response.logo,
@@ -217,6 +223,18 @@ export const Settings = () => {
     setHomeSettingData(tempArr);
   };
 
+  const handleFileSelect = (data, imageName, key) => {
+    console.log(key);
+    const tempArr = [...homeSettingData];
+    tempArr.forEach((item) => {
+      if (item.key === key) {
+        item.icon_name = imageName;
+        item.icon_url = data;
+      }
+    });
+    setHomeSettingData(tempArr);
+  };
+
   const handleDescriptionChangeSetting = (e, key) => {
     const tempArr = [...homeSettingData];
     tempArr.forEach((item) => {
@@ -231,20 +249,17 @@ export const Settings = () => {
     fetchGeneralSettings();
   }, []);
 
-
-
   const items = useMemo(() => {
     return homeSettingData.map((item) => ({
       key: item.key,
       label: item.label,
       children: (
         <div key={item.key}>
-          <Input
-            placeholder="Add Icon Class"
-            onChange={(e) => handleIconChangeSetting(e, item.key)}
-            addonBefore="Icon"
-            style={{ borderRadius: "10px" }}
-            value={item.icon}
+          <ImageUpload
+            onFileSelect={handleFileSelect}
+            imageName={item.icon_name}
+            imageUrl={item.icon_url}
+            filter={item.key}
           />
           <Input
             placeholder="Add Title"

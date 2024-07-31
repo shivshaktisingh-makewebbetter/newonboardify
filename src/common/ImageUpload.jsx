@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-export const ImageUpload = ({ onFileSelect, imageName, imageUrl }) => {
+export const ImageUpload = ({ onFileSelect, imageName, imageUrl , filter}) => {
   const [logoData, setLogoData] = useState({ logo_name: imageName, logo_image: imageUrl });
 
   const handleFileChange = (e) => {
@@ -10,7 +10,7 @@ export const ImageUpload = ({ onFileSelect, imageName, imageUrl }) => {
       const reader = new FileReader();
       reader.onload = (event) => {
         setLogoData({ logo_image: event.target.result, logo_name: file.name });
-        onFileSelect(event.target.result, file.name);
+        onFileSelect(event.target.result, file.name , filter);
       };
       reader.readAsDataURL(file);
     }
@@ -24,6 +24,7 @@ export const ImageUpload = ({ onFileSelect, imageName, imageUrl }) => {
         type="file"
         id="logo_image"
         onChange={handleFileChange}
+        accept='svg'
       />
       <small className="text-danger text-start ms-2"></small>
       <div

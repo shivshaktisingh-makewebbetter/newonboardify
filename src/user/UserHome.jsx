@@ -1,13 +1,7 @@
 import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
-import {
-  OverallStatusIcon,
-  RequestOnboardIcon,
-  TrackOnboardIcon,
-} from "../utils/icons";
 import { SubHeader } from "../components/SubHeader";
-import { useEffect } from "react";
-import { getLoginUserDetails } from "../apiservice/ApiService";
+import { useMemo } from "react";
 
 export const UserHome = () => {
   const settingData = JSON.parse(sessionStorage.getItem("settings")) || {
@@ -21,50 +15,48 @@ export const UserHome = () => {
     head_title_color: "#497ed8",
   };
 
-  const data = [
-    {
-      title: "Request Onboarding",
-      description:
-        "Streamline your employee onboarding with TASC Outsourcing. Request here for a hassle-free experience, letting us handle the rest with care and efficiency.",
-      icon: <RequestOnboardIcon />,
-      buttonText: "Request",
-      navigateKey: "request",
-    },
-    {
-      title: "Track Onboarding",
-      description:
-        "Track your onboarding requests seamlessly with us. Stay updated on the progress of your employee onboarding journey. Effortless tracking for a smoother onboarding experience.",
-      icon: <TrackOnboardIcon />,
-      buttonText: "Track",
-      navigateKey: "track",
-    },
-    {
-      title: "Overall Status",
-      description:
-        "Stay in the loop with ease! Check the overall status of your onboarding requests and keep tabs on your employee onboarding progress for a comprehensive overview of the entire process.",
-      icon: <OverallStatusIcon />,
-      buttonText: "Check",
-      navigateKey: "check",
-    },
-  ];
+  // const data = [
+  //   {
+  //     title: "Request Onboarding",
+  //     description:
+  //       "Streamline your employee onboarding with TASC Outsourcing. Request here for a hassle-free experience, letting us handle the rest with care and efficiency.",
+  //     icon: <RequestOnboardIcon />,
+  //     buttonText: "Request",
+  //     navigateKey: "request",
+  //   },
+  //   {
+  //     title: "Track Onboarding",
+  //     description:
+  //       "Track your onboarding requests seamlessly with us. Stay updated on the progress of your employee onboarding journey. Effortless tracking for a smoother onboarding experience.",
+  //     icon: <TrackOnboardIcon />,
+  //     buttonText: "Track",
+  //     navigateKey: "track",
+  //   },
+  //   {
+  //     title: "Overall Status",
+  //     description:
+  //       "Stay in the loop with ease! Check the overall status of your onboarding requests and keep tabs on your employee onboarding progress for a comprehensive overview of the entire process.",
+  //     icon: <OverallStatusIcon />,
+  //     buttonText: "Check",
+  //     navigateKey: "check",
+  //   },
+  // ];
+
+  const data = useMemo(() => {
+    return settingData.homePageSetting.map((item) => ({
+      title: item.title,
+      description: item.description,
+      icon: item.icon_url,
+      buttonText: item.btnText,
+      navigateKey: item.navigateKey,
+    }));
+  }, [settingData]);
 
   const navigate = useNavigate();
 
   const handleAdminRoute = (title) => {
     navigate(title);
   };
-
-  const newHelper = async () => {
-    const response = await getLoginUserDetails(sessionStorage.getItem("token"));
-    // console.log(response, "response");
-    sessionStorage.setItem("userEmail", "userone@gmail.com");
-    sessionStorage.setItem("userName", "user");
-    sessionStorage.setItem("userId", 34);
-  };
-
-  useEffect(() => {
-    newHelper();
-  }, []);
 
   return (
     <>
@@ -77,7 +69,17 @@ export const UserHome = () => {
               style={{ position: "relative", paddingBottom: "40px" }}
               key={item.navigateKey}
             >
-              <div style={{ height: "6rem" }}>{item.icon}</div>
+              <div style={{ height: "6rem" }}>
+                <img
+                  src={item.icon}
+                  alt="No Preview"
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    objectFit: "contain",
+                  }}
+                />
+              </div>
               <div className="governify-option-list-title font-family-hind fs-28 fw-700 mt-16 mb-16">
                 {item.title}
               </div>
@@ -105,7 +107,7 @@ export const UserHome = () => {
                     alignItems: "center",
                     position: "absolute",
                     bottom: "0px",
-                    cursor:"pointer"
+                    cursor: "pointer",
                   }}
                   onClick={() => handleAdminRoute(item.navigateKey)}
                 >
