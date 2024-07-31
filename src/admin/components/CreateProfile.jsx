@@ -34,33 +34,40 @@ export const CreateProfile = () => {
   };
 
   const getListOfAllCustomers = async () => {
-    const tempUser = [];
     try {
-      const response = await getAllCustomers();
-      const response1 = await getProfileListing();
-      if (response.success) {
-        response.data.response.forEach((item) => {
-          tempUser.push({ label: item.name, value: item.email });
-        });
-        // setUserListing(tempUser);
-      }
-      if (response1.success) {
-        response1.data.response.forEach((item) => {
-          tempUser.forEach((subItem) => {
-            if (item.users.includes(subItem.value)) {
-              subItem.desc = `Assigned to : ${item.title}`;
-            } else {
-              subItem.desc = "";
+      const [customerResponse, profileResponse] = await Promise.all([getAllCustomers(), getProfileListing()]);
+      console.log(customerResponse, profileResponse);
+      
+      if (customerResponse.success && profileResponse.success) {
+        const customerList = customerResponse.data.response.map(item => ({
+          label: item.name,
+          value: item.email,
+          desc: ""
+        }));
+  
+        const profileMap = new Map();
+        profileResponse.data.response.forEach(profile => {
+          profile.users.split(',').forEach(userEmail => {
+            if (!profileMap.has(userEmail)) {
+              profileMap.set(userEmail, []);
             }
+            profileMap.get(userEmail).push(profile.title);
           });
         });
-        setUserListing(tempUser);
+  
+        customerList.forEach(customer => {
+          if (profileMap.has(customer.value)) {
+            customer.desc = `Assigned to: ${profileMap.get(customer.value).join(', ')}`;
+          }
+        });
+  
+        setUserListing(customerList);
       }
     } catch (err) {
-    } finally {
+      console.error("Error fetching data:", err);
     }
   };
-
+  
   const handleUserChange = (e) => {
     setProfileData({ ...profileData, users: e });
   };

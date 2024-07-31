@@ -7,6 +7,7 @@ import {
   deleteServices,
   getAllBoards,
   getAllCustomers,
+  getProfileListing,
   getServicesByProfileId,
   updateProfile,
 } from "../../apiservice/ApiService";
@@ -135,23 +136,44 @@ export const EditProfile = () => {
   };
 
   const getListOfAllCustomers = async () => {
-    const tempUser = [];
     try {
-      const response = await getAllCustomers();
-      if (response.success) {
-        response.data.response.forEach((item) => {
-          tempUser.push({ label: item.name, value: item.email });
+      const [customerResponse, profileResponse] = await Promise.all([
+        getAllCustomers(),
+        getProfileListing(),
+      ]);
+      console.log(customerResponse, profileResponse);
+
+      if (customerResponse.success && profileResponse.success) {
+        const customerList = customerResponse.data.response.map((item) => ({
+          label: item.name,
+          value: item.email,
+          desc: "",
+        }));
+
+        const profileMap = new Map();
+        profileResponse.data.response.forEach((profile) => {
+          profile.users.split(",").forEach((userEmail) => {
+            if (!profileMap.has(userEmail)) {
+              profileMap.set(userEmail, []);
+            }
+            profileMap.get(userEmail).push(profile.title);
+          });
         });
-        setUserListing(tempUser);
+
+        customerList.forEach((customer) => {
+          if (profileMap.has(customer.value)) {
+            customer.desc = `Assigned to: ${profileMap
+              .get(customer.value)
+              .join(", ")}`;
+          }
+        });
+
+        setUserListing(customerList);
       }
     } catch (err) {
-    } finally {
+      console.error("Error fetching data:", err);
     }
   };
-
-  // useEffect(() => {
-  //   getAllBoardIds();
-  // }, []);
 
   const handleUserChange = (e) => {
     setProfileData({ ...profileData, users: e });
@@ -186,14 +208,14 @@ export const EditProfile = () => {
 
   const getAllServiceListing = async () => {
     const allAlreadyAssignedBoard = [];
-    
+
     try {
       const response = await getServicesByProfileId(location.state.profileId);
       if (response.success && response.data.response[0].services.length > 0) {
         setDataSource(response.data.response[0].services);
-        response.data.response[0].services.forEach((item)=>{
+        response.data.response[0].services.forEach((item) => {
           allAlreadyAssignedBoard.push(item.board_id);
-        })
+        });
       }
       if (response.success && response.data.response[0].services.length === 0) {
         setDataSource([]);
@@ -206,7 +228,7 @@ export const EditProfile = () => {
             key: item.id,
             label: item.name,
             value: item.id,
-            disabled : allAlreadyAssignedBoard.includes(item.id)
+            disabled: allAlreadyAssignedBoard.includes(item.id),
           });
         });
         setBoardIdOptions(tempData);
@@ -241,7 +263,6 @@ export const EditProfile = () => {
     getAllServiceListing();
     getListOfAllCustomers();
   }, []);
-
 
   return (
     <>
@@ -310,6 +331,18 @@ export const EditProfile = () => {
                 onChange={handleUserChange}
                 options={userListing}
                 value={profileData.users}
+                optionRender={(option) => (
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <span> {option.data.label}</span>
+                    <span> {option.data.desc}</span>
+                  </div>
+                )}
               />
             </div>
 
@@ -357,7 +390,7 @@ export const EditProfile = () => {
           onCancel={() => {
             setOpenService(false);
           }}
-          style={{overflowY:"auto" , maxHeight:"600"}}
+          style={{ overflowY: "auto", maxHeight: "600" }}
           width={800}
         >
           <CreateServices
