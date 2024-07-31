@@ -60,6 +60,8 @@ export const Register = () => {
       setLoading(true);
       const response = await registerApi(payload);
       if (response.success) {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: "Signup_Success" });
         toast.success(
           "Just verify your email address to confirm that you want to use this email"
         );
@@ -195,11 +197,7 @@ export const Register = () => {
           </div>
           <div className="form-container mx-auto" style={{ maxWidth: "440px" }}>
             <div>
-              <img
-                 src="/1.png"
-                alt="TASC logo"
-                style={{ maxWidth: "220px" }}
-              />
+              <img src="/1.png" alt="TASC logo" style={{ maxWidth: "220px" }} />
               <div
                 className="fs-24 ff-ws mb-3 text-inc-tundora"
                 style={{ fontWeight: 600, color: "#434343" }}
@@ -285,7 +283,7 @@ export const Register = () => {
               </div>
               <button
                 id="login-button"
-                className="btn btn-gradiant btn-to-link btn-secondary mt-4 d-flex align-items-center"
+                className="btn btn-newgradiant btn-to-link btn-secondary mt-4 d-flex align-items-center"
                 type="button"
                 style={{
                   border: "0",
