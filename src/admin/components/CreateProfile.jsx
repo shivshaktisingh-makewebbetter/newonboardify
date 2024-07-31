@@ -1,4 +1,4 @@
-import { Button, Input, Select } from "antd";
+import { Button, Input, Select, Space } from "antd";
 import { useEffect, useState } from "react";
 import { LeftOutlined } from "@ant-design/icons";
 import { toast, ToastContainer } from "react-toastify";
@@ -37,9 +37,22 @@ export const CreateProfile = () => {
     const tempUser = [];
     try {
       const response = await getAllCustomers();
+      const response1 = await getProfileListing();
       if (response.success) {
         response.data.response.forEach((item) => {
           tempUser.push({ label: item.name, value: item.email });
+        });
+        // setUserListing(tempUser);
+      }
+      if (response1.success) {
+        response1.data.response.forEach((item) => {
+          tempUser.forEach((subItem) => {
+            if (item.users.includes(subItem.value)) {
+              subItem.desc = `Assigned to : ${item.title}`;
+            } else {
+              subItem.desc = "";
+            }
+          });
         });
         setUserListing(tempUser);
       }
@@ -47,10 +60,6 @@ export const CreateProfile = () => {
     } finally {
     }
   };
-
-  useEffect(() => {
-    getListOfAllCustomers();
-  }, []);
 
   const handleUserChange = (e) => {
     setProfileData({ ...profileData, users: e });
@@ -68,7 +77,6 @@ export const CreateProfile = () => {
         JSON.stringify(tempProfileData)
       );
       if (response.success) {
-
         tempProfileId = response.data.response[0].id;
         setTimeout(() => {
           navigate("/admin/editprofile", {
@@ -86,7 +94,6 @@ export const CreateProfile = () => {
     } catch (err) {
     } finally {
       setLoading(false);
-     
     }
   };
 
@@ -94,7 +101,9 @@ export const CreateProfile = () => {
     navigate("/admin/profile");
   };
 
-
+  useEffect(() => {
+    getListOfAllCustomers();
+  }, []);
 
   return (
     <>
@@ -154,6 +163,12 @@ export const CreateProfile = () => {
                 onChange={handleUserChange}
                 options={userListing}
                 value={profileData.users}
+                optionRender={(option) => (
+                  <div style={{display:"flex" , width:"100%" , justifyContent:"space-between"}}>
+                    <span> {option.data.label}</span>
+                    <span> {option.data.desc}</span>
+                  </div>
+                )}
               />
             </div>
 
