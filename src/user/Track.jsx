@@ -21,6 +21,7 @@ import {
   setTrackBoardData,
 } from "../redux/slices/trackBoardData";
 import { Loader } from "../common/Loader";
+import { SelectService } from "./component/SelectService";
 
 let flag = false;
 
@@ -198,6 +199,22 @@ export const Track = () => {
     setStatusItems(updatedFilterColumn);
   };
 
+  const getFilterServices = (items) => {
+  
+
+  
+  let updatedFilterColumn = [];
+
+    // Object.keys(statusObject).map((key) =>
+    //   updatedFilterColumn.push({
+    //     label: statusObject[key],
+    //     key: parseInt(key, 10),
+    //   })
+    // );
+
+    setStatusItems(updatedFilterColumn);
+  };
+
   const handleExport = () => {
     let tempAllColumns = ["Name"];
     let tempAllColumnsIds = ["name"];
@@ -287,6 +304,7 @@ export const Track = () => {
               });
             });
           }
+          // getFilterServices()
           setOptions(tempArr);
           setSelectedRequest(tempArr[0].value);
           setSelectedBoardId(tempBoardId);
@@ -400,6 +418,7 @@ export const Track = () => {
           marginBottom: "32px",
         }}
       >
+        <SelectService items={options} />
         <SortBy items={sortingItems} />
         <FilterBy items={statusItems} setSelectedFilter={setSelectedFilter} />
         <ExportBy handleExport={handleExport} />
@@ -417,7 +436,6 @@ export const Track = () => {
           <Button onClick={loadMoreFun}>Load More</Button>
         </div>
       )}
-     
     </div>
   );
 };
