@@ -107,11 +107,8 @@ export const Login = () => {
   }, []);
 
   const handleNavigate = async () => {
-    if(tascRole) {
-      return;
-    }
     let role = sessionStorage.getItem("role");
-    if (role === "customer") {
+    if (tascRole === 'customer' || role === "customer") {
       const response1 = await getLoginUserDetails(
         sessionStorage.getItem("token")
       );
@@ -123,7 +120,7 @@ export const Login = () => {
       navigate("/user");
     }
 
-    if (role === "superAdmin" || role === "admin") {
+    if (tascRole === 'superAdmin' || tascRole === 'admin' || role === "superAdmin" || role === "admin") {
       const response1 = await getLoginUserDetails(
         sessionStorage.getItem("token")
       );
