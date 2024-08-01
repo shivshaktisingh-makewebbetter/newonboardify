@@ -107,6 +107,9 @@ export const Login = () => {
   }, []);
 
   const handleNavigate = async () => {
+    if(tascRole) {
+      return;
+    }
     let role = sessionStorage.getItem("role");
     if (role === "customer") {
       const response1 = await getLoginUserDetails(
