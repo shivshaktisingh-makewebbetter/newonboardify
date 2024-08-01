@@ -159,3 +159,7 @@ export const getAllServicesByUser = () => {
     `newonboardify/customer/getAllRequestTrackingByUserServices`
   );
 };
+
+export const getAllProfileDataByUser = () => {
+  return Services.GET(`newonboardify/customer/allProfileWithServicesByUser`);
+};

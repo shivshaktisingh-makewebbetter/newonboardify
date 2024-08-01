@@ -9,6 +9,7 @@ import { ExportBy } from "./component/ExportBy";
 import { Button, Pagination, Radio } from "antd";
 import { RequestComponent } from "./component/RequestComponent";
 import {
+  getAllProfileDataByUser,
   getBoardSettingDataCustomerByID,
   getColorMappingForUser,
   getRequestTrackingData,
@@ -43,7 +44,11 @@ export const Track = () => {
   const [selectedOrder, setSelectedOrder] = useState(1);
   const [selectedFilter, setSelectedFilter] = useState(9);
   const [statusItems, setStatusItems] = useState([]);
-  const [cursr, setCursor] = useState("");
+  const [options, setOptions] = useState([]);
+  const [selectedRequest, setSelectedRequest] = useState("");
+  const [selectedBoardId, setSelectedBoardId] = useState("");
+
+  const [cursor, setCursor] = useState("");
   const dispatch = useDispatch();
 
   const onChangeRadio = (item) => {
@@ -262,8 +267,33 @@ export const Track = () => {
 
   const getTrackRequestData = async () => {
     setLoading(true);
+    let tempBoardId = "";
     try {
-      const response = await getRequestTrackingDataByBoardId();
+      const profileResponse = await getAllProfileDataByUser();
+
+      if (profileResponse.success) {
+        if (profileResponse.data.response.length > 0) {
+          tempBoardId = profileResponse.data.response[0].services[0].board_id;
+          let tempArr = [];
+          if (
+            profileResponse.data.response[0].hasOwnProperty("services") &&
+            profileResponse.data.response[0].services.length > 0
+          ) {
+            profileResponse.data.response[0].services.forEach((item) => {
+              tempArr.push({
+                label: item.title,
+                value: item.id,
+                chart: item.service_chart_link,
+              });
+            });
+          }
+          setOptions(tempArr);
+          setSelectedRequest(tempArr[0].value);
+          setSelectedBoardId(tempBoardId);
+        }
+      }
+
+      const response = await getRequestTrackingDataByBoardId(tempBoardId, {});
 
       const response1 = await getBoardSettingDataCustomerByID(
         response.data.response.data.boards[0].id
@@ -289,7 +319,6 @@ export const Track = () => {
 
       if (response1.success) {
         setColumnIdData(JSON.parse(response1.data.response[0].columns));
-        dispatch(setColumnData(JSON.parse(response1.data.response[0].columns)));
       }
       if (response2.success) {
         setColorMappingData(response2.data.response);
@@ -300,42 +329,26 @@ export const Track = () => {
     }
   };
 
-  const loadMoreFun = () => {};
-
-  const fetchProfiledata = async () => {
+  const loadMoreFun = async () => {
+    setLoading(true);
     try {
-      const response = await getAllProfileDataByUser();
+      const response = await getRequestTrackingDataByBoardId(selectedBoardId, {
+        cursor: cursor,
+      });
       if (response.success) {
-        if (response.data.response.length > 0) {
-          let tempArr = [];
-          if (
-            response.data.response[0].hasOwnProperty("services") &&
-            response.data.response[0].services.length > 0
-          ) {
-            response.data.response[0].services.forEach((item) => {
-              tempArr.push({
-                label: item.title,
-                value: item.id,
-                chart: item.service_chart_link,
-              });
-            });
-          }
-          setOptions(tempArr);
-          setSelectedRequest(tempArr[0].value);
-          let element = document.getElementById("iframe-chart");
-          element.innerHTML =
-            tempArr[0].chart +
-            `<div class="w-100 bottom-blur" style="height:50px;"></div>`;
-        }
+        const tempData = [
+          ...data,
+          ...response.data.response.data.boards[0].items_page.items,
+        ];
+        setData(tempData);
+
+        setCursor(response.data.response.data.boards[0].items_page.cursor);
       }
     } catch (err) {
     } finally {
+      setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchProfiledata();
-  }, []);
 
   useEffect(() => {
     if (flag) {
@@ -399,21 +412,12 @@ export const Track = () => {
         allColumns={allColumns}
         colorData={colorMappingData}
       />
-      <div>
-        <Button onClick={loadMoreFun}>Load More</Button>
-      </div>
-      {/* <Pagination
-        showQuickJumper
-        total={dataLength}
-        onChange={onChange}
-        showTotal={(total) => `Total ${total} items`}
-        current={currentPage}
-        showSizeChanger={true}
-        onShowSizeChange={onShowSizeChange}
-        defaultPageSize={10}
-        pageSizeOptions={[10, 20, 50, 100]}
-        align="center"
-      /> */}
+      {cursor !== null && (
+        <div>
+          <Button onClick={loadMoreFun}>Load More</Button>
+        </div>
+      )}
+     
     </div>
   );
 };
