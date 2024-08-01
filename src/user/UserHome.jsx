@@ -54,17 +54,7 @@ export const UserHome = () => {
     navigate(title);
   };
 
-  const newHelper = async () => {
-    const response = await getLoginUserDetails(sessionStorage.getItem("token"));
-    // console.log(response, "response");
-    sessionStorage.setItem("userEmail", "userone@gmail.com");
-    sessionStorage.setItem("userName", "user");
-    sessionStorage.setItem("userId", 34);
-  };
 
-  useEffect(() => {
-    newHelper();
-  }, []);
 
   return (
     <>
