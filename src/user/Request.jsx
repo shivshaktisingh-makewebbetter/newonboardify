@@ -6,11 +6,12 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import { LeftOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
-import { Button } from "antd";
+import { Button, Modal } from "antd";
 
 export const Request = () => {
   const [formCode, setFormCode] = useState("");
   const [profileData, setProfileData] = useState([]);
+  const [open, setOpen] = useState(false);
 
   const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -71,11 +72,22 @@ export const Request = () => {
     }
   };
 
+  const handleOpenModal = (item) => {
+    setOpen(true);
+    fetchForm(item);
+  };
+
+  const fetchForm = (item) => {
+    console.log(item , 'item');
+    // let element = document.getElementById("iframe-signup");
+    // element.innerHTML = columns.extra_details.form_embed_code;
+  };
+
+
+
   useEffect(() => {
     fetchProfiledata();
   }, []);
-
-  console.log(profileData, "prof");
 
   return (
     <div style={{ padding: "1rem" }}>
@@ -163,6 +175,7 @@ export const Request = () => {
                             border: `1px solid ${settingsData.button_bg}`,
                             color: settingsData.button_bg,
                           }}
+                          onClick={() => handleOpenModal(item)}
                         >
                           Submit Request
                         </Button>
@@ -174,28 +187,35 @@ export const Request = () => {
           </Slider>
         </div>
       </div>
+      <Modal
+        open={open}
+        centered
+        footer={(_) => <></>}
+        onCancel={() => {
+          setOpen(false);
+        }}
+        width={800}
+      >
+        <div style={{ margin: "0px", height: "75vh" }} id="iframe-signup"></div>
+      </Modal>
     </div>
   );
 };
 
 const CustomArrow = (props) => {
   const { className, onClick, arrowType } = props;
-  
+
   // Common styles for the arrow container
   const commonStyle = {
-    paddingRight:arrowType==="next"?"0px":"200px",
-    paddingLeft:arrowType==="prev"?"0px":"200px",
+    paddingRight: arrowType === "next" ? "0px" : "200px",
+    paddingLeft: arrowType === "prev" ? "0px" : "200px",
     borderRadius: "50%", // Makes the container circular
     cursor: "pointer",
     zIndex: 2,
   };
 
   return (
-    <div
-      className={className}
-      style={commonStyle}
-      onClick={onClick}
-    >
+    <div className={className} style={commonStyle} onClick={onClick}>
       {arrowType === "prev" ? (
         <LeftOutlined style={{ color: "grey", fontSize: "20px" }} /> // Icon color and size
       ) : (
