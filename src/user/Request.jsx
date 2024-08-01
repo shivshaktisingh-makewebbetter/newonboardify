@@ -12,6 +12,7 @@ export const Request = () => {
   const [formCode, setFormCode] = useState("");
   const [profileData, setProfileData] = useState([]);
   const [open, setOpen] = useState(false);
+  const [selectedServices , setSelectedServices] = useState({});
 
   const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -78,9 +79,15 @@ export const Request = () => {
   };
 
   const fetchForm = (item) => {
-    let element = document.getElementById("iframe-signup");
-    element.innerHTML = item.service_form_link;
+
+    
   };
+
+  useEffect(()=>{
+    // let element = document.getElementById("iframe-signup");
+    // console.log(item , element);
+    // element.innerHTML = item.service_form_link;
+  },[open])
 
   useEffect(() => {
     fetchProfiledata();

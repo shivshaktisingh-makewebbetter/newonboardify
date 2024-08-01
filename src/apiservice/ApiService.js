@@ -180,3 +180,7 @@ export const deleteServices = (id) => {
 export const getAllProfileDataByUser = () => {
   return Services.GET(`newonboardify/customer/allProfileWithServicesByUser`);
 };
+
+export const getAllServicesByUser = () =>{
+  return Services.GET(`newonboardify/customer/getAllRequestTrackingByUserServices`);
+}
