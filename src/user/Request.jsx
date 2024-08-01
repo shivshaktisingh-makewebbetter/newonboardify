@@ -78,12 +78,9 @@ export const Request = () => {
   };
 
   const fetchForm = (item) => {
-    console.log(item , 'item');
     let element = document.getElementById("iframe-signup");
     element.innerHTML = item.service_form_link;
   };
-
-
 
   useEffect(() => {
     fetchProfiledata();
@@ -176,7 +173,10 @@ export const Request = () => {
                             color: settingsData.button_bg,
                           }}
                           onClick={() => handleOpenModal(item)}
-                          disabled={item.service_form_link === undefined || item.service_form_link.length === 0}
+                          disabled={
+                            item.service_form_link === undefined ||
+                            item.service_form_link.length === 0
+                          }
                         >
                           Submit Request
                         </Button>
