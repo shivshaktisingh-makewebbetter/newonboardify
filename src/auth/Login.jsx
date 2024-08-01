@@ -5,9 +5,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Loader } from "../common/Loader";
 import {
   getCustomerGeneralSettings,
+  getGeneralSettingsData,
   getLoginUserDetails,
   loginApi,
 } from "../apiservice/ApiService";
+import { isTokenValid } from "../utils/helper";
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,6 +20,11 @@ export const Login = () => {
   const [role, setRole] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
+  const queryParameters = new URLSearchParams(location.search);
+  let adminToken = queryParameters.get("token");
+  let tascRole = queryParameters.get("role");
+  let id = queryParameters.get("id");
+  let path = queryParameters.get("path");
 
   const handleSubmit = async () => {
     let payload = JSON.stringify({
@@ -128,9 +135,12 @@ export const Login = () => {
 
   useEffect(() => {
     const loadIntercom = () => {
-      const userPresentOnSession = sessionStorage.getItem('userId');
-      if(userPresentOnSession === null){
-        sessionStorage.setItem('userId' ,  Math.floor(100000 + Math.random() * 900000));
+      const userPresentOnSession = sessionStorage.getItem("userId");
+      if (userPresentOnSession === null) {
+        sessionStorage.setItem(
+          "userId",
+          Math.floor(100000 + Math.random() * 900000)
+        );
       }
       if (
         location.pathname !== "/admin" &&
@@ -146,8 +156,8 @@ export const Login = () => {
           name: sessionStorage.getItem("userName")
             ? sessionStorage.getItem("userName")
             : "", // Full name
-          user_id: sessionStorage.getItem("userId") ,
-           
+          user_id: sessionStorage.getItem("userId"),
+
           email: sessionStorage.getItem("userEmail")
             ? sessionStorage.getItem("userEmail")
             : "",
@@ -201,10 +211,7 @@ export const Login = () => {
     // Cleanup function to remove Intercom script
     return () => {
       const intercomScript = document.getElementById("intercom-script");
-      if (
-        intercomScript &&
-        location.pathname === "/admin"
-      ) {
+      if (intercomScript && location.pathname === "/admin") {
         intercomScript.remove();
       }
       if (typeof window.Intercom === "function") {
@@ -212,6 +219,33 @@ export const Login = () => {
       }
     };
   }, [token, role, location]);
+
+  const adminLogin = async () => {
+    let status = isTokenValid(adminToken);
+    if (status.valid) {
+      sessionStorage.setItem("token", adminToken);
+      sessionStorage.setItem("role", tascRole);
+      await getLoginUserDetails(adminToken);
+      await getGeneralSettingsData();
+      if (id && tascRole === "customer") {
+        sessionStorage.setItem("itemId", id);
+        // sessionStorage.setItem('count', count);
+        navigate(`/${path}`);
+      } else if (tascRole === "customer") {
+        navigate("/");
+      } else {
+        navigate("/admin");
+      }
+    } else {
+      navigate("/signin");
+    }
+  };
+
+  useEffect(() => {
+    if (adminToken) {
+      adminLogin();
+    }
+  }, [adminToken]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -222,6 +256,9 @@ export const Login = () => {
   useEffect(() => {
     handleNavigate();
   }, []);
+  if (adminToken) {
+    return <Loader />;
+  }
   return (
     <div className="inc-auth-container">
       <div className="container auth-container text-center">
