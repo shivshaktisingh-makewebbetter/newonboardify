@@ -689,8 +689,10 @@ export const Board = () => {
                           borderRadius: "10px",
                         }}
                       >
-                        <p style={{ textAlign: "left" }}>Profession column</p>
+                        <p style={{ textAlign: "left" }}>Search column</p>
                         <Select
+                          mode="multiple"
+                          allowClear
                           style={{
                             width: "100%",
                           }}
@@ -711,9 +713,7 @@ export const Board = () => {
                           borderRadius: "10px",
                         }}
                       >
-                        <p style={{ textAlign: "left" }}>
-                          Overall Status column
-                        </p>
+                        <p style={{ textAlign: "left" }}>Filter column</p>
                         <Select
                           style={{
                             width: "100%",
