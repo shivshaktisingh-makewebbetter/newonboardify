@@ -194,7 +194,7 @@ export const Settings = () => {
       const tempData = JSON.parse(response.data.response.ui_settings);
       tempData.banner_content = tempData.banner_content;
       setUiData(tempData);
-      setHomeSettingData(tempData?.homePageSetting ||  {
+      setHomeSettingData(tempData?.homePageSetting ||  [{
         key: "Request",
         icon_name: "",
         icon_url: "",
@@ -223,7 +223,7 @@ export const Settings = () => {
         label: "Overall Status Setting",
         btnText: "Check",
         navigateKey: "check",
-      },);
+      }]);
       setStatusFields(tempData?.statusColorSetting || []);
       setLogoData({
         logo_name: response.data.response.logo,
