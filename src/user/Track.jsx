@@ -272,7 +272,7 @@ export const Track = () => {
       const response2 = await getColorMappingForUser();
 
       if (response.success) {
-       setCursor(response.data.response.data.boards[0].items_page.cursor)
+        setCursor(response.data.response.data.boards[0].items_page.cursor);
         getFilterColumns(response.data.response.data.boards[0].columns);
         setDataLength(
           response.data.response.data.boards[0].items_page.items.length
@@ -301,6 +301,41 @@ export const Track = () => {
   };
 
   const loadMoreFun = () => {};
+
+  const fetchProfiledata = async () => {
+    try {
+      const response = await getAllProfileDataByUser();
+      if (response.success) {
+        if (response.data.response.length > 0) {
+          let tempArr = [];
+          if (
+            response.data.response[0].hasOwnProperty("services") &&
+            response.data.response[0].services.length > 0
+          ) {
+            response.data.response[0].services.forEach((item) => {
+              tempArr.push({
+                label: item.title,
+                value: item.id,
+                chart: item.service_chart_link,
+              });
+            });
+          }
+          setOptions(tempArr);
+          setSelectedRequest(tempArr[0].value);
+          let element = document.getElementById("iframe-chart");
+          element.innerHTML =
+            tempArr[0].chart +
+            `<div class="w-100 bottom-blur" style="height:50px;"></div>`;
+        }
+      }
+    } catch (err) {
+    } finally {
+    }
+  };
+
+  useEffect(() => {
+    fetchProfiledata();
+  }, []);
 
   useEffect(() => {
     if (flag) {
