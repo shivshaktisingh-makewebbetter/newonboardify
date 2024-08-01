@@ -15,15 +15,18 @@ export const UserHome = () => {
     head_title_color: "#497ed8",
   };
 
-
   const data = useMemo(() => {
-    return settingData.homePageSetting.map((item) => ({
-      title: item.title,
-      description: item.description,
-      icon: item.icon_url,
-      buttonText: item.btnText,
-      navigateKey: item.navigateKey,
-    }));
+    if (settingData.homePageSetting !== undefined) {
+      return settingData.homePageSetting.map((item) => ({
+        title: item.title,
+        description: item.description,
+        icon: item.icon_url,
+        buttonText: item.btnText,
+        navigateKey: item.navigateKey,
+      }));
+    } else {
+      return [];
+    }
   }, [settingData]);
 
   const navigate = useNavigate();
@@ -43,7 +46,15 @@ export const UserHome = () => {
               style={{ position: "relative", paddingBottom: "40px" }}
               key={item.navigateKey}
             >
-              <div style={{ display: "flex", justifyContent:"center" , alignItems:"center" ,width: "100%", height: "90px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  height: "90px",
+                }}
+              >
                 <img
                   src={item.icon}
                   alt="No Preview"

@@ -203,16 +203,6 @@ export const Settings = () => {
     }
   };
 
-  const handleIconChangeSetting = (e, key) => {
-    const tempArr = [...homeSettingData];
-    tempArr.forEach((item) => {
-      if (item.key === key) {
-        item.icon = e.target.value;
-      }
-    });
-    setHomeSettingData(tempArr);
-  };
-
   const handleTitleChangeSetting = (e, key) => {
     const tempArr = [...homeSettingData];
     tempArr.forEach((item) => {
