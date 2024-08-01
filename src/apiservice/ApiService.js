@@ -88,6 +88,19 @@ export const getRequestTrackingData = () => {
   return Services.POST(`newonboardify/customer/requestTracking`);
 };
 
+export const getRequestTrackingDataByBoardId = (id, data) => {
+  if (data === null) {
+    return Services.POST(
+      `newonboardify/customer/requestTrackingByBoardId/${id}`
+    );
+  } else {
+    return Services.POST(
+      `newonboardify/customer/requestTrackingByBoardId/${id}`,
+      data
+    );
+  }
+};
+
 export const getBoardSettingDataCustomerByID = (id) => {
   return Services.GET(
     `newonboardify/customer/getboardVisibilityMapping?board_id=${id}`
@@ -139,4 +152,10 @@ export const getCustomerGeneralSettings = (data) => {
 
 export const commonVerifyUser = (data) => {
   return Services.POST(`common/verifyUser`, data);
+};
+
+export const getAllServicesByUser = () => {
+  return Services.GET(
+    `newonboardify/customer/getAllRequestTrackingByUserServices`
+  );
 };
