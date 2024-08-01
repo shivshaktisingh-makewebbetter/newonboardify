@@ -5,6 +5,9 @@ import {
   getAllProfileDataByUser,
   getUserFormAndChart,
 } from "../apiservice/ApiService";
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 import { LeftOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
 
@@ -24,24 +27,39 @@ export const Request = () => {
     </div>
   );
 
-  const responsive = {
-    superLargeDesktop: {
-      // the naming can be any, depends on you.
-      breakpoint: { max: 4000, min: 3000 },
-      items: 5
-    },
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 3
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1
-    }
+  const settings = {
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    nextArrow: <CustomArrow arrowType="next" />,
+    prevArrow: <CustomArrow arrowType="prev" />,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          infinite: true,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          initialSlide: 1
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }
+    ]
   };
 
   const fetchProfiledata = async () => {
@@ -72,26 +90,19 @@ export const Request = () => {
           forHome={true}
         />
 
-<Carousel
-  swipeable={false}
-  draggable={false}
-  showDots={true}
-  responsive={responsive}
-  ssr={true} // means to render carousel on server-side.
-  infinite={true}
-  keyBoardControl={true}
-  customTransition="all .5"
-  transitionDuration={500}
-  containerClass="carousel-container"
-  removeArrowOnDeviceType={["tablet", "mobile"]}
-  dotListClass="custom-dot-list-style"
-  itemClass="carousel-item-padding-40-px"
->
-  <div>Item 1</div>
-  <div>Item 2</div>
-  <div>Item 3</div>
-  <div>Item 4</div>
-</Carousel>;
+<div className="carousel-container">
+      <Slider {...settings}>
+        <div>
+          <img src="/1.png" alt="Slide 1" />
+        </div>
+        <div>
+          <img src="/1.png" alt="Slide 2" />
+        </div>
+        <div>
+          <img src="/1.png" alt="Slide 3" />
+        </div>
+      </Slider>
+    </div>
 {/* 
         <div className="carousel-container">
           <Carousel
@@ -169,3 +180,16 @@ export const Request = () => {
     </div>
   );
 };
+
+const CustomArrow = (props) => {
+  const { className, style, onClick, arrowType } = props;
+  return (
+    <div
+      className={`${className} ${arrowType}`}
+      style={{ ...style, display: 'block', background: '#000', borderRadius: '50%' }}
+      onClick={onClick}
+    />
+  );
+};
+
+export default CustomArrow;
