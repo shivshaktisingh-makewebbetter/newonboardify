@@ -6,12 +6,13 @@ import { useEffect, useState } from "react";
 import { SortBy } from "./component/SortBy";
 import { FilterBy } from "./component/FilterBy";
 import { ExportBy } from "./component/ExportBy";
-import { Pagination, Radio } from "antd";
+import { Button, Pagination, Radio } from "antd";
 import { RequestComponent } from "./component/RequestComponent";
 import {
   getBoardSettingDataCustomerByID,
   getColorMappingForUser,
   getRequestTrackingData,
+  getRequestTrackingDataByBoardId,
 } from "../apiservice/ApiService";
 import { useDispatch } from "react-redux";
 import {
@@ -42,6 +43,7 @@ export const Track = () => {
   const [selectedOrder, setSelectedOrder] = useState(1);
   const [selectedFilter, setSelectedFilter] = useState(9);
   const [statusItems, setStatusItems] = useState([]);
+  const [cursr, setCursor] = useState("");
   const dispatch = useDispatch();
 
   const onChangeRadio = (item) => {
@@ -261,7 +263,7 @@ export const Track = () => {
   const getTrackRequestData = async () => {
     setLoading(true);
     try {
-      const response = await getRequestTrackingData();
+      const response = await getRequestTrackingDataByBoardId();
 
       const response1 = await getBoardSettingDataCustomerByID(
         response.data.response.data.boards[0].id
@@ -270,11 +272,7 @@ export const Track = () => {
       const response2 = await getColorMappingForUser();
 
       if (response.success) {
-        dispatch(
-          setTrackBoardData(
-            response.data.response.data.boards[0].items_page.items
-          )
-        );
+       setCursor(response.data.response.data.boards[0].items_page.cursor)
         getFilterColumns(response.data.response.data.boards[0].columns);
         setDataLength(
           response.data.response.data.boards[0].items_page.items.length
@@ -301,6 +299,8 @@ export const Track = () => {
       setLoading(false);
     }
   };
+
+  const loadMoreFun = () => {};
 
   useEffect(() => {
     if (flag) {
@@ -364,7 +364,10 @@ export const Track = () => {
         allColumns={allColumns}
         colorData={colorMappingData}
       />
-      <Pagination
+      <div>
+        <Button onClick={loadMoreFun}>Load More</Button>
+      </div>
+      {/* <Pagination
         showQuickJumper
         total={dataLength}
         onChange={onChange}
@@ -375,7 +378,7 @@ export const Track = () => {
         defaultPageSize={10}
         pageSizeOptions={[10, 20, 50, 100]}
         align="center"
-      />
+      /> */}
     </div>
   );
 };
