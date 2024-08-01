@@ -181,6 +181,12 @@ export const getAllProfileDataByUser = () => {
   return Services.GET(`newonboardify/customer/allProfileWithServicesByUser`);
 };
 
-export const getAllServicesByUser = () =>{
-  return Services.GET(`newonboardify/customer/getAllRequestTrackingByUserServices`);
-}
+export const getAllServicesByUser = () => {
+  return Services.GET(
+    `newonboardify/customer/getAllRequestTrackingByUserServices`
+  );
+};
+
+export const getServiceByBoardId = (id) => {
+  return Services.POST(`newonboardify/customer/requestTrackingByBoardId/${id}`);
+};

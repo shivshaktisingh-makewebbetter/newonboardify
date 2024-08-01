@@ -141,7 +141,6 @@ export const EditProfile = () => {
         getAllCustomers(),
         getProfileListing(),
       ]);
-      console.log(customerResponse, profileResponse);
 
       if (customerResponse.success && profileResponse.success) {
         const customerList = customerResponse.data.response.map((item) => ({

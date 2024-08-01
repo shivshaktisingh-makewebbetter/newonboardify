@@ -9,6 +9,7 @@ import { ExportBy } from "./component/ExportBy";
 import { Pagination, Radio } from "antd";
 import { RequestComponent } from "./component/RequestComponent";
 import {
+  getAllProfileDataByUser,
   getBoardSettingDataCustomerByID,
   getColorMappingForUser,
   getRequestTrackingData,
@@ -19,6 +20,7 @@ import {
   setTrackBoardData,
 } from "../redux/slices/trackBoardData";
 import { Loader } from "../common/Loader";
+import { FilterByService } from "./component/FilterByService";
 
 let flag = false;
 
@@ -27,7 +29,6 @@ export const Track = () => {
   const breadCrumbData = location.pathname.split("/");
   const [loading, setLoading] = useState(false);
   const [searchData, setSearchData] = useState("");
-  const [filter, setFilter] = useState("");
   const [filterOption, setFilterOption] = useState([]);
   const [boardId, setBoardId] = useState("");
   const [data, setData] = useState([]);
@@ -42,6 +43,7 @@ export const Track = () => {
   const [selectedOrder, setSelectedOrder] = useState(1);
   const [selectedFilter, setSelectedFilter] = useState(9);
   const [statusItems, setStatusItems] = useState([]);
+  const [options, setOptions] = useState([]);
   const dispatch = useDispatch();
 
   const onChangeRadio = (item) => {
@@ -191,6 +193,19 @@ export const Track = () => {
     setStatusItems(updatedFilterColumn);
   };
 
+  const getFilterServices = (items) => {
+    let updatedFilterColumn = [];
+
+    items.forEach((subItem) =>
+      updatedFilterColumn.push({
+        label: subItem.label,
+        key: subItem.label,
+      })
+    );
+
+    return updatedFilterColumn;
+  };
+
   const handleExport = () => {
     let tempAllColumns = ["Name"];
     let tempAllColumnsIds = ["name"];
@@ -302,6 +317,29 @@ export const Track = () => {
     }
   };
 
+  const fetchProfiledata = async () => {
+    try {
+      const response = await getAllProfileDataByUser();
+      if (response.success) {
+        if (response.data.response.length > 0) {
+          let tempArr = [];
+          if (
+            response.data.response[0].hasOwnProperty("services") &&
+            response.data.response[0].services.length > 0
+          ) {
+            response.data.response[0].services.forEach((item) => {
+              tempArr.push({ ...item, label: item.title, value: item.id });
+            });
+          }
+          const tempData = getFilterServices(tempArr);
+          setOptions(tempData);
+        }
+      }
+    } catch (err) {
+    } finally {
+    }
+  };
+
   useEffect(() => {
     if (flag) {
       onChangeSearchData();
@@ -311,6 +349,10 @@ export const Track = () => {
       flag = true;
     }, 2000);
   }, [selectedOrder, selectedFilter, searchData]);
+
+  useEffect(() => {
+    fetchProfiledata();
+  }, []);
 
   useEffect(() => {
     getTrackRequestData();
@@ -352,6 +394,7 @@ export const Track = () => {
           marginBottom: "32px",
         }}
       >
+        <FilterByService items={options} />
         <SortBy items={sortingItems} />
         <FilterBy items={statusItems} setSelectedFilter={setSelectedFilter} />
         <ExportBy handleExport={handleExport} />

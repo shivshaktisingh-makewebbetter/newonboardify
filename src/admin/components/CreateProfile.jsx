@@ -36,7 +36,6 @@ export const CreateProfile = () => {
   const getListOfAllCustomers = async () => {
     try {
       const [customerResponse, profileResponse] = await Promise.all([getAllCustomers(), getProfileListing()]);
-      console.log(customerResponse, profileResponse);
       
       if (customerResponse.success && profileResponse.success) {
         const customerList = customerResponse.data.response.map(item => ({

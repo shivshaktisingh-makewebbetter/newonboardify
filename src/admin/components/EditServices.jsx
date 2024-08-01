@@ -60,8 +60,6 @@ export const EditServices = ({
     );
   }
 
-  console.log(editServiceData, "editServiceData");
-
   const handleUpdateServices = async () => {
     let tempServiceData = { ...serviceData };
     tempServiceData.image_name = startsWithHttp(serviceData.image)
