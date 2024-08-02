@@ -276,6 +276,7 @@ export const Track = () => {
       const response2 = await getColorMappingForUser();
 
       if (response.success) {
+        console.log(response , 'response');
         getFilterColumns(response.data.response.data.boards[0].columns);
         setData(response.data.response.data.boards[0].items_page.items);
         setCursor(response.data.response.data.boards[0].items_page.cursor);
