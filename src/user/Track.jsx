@@ -372,7 +372,7 @@ export const Track = () => {
         allColumns={allColumns}
         colorData={colorMappingData}
       />
-      {/* {cursor !== null && (
+      {cursor !== null && (
         <div>
           <Button
             onClick={
@@ -386,7 +386,7 @@ export const Track = () => {
             Load More
           </Button>
         </div>
-      )} */}
+      )}
       {/* <Pagination
         showQuickJumper
         total={dataLength}
