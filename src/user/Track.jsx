@@ -77,7 +77,7 @@ export const Track = () => {
   const getFilterColumns = (items) => {
     let listOfStatus = {};
     items.forEach((subItem) => {
-      if (subItem.title === "Overall Status") {
+      if (subItem.id === columnIdData.required_columns.overall_status) {
         listOfStatus = JSON.parse(subItem.settings_str);
       }
     });

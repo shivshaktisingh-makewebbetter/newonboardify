@@ -128,7 +128,6 @@ export const Board = () => {
         required_columns: { profession: [], overall_status: "" },
         sub_headings_column: [],
       };
-      console.log(tempData);
       let tempEmailKey = tempData?.document_fetch_key || [];
       let tempImageKey = tempData?.image_key || "";
       setBoardVisibilityData(tempData);
