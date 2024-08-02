@@ -262,7 +262,18 @@ export const Login = () => {
         }
         navigate("/user");
       } else {
-        await getGeneralSettingsData();
+        const res = await getGeneralSettingsData();
+        if (res?.success) {
+          // console.log(response2)
+          sessionStorage.setItem(
+            "settings",
+            res?.data?.response.ui_settings
+          );
+          sessionStorage.setItem(
+            "logo_location",
+            res?.data?.response.logo_location
+          );
+        }
         navigate("/admin");
       }
     } else {
