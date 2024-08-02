@@ -125,7 +125,7 @@ export const Board = () => {
         filterByUser: { key: "", value: "" },
         image_key: "",
         onboarding_columns: [],
-        required_columns: { profession: "", overall_status: "" },
+        required_columns: { profession: [], overall_status: "" },
         sub_headings_column: [],
       };
       console.log(tempData);
