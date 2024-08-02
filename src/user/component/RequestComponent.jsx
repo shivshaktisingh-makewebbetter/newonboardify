@@ -28,7 +28,7 @@ export const RequestComponent = ({
     COMPLETED: "#d5f9e2",
     "IN PROGRESS": "#fcefbe",
   };
-  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   const getHeadData = (item) => {
@@ -56,7 +56,7 @@ export const RequestComponent = ({
   const getStatusText = (item) => {
     let tempId = "";
     allColumns.forEach((subItem) => {
-      if (subItem.title === "Overall Status") {
+      if (subItem.id === columnIdData.required_columns.overall_status) {
         tempId = subItem.id;
       }
     });
@@ -73,7 +73,7 @@ export const RequestComponent = ({
     let tempId = "";
     let tempData = "";
     allColumns.forEach((subItem) => {
-      if (subItem.title === "Overall Status") {
+      if (subItem.id === columnIdData.required_columns.overall_status) {
         tempId = subItem.id;
         tempData = JSON.parse(subItem.settings_str);
       }
