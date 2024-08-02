@@ -123,8 +123,9 @@ export const RequestComponent = ({
 
     colorData.forEach((subItem) => {
       for (const [status, tasks] of Object.entries(subItem)) {
+        const cleanedArray = tasks.map(item => item.trim().toLowerCase());
 
-        if (tasks.includes(value.toLowerCase())) {
+        if (cleanedArray.includes(value.toLowerCase())) {
           bgColor = bgColorSet[status];
         }
       }
