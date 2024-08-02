@@ -9,11 +9,12 @@ import { ExportBy } from "./component/ExportBy";
 import { Button, Pagination, Radio } from "antd";
 import { RequestComponent } from "./component/RequestComponent";
 import {
-  getAllProfileDataByUser,
+  getBoardIdByUser,
   getBoardSettingDataCustomerByID,
   getColorMappingForUser,
   getRequestTrackingData,
-  getRequestTrackingDataByBoardId,
+  getRequestTrackingDataByBoardIdAndSearch,
+  getTrackingDataByBoardId,
 } from "../apiservice/ApiService";
 import { useDispatch } from "react-redux";
 import {
@@ -21,7 +22,6 @@ import {
   setTrackBoardData,
 } from "../redux/slices/trackBoardData";
 import { Loader } from "../common/Loader";
-import { SelectService } from "./component/SelectService";
 
 let flag = false;
 
@@ -30,27 +30,19 @@ export const Track = () => {
   const breadCrumbData = location.pathname.split("/");
   const [loading, setLoading] = useState(false);
   const [searchData, setSearchData] = useState("");
-  const [filter, setFilter] = useState("");
   const [filterOption, setFilterOption] = useState([]);
   const [boardId, setBoardId] = useState("");
   const [data, setData] = useState([]);
   const [columnIdData, setColumnIdData] = useState({});
   const [allColumns, setAllColumns] = useState([]);
-  const [dataLength, setDataLength] = useState(1);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [limit, setLimit] = useState(10);
   const [originalArray, setOriginalArray] = useState([]);
-  const [clonedData, setClonedData] = useState([]);
   const [colorMappingData, setColorMappingData] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(1);
   const [selectedFilter, setSelectedFilter] = useState(9);
   const [statusItems, setStatusItems] = useState([]);
-  const [options, setOptions] = useState([]);
-  const [selectedRequest, setSelectedRequest] = useState("");
-  const [selectedBoardId, setSelectedBoardId] = useState("");
-
   const [cursor, setCursor] = useState("");
-  const dispatch = useDispatch();
+  const [searchKeys, setSearchKeys] = useState([]);
+  const [loadMoreValue, setLoadMoreValue] = useState(1);
 
   const onChangeRadio = (item) => {
     if (item === "ASC") {
@@ -61,20 +53,20 @@ export const Track = () => {
     }
   };
 
-  const onChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
+  // const onChange = (pageNumber) => {
+  //   setCurrentPage(pageNumber);
+  // };
 
-  const onShowSizeChange = (current, size) => {
-    setLimit(size);
-  };
+  // const onShowSizeChange = (current, size) => {
+  //   setLimit(size);
+  // };
 
-  const setStateData = (data, length) => {
-    setData(data.slice(0, 10));
-    setOriginalArray(data);
-    setDataLength(length);
-    setCurrentPage(1);
-  };
+  // const setStateData = (data, length) => {
+  //   setData(data.slice(0, 10));
+  //   setOriginalArray(data);
+  //   setDataLength(length);
+  //   setCurrentPage(1);
+  // };
 
   const sortingItems = [
     {
@@ -101,77 +93,77 @@ export const Track = () => {
     },
   ];
 
-  const filterDataBySearchString = (data, searchString) => {
-    let tempArray = [];
-    originalArray.forEach((item) => {
-      item.column_values.forEach((subItem) => {
-        if (
-          subItem.id === columnIdData.required_columns.profession &&
-          subItem.text.includes(searchString)
-        ) {
-          tempArray.push(item);
-        }
-      });
-    });
+  // const filterDataBySearchString = (data, searchString) => {
+  //   let tempArray = [];
+  //   originalArray.forEach((item) => {
+  //     item.column_values.forEach((subItem) => {
+  //       if (
+  //         subItem.id === columnIdData.required_columns.profession &&
+  //         subItem.text.includes(searchString)
+  //       ) {
+  //         tempArray.push(item);
+  //       }
+  //     });
+  //   });
 
-    originalArray.forEach((item) => {
-      item.column_values.forEach((subItem) => {
-        if (
-          subItem.id === columnIdData.required_columns.overall_status &&
-          subItem.text.includes(searchString)
-        ) {
-          tempArray.push(item);
-        }
-      });
-    });
-    return tempArray;
-  };
+  //   originalArray.forEach((item) => {
+  //     item.column_values.forEach((subItem) => {
+  //       if (
+  //         subItem.id === columnIdData.required_columns.overall_status &&
+  //         subItem.text.includes(searchString)
+  //       ) {
+  //         tempArray.push(item);
+  //       }
+  //     });
+  //   });
+  //   return tempArray;
+  // };
 
-  const handleFilter = (data, filter) => {
-    if (filter == 9) {
-      return data;
-    }
+  // const handleFilter = (data, filter) => {
+  //   if (filter == 9) {
+  //     return data;
+  //   }
 
-    let tempStatus = "";
-    statusItems.forEach((subItem) => {
-      if (subItem.key == filter) {
-        tempStatus = subItem.label;
-      }
-    });
-    let tempStatusKey = "";
+  //   let tempStatus = "";
+  //   statusItems.forEach((subItem) => {
+  //     if (subItem.key == filter) {
+  //       tempStatus = subItem.label;
+  //     }
+  //   });
+  //   let tempStatusKey = "";
 
-    allColumns.forEach((subItem) => {
-      if (subItem.title === "Overall Status") {
-        tempStatusKey = subItem.id;
-      }
-    });
+  //   allColumns.forEach((subItem) => {
+  //     if (subItem.title === "Overall Status") {
+  //       tempStatusKey = subItem.id;
+  //     }
+  //   });
 
-    const tempFilterArray = [];
-    data.forEach((item) => {
-      item.column_values.forEach((subItem) => {
-        if (subItem.id === tempStatusKey) {
-          if (subItem.label === tempStatus) {
-            tempFilterArray.push(item);
-          }
-        }
-      });
-    });
-    return tempFilterArray;
-  };
+  //   const tempFilterArray = [];
+  //   data.forEach((item) => {
+  //     item.column_values.forEach((subItem) => {
+  //       if (subItem.id === tempStatusKey) {
+  //         if (subItem.label === tempStatus) {
+  //           tempFilterArray.push(item);
+  //         }
+  //       }
+  //     });
+  //   });
+  //   return tempFilterArray;
+  // };
 
-  const sortData = (data, order) => {
-    return order === 1 ? data : data.slice().reverse();
-  };
+  // const sortData = (data, order) => {
+  //   return order === 1 ? data : data.slice().reverse();
+  // };
 
-  const onChangeSearchData = () => {
-    let tempData = [...clonedData];
-    if (searchData.length > 0) {
-      tempData = filterDataBySearchString(tempData, searchData);
-    }
-    tempData = sortData(tempData, selectedOrder);
-    tempData = handleFilter(tempData, selectedFilter);
-    setStateData(tempData, tempData.length);
-  };
+  // const onChangeSearchData = () => {
+  //   let tempData = [...clonedData];
+  //   if (searchData.length > 0) {
+  //     tempData = filterDataBySearchString(tempData, searchData);
+  //   }
+  //   tempData = sortData(tempData, selectedOrder);
+  //   tempData = handleFilter(tempData, selectedFilter);
+  //   setStateData(tempData, tempData.length);
+  // };
 
   const getFilterColumns = (items) => {
     let listOfStatus = {};
@@ -199,22 +191,6 @@ export const Track = () => {
     setStatusItems(updatedFilterColumn);
   };
 
-  const getFilterServices = (items) => {
-  
-
-  
-  let updatedFilterColumn = [];
-
-    // Object.keys(statusObject).map((key) =>
-    //   updatedFilterColumn.push({
-    //     label: statusObject[key],
-    //     key: parseInt(key, 10),
-    //   })
-    // );
-
-    setStatusItems(updatedFilterColumn);
-  };
-
   const handleExport = () => {
     let tempAllColumns = ["Name"];
     let tempAllColumnsIds = ["name"];
@@ -222,7 +198,7 @@ export const Track = () => {
       return;
     }
 
-    let tempData = [...originalArray];
+    let tempData = [...data];
     columnIdData.candidate_coulmns.forEach((subItem) => {
       if (!tempAllColumns.includes(subItem.name)) {
         tempAllColumns.push(subItem.name);
@@ -283,35 +259,15 @@ export const Track = () => {
   };
 
   const getTrackRequestData = async () => {
-    setLoading(true);
     let tempBoardId = "";
+    setLoading(true);
     try {
-      const profileResponse = await getAllProfileDataByUser();
-
-      if (profileResponse.success) {
-        if (profileResponse.data.response.length > 0) {
-          tempBoardId = profileResponse.data.response[0].services[0].board_id;
-          let tempArr = [];
-          if (
-            profileResponse.data.response[0].hasOwnProperty("services") &&
-            profileResponse.data.response[0].services.length > 0
-          ) {
-            profileResponse.data.response[0].services.forEach((item) => {
-              tempArr.push({
-                label: item.title,
-                value: item.id,
-                chart: item.service_chart_link,
-              });
-            });
-          }
-          // getFilterServices()
-          setOptions(tempArr);
-          setSelectedRequest(tempArr[0].value);
-          setSelectedBoardId(tempBoardId);
-        }
+      const boardIdData = await getBoardIdByUser();
+      if (boardIdData.success) {
+        setBoardId(boardIdData.data.response);
+        tempBoardId = boardIdData.data.response;
       }
-
-      const response = await getRequestTrackingDataByBoardId(tempBoardId, {});
+      const response = await getTrackingDataByBoardId(tempBoardId, null);
 
       const response1 = await getBoardSettingDataCustomerByID(
         response.data.response.data.boards[0].id
@@ -320,23 +276,19 @@ export const Track = () => {
       const response2 = await getColorMappingForUser();
 
       if (response.success) {
-        setCursor(response.data.response.data.boards[0].items_page.cursor);
         getFilterColumns(response.data.response.data.boards[0].columns);
-        setDataLength(
-          response.data.response.data.boards[0].items_page.items.length
-        );
-        setOriginalArray(
-          response.data.response.data.boards[0].items_page.items
-        );
-        setClonedData(response.data.response.data.boards[0].items_page.items);
-        setData(
-          response.data.response.data.boards[0].items_page.items.slice(0, 10)
-        );
+        setData(response.data.response.data.boards[0].items_page.items);
+        setCursor(response.data.response.data.boards[0].items_page.cursor);
         setAllColumns(response.data.response.data.boards[0].columns);
       }
 
       if (response1.success) {
         setColumnIdData(JSON.parse(response1.data.response[0].columns));
+        setSearchKeys(
+          JSON.parse(response1.data.response[0].columns).required_columns
+            .profession
+        );
+        console.log(JSON.parse(response1.data.response[0].columns));
       }
       if (response2.success) {
         setColorMappingData(response2.data.response);
@@ -347,19 +299,19 @@ export const Track = () => {
     }
   };
 
-  const loadMoreFun = async () => {
+  const loadMoreHandler = async () => {
     setLoading(true);
     try {
-      const response = await getRequestTrackingDataByBoardId(selectedBoardId, {
-        cursor: cursor,
-      });
+      const response = await getTrackingDataByBoardId(
+        boardId,
+        JSON.stringify({ cursor: cursor })
+      );
       if (response.success) {
-        const tempData = [
+        let tempData = [
           ...data,
           ...response.data.response.data.boards[0].items_page.items,
         ];
         setData(tempData);
-
         setCursor(response.data.response.data.boards[0].items_page.cursor);
       }
     } catch (err) {
@@ -368,11 +320,104 @@ export const Track = () => {
     }
   };
 
-  useEffect(() => {
-    if (flag) {
-      onChangeSearchData();
+  const getDataByFilterAndSearch = async () => {
+    const rules = [];
+    if (selectedFilter !== 9) {
+      rules.push({
+        column_id: columnIdData.required_columns.overall_status,
+        compare_value: [Number(selectedFilter)],
+      });
+    }
+    if (searchData.length > 0) {
+      searchKeys.forEach((item) => {
+        rules.push({
+          column_id: item,
+          compare_value: [searchData],
+          operator: "contains_text",
+        });
+      });
     }
 
+    const payload = {
+      query_params: {
+        order_by: [
+          {
+            direction: selectedOrder === 1 ? "asc" : "desc",
+            column_id: "__creation_log__",
+          },
+        ],
+        ...(rules.length > 0 && { rules, operator: "or" }),
+      },
+    };
+
+    setLoading(true);
+
+    try {
+      const response = await getRequestTrackingDataByBoardIdAndSearch(
+        boardId,
+        JSON.stringify(payload)
+      );
+      if (response.success) {
+        setData(
+          response.data.response.data.boards[0].items_page.items.slice(0, 10)
+        );
+        setOriginalArray(
+          response.data.response.data.boards[0].items_page.items
+        );
+        if (
+          response.data.response.data.boards[0].items_page.items.length <= 10
+        ) {
+          setCursor(null);
+        }
+      }
+      if (
+        response.success &&
+        response.data.response.data.boards[0].items_page.items.length === 0
+      ) {
+        setData([]);
+        setOriginalArray([]);
+        if (
+          response.data.response.data.boards[0].items_page.items.length <= 10
+        ) {
+          setCursor(null);
+        }
+      }
+    } catch (err) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getMoreData = () => {
+    const startIndex = loadMoreValue * 10;
+    const endIndex = startIndex + 10;
+
+    // Ensure endIndex does not exceed the array length
+    const validEndIndex = Math.min(endIndex, originalArray.length - 1);
+
+    // Get the subarray from startIndex to validEndIndex (inclusive)
+    const subArray = originalArray.slice(startIndex, validEndIndex + 1);
+    if (subArray.length > 0) {
+      setLoading(true);
+      setTimeout(() => {
+        if (subArray.length < 10) {
+          setCursor(null);
+        }
+        const tempData = [...data, ...subArray];
+        setData(tempData);
+        setLoadMoreValue(loadMoreValue + 1);
+        setLoading(false);
+      }, 2000);
+    } else {
+      setCursor(null);
+    }
+    // originalArray.slice(10 , 20);
+  };
+
+  useEffect(() => {
+    if (flag) {
+      getDataByFilterAndSearch();
+    }
     setTimeout(() => {
       flag = true;
     }, 2000);
@@ -381,19 +426,6 @@ export const Track = () => {
   useEffect(() => {
     getTrackRequestData();
   }, []);
-
-  useEffect(() => {
-    const tempData = [...originalArray];
-    const from = (currentPage - 1) * limit;
-    const to =
-      dataLength < currentPage * limit ? dataLength : currentPage * limit;
-    const newData = tempData.slice(from, to);
-    setData(newData);
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }, [currentPage, limit]);
 
   return (
     <div style={{ padding: "2rem" }}>
@@ -418,7 +450,6 @@ export const Track = () => {
           marginBottom: "32px",
         }}
       >
-        <SelectService items={options} />
         <SortBy items={sortingItems} />
         <FilterBy items={statusItems} setSelectedFilter={setSelectedFilter} />
         <ExportBy handleExport={handleExport} />
@@ -433,9 +464,31 @@ export const Track = () => {
       />
       {cursor !== null && (
         <div>
-          <Button onClick={loadMoreFun}>Load More</Button>
+          <Button
+            onClick={
+              selectedFilter !== 9 ||
+              searchData.length > 0 ||
+              selectedOrder !== 1
+                ? getMoreData
+                : loadMoreHandler
+            }
+          >
+            Load More
+          </Button>
         </div>
       )}
+      {/* <Pagination
+        showQuickJumper
+        total={dataLength}
+        onChange={onChange}
+        showTotal={(total) => `Total ${total} items`}
+        current={currentPage}
+        showSizeChanger={true}
+        onShowSizeChange={onShowSizeChange}
+        defaultPageSize={10}
+        pageSizeOptions={[10, 20, 50, 100]}
+        align="center"
+      /> */}
     </div>
   );
 };

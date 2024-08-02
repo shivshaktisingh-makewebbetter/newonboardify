@@ -163,3 +163,22 @@ export const getAllServicesByUser = () => {
 export const getAllProfileDataByUser = () => {
   return Services.GET(`newonboardify/customer/allProfileWithServicesByUser`);
 };
+
+
+export const getTrackingDataByBoardId = (id , data) =>{
+  if(data === null){
+    return Services.POST(`/newonboardify/customer/requestTrackingByBoardId/${id}`);
+
+  }else{
+    return Services.POST(`/newonboardify/customer/requestTrackingByBoardId/${id}` , data)
+
+  }
+}
+
+export const getBoardIdByUser = () =>{
+  return Services.GET(`/newonboardify/customer/getBoardIdByUser`);
+}
+
+export const getRequestTrackingDataByBoardIdAndSearch = (id , data) =>{
+  return Services.POST(`newonboardify/customer/requestTrackingByBoardIdAndSearch/${id}` , data)
+}
