@@ -116,6 +116,7 @@ export const Board = () => {
     }
     if (response.success && response.data.response.length === 0) {
       let tempData = {
+        board:selectedBoardId ,
         candidate_coulmns: [],
         card_section: { column1: "", column2: "" },
         document_fetch_key: [],
@@ -198,6 +199,7 @@ export const Board = () => {
     const tempData = { ...boardVisiblityData };
     tempData.email = selectedUser;
     tempData.filterByUser = flterUserSpecific;
+    tempData.board =selectedBoardId
     setLoading(true);
     try {
       const response = await setBoardVisibilityDataEndpoint(
