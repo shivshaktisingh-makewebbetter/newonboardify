@@ -9,6 +9,7 @@ import { ExportBy } from "./component/ExportBy";
 import { Button, Radio } from "antd";
 import { RequestComponent } from "./component/RequestComponent";
 import {
+  getAllFilters,
   getBoardIdByUser,
   getBoardSettingDataCustomerByID,
   getColorMappingForUser,
@@ -183,10 +184,14 @@ export const Track = () => {
       );
 
       const response2 = await getColorMappingForUser();
+      const filterResponse = await getAllFilters(tempBoardId);
+      if(filterResponse.success){
+        getFilterColumns(filterResponse.data.response.data.board[0].columns[0] );
+
+      }
 
       if (response.success) {
         console.log(response, "response");
-        // getFilterColumns(response.data.response.data.boards[0].columns);
         setData(response.data.response.data.boards[0].items_page.items);
         setCursor(response.data.response.data.boards[0].items_page.cursor);
         setAllColumns(response.data.response.data.boards[0].columns);

@@ -182,3 +182,8 @@ export const getBoardIdByUser = () =>{
 export const getRequestTrackingDataByBoardIdAndSearch = (id , data) =>{
   return Services.POST(`newonboardify/customer/requestTrackingByBoardIdAndSearch/${id}` , data)
 }
+
+
+export const getAllFilters = (id) =>{
+  return Services.GET(`/newonboardify/customer/getFilterColumnByBoardId/${id}`)
+}
