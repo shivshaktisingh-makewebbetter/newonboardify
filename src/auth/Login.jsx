@@ -108,7 +108,7 @@ export const Login = () => {
 
   const handleNavigate = async () => {
     let role = sessionStorage.getItem("role");
-    if (tascRole === 'customer' || role === "customer") {
+    if (role === "customer") {
       const response1 = await getLoginUserDetails(
         sessionStorage.getItem("token")
       );
@@ -120,7 +120,7 @@ export const Login = () => {
       navigate("/user");
     }
 
-    if (tascRole === 'superAdmin' || tascRole === 'admin' || role === "superAdmin" || role === "admin") {
+    if (role === "superAdmin" || role === "admin") {
       const response1 = await getLoginUserDetails(
         sessionStorage.getItem("token")
       );
@@ -225,15 +225,55 @@ export const Login = () => {
     if (status.valid) {
       sessionStorage.setItem("token", adminToken);
       sessionStorage.setItem("role", tascRole);
-      await getLoginUserDetails(adminToken);
-      await getGeneralSettingsData();
+      let res = await getLoginUserDetails(adminToken);
+      if (res.success) {
+        sessionStorage.setItem("userEmail", res.data.data.email);
+        sessionStorage.setItem("userName", res.data.data.name);
+        sessionStorage.setItem("userId", res.data.data.user_id);
+      }
       if (id && tascRole === "customer") {
+        const res2 = await getCustomerGeneralSettings(adminToken);
+        if (res2.success) {
+          // console.log(response2)
+          sessionStorage.setItem(
+            "settings",
+            res2.data.response.ui_settings
+          );
+          sessionStorage.setItem(
+            "logo_location",
+            res2.data.response.logo_location
+          );
+        }
         sessionStorage.setItem("itemId", id);
         // sessionStorage.setItem('count', count);
         navigate(`/${path}`);
       } else if (tascRole === "customer") {
-        navigate("/");
+        const res2 = await getCustomerGeneralSettings(adminToken);
+        if (res2.success) {
+          // console.log(response2)
+          sessionStorage.setItem(
+            "settings",
+            res2.data.response.ui_settings
+          );
+          sessionStorage.setItem(
+            "logo_location",
+            res2.data.response.logo_location
+          );
+        }
+        navigate("/user");
       } else {
+        const res = await getGeneralSettingsData();
+        if (res?.success) {
+          // console.log(response2)
+          sessionStorage.setItem(
+            "settings",
+            res?.data?.response.ui_settings
+          );
+          sessionStorage.setItem(
+            "logo_location",
+            res?.data?.response.logo_location
+          );
+        }
         navigate("/admin");
       }
     } else {
@@ -254,7 +294,9 @@ export const Login = () => {
   }, []);
 
   useEffect(() => {
-    handleNavigate();
+    if (adminToken === null || adminToken === undefined) {
+      handleNavigate();
+    }
   }, []);
   if (adminToken) {
     return <Loader />;
