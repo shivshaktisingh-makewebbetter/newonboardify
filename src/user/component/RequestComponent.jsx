@@ -109,7 +109,7 @@ export const RequestComponent = ({
   const getBgColor = (item) => {
     let tempId = "";
     allColumns.forEach((subItem) => {
-      if (subItem.title === "Overall Status") {
+      if (subItem.id === columnIdData.required_columns.overall_status) {
         tempId = subItem.id;
       }
     });
