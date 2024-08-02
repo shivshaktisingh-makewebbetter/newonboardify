@@ -107,7 +107,6 @@ export const Board = () => {
 
     if (response.success && response.data.response.length > 0) {
       let tempData = JSON.parse(response.data.response[0].columns);
-      console.log(tempData);
       let tempEmailKey = tempData?.document_fetch_key || [];
       let tempImageKey = tempData?.image_key || "";
       setBoardVisibilityData(tempData);

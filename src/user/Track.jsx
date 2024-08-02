@@ -76,12 +76,12 @@ export const Track = () => {
 
 
   const getFilterColumns = (items) => {
-    let listOfStatus = {};
-    items.forEach((subItem) => {
-      if (subItem.id === columnIdData.required_columns.overall_status) {
-        listOfStatus = JSON.parse(subItem.settings_str);
-      }
-    });
+    let listOfStatus = JSON.parse(items.settings_str);
+    // items.forEach((subItem) => {
+    //   if (subItem.id === columnIdData.required_columns.overall_status) {
+    //     listOfStatus = JSON.parse(subItem.settings_str);
+    //   }
+    // });
 
     let updatedFilterColumn = [
       {
@@ -186,12 +186,11 @@ export const Track = () => {
       const response2 = await getColorMappingForUser();
       const filterResponse = await getAllFilters(tempBoardId);
       if(filterResponse.success){
-        getFilterColumns(filterResponse.data.response.data.board[0].columns[0] );
+        getFilterColumns(filterResponse.data.response.data.boards[0].columns[0] );
 
       }
 
       if (response.success) {
-        console.log(response, "response");
         setData(response.data.response.data.boards[0].items_page.items);
         setCursor(response.data.response.data.boards[0].items_page.cursor);
         setAllColumns(response.data.response.data.boards[0].columns);
@@ -203,7 +202,6 @@ export const Track = () => {
           JSON.parse(response1.data.response[0].columns).required_columns
             .profession
         );
-        console.log(JSON.parse(response1.data.response[0].columns));
       }
       if (response2.success) {
         setColorMappingData(response2.data.response);
