@@ -225,15 +225,44 @@ export const Login = () => {
     if (status.valid) {
       sessionStorage.setItem("token", adminToken);
       sessionStorage.setItem("role", tascRole);
-      await getLoginUserDetails(adminToken);
-      await getGeneralSettingsData();
+      let res = await getLoginUserDetails(adminToken);
+      if (res.success) {
+        sessionStorage.setItem("userEmail", res.data.data.email);
+        sessionStorage.setItem("userName", res.data.data.name);
+        sessionStorage.setItem("userId", res.data.data.user_id);
+      }
       if (id && tascRole === "customer") {
+        const res2 = await getCustomerGeneralSettings(adminToken);
+        if (res2.success) {
+          // console.log(response2)
+          sessionStorage.setItem(
+            "settings",
+            res2.data.response.ui_settings
+          );
+          sessionStorage.setItem(
+            "logo_location",
+            res2.data.response.logo_location
+          );
+        }
         sessionStorage.setItem("itemId", id);
         // sessionStorage.setItem('count', count);
         navigate(`/${path}`);
       } else if (tascRole === "customer") {
-        navigate("/");
+        const res2 = await getCustomerGeneralSettings(adminToken);
+        if (res2.success) {
+          // console.log(response2)
+          sessionStorage.setItem(
+            "settings",
+            res2.data.response.ui_settings
+          );
+          sessionStorage.setItem(
+            "logo_location",
+            res2.data.response.logo_location
+          );
+        }
+        navigate("/user");
       } else {
+        await getGeneralSettingsData();
         navigate("/admin");
       }
     } else {
