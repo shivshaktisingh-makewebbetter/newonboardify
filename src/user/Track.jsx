@@ -420,7 +420,7 @@ export const Track = () => {
     }
     setTimeout(() => {
       flag = true;
-    }, 2000);
+    }, 4000);
   }, [selectedOrder, selectedFilter, searchData]);
 
   useEffect(() => {
