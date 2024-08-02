@@ -6,21 +6,15 @@ import { useEffect, useState } from "react";
 import { SortBy } from "./component/SortBy";
 import { FilterBy } from "./component/FilterBy";
 import { ExportBy } from "./component/ExportBy";
-import { Button, Pagination, Radio } from "antd";
+import { Button, Radio } from "antd";
 import { RequestComponent } from "./component/RequestComponent";
 import {
   getBoardIdByUser,
   getBoardSettingDataCustomerByID,
   getColorMappingForUser,
-  getRequestTrackingData,
   getRequestTrackingDataByBoardIdAndSearch,
   getTrackingDataByBoardId,
 } from "../apiservice/ApiService";
-import { useDispatch } from "react-redux";
-import {
-  setColumnData,
-  setTrackBoardData,
-} from "../redux/slices/trackBoardData";
 import { Loader } from "../common/Loader";
 
 let flag = false;
@@ -53,21 +47,6 @@ export const Track = () => {
     }
   };
 
-  // const onChange = (pageNumber) => {
-  //   setCurrentPage(pageNumber);
-  // };
-
-  // const onShowSizeChange = (current, size) => {
-  //   setLimit(size);
-  // };
-
-  // const setStateData = (data, length) => {
-  //   setData(data.slice(0, 10));
-  //   setOriginalArray(data);
-  //   setDataLength(length);
-  //   setCurrentPage(1);
-  // };
-
   const sortingItems = [
     {
       key: "1",
@@ -93,77 +72,7 @@ export const Track = () => {
     },
   ];
 
-  // const filterDataBySearchString = (data, searchString) => {
-  //   let tempArray = [];
-  //   originalArray.forEach((item) => {
-  //     item.column_values.forEach((subItem) => {
-  //       if (
-  //         subItem.id === columnIdData.required_columns.profession &&
-  //         subItem.text.includes(searchString)
-  //       ) {
-  //         tempArray.push(item);
-  //       }
-  //     });
-  //   });
 
-  //   originalArray.forEach((item) => {
-  //     item.column_values.forEach((subItem) => {
-  //       if (
-  //         subItem.id === columnIdData.required_columns.overall_status &&
-  //         subItem.text.includes(searchString)
-  //       ) {
-  //         tempArray.push(item);
-  //       }
-  //     });
-  //   });
-  //   return tempArray;
-  // };
-
-  // const handleFilter = (data, filter) => {
-  //   if (filter == 9) {
-  //     return data;
-  //   }
-
-  //   let tempStatus = "";
-  //   statusItems.forEach((subItem) => {
-  //     if (subItem.key == filter) {
-  //       tempStatus = subItem.label;
-  //     }
-  //   });
-  //   let tempStatusKey = "";
-
-  //   allColumns.forEach((subItem) => {
-  //     if (subItem.title === "Overall Status") {
-  //       tempStatusKey = subItem.id;
-  //     }
-  //   });
-
-  //   const tempFilterArray = [];
-  //   data.forEach((item) => {
-  //     item.column_values.forEach((subItem) => {
-  //       if (subItem.id === tempStatusKey) {
-  //         if (subItem.label === tempStatus) {
-  //           tempFilterArray.push(item);
-  //         }
-  //       }
-  //     });
-  //   });
-  //   return tempFilterArray;
-  // };
-
-  // const sortData = (data, order) => {
-  //   return order === 1 ? data : data.slice().reverse();
-  // };
-
-  // const onChangeSearchData = () => {
-  //   let tempData = [...clonedData];
-  //   if (searchData.length > 0) {
-  //     tempData = filterDataBySearchString(tempData, searchData);
-  //   }
-  //   tempData = sortData(tempData, selectedOrder);
-  //   tempData = handleFilter(tempData, selectedFilter);
-  //   setStateData(tempData, tempData.length);
-  // };
 
   const getFilterColumns = (items) => {
     let listOfStatus = {};
@@ -276,7 +185,7 @@ export const Track = () => {
       const response2 = await getColorMappingForUser();
 
       if (response.success) {
-        console.log(response , 'response');
+        console.log(response, "response");
         getFilterColumns(response.data.response.data.boards[0].columns);
         setData(response.data.response.data.boards[0].items_page.items);
         setCursor(response.data.response.data.boards[0].items_page.cursor);
@@ -463,7 +372,7 @@ export const Track = () => {
         allColumns={allColumns}
         colorData={colorMappingData}
       />
-      {cursor !== null && (
+      {/* {cursor !== null && (
         <div>
           <Button
             onClick={
@@ -477,7 +386,7 @@ export const Track = () => {
             Load More
           </Button>
         </div>
-      )}
+      )} */}
       {/* <Pagination
         showQuickJumper
         total={dataLength}
