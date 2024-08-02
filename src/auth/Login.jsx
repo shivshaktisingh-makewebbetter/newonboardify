@@ -108,7 +108,7 @@ export const Login = () => {
 
   const handleNavigate = async () => {
     let role = sessionStorage.getItem("role");
-    if (tascRole === 'customer' || role === "customer") {
+    if (role === "customer") {
       const response1 = await getLoginUserDetails(
         sessionStorage.getItem("token")
       );
@@ -120,7 +120,7 @@ export const Login = () => {
       navigate("/user");
     }
 
-    if (tascRole === 'superAdmin' || tascRole === 'admin' || role === "superAdmin" || role === "admin") {
+    if (role === "superAdmin" || role === "admin") {
       const response1 = await getLoginUserDetails(
         sessionStorage.getItem("token")
       );
@@ -254,7 +254,9 @@ export const Login = () => {
   }, []);
 
   useEffect(() => {
-    handleNavigate();
+    if (adminToken === null || adminToken === undefined) {
+      handleNavigate();
+    }
   }, []);
   if (adminToken) {
     return <Loader />;
