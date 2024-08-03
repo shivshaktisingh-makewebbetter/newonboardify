@@ -180,6 +180,9 @@ export const UserList = () => {
             role: roleData[item.role],
             phone: item.phone,
             boardId: item.board_id,
+            utm_campaign:item.utm_campaign ,
+            utm_source:item.utm_source ,
+            utm_medium: item.utm_medium
           });
         });
         setDataSource(tempData);
