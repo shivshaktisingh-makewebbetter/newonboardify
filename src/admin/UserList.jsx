@@ -88,6 +88,10 @@ export const UserList = () => {
       dataIndex: "phone",
     },
     {
+      title: "Source",
+      dataIndex: "utm_source",
+    },
+    {
       title: "Email",
       dataIndex: "email",
       // sorter: (a, b) => a.age - b.age,
