@@ -92,6 +92,14 @@ export const UserList = () => {
       dataIndex: "utm_source",
     },
     {
+      title: "Medium",
+      dataIndex: "utm_medium",
+    },
+    {
+      title: "Campaign",
+      dataIndex: "utm_campaign",
+    },
+    {
       title: "Email",
       dataIndex: "email",
       // sorter: (a, b) => a.age - b.age,
