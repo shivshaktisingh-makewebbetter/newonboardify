@@ -317,7 +317,7 @@ export const TrackDetails = () => {
 
           <div className="card border-0 border-1 p-4">
             <h4 className="text-start head-color fw-bold pb-4 border-bottom onboarding-fs-20">
-              Status Update
+              Status Updates
             </h4>
             <ul className="list-group list-group-flush">
               {Object.keys(columnData).length > 0 &&

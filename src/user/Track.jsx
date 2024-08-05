@@ -16,6 +16,7 @@ import {
   getColorMappingForUser,
   getRequestTrackingDataByBoardIdAndSearch,
   getTrackingDataByBoardId,
+  getAllServicesByUser,
 } from "../apiservice/ApiService";
 import { Loader } from "../common/Loader";
 import { FilterByService } from "./component/FilterByService";
@@ -39,6 +40,7 @@ export const Track = () => {
   const [cursor, setCursor] = useState("");
   const [searchKeys, setSearchKeys] = useState([]);
   const [loadMoreValue, setLoadMoreValue] = useState(1);
+  const [options, setOptions] = useState([]);
   const initialRender = useRef(true);
 
   const onChangeRadio = (item) => {
@@ -191,17 +193,18 @@ export const Track = () => {
         tempBoardId = boardIdData.data.response;
       }
       let tempPayLoad = {
-        "query_params": {
-            "order_by": [
-                {
-                    "direction": selectedOrder === 1 ? "asc" : "desc",
-                    "column_id": "__creation_log__"
-                }
-            ]
-        }
-    };
+        query_params: {
+          order_by: [
+            {
+              direction: selectedOrder === 1 ? "asc" : "desc",
+              column_id: "__creation_log__",
+            },
+          ],
+        },
+      };
       const response = await getTrackingDataByBoardId(tempBoardId, tempPayLoad);
-
+      const profileResponse = await getAllProfileDataByUser();
+      console.log(profileResponse , 'serviceResponse')
       const response1 = await getBoardSettingDataCustomerByID(
         response.data.response.data.boards[0].id
       );
@@ -289,12 +292,11 @@ export const Track = () => {
 
     setLoading(true);
     let tempBoardId = boardId;
-    if(tempBoardId === ''){
+    if (tempBoardId === "") {
       return;
     }
 
     try {
-      
       const response = await getRequestTrackingDataByBoardIdAndSearch(
         tempBoardId,
         JSON.stringify(payload)
@@ -365,10 +367,6 @@ export const Track = () => {
   }, [selectedOrder, selectedFilter, searchData]);
 
   useEffect(() => {
-    fetchProfiledata();
-  }, []);
-
-  useEffect(() => {
     getTrackRequestData();
   }, []);
 
@@ -395,7 +393,10 @@ export const Track = () => {
           marginBottom: "32px",
         }}
       >
-        <FilterByService items={options} setSelectedService={setSelectedService}/>
+        <FilterByService
+          items={options}
+          setSelectedService={setSelectedService}
+        />
         <SortBy items={sortingItems} />
         <FilterBy items={statusItems} setSelectedFilter={setSelectedFilter} />
         <ExportBy handleExport={handleExport} />
