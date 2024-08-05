@@ -6,13 +6,13 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import { LeftOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
-import { Button, Modal } from "antd";
+import { Button, Modal, Typography } from "antd";
 
 export const Request = () => {
   const [formCode, setFormCode] = useState("");
   const [profileData, setProfileData] = useState([]);
   const [open, setOpen] = useState(false);
-  const [selectedServices , setSelectedServices] = useState({});
+  const [selectedServices, setSelectedServices] = useState({});
 
   const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -28,6 +28,7 @@ export const Request = () => {
   const settings = {
     infinite: true,
     speed: 500,
+    adaptiveHeight: true,
     slidesToShow: 4,
     slidesToScroll: 1,
     nextArrow: <CustomArrow arrowType="next" />,
@@ -78,10 +79,6 @@ export const Request = () => {
     setFormCode(item.service_form_link);
   };
 
-
-
-
-
   useEffect(() => {
     fetchProfiledata();
   }, []);
@@ -105,8 +102,9 @@ export const Request = () => {
                     <div
                       style={{
                         padding: "20px",
-                        paddingBottom: "60px",
                         position: "relative",
+                        // marginBottom:"60px",
+                        paddingBottom: "60px",
                       }}
                     >
                       <div
@@ -138,7 +136,6 @@ export const Request = () => {
                           fontWeight: "700",
                           marginTop: "20px",
                           marginBottom: "0px",
-                          minHeight: "78px",
                         }}
                       >
                         {item.title}
@@ -151,14 +148,20 @@ export const Request = () => {
                           color: "#928f8f",
                           fontSize: "17px",
                           fontWeight: "400",
-                          marginTop: "20px",
+
                           marginBottom: "0px",
-                          minHeight: "77px",
                         }}
                       >
                         {item.description}
                       </p>
-                      <div style={{ width: "100%", textAlign: "left" }}>
+                      <div
+                        style={{
+                          width: "100%",
+                          textAlign: "left",
+                          position: "absolute",
+                          bottom: "0px",
+                        }}
+                      >
                         <Button
                           icon={
                             <PlusOutlined
@@ -167,8 +170,6 @@ export const Request = () => {
                           }
                           iconPosition="start"
                           style={{
-                            position: "absolute",
-                            bottom: "0px",
                             border: `1px solid ${settingsData.button_bg}`,
                             color: settingsData.button_bg,
                           }}
@@ -197,7 +198,11 @@ export const Request = () => {
         }}
         width={800}
       >
-        <div style={{ margin: "0px", height: "75vh" }} id="iframe-signup"  dangerouslySetInnerHTML={{ __html: formCode }}></div>
+        <div
+          style={{ margin: "0px", height: "75vh" }}
+          id="iframe-signup"
+          dangerouslySetInnerHTML={{ __html: formCode }}
+        ></div>
       </Modal>
     </div>
   );

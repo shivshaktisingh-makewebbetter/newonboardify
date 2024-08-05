@@ -37,7 +37,7 @@ export const EditServices = ({
     JSON.parse(editServiceData.service_setting_data).image_key
   );
   const [boardVisiblityData, setBoardVisibilityData] = useState(
-    JSON.parse(editServiceData.service_setting_data)
+  JSON.parse(editServiceData.service_setting_data)
   );
   const [serviceData, setServiceData] = useState({
     title: editServiceData.title || "",

@@ -46,8 +46,8 @@ export const CreateServices = ({
   const handleCreateServices = async () => {
     let payload = {
       ...serviceData,
-      service_column_value_filter: JSON.stringify(serviceColumnValueFilter),
-      service_setting_data: JSON.stringify(boardVisiblityData),
+      service_column_value_filter: serviceColumnValueFilter,
+      service_setting_data: boardVisiblityData,
     };
 
     try {
