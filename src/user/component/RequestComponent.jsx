@@ -101,7 +101,8 @@ export const RequestComponent = ({
       name: name,
       status: statusText,
       color: statusColor,
-      subHeadingColumn:columnIdData.sub_headings_column
+      boardId: boardId,
+      subHeadingColumn: columnIdData.sub_headings_column,
     }; // Replace with your data
     navigate("details", { state: dataToPass });
   };
@@ -123,7 +124,7 @@ export const RequestComponent = ({
 
     colorData.forEach((subItem) => {
       for (const [status, tasks] of Object.entries(subItem)) {
-        const cleanedArray = tasks.map(item => item.trim().toLowerCase());
+        const cleanedArray = tasks.map((item) => item.trim().toLowerCase());
 
         if (cleanedArray.includes(value.toLowerCase())) {
           bgColor = bgColorSet[status];

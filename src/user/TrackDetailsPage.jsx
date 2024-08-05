@@ -31,7 +31,7 @@ export const TrackDetails = () => {
       const response2 = await getRequestTrackingData();
       const response = await getSubItemDetails(state.id);
       const response1 = await getBoardSettingDataCustomerByID(
-        response2.data.response.data.boards[0].id
+        state.boardId
       );
 
       if (response1.success) {
