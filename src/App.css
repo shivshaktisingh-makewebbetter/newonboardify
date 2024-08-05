@@ -27,8 +27,8 @@ body,
   min-width: 110px;
 }
 
-.btn-newgradiant{
-  background-image: linear-gradient(90deg, #434343 0, #0CC3E1 51%, #45CE43);
+.btn-newgradiant {
+  background-image: linear-gradient(90deg, #434343 0, #0cc3e1 51%, #45ce43);
   transition: 0.5s;
   background-size: 200% auto;
   color: white;
@@ -619,8 +619,8 @@ body,
   color: #928f8f;
 }
 
-.text-white{
-  color:#fff;
+.text-white {
+  color: #fff;
 }
 
 .text-color-434343 {
@@ -639,8 +639,8 @@ body,
   color: #0d6efd;
 }
 
-.text-color-497ed8{
-  color:#497ed8;
+.text-color-497ed8 {
+  color: #497ed8;
 }
 
 .text-decoration-underline {
@@ -936,7 +936,6 @@ body,
   padding: 20px;
 }
 
-
 .customer-form-container {
   /* border: 1px solid #ccc; */
   border-radius: 5px;
@@ -1228,7 +1227,7 @@ body,
   bottom: 6px;
 }
 
-#iframe-chart>iframe {
+#iframe-chart > iframe {
   border: 0;
   border-radius: 0.5rem;
   box-shadow: 5px 5px 56px 0px rgba(0, 0, 0, 0.25);
@@ -1237,8 +1236,8 @@ body,
   transform: scale(1) !important;
 }
 
-.ant-card-head-title{
-  color:white;
+.ant-card-head-title {
+  color: white;
 }
 
 .rotating-img {
@@ -1272,7 +1271,6 @@ body,
   border-radius: 10px;
   outline: 1px solid #20681f;
 }
-
 
 .option-container {
   margin-bottom: 20px;
@@ -1328,7 +1326,16 @@ body,
   height: auto;
 } */
 
+.slick-track > div > div {
+  height: 100%;
+}
 
+.slick-track > div > div > .carousel-slide-wrapper {
+  height: 100%;
+}
 
-
-
+.slick-track > div > div > .carousel-slide-wrapper > div {
+  height: 100%;
+  display: flex !important;
+  flex-direction: column;
+}
