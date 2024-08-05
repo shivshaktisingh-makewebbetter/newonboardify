@@ -1,12 +1,9 @@
 import { Button, Input, Select } from "antd";
 import { useEffect, useState } from "react";
-
 import { toast } from "react-toastify";
 import { ImageUpload } from "../../common/ImageUpload";
 import {
-  createService,
   editServices,
-  getAllBoards,
   getAllColumnsOfBoard,
   getBoardVisibilityData,
 } from "../../apiservice/ApiService";
@@ -149,7 +146,7 @@ export const EditServices = ({
           filterByUser: { key: "", value: "" },
           image_key: "",
           onboarding_columns: [],
-          required_columns: { profession: "", overall_status: "" },
+          required_columns: { profession: [], overall_status: "" },
           sub_headings_column: [],
         };
         let tempEmailKey = tempData?.document_fetch_key || [];
@@ -253,11 +250,6 @@ export const EditServices = ({
     setBoardVisibilityData(tempData);
   };
 
-  const handleChangeOnboardingUpdates = (e) => {
-    const tempData = { ...boardVisiblityData };
-    tempData.extra_details.key = e;
-    setBoardVisibilityData(tempData);
-  };
 
   const handleChangeCardSectionColumn1 = (e) => {
     const tempData = { ...boardVisiblityData };
@@ -308,6 +300,8 @@ export const EditServices = ({
     let boardId = boardVisiblityData.board;
     fetchAllColumnsOfBoard(boardId);
   }, []);
+
+  console.log(boardVisiblityData , 'boardVisibi')
 
   return (
     <div style={{ width: "100%", marginTop: "25px" }}>

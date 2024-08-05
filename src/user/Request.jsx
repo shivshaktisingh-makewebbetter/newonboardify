@@ -75,19 +75,12 @@ export const Request = () => {
 
   const handleOpenModal = (item) => {
     setOpen(true);
-    fetchForm(item);
+    setFormCode(item.service_form_link);
   };
 
-  const fetchForm = (item) => {
 
-    
-  };
 
-  useEffect(()=>{
-    // let element = document.getElementById("iframe-signup");
-    // console.log(item , element);
-    // element.innerHTML = item.service_form_link;
-  },[open])
+
 
   useEffect(() => {
     fetchProfiledata();
@@ -204,7 +197,7 @@ export const Request = () => {
         }}
         width={800}
       >
-        <div style={{ margin: "0px", height: "75vh" }} id="iframe-signup"></div>
+        <div style={{ margin: "0px", height: "75vh" }} id="iframe-signup"  dangerouslySetInnerHTML={{ __html: formCode }}></div>
       </Modal>
     </div>
   );
