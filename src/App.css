@@ -1326,6 +1326,7 @@ body,
   height: auto;
 } */
 
+
 .slick-track > div > div {
   height: 100%;
 }
@@ -1339,3 +1340,5 @@ body,
   display: flex !important;
   flex-direction: column;
 }
+
+

@@ -7,12 +7,14 @@ import "slick-carousel/slick/slick-theme.css";
 
 import { LeftOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
 import { Button, Modal, Typography } from "antd";
+import { Loader } from "../common/Loader";
 
 export const Request = () => {
   const [formCode, setFormCode] = useState("");
   const [profileData, setProfileData] = useState([]);
   const [open, setOpen] = useState(false);
   const [selectedServices, setSelectedServices] = useState({});
+  const [loading , setLoading] = useState(true);
 
   const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -61,16 +63,20 @@ export const Request = () => {
     ],
   };
 
-  const fetchProfiledata = async () => {
+  const fetchProfileData = async () => {
+    setLoading(true);
     try {
       const response = await getAllProfileDataByUser();
       if (response.success) {
         if (response.data.response.length > 0) {
           setProfileData(response.data.response);
+          setTimeout(setSlickTrackHeight, 1000);
         }
       }
     } catch (err) {
     } finally {
+      // Ensure the DOM is fully rendered before setting the height
+      
     }
   };
 
@@ -79,12 +85,21 @@ export const Request = () => {
     setFormCode(item.service_form_link);
   };
 
+  const setSlickTrackHeight = () => {
+    const slickTracks = document.querySelectorAll(".slick-track");
+    slickTracks.forEach((slickTrack) => {
+      slickTrack.style.height = "100%";
+      setLoading(false);
+    });
+  };
+
   useEffect(() => {
-    fetchProfiledata();
+    fetchProfileData();
   }, []);
 
   return (
     <div style={{ padding: "1rem" }}>
+      {loading && <Loader/>}
       <div style={{ marginTop: "3rem", marginBottom: "1rem" }}>
         <Hero
           heading={"Submit Service Request"}
