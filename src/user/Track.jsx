@@ -30,7 +30,7 @@ export const Track = () => {
   const [allColumns, setAllColumns] = useState([]);
   const [originalArray, setOriginalArray] = useState([]);
   const [colorMappingData, setColorMappingData] = useState([]);
-  const [selectedOrder, setSelectedOrder] = useState(1);
+  const [selectedOrder, setSelectedOrder] = useState(2);
   const [selectedFilter, setSelectedFilter] = useState(9);
   const [statusItems, setStatusItems] = useState([]);
   const [cursor, setCursor] = useState("");
@@ -174,7 +174,17 @@ export const Track = () => {
         setBoardId(boardIdData.data.response);
         tempBoardId = boardIdData.data.response;
       }
-      const response = await getTrackingDataByBoardId(tempBoardId, null);
+      let tempPayLoad = {
+        "query_params": {
+            "order_by": [
+                {
+                    "direction": selectedOrder === 1 ? "asc" : "desc",
+                    "column_id": "__creation_log__"
+                }
+            ]
+        }
+    };
+      const response = await getTrackingDataByBoardId(tempBoardId, tempPayLoad);
 
       const response1 = await getBoardSettingDataCustomerByID(
         response.data.response.data.boards[0].id
@@ -233,7 +243,7 @@ export const Track = () => {
 
   const getDataByFilterAndSearch = async () => {
     const rules = [];
-    if (selectedFilter !== 9) {
+    if (selectedFilter != 9) {
       rules.push({
         column_id: columnIdData.required_columns.overall_status,
         compare_value: [Number(selectedFilter)],
@@ -266,14 +276,8 @@ export const Track = () => {
     if(tempBoardId === ''){
       return;
     }
+
     try {
-      // if(boardId === ''){
-      //   const boardIdData = await getBoardIdByUser();
-      //   if (boardIdData.success) {
-      //     setBoardId(boardIdData.data.response);
-      //     tempBoardId = boardIdData.data.response;
-      //   }
-      // }
       
       const response = await getRequestTrackingDataByBoardIdAndSearch(
         tempBoardId,
