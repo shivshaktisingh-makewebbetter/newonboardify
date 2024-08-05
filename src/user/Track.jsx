@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import { Hero } from "../components/Hero";
 import { BreadcrumbComponent } from "./component/BreadCrumbComponent";
 import { SearchBox } from "../components/SearchBox";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SortBy } from "./component/SortBy";
 import { FilterBy } from "./component/FilterBy";
 import { ExportBy } from "./component/ExportBy";
@@ -17,8 +17,6 @@ import {
   getTrackingDataByBoardId,
 } from "../apiservice/ApiService";
 import { Loader } from "../common/Loader";
-
-let flag = false;
 
 export const Track = () => {
   const location = useLocation();
@@ -38,6 +36,7 @@ export const Track = () => {
   const [cursor, setCursor] = useState("");
   const [searchKeys, setSearchKeys] = useState([]);
   const [loadMoreValue, setLoadMoreValue] = useState(1);
+  const initialRender = useRef(true);
 
   const onChangeRadio = (item) => {
     if (item === "ASC") {
@@ -72,8 +71,6 @@ export const Track = () => {
       ),
     },
   ];
-
-
 
   const getFilterColumns = (items) => {
     let listOfStatus = JSON.parse(items.settings_str);
@@ -185,9 +182,10 @@ export const Track = () => {
 
       const response2 = await getColorMappingForUser();
       const filterResponse = await getAllFilters(tempBoardId);
-      if(filterResponse.success){
-        getFilterColumns(filterResponse.data.response.data.boards[0].columns[0] );
-
+      if (filterResponse.success) {
+        getFilterColumns(
+          filterResponse.data.response.data.boards[0].columns[0]
+        );
       }
 
       if (response.success) {
@@ -264,10 +262,21 @@ export const Track = () => {
     };
 
     setLoading(true);
-
+    let tempBoardId = boardId;
+    if(tempBoardId === ''){
+      return;
+    }
     try {
+      // if(boardId === ''){
+      //   const boardIdData = await getBoardIdByUser();
+      //   if (boardIdData.success) {
+      //     setBoardId(boardIdData.data.response);
+      //     tempBoardId = boardIdData.data.response;
+      //   }
+      // }
+      
       const response = await getRequestTrackingDataByBoardIdAndSearch(
-        boardId,
+        tempBoardId,
         JSON.stringify(payload)
       );
       if (response.success) {
@@ -328,12 +337,11 @@ export const Track = () => {
   };
 
   useEffect(() => {
-    if (flag) {
+    if (!initialRender.current) {
       getDataByFilterAndSearch();
+    } else {
+      initialRender.current = false;
     }
-    setTimeout(() => {
-      flag = true;
-    }, 4000);
   }, [selectedOrder, selectedFilter, searchData]);
 
   useEffect(() => {

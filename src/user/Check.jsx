@@ -18,7 +18,7 @@ export const Check = () => {
         let element = document.getElementById("iframe-chart");
         element.innerHTML =
           columns.extra_details.chart_embed_code +
-          `<div class="w-100 bottom-blur" style="height:50px;"></div>`;
+          `<div className="w-100 bottom-blur" style="height:50px;"></div>`;
       } else {
         setChartCode("");
       }

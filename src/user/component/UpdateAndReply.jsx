@@ -132,9 +132,9 @@ const UpdateAndReply = ({
         </button>
       </div>
       {item.replies.length > 0 &&
-        item.replies.map((reply) => {
+        item.replies.map((reply , i) => {
           return (
-            <div className="px-4 pt-3">
+            <div className="px-4 pt-3" key={i}>
               <Replies item={reply} />
             </div>
           );

@@ -2,9 +2,7 @@ import { useLocation } from "react-router-dom";
 import { BreadcrumbComponent } from "./component/BreadCrumbComponent";
 
 import {
-  geAllLikesUser,
   getBoardSettingDataCustomerByID,
-  getRequestTrackingData,
   getSubItemDetails,
 } from "../apiservice/ApiService";
 import { useEffect, useState } from "react";
