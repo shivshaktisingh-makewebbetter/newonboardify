@@ -26,6 +26,7 @@ export const RequestComponent = ({
     "IN PROGRESS": "#fcefbe",
   };
 
+
   const navigate = useNavigate();
 
   const getHeadData = (item) => {
@@ -53,7 +54,7 @@ export const RequestComponent = ({
   const getStatusText = (item) => {
     let tempId = "";
     allColumns.forEach((subItem) => {
-      if (subItem.title === "Overall Status") {
+      if (subItem.id === columnIdData.required_columns.overall_status) {
         tempId = subItem.id;
       }
     });
@@ -70,7 +71,7 @@ export const RequestComponent = ({
     let tempId = "";
     let tempData = "";
     allColumns.forEach((subItem) => {
-      if (subItem.title === "Overall Status") {
+      if (subItem.id === columnIdData.required_columns.overall_status) {
         tempId = subItem.id;
         tempData = JSON.parse(subItem.settings_str);
       }
@@ -98,6 +99,7 @@ export const RequestComponent = ({
       name: name,
       status: statusText,
       color: statusColor,
+      boardId: boardId,
       subHeadingColumn: columnIdData.sub_headings_column,
     }; // Replace with your data
     navigate("details", { state: dataToPass });
@@ -106,7 +108,7 @@ export const RequestComponent = ({
   const getBgColor = (item) => {
     let tempId = "";
     allColumns.forEach((subItem) => {
-      if (subItem.title === "Overall Status") {
+      if (subItem.id === columnIdData.required_columns.overall_status) {
         tempId = subItem.id;
       }
     });
@@ -120,7 +122,9 @@ export const RequestComponent = ({
 
     colorData.forEach((subItem) => {
       for (const [status, tasks] of Object.entries(subItem)) {
-        if (tasks.includes(value.toLowerCase())) {
+        const cleanedArray = tasks.map((item) => item.trim().toLowerCase());
+
+        if (cleanedArray.includes(value.toLowerCase())) {
           bgColor = bgColorSet[status];
         }
       }

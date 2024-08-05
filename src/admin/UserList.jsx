@@ -88,6 +88,18 @@ export const UserList = () => {
       dataIndex: "phone",
     },
     {
+      title: "Source",
+      dataIndex: "utm_source",
+    },
+    {
+      title: "Medium",
+      dataIndex: "utm_medium",
+    },
+    {
+      title: "Campaign",
+      dataIndex: "utm_campaign",
+    },
+    {
       title: "Email",
       dataIndex: "email",
       // sorter: (a, b) => a.age - b.age,
@@ -168,6 +180,9 @@ export const UserList = () => {
             role: roleData[item.role],
             phone: item.phone,
             boardId: item.board_id,
+            utm_campaign:item.utm_campaign ,
+            utm_source:item.utm_source ,
+            utm_medium: item.utm_medium
           });
         });
         setDataSource(tempData);

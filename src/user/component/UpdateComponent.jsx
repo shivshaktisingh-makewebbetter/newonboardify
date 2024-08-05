@@ -266,15 +266,15 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
     }
   };
 
-  const getUrlArray = (tempData) => {
-    let urlData = [];
-    tempData.forEach((item) => {
-      if (item.id === settingsData.selectedColumn.update) {
-        urlData = item.text.split(",").map((url) => url.trim());
-      }
-    });
-    return urlData;
-  };
+  // const getUrlArray = (tempData) => {
+  //   let urlData = [];
+  //   tempData.forEach((item) => {
+  //     if (item.id === settingsData.selectedColumn.update) {
+  //       urlData = item.text.split(",").map((url) => url.trim());
+  //     }
+  //   });
+  //   return urlData;
+  // };
 
   useEffect(() => {
     newFetchData();
@@ -317,7 +317,7 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
         <div style={{ height: "600px" }}></div>
       ) : (
         <div>
-          <div style={{ minHeight: "500px" }}>
+          <div style={{ minHeight: "300px" }}>
             <div
               className="text-start inc-detail-container"
               style={{ borderRadius: "10px" }}
@@ -338,8 +338,8 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
                       // const urlList = getUrlArray(data.column_values);
 
                       return (
-                        <>
-                          <div>
+                   
+                          <div key={i}>
                             <a
                               href={item.public_url}
                               target="_blank"
@@ -354,7 +354,7 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
                               </Popover>
                             </div>
                           </div>
-                        </>
+                      
                       );
                     })}
                   </Flex>

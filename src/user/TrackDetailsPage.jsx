@@ -2,9 +2,7 @@ import { useLocation } from "react-router-dom";
 import { BreadcrumbComponent } from "./component/BreadCrumbComponent";
 
 import {
-  geAllLikesUser,
   getBoardSettingDataCustomerByID,
-  getRequestTrackingData,
   getSubItemDetails,
 } from "../apiservice/ApiService";
 import { useEffect, useState } from "react";
@@ -28,19 +26,16 @@ export const TrackDetails = () => {
     setLoading(true);
 
     try {
-      const response2 = await getRequestTrackingData();
       const response = await getSubItemDetails(state.id);
-      const response1 = await getBoardSettingDataCustomerByID(
-        response2.data.response.data.boards[0].id
-      );
+      const response1 = await getBoardSettingDataCustomerByID(state.boardId);
 
       if (response1.success) {
         setColumnData(JSON.parse(response1.data.response[0].columns));
       }
-      if (response2.success) {
-        let tempText = "";
-        setAllColumns(response2.data.response.data.boards[0].columns);
 
+      if (response.success) {
+        let tempText = "";
+        setAllColumns(response.data.response.data.boards[0].columns);
         state.subHeadingColumn.forEach((item, index) => {
           response.data.response.data.items[0].column_values.forEach(
             (subItem) => {
@@ -54,8 +49,6 @@ export const TrackDetails = () => {
           );
         });
         setSubHeadingString(tempText);
-      }
-      if (response.success) {
         setItemDetails(response.data.response.data);
       }
     } catch (err) {

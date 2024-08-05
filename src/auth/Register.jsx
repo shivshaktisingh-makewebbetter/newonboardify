@@ -54,6 +54,16 @@ export const Register = () => {
     if (!isFormValid) {
       return;
     }
+
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    const utmSource = params.get("utm_source") || "";
+    const utmMedium = params.get("utm_medium") || "";
+    const utmCampaign = params.get("utm_campaign") || "";
+    formData.utm_source = utmSource;
+    formData.utm_medium = utmMedium;
+    formData.utm_campaign = utmCampaign;
+
     formData.domain = "onboardify";
     let payload = JSON.stringify(formData);
     try {

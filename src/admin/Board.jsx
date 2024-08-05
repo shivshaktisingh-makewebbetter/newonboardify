@@ -98,6 +98,7 @@ export const Board = () => {
     }
     if (response.success && response.data.response.length === 0) {
       let tempData = {
+        board:selectedBoardId ,
         candidate_coulmns: [],
         card_section: { column1: "", column2: "" },
         document_fetch_key: [],
@@ -107,7 +108,8 @@ export const Board = () => {
         filterByUser: { key: "", value: "" },
         image_key: "",
         onboarding_columns: [],
-        required_columns: { profession: "", overall_status: "" },
+        
+        required_columns: { profession: [], overall_status: "" },
         sub_headings_column: [],
       };
       let tempEmailKey = tempData?.document_fetch_key || [];
@@ -180,6 +182,7 @@ export const Board = () => {
     const tempData = { ...boardVisiblityData };
     tempData.email = selectedUser;
     tempData.filterByUser = flterUserSpecific;
+    tempData.board =selectedBoardId
     setLoading(true);
     try {
       const response = await setBoardVisibilityDataEndpoint(
@@ -670,8 +673,10 @@ export const Board = () => {
                           borderRadius: "10px",
                         }}
                       >
-                        <p style={{ textAlign: "left" }}>Profession column</p>
+                        <p style={{ textAlign: "left" }}>Search column</p>
                         <Select
+                          mode="multiple"
+                          allowClear
                           style={{
                             width: "100%",
                           }}
@@ -692,9 +697,7 @@ export const Board = () => {
                           borderRadius: "10px",
                         }}
                       >
-                        <p style={{ textAlign: "left" }}>
-                          Overall Status column
-                        </p>
+                        <p style={{ textAlign: "left" }}>Filter column</p>
                         <Select
                           style={{
                             width: "100%",
