@@ -28,18 +28,21 @@ export const TrackDetails = () => {
     setLoading(true);
 
     try {
-      const response2 = await getRequestTrackingData();
       const response = await getSubItemDetails(state.id);
       const response1 = await getBoardSettingDataCustomerByID(
         state.boardId
       );
+      console.log(response , 'response')
+   
 
       if (response1.success) {
         setColumnData(JSON.parse(response1.data.response[0].columns));
       }
-      if (response2.success) {
-        let tempText = "";
-        setAllColumns(response2.data.response.data.boards[0].columns);
+      
+      if (response.success) {
+       
+           let tempText = "";
+        setAllColumns(response.data.response.data.boards[0].columns);
 
         state.subHeadingColumn.forEach((item, index) => {
           response.data.response.data.items[0].column_values.forEach(
@@ -54,8 +57,6 @@ export const TrackDetails = () => {
           );
         });
         setSubHeadingString(tempText);
-      }
-      if (response.success) {
         setItemDetails(response.data.response.data);
       }
     } catch (err) {
