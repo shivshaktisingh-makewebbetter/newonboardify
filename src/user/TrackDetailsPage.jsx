@@ -31,9 +31,7 @@ export const TrackDetails = () => {
       const response = await getSubItemDetails(state.id);
       const response1 = await getBoardSettingDataCustomerByID(
         state.boardId
-      );
-      console.log(response , 'response')
-   
+      );   
 
       if (response1.success) {
         setColumnData(JSON.parse(response1.data.response[0].columns));
