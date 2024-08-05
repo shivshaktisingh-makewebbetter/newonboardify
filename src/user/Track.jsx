@@ -14,11 +14,6 @@ import {
   getColorMappingForUser,
   getRequestTrackingData,
 } from "../apiservice/ApiService";
-import { useDispatch } from "react-redux";
-import {
-  setColumnData,
-  setTrackBoardData,
-} from "../redux/slices/trackBoardData";
 import { Loader } from "../common/Loader";
 import { FilterByService } from "./component/FilterByService";
 
@@ -42,9 +37,10 @@ export const Track = () => {
   const [colorMappingData, setColorMappingData] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(1);
   const [selectedFilter, setSelectedFilter] = useState(9);
+  const [selectedService, setSelectedService] = useState(9);
   const [statusItems, setStatusItems] = useState([]);
   const [options, setOptions] = useState([]);
-  const dispatch = useDispatch();
+
 
   const onChangeRadio = (item) => {
     if (item === "ASC") {
@@ -285,11 +281,7 @@ export const Track = () => {
       const response2 = await getColorMappingForUser();
 
       if (response.success) {
-        dispatch(
-          setTrackBoardData(
-            response.data.response.data.boards[0].items_page.items
-          )
-        );
+        
         getFilterColumns(response.data.response.data.boards[0].columns);
         setDataLength(
           response.data.response.data.boards[0].items_page.items.length
@@ -306,7 +298,7 @@ export const Track = () => {
 
       if (response1.success) {
         setColumnIdData(JSON.parse(response1.data.response[0].columns));
-        dispatch(setColumnData(JSON.parse(response1.data.response[0].columns)));
+      
       }
       if (response2.success) {
         setColorMappingData(response2.data.response);
@@ -332,6 +324,7 @@ export const Track = () => {
             });
           }
           const tempData = getFilterServices(tempArr);
+          setSelectedService(tempArr[0].value)
           setOptions(tempData);
         }
       }
@@ -394,7 +387,7 @@ export const Track = () => {
           marginBottom: "32px",
         }}
       >
-        <FilterByService items={options} />
+        <FilterByService items={options} setSelectedService={setSelectedService}/>
         <SortBy items={sortingItems} />
         <FilterBy items={statusItems} setSelectedFilter={setSelectedFilter} />
         <ExportBy handleExport={handleExport} />
