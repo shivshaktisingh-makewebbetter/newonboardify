@@ -20,6 +20,9 @@ export const SearchBox = ({placeHolder , setSearchData , getDataByFilterAndSearc
 
   const handleChange = (e) => {
     setData(e.target.value);
+    if(e.target.value.length === 0){
+      handleEraseData();
+    }
   };
 
   const handleEnterPressed = (event) => {
