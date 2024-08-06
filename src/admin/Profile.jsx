@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { Loader } from "../common/Loader";
 import { toast, ToastContainer } from "react-toastify";
 import {
+  cloneProfile,
   deleteProfile,
   getProfileListing,
 } from "../apiservice/ApiService";
@@ -98,6 +99,17 @@ export const Profile = () => {
     });
   };
 
+  const handleCloneProfile = async(id) =>{
+    try{
+      const response = await cloneProfile(id);
+      console.log(response , 'response');
+    }catch(err){
+
+    }finally{
+
+    }
+  }
+
   const columns = [
     {
       title: "#",
@@ -111,16 +123,6 @@ export const Profile = () => {
       title: "User List",
       dataIndex: "users",
     },
-    // {
-    //   title: "Default Profile",
-    //   dataIndex: "default",
-    //   render: (_, record) => (
-    //     <Switch
-    //       checked={record.default}
-    //       onChange={(e) => onChangeSwitch(e, record.id)}
-    //     />
-    //   ),
-    // },
     {
       title: "Action",
       dataIndex: "",
@@ -144,7 +146,7 @@ export const Profile = () => {
             className="governify-delete-icon"
             type="plain"
             icon={<CopyOutlined />}
-            onClick={() => {}}
+            onClick={() => handleCloneProfile(record.id)}
           ></Button>
         </>
       ),
