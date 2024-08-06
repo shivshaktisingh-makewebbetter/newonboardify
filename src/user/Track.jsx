@@ -41,6 +41,7 @@ export const Track = () => {
   const [searchKeys, setSearchKeys] = useState([]);
   const [loadMoreValue, setLoadMoreValue] = useState(1);
   const [options, setOptions] = useState([]);
+  const [serviceOptions, setServiceOptions] = useState([]);
   const initialRender = useRef(true);
 
   const onChangeRadio = (item) => {
@@ -79,11 +80,7 @@ export const Track = () => {
 
   const getFilterColumns = (items) => {
     let listOfStatus = JSON.parse(items.settings_str);
-    // items.forEach((subItem) => {
-    //   if (subItem.id === columnIdData.required_columns.overall_status) {
-    //     listOfStatus = JSON.parse(subItem.settings_str);
-    //   }
-    // });
+ 
 
     let updatedFilterColumn = [
       {
@@ -204,7 +201,14 @@ export const Track = () => {
       };
       const response = await getTrackingDataByBoardId(tempBoardId, tempPayLoad);
       const profileResponse = await getAllProfileDataByUser();
-      console.log(profileResponse , 'serviceResponse')
+      if (profileResponse.success) {
+        let tempData = [];
+        profileResponse.data.response[0].services.forEach((item) => {
+          tempData.push({ label: item.title, value: item.id , key:item.id });
+        });
+        setServiceOptions(tempData);
+        setSelectedService(tempData[0].key);
+      }
       const response1 = await getBoardSettingDataCustomerByID(
         response.data.response.data.boards[0].id
       );
@@ -335,11 +339,7 @@ export const Track = () => {
   const getMoreData = () => {
     const startIndex = loadMoreValue * 10;
     const endIndex = startIndex + 10;
-
-    // Ensure endIndex does not exceed the array length
     const validEndIndex = Math.min(endIndex, originalArray.length - 1);
-
-    // Get the subarray from startIndex to validEndIndex (inclusive)
     const subArray = originalArray.slice(startIndex, validEndIndex + 1);
     if (subArray.length > 0) {
       setLoading(true);
@@ -394,7 +394,7 @@ export const Track = () => {
         }}
       >
         <FilterByService
-          items={options}
+          items={serviceOptions}
           setSelectedService={setSelectedService}
         />
         <SortBy items={sortingItems} />
