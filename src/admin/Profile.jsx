@@ -44,7 +44,6 @@ export const Profile = () => {
 
   const onChangeSwitch = async (e, id) => {
     const tempDataSource = [...dataSource];
-
     let payload = {
       profile_id: id,
       value: e,
@@ -55,8 +54,7 @@ export const Profile = () => {
       const response = await makeProfileDefault(JSON.stringify(payload));
       if (response.success) {
         tempDataSource.forEach((item) => {
-            item.default = item.id === id && e ? true : false;
-
+          item.default = item.id === id && e ? true : false;
         });
         toast.success(response.message);
         setDataSource(tempDataSource);
