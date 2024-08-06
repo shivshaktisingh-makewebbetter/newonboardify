@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Switch, Table } from "antd";
+import { Button, Table } from "antd";
 import {
   CopyOutlined,
   DeleteOutlined,
@@ -13,7 +13,6 @@ import { toast, ToastContainer } from "react-toastify";
 import {
   deleteProfile,
   getProfileListing,
-  makeProfileDefault,
 } from "../apiservice/ApiService";
 import { DeleteModal } from "./components/DeleteModal";
 

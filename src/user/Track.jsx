@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import { Hero } from "../components/Hero";
 import { BreadcrumbComponent } from "./component/BreadCrumbComponent";
 import { SearchBox } from "../components/SearchBox";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { SortBy } from "./component/SortBy";
 import { FilterBy } from "./component/FilterBy";
 import { ExportBy } from "./component/ExportBy";
@@ -23,7 +23,6 @@ export const Track = () => {
   const breadCrumbData = location.pathname.split("/");
   const [loading, setLoading] = useState(false);
   const [searchData, setSearchData] = useState("");
-  const [filterOption, setFilterOption] = useState([]);
   const [boardId, setBoardId] = useState("");
   const [data, setData] = useState([]);
   const [columnIdData, setColumnIdData] = useState({});
@@ -450,7 +449,6 @@ export const Track = () => {
       <RequestComponent
         data={data}
         boardId={boardId}
-        filterOption={filterOption}
         columnIdData={columnIdData}
         allColumns={allColumns}
       />

@@ -18,13 +18,6 @@ export const RequestComponent = ({
     header_bg: "#f7f7f7",
     head_title_color: "#497ed8",
   };
-  // console.log(settingData);
-
-  const bgColorSet = {
-    STUCK: "#f4bab6",
-    COMPLETED: "#d5f9e2",
-    "IN PROGRESS": "#fcefbe",
-  };
 
   const navigate = useNavigate();
 
