@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Table } from "antd";
+import { Button, Switch, Table } from "antd";
 import {
   CopyOutlined,
   DeleteOutlined,
@@ -14,6 +14,7 @@ import {
   cloneProfile,
   deleteProfile,
   getProfileListing,
+  makeProfileDefault,
 } from "../apiservice/ApiService";
 import { DeleteModal } from "./components/DeleteModal";
 
@@ -41,30 +42,33 @@ export const Profile = () => {
     navigate("/admin/createprofile");
   };
 
-  // const onChangeSwitch = async (e, id) => {
-  //   const tempDataSource = [...dataSource];
+  const onChangeSwitch = async (e, id) => {
+    const tempDataSource = [...dataSource];
+    console.log(e , id)
 
-  //   let payload = {
-  //     profile_id: id,
-  //     value: e,
-  //   };
-  //   setLoading(true);
-  //   try {
-  //     const response = await makeProfileDefault(JSON.stringify(payload));
-  //     if (response.success) {
-  //       tempDataSource.forEach((item) => {
-  //         item.default = item.id === id ? true : false;
-  //       });
-  //       toast.success(response.message);
-  //       setDataSource(tempDataSource);
-  //     } else {
-  //       toast.error(response.message);
-  //     }
-  //   } catch (err) {
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+    let payload = {
+      profile_id: id,
+      value: e,
+    };
+
+    setLoading(true);
+    try {
+      const response = await makeProfileDefault(JSON.stringify(payload));
+      if (response.success) {
+        tempDataSource.forEach((item) => {
+            item.default = item.id === id && e ? true : false;
+
+        });
+        toast.success(response.message);
+        setDataSource(tempDataSource);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (err) {
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleDeleteProfile = async () => {
     setLoading(true);
@@ -125,6 +129,18 @@ export const Profile = () => {
     {
       title: "User List",
       dataIndex: "users",
+    },
+    {
+      title: "Default Profile",
+      dataIndex: "make_default",
+      render: (_, record) => (
+        <>
+          <Switch
+            checked={record.default == 1}
+            onChange={(e) => onChangeSwitch(e, record.id)}
+          />
+        </>
+      ),
     },
     {
       title: "Action",
