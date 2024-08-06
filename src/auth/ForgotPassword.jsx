@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Loader } from "../common/Loader";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
-import { fetcher } from "../utils/helper";
 import { useLocation } from "react-router-dom";
 import { forgotPasswordApi } from "../apiservice/ApiService";
 

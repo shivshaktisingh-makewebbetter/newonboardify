@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import { ToastContainer, toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Loader } from "../common/Loader";
