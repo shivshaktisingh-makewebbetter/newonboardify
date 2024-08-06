@@ -44,7 +44,6 @@ export const Profile = () => {
 
   const onChangeSwitch = async (e, id) => {
     const tempDataSource = [...dataSource];
-    console.log(e , id)
 
     let payload = {
       profile_id: id,
