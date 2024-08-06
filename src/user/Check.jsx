@@ -39,10 +39,11 @@ export const Check = () => {
   };
 
   const handleChangeRequest = (item) => {
-    setIsBlurry(true)
+    setIsBlurry(true);
     const tempOptions = [...options];
     tempOptions.forEach((subItem) => {
       if (subItem.value === item) {
+        setSelectedRequest(subItem.value);
         let element = document.getElementById("iframe-chart");
         element.innerHTML =
           subItem.chart +
@@ -51,16 +52,14 @@ export const Check = () => {
     });
     setTimeout(() => {
       setIsBlurry(false);
-    }, 5000); 
+    }, 5000);
   };
   const [isBlurry, setIsBlurry] = useState(true);
 
   useEffect(() => {
-    // Remove the blur effect after a few seconds
-    
     const timer = setTimeout(() => {
       setIsBlurry(false);
-    }, 5000); // 5000 milliseconds = 5 seconds
+    }, 5000); 
 
     return () => clearTimeout(timer);
   }, []);
@@ -78,7 +77,7 @@ export const Check = () => {
           forHome={true}
         />
       </div>
-      <div>
+      <div style={{maxWidth:'200px'}}>
         <Select
           style={{
             width: "100%",
@@ -96,11 +95,7 @@ export const Check = () => {
           className="blurry w-100"
           style={{ height: "100vh", display: "none" }}
         ></div>
-        {/* <div
-          style={{ margin: "0px", height: "130vh", position: "relative" }}
-          className="w-100"
-          id="iframe-chart"
-        ></div> */}
+
         <div
           style={{
             margin: "0px",
@@ -111,9 +106,7 @@ export const Check = () => {
           }}
           className="w-100"
           id="iframe-chart"
-        >
-          {/* Content inside the div */}
-        </div>
+        ></div>
       </div>
     </div>
   );

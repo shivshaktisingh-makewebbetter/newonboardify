@@ -13,7 +13,7 @@ import { Loader } from "../common/Loader";
 
 export const TrackDetails = () => {
   const [columnData, setColumnData] = useState({});
-  const [allColumns, setAllColumns] = useState();
+  // const [allColumns, setAllColumns] = useState();
   const [itemDetails, setItemDetails] = useState({});
   const location = useLocation();
   const [likeIds, setLikeIds] = useState([]);
@@ -35,7 +35,7 @@ export const TrackDetails = () => {
 
       if (response.success) {
         let tempText = "";
-        setAllColumns(response.data.response.data.boards[0].columns);
+        // setAllColumns(response.data.response.data.boards[0].columns);
         state.subHeadingColumn.forEach((item, index) => {
           response.data.response.data.items[0].column_values.forEach(
             (subItem) => {
