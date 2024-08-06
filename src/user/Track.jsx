@@ -453,7 +453,7 @@ export const Track = () => {
         columnIdData={columnIdData}
         allColumns={allColumns}
       />
-      {cursor !== null && (
+      {cursor !== null && !loading && (
         <div>
           <Button
             onClick={originalArray.length > 0 ? getMoreData : loadMoreHandler}

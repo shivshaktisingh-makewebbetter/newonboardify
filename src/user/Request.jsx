@@ -209,7 +209,7 @@ export const Request = () => {
         onCancel={() => {
           setOpen(false);
         }}
-        width={800}
+        width={700}
       >
         <div
           style={{ margin: "0px", height: "75vh" }}
