@@ -194,36 +194,40 @@ export const Settings = () => {
       const tempData = JSON.parse(response.data.response.ui_settings);
       tempData.banner_content = tempData.banner_content;
       setUiData(tempData);
-      setHomeSettingData(tempData?.homePageSetting ||  [{
-        key: "Request",
-        icon_name: "",
-        icon_url: "",
-        title: "",
-        description: "",
-        label: "Request Setting",
-        btnText: "Request",
-        navigateKey: "request",
-      },
-      {
-        key: "Track",
-        icon_name: "",
-        icon_url: "",
-        title: "",
-        description: "",
-        label: "Track Setting",
-        btnText: "Track",
-        navigateKey: "track",
-      },
-      {
-        key: "Status",
-        icon_name: "",
-        icon_url: "",
-        title: "",
-        description: "",
-        label: "Overall Status Setting",
-        btnText: "Check",
-        navigateKey: "check",
-      }]);
+      setHomeSettingData(
+        tempData?.homePageSetting || [
+          {
+            key: "Request",
+            icon_name: "",
+            icon_url: "",
+            title: "",
+            description: "",
+            label: "Request Setting",
+            btnText: "Request",
+            navigateKey: "request",
+          },
+          {
+            key: "Track",
+            icon_name: "",
+            icon_url: "",
+            title: "",
+            description: "",
+            label: "Track Setting",
+            btnText: "Track",
+            navigateKey: "track",
+          },
+          {
+            key: "Status",
+            icon_name: "",
+            icon_url: "",
+            title: "",
+            description: "",
+            label: "Overall Status Setting",
+            btnText: "Check",
+            navigateKey: "check",
+          },
+        ]
+      );
       setStatusFields(tempData?.statusColorSetting || []);
       setLogoData({
         logo_name: response.data.response.logo,
