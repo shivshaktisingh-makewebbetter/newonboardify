@@ -1,16 +1,19 @@
 import { Button, Dropdown, Space } from "antd";
 import { FilterIcon } from "../../utils/icons";
-import { useEffect, useRef } from "react";
 
 export const FilterByService = ({ items, setSelectedService, setBoardId , boardId , getDataByFilterAndSearch}) => {
-  const isInitialRender = useRef(true);
+
   const handleMenuClick = (e) => {
+    let tempBoardId = '';
     setSelectedService(e.key);
     items.forEach((details, index) => {
       if (e.key === index.toString()) {
+        tempBoardId = details.boardId; 
         setBoardId(details.boardId);
+
       }
     });
+    getDataByFilterAndSearch()
   };
 
   const menuProps = {
@@ -20,13 +23,6 @@ export const FilterByService = ({ items, setSelectedService, setBoardId , boardI
     onClick: handleMenuClick,
   };
 
-  // useEffect(() => {
-  //   if (isInitialRender.current) {
-  //     isInitialRender.current = false;
-  //   } else {
-  //     getDataByFilterAndSearch()
-  //   }
-  // }, [boardId]);
 
   return (
     <Dropdown menu={menuProps}>

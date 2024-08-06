@@ -2,13 +2,11 @@ import { Button, Card, Typography } from "antd";
 import { formatDate } from "../../utils/helper";
 import { useNavigate } from "react-router-dom";
 
-
 export const RequestComponent = ({
   data,
   columnIdData,
   allColumns,
-  colorData,
-  boardId
+  boardId,
 }) => {
   const settingData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -20,13 +18,13 @@ export const RequestComponent = ({
     header_bg: "#f7f7f7",
     head_title_color: "#497ed8",
   };
+  // console.log(settingData);
 
   const bgColorSet = {
     STUCK: "#f4bab6",
     COMPLETED: "#d5f9e2",
     "IN PROGRESS": "#fcefbe",
   };
-
 
   const navigate = useNavigate();
 
@@ -69,29 +67,13 @@ export const RequestComponent = ({
   };
 
   const getStatusColor = (item) => {
-    let tempId = "";
-    let tempData = "";
-    allColumns.forEach((subItem) => {
-      if (subItem.id === columnIdData.required_columns.overall_status) {
-        tempId = subItem.id;
-        tempData = JSON.parse(subItem.settings_str);
+    let tempBgColor = "#8080803b";
+    settingData.statusColorSetting.forEach((details) => {
+      if (details.status.trim().toLowerCase() === item.trim().toLowerCase()) {
+        tempBgColor = details.color;
       }
     });
-    let value;
-    item.column_values.forEach((subItem) => {
-      if (subItem.id === tempId) {
-        value = subItem.text;
-      }
-    });
-
-    let index = "";
-    for (const key in tempData.labels) {
-      if (tempData.labels[key] === value) {
-        index = key;
-      }
-    }
-
-    return tempData.labels_colors[index].color;
+    return tempBgColor;
   };
 
   const openTrackRequest = (name, id, statusText, statusColor) => {
@@ -107,41 +89,21 @@ export const RequestComponent = ({
   };
 
   const getBgColor = (item) => {
-    let tempId = "";
-    allColumns.forEach((subItem) => {
-      if (subItem.id === columnIdData.required_columns.overall_status) {
-        tempId = subItem.id;
+    let tempBgColor = "#8080803b";
+    settingData.statusColorSetting.forEach((details) => {
+      if (details.status.trim().toLowerCase() === item.trim().toLowerCase()) {
+        tempBgColor = details.bgcolor;
       }
     });
-    let value;
-    item.column_values.forEach((subItem) => {
-      if (subItem.id === tempId) {
-        value = subItem.text;
-      }
-    });
-    let bgColor = "";
-
-    colorData.forEach((subItem) => {
-      for (const [status, tasks] of Object.entries(subItem)) {
-        const cleanedArray = tasks.map((item) => item.trim().toLowerCase());
-
-        if (cleanedArray.includes(value.toLowerCase())) {
-          bgColor = bgColorSet[status];
-        }
-      }
-    });
-    if (bgColor === "") {
-      bgColor = "#8080803b";
-    }
-    return bgColor;
+    return tempBgColor;
   };
 
   return (
     <div>
       {data.map((item, index) => {
-        const bgColor = getBgColor(item);
         const statusText = getStatusText(item);
-        const statusColor = getStatusColor(item);
+        const bgColor = getBgColor(statusText);
+        const statusColor = getStatusColor(statusText);
         const head = getHeadData(item);
         const mid = getMidData(item);
 

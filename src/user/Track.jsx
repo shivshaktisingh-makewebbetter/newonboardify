@@ -12,7 +12,6 @@ import {
   getAllProfileDataByUser,
   getAllFilters,
   getBoardSettingDataCustomerByID,
-  getColorMappingForUser,
   getRequestTrackingDataByBoardIdAndSearch,
   getTrackingDataByBoardId,
 } from "../apiservice/ApiService";
@@ -30,7 +29,6 @@ export const Track = () => {
   const [columnIdData, setColumnIdData] = useState({});
   const [allColumns, setAllColumns] = useState([]);
   const [originalArray, setOriginalArray] = useState([]);
-  const [colorMappingData, setColorMappingData] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(2);
   const [selectedFilter, setSelectedFilter] = useState(9);
   const [selectedService, setSelectedService] = useState(0);
@@ -48,6 +46,7 @@ export const Track = () => {
     if (item === "DESC") {
       setSelectedOrder(2);
     }
+    getDataByFilterAndSearch();
   };
 
   const sortingItems = [
@@ -94,19 +93,6 @@ export const Track = () => {
     );
 
     setStatusItems(updatedFilterColumn);
-  };
-
-  const getFilterServices = (items) => {
-    let updatedFilterColumn = [];
-
-    items.forEach((subItem) =>
-      updatedFilterColumn.push({
-        label: subItem.label,
-        key: subItem.label,
-      })
-    );
-
-    return updatedFilterColumn;
   };
 
   const handleExport = () => {
@@ -234,22 +220,12 @@ export const Track = () => {
     try {
       const response = await getBoardSettingDataCustomerByID(tempBoardId);
       if (response.success) {
-        setColumnIdData(JSON.parse(response.data.response[0].columns));
+        let tempData = JSON.parse(response.data.response[0].columns);
+        setColumnIdData(tempData);
         setSearchKeys(
           JSON.parse(response.data.response[0].columns).required_columns
             .profession
         );
-      }
-    } catch (err) {
-    } finally {
-    }
-  };
-
-  const getColorData = async () => {
-    try {
-      const response = await getColorMappingForUser();
-      if (response.success) {
-        setColorMappingData(response.data.response);
       }
     } catch (err) {
     } finally {
@@ -287,17 +263,14 @@ export const Track = () => {
         setServiceOptions(tempData);
         setSelectedService(tempData[0].key);
       }
-      await getTrackData(tempBoardId);
       await getBoardSettingData(tempBoardId);
-      await getColorData();
+      await getTrackData(tempBoardId);
       await getStatusFilterData(tempBoardId);
     } catch (err) {
     } finally {
       setLoading(false);
     }
   };
-
-  console.log(columnIdData, "columnIdData");
 
   const loadMoreHandler = async () => {
     setLoading(true);
@@ -351,14 +324,10 @@ export const Track = () => {
     };
 
     setLoading(true);
-    let tempBoardId = boardId;
-    if (tempBoardId === "") {
-      return;
-    }
 
     try {
       const response = await getRequestTrackingDataByBoardIdAndSearch(
-        tempBoardId,
+        boardId,
         JSON.stringify(payload)
       );
       if (response.success) {
@@ -415,14 +384,6 @@ export const Track = () => {
   };
 
   useEffect(() => {
-    if (!initialRender.current) {
-      getTrackData(boardId);
-    } else {
-      initialRender.current = false;
-    }
-  }, [selectedOrder, selectedFilter, searchData, boardId]);
-
-  useEffect(() => {
     getTrackRequestData();
   }, []);
 
@@ -440,6 +401,7 @@ export const Track = () => {
       <SearchBox
         placeHolder={"Search By profession"}
         setSearchData={setSearchData}
+        getDataByFilterAndSearch={getDataByFilterAndSearch}
       />
       <div
         style={{
@@ -456,8 +418,15 @@ export const Track = () => {
           getDataByFilterAndSearch={getDataByFilterAndSearch}
           boardId={boardId}
         />
-        <SortBy items={sortingItems} />
-        <FilterBy items={statusItems} setSelectedFilter={setSelectedFilter} />
+        <SortBy
+          items={sortingItems}
+          getDataByFilterAndSearch={getDataByFilterAndSearch}
+        />
+        <FilterBy
+          items={statusItems}
+          setSelectedFilter={setSelectedFilter}
+          getDataByFilterAndSearch={getDataByFilterAndSearch}
+        />
         <ExportBy handleExport={handleExport} />
       </div>
       <RequestComponent
@@ -466,15 +435,12 @@ export const Track = () => {
         filterOption={filterOption}
         columnIdData={columnIdData}
         allColumns={allColumns}
-        colorData={colorMappingData}
       />
       {cursor !== null && (
         <div>
           <Button
             onClick={
-              selectedFilter !== 9 ||
-              searchData.length > 0 ||
-              selectedOrder !== 1
+              selectedFilter !== 9 || searchData.length > 0
                 ? getMoreData
                 : loadMoreHandler
             }

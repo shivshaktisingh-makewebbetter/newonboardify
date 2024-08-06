@@ -3,7 +3,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import { Input } from "antd";
 import { useState } from "react";
 
-export const SearchBox = ({placeHolder , setSearchData}) => {
+export const SearchBox = ({placeHolder , setSearchData , getDataByFilterAndSearch}) => {
     const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
 		image:
 		  "https://onboardify.tasc360.com/uploads/y22.png",
@@ -25,6 +25,7 @@ export const SearchBox = ({placeHolder , setSearchData}) => {
   const handleEnterPressed = (event) => {
     if (event.keyCode === 13) {
       setSearchData(data);
+      getDataByFilterAndSearch();
     }
   };
 
