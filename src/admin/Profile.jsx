@@ -99,16 +99,19 @@ export const Profile = () => {
     });
   };
 
-  const handleCloneProfile = async(id) =>{
-    try{
+  const handleCloneProfile = async (id) => {
+    try {
       const response = await cloneProfile(id);
-      console.log(response , 'response');
-    }catch(err){
-
-    }finally{
-
+      if (response.success) {
+        toast.success(response.message);
+        getListOfAllProfiles();
+      } else {
+        toast.error("Profile Not Cloned.");
+      }
+    } catch (err) {
+    } finally {
     }
-  }
+  };
 
   const columns = [
     {
@@ -159,6 +162,7 @@ export const Profile = () => {
 
   const getListOfAllProfiles = async () => {
     let tempListing = [];
+    setLoading(true);
     try {
       const response = await getProfileListing();
 
@@ -178,6 +182,7 @@ export const Profile = () => {
       }
     } catch (err) {
     } finally {
+      setLoading(false);
     }
   };
 
