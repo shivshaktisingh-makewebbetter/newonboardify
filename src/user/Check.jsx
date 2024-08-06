@@ -59,7 +59,7 @@ export const Check = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsBlurry(false);
-    }, 5000); 
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -77,7 +77,7 @@ export const Check = () => {
           forHome={true}
         />
       </div>
-      <div style={{maxWidth:'200px'}}>
+      <div style={{ maxWidth: "200px" }}>
         <Select
           style={{
             width: "100%",

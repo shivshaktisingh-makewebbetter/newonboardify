@@ -1,11 +1,11 @@
 // ProtectedRoute.js
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+
 import { getRole } from '../utils/helper';
 
 export const ProtectedRoute = ({ element, allowedRoles }) => {
   const role = getRole();
-  const navigate = useNavigate();
+
 
  useEffect(()=>{
 //   if (role === null){
