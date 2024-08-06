@@ -296,7 +296,7 @@ export const EditServices = ({
   };
 
   useEffect(() => {
-    let boardId = boardVisiblityData.board;
+    let boardId = editServiceData.board_id;
     fetchAllColumnsOfBoard(boardId);
   }, []);
 
