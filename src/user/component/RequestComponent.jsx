@@ -8,6 +8,7 @@ export const RequestComponent = ({
   columnIdData,
   allColumns,
   colorData,
+  boardId
 }) => {
   const settingData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",

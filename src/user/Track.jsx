@@ -11,12 +11,10 @@ import { RequestComponent } from "./component/RequestComponent";
 import {
   getAllProfileDataByUser,
   getAllFilters,
-  getBoardIdByUser,
   getBoardSettingDataCustomerByID,
   getColorMappingForUser,
   getRequestTrackingDataByBoardIdAndSearch,
   getTrackingDataByBoardId,
-  getAllServicesByUser,
 } from "../apiservice/ApiService";
 import { Loader } from "../common/Loader";
 import { FilterByService } from "./component/FilterByService";
@@ -35,12 +33,11 @@ export const Track = () => {
   const [colorMappingData, setColorMappingData] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(2);
   const [selectedFilter, setSelectedFilter] = useState(9);
-  const [selectedService, setSelectedService] = useState(9);
+  const [selectedService, setSelectedService] = useState(0);
   const [statusItems, setStatusItems] = useState([]);
   const [cursor, setCursor] = useState("");
   const [searchKeys, setSearchKeys] = useState([]);
   const [loadMoreValue, setLoadMoreValue] = useState(1);
-  const [options, setOptions] = useState([]);
   const [serviceOptions, setServiceOptions] = useState([]);
   const initialRender = useRef(true);
 
@@ -80,7 +77,6 @@ export const Track = () => {
 
   const getFilterColumns = (items) => {
     let listOfStatus = JSON.parse(items.settings_str);
- 
 
     let updatedFilterColumn = [
       {
@@ -179,69 +175,129 @@ export const Track = () => {
     // Remove the link from the document
     document.body.removeChild(link);
   };
-
-  const getTrackRequestData = async () => {
-    let tempBoardId = "";
-    setLoading(true);
+  const getProfileData = async () => {
     try {
-      const boardIdData = await getBoardIdByUser();
-      if (boardIdData.success) {
-        setBoardId(boardIdData.data.response);
-        tempBoardId = boardIdData.data.response;
-      }
-      let tempPayLoad = {
-        query_params: {
-          order_by: [
-            {
-              direction: selectedOrder === 1 ? "asc" : "desc",
-              column_id: "__creation_log__",
-            },
-          ],
-        },
-      };
-      const response = await getTrackingDataByBoardId(tempBoardId, tempPayLoad);
-      const profileResponse = await getAllProfileDataByUser();
-      if (profileResponse.success) {
-        let tempData = [];
-        profileResponse.data.response[0].services.forEach((item) => {
-          tempData.push({ label: item.title, value: item.id , key:item.id });
+      const response = await getAllProfileDataByUser();
+
+      return response;
+    } catch (err) {
+    } finally {
+    }
+  };
+
+  const getTrackData = async (tempBoardId) => {
+    if (tempBoardId === "") {
+      return;
+    }
+    const rules = [];
+    if (selectedFilter != 9) {
+      rules.push({
+        column_id: columnIdData.required_columns.overall_status,
+        compare_value: [Number(selectedFilter)],
+      });
+    }
+    if (searchData.length > 0) {
+      searchKeys.forEach((item) => {
+        rules.push({
+          column_id: item,
+          compare_value: [searchData],
+          operator: "contains_text",
         });
-        setServiceOptions(tempData);
-        setSelectedService(tempData[0].key);
-      }
-      const response1 = await getBoardSettingDataCustomerByID(
-        response.data.response.data.boards[0].id
-      );
+      });
+    }
 
-      const response2 = await getColorMappingForUser();
-      const filterResponse = await getAllFilters(tempBoardId);
-      if (filterResponse.success) {
-        getFilterColumns(
-          filterResponse.data.response.data.boards[0].columns[0]
-        );
-      }
+    const payload = {
+      query_params: {
+        order_by: [
+          {
+            direction: selectedOrder === 1 ? "asc" : "desc",
+            column_id: "__creation_log__",
+          },
+        ],
+        ...(rules.length > 0 && { rules, operator: "or" }),
+      },
+    };
 
+    try {
+      const response = await getTrackingDataByBoardId(tempBoardId, payload);
       if (response.success) {
         setData(response.data.response.data.boards[0].items_page.items);
         setCursor(response.data.response.data.boards[0].items_page.cursor);
         setAllColumns(response.data.response.data.boards[0].columns);
       }
+    } catch (err) {
+    } finally {
+    }
+  };
 
-      if (response1.success) {
-        setColumnIdData(JSON.parse(response1.data.response[0].columns));
+  const getBoardSettingData = async (tempBoardId) => {
+    try {
+      const response = await getBoardSettingDataCustomerByID(tempBoardId);
+      if (response.success) {
+        setColumnIdData(JSON.parse(response.data.response[0].columns));
         setSearchKeys(
-          JSON.parse(response1.data.response[0].columns).required_columns
+          JSON.parse(response.data.response[0].columns).required_columns
             .profession
         );
       }
-      if (response2.success) {
-        setColorMappingData(response2.data.response);
+    } catch (err) {
+    } finally {
+    }
+  };
+
+  const getColorData = async () => {
+    try {
+      const response = await getColorMappingForUser();
+      if (response.success) {
+        setColorMappingData(response.data.response);
       }
+    } catch (err) {
+    } finally {
+    }
+  };
+
+  const getStatusFilterData = async (tempBoardId) => {
+    try {
+      const response = await getAllFilters(tempBoardId);
+      if (response.success) {
+        getFilterColumns(response.data.response.data.boards[0].columns[0]);
+      }
+    } catch (err) {
+    } finally {
+    }
+  };
+
+  const getTrackRequestData = async () => {
+    let tempBoardId = "";
+    setLoading(true);
+    try {
+      const profileResponse = await getProfileData();
+      if (profileResponse.success) {
+        let tempData = [];
+        profileResponse.data.response[0].services.forEach((item, index) => {
+          tempData.push({
+            label: item.title,
+            boardId: item.board_id,
+            value: item.id,
+            key: index,
+          });
+        });
+        tempBoardId = tempData[0].boardId;
+        setBoardId(tempData[0].boardId);
+        setServiceOptions(tempData);
+        setSelectedService(tempData[0].key);
+      }
+      await getTrackData(tempBoardId);
+      await getBoardSettingData(tempBoardId);
+      await getColorData();
+      await getStatusFilterData(tempBoardId);
     } catch (err) {
     } finally {
       setLoading(false);
     }
   };
+
+  console.log(columnIdData, "columnIdData");
 
   const loadMoreHandler = async () => {
     setLoading(true);
@@ -360,11 +416,11 @@ export const Track = () => {
 
   useEffect(() => {
     if (!initialRender.current) {
-      getDataByFilterAndSearch();
+      getTrackData(boardId);
     } else {
       initialRender.current = false;
     }
-  }, [selectedOrder, selectedFilter, searchData]);
+  }, [selectedOrder, selectedFilter, searchData, boardId]);
 
   useEffect(() => {
     getTrackRequestData();
@@ -396,6 +452,9 @@ export const Track = () => {
         <FilterByService
           items={serviceOptions}
           setSelectedService={setSelectedService}
+          setBoardId={setBoardId}
+          getDataByFilterAndSearch={getDataByFilterAndSearch}
+          boardId={boardId}
         />
         <SortBy items={sortingItems} />
         <FilterBy items={statusItems} setSelectedFilter={setSelectedFilter} />
@@ -424,18 +483,6 @@ export const Track = () => {
           </Button>
         </div>
       )}
-      {/* <Pagination
-        showQuickJumper
-        total={dataLength}
-        onChange={onChange}
-        showTotal={(total) => `Total ${total} items`}
-        current={currentPage}
-        showSizeChanger={true}
-        onShowSizeChange={onShowSizeChange}
-        defaultPageSize={10}
-        pageSizeOptions={[10, 20, 50, 100]}
-        align="center"
-      /> */}
     </div>
   );
 };
