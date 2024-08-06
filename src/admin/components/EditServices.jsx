@@ -301,7 +301,6 @@ export const EditServices = ({
     fetchAllColumnsOfBoard(boardId);
   }, []);
 
-  console.log(boardVisiblityData , 'boardVisibi')
 
   return (
     <div style={{ width: "100%", marginTop: "25px" }}>

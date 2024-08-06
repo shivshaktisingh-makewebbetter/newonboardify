@@ -29,7 +29,7 @@ export const Track = () => {
   const [columnIdData, setColumnIdData] = useState({});
   const [allColumns, setAllColumns] = useState([]);
   const [originalArray, setOriginalArray] = useState([]);
-  const [selectedOrder, setSelectedOrder] = useState(2);
+  const [selectedOrder, setSelectedOrder] = useState(1);
   const [selectedFilter, setSelectedFilter] = useState(9);
   const [selectedService, setSelectedService] = useState(0);
   const [statusItems, setStatusItems] = useState([]);
@@ -281,6 +281,7 @@ export const Track = () => {
   };
 
   const loadMoreHandler = async () => {
+    console.log(selectedFilter, searchData, "searchData");
     setLoading(true);
     try {
       const response = await getTrackingDataByBoardId(
@@ -456,11 +457,7 @@ export const Track = () => {
       {cursor !== null && (
         <div>
           <Button
-            onClick={
-              selectedFilter !== 9 || searchData.length > 0
-                ? getMoreData
-                : loadMoreHandler
-            }
+            onClick={originalArray.length > 0 ? getMoreData : loadMoreHandler}
           >
             Load More
           </Button>
