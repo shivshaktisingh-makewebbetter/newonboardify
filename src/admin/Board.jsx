@@ -78,8 +78,6 @@ export const Board = () => {
     }
   };
 
-
-
   const handleBoardChange = async (e) => {
     setSelectedBoardId(e);
     setSelectedUser("");
@@ -98,7 +96,7 @@ export const Board = () => {
     }
     if (response.success && response.data.response.length === 0) {
       let tempData = {
-        board:selectedBoardId ,
+        board: selectedBoardId,
         candidate_coulmns: [],
         card_section: { column1: "", column2: "" },
         document_fetch_key: [],
@@ -108,7 +106,7 @@ export const Board = () => {
         filterByUser: { key: "", value: "" },
         image_key: "",
         onboarding_columns: [],
-        
+
         required_columns: { profession: [], overall_status: "" },
         sub_headings_column: [],
       };
@@ -182,7 +180,7 @@ export const Board = () => {
     const tempData = { ...boardVisiblityData };
     tempData.email = selectedUser;
     tempData.filterByUser = flterUserSpecific;
-    tempData.board =selectedBoardId
+    tempData.board = selectedBoardId;
     setLoading(true);
     try {
       const response = await setBoardVisibilityDataEndpoint(

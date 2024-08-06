@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Switch, Table } from "antd";
 import {
+  CopyOutlined,
   DeleteOutlined,
   EditOutlined,
   LeftOutlined,
@@ -40,30 +41,30 @@ export const Profile = () => {
     navigate("/admin/createprofile");
   };
 
-  const onChangeSwitch = async (e, id) => {
-    const tempDataSource = [...dataSource];
+  // const onChangeSwitch = async (e, id) => {
+  //   const tempDataSource = [...dataSource];
 
-    let payload = {
-      profile_id: id,
-      value: e,
-    };
-    setLoading(true);
-    try {
-      const response = await makeProfileDefault(JSON.stringify(payload));
-      if (response.success) {
-        tempDataSource.forEach((item) => {
-          item.default = item.id === id ? true : false;
-        });
-        toast.success(response.message);
-        setDataSource(tempDataSource);
-      } else {
-        toast.error(response.message);
-      }
-    } catch (err) {
-    } finally {
-      setLoading(false);
-    }
-  };
+  //   let payload = {
+  //     profile_id: id,
+  //     value: e,
+  //   };
+  //   setLoading(true);
+  //   try {
+  //     const response = await makeProfileDefault(JSON.stringify(payload));
+  //     if (response.success) {
+  //       tempDataSource.forEach((item) => {
+  //         item.default = item.id === id ? true : false;
+  //       });
+  //       toast.success(response.message);
+  //       setDataSource(tempDataSource);
+  //     } else {
+  //       toast.error(response.message);
+  //     }
+  //   } catch (err) {
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleDeleteProfile = async () => {
     setLoading(true);
@@ -139,6 +140,12 @@ export const Profile = () => {
             type="plain"
             icon={<DeleteOutlined />}
             onClick={() => handleDeleteModal(record.id)}
+          ></Button>
+          <Button
+            className="governify-delete-icon"
+            type="plain"
+            icon={<CopyOutlined />}
+            onClick={() => {}}
           ></Button>
         </>
       ),
