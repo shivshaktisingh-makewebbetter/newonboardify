@@ -1,6 +1,6 @@
 import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
-import { BoardSetting, ChangeRole } from "../utils/icons";
+import { ChangeRole } from "../utils/icons";
 import { ProfileOutlined, UserOutlined } from "@ant-design/icons";
 import { getRole } from "../utils/helper";
 

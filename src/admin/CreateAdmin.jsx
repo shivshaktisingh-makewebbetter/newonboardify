@@ -2,7 +2,6 @@ import { LeftOutlined, UserAddOutlined } from "@ant-design/icons";
 import { Button, Select } from "antd";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { setUser } from "../utils/authUtils";
 import { setUserOrAdmin } from "../apiservice/ApiService";
 import { toast, ToastContainer } from "react-toastify";
 import { Loader } from "../common/Loader";
