@@ -134,7 +134,7 @@ export const CreateServices = ({
           filterByUser: { key: "", value: "" },
           image_key: "",
           onboarding_columns: [],
-          required_columns: { profession: "", overall_status: "" },
+          required_columns: { profession: [], overall_status: "" },
           sub_headings_column: [],
         };
         let tempEmailKey = tempData?.document_fetch_key || [];
@@ -350,7 +350,7 @@ export const CreateServices = ({
             }}
           >
             <p style={{ textAlign: "left" }} className="border-bottom">
-             Please Select BoardID
+              Please Select BoardID
             </p>
             <div className="mt-10">
               <Select
@@ -376,37 +376,36 @@ export const CreateServices = ({
             }}
           >
             <p style={{ textAlign: "left" }} className="border-bottom">
-             Please Select Column Filter
+              Please Select Column Filter
             </p>
-          <div className="mt-10">
-            <Select
-              showSearch
-              placeholder={"Please Select Filter"}
-              style={{ width: "100%" }}
-              popupMatchSelectWidth={false}
-              placement="bottomLeft"
-              onChange={handleChangeServiceColumnFilter}
-              options={options}
-              filterOption={filterOption}
-              value={serviceColumnValueFilter.key || undefined}
-              disabled={options.length === 0}
-              allowClear
-            />
-          </div>
-         
-
-          {serviceColumnValueFilter.key !== undefined &&
-            serviceColumnValueFilter.key.length > 0 && (
-              <Input
-                placeholder="Filter Value"
-                className="mt-10"
-                onChange={handleFilterValueChange}
-                addonBefore="Select Filter Value"
-                style={{ borderRadius: "10px" }}
-                value={serviceColumnValueFilter.value}
+            <div className="mt-10">
+              <Select
+                showSearch
+                placeholder={"Please Select Filter"}
+                style={{ width: "100%" }}
+                popupMatchSelectWidth={false}
+                placement="bottomLeft"
+                onChange={handleChangeServiceColumnFilter}
+                options={options}
+                filterOption={filterOption}
+                value={serviceColumnValueFilter.key || undefined}
+                disabled={options.length === 0}
+                allowClear
               />
-            )}
-             </div>
+            </div>
+
+            {serviceColumnValueFilter.key !== undefined &&
+              serviceColumnValueFilter.key.length > 0 && (
+                <Input
+                  placeholder="Filter Value"
+                  className="mt-10"
+                  onChange={handleFilterValueChange}
+                  addonBefore="Select Filter Value"
+                  style={{ borderRadius: "10px" }}
+                  value={serviceColumnValueFilter.value}
+                />
+              )}
+          </div>
 
           {boardVisiblityData !== undefined &&
             Object.keys(boardVisiblityData).length > 0 && (
@@ -477,9 +476,7 @@ export const CreateServices = ({
                     borderRadius: "10px",
                   }}
                 >
-                  <p style={{ textAlign: "left" }}>
-                    Basic Information Columns
-                  </p>
+                  <p style={{ textAlign: "left" }}>Basic Information Columns</p>
                   <Select
                     mode="multiple"
                     allowClear
@@ -613,6 +610,8 @@ export const CreateServices = ({
                       Profession column
                     </p>
                     <Select
+                      mode="multiple"
+                      allowClear
                       style={{
                         width: "100%",
                       }}

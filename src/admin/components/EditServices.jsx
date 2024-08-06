@@ -37,7 +37,7 @@ export const EditServices = ({
     JSON.parse(editServiceData.service_setting_data).image_key
   );
   const [boardVisiblityData, setBoardVisibilityData] = useState(
-  JSON.parse(editServiceData.service_setting_data)
+    JSON.parse(editServiceData.service_setting_data)
   );
   const [serviceData, setServiceData] = useState({
     title: editServiceData.title || "",
@@ -250,7 +250,6 @@ export const EditServices = ({
     setBoardVisibilityData(tempData);
   };
 
-
   const handleChangeCardSectionColumn1 = (e) => {
     const tempData = { ...boardVisiblityData };
     tempData.card_section.column1 = e;
@@ -300,7 +299,6 @@ export const EditServices = ({
     let boardId = boardVisiblityData.board;
     fetchAllColumnsOfBoard(boardId);
   }, []);
-
 
   return (
     <div style={{ width: "100%", marginTop: "25px" }}>
@@ -489,9 +487,7 @@ export const EditServices = ({
                     borderRadius: "10px",
                   }}
                 >
-                  <p style={{ textAlign: "left" }}>
-                    Basic Information Columns
-                  </p>
+                  <p style={{ textAlign: "left" }}>Basic Information Columns</p>
                   <Select
                     mode="multiple"
                     allowClear
@@ -625,6 +621,8 @@ export const EditServices = ({
                       Profession column
                     </p>
                     <Select
+                      mode="multiple"
+                      allowClear
                       style={{
                         width: "100%",
                       }}
