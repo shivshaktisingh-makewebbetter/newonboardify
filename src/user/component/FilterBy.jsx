@@ -6,10 +6,20 @@ export const FilterBy = ({
   setSelectedFilter,
   items,
   getDataByFilterAndSearch,
+  boardId,
+  order,
+  searchData,
 }) => {
   const handleMenuClick = (e) => {
+    let tempData = {
+      order: order,
+      boardId: boardId,
+      statusFilter: e.key,
+      searchData: searchData,
+    };
+
     setSelectedFilter(e.key);
-    getDataByFilterAndSearch();
+    getDataByFilterAndSearch(tempData);
   };
 
   const menuProps = {

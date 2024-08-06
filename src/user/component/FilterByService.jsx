@@ -1,19 +1,32 @@
 import { Button, Dropdown, Space } from "antd";
 import { FilterIcon } from "../../utils/icons";
 
-export const FilterByService = ({ items, setSelectedService, setBoardId , boardId , getDataByFilterAndSearch}) => {
-
+export const FilterByService = ({
+  items,
+  setSelectedService,
+  setBoardId,
+  getDataByFilterAndSearch,
+  order,
+  searchData,
+  selectedFilter
+}) => {
   const handleMenuClick = (e) => {
-    let tempBoardId = '';
+   
+    let tempBoardId = "";
     setSelectedService(e.key);
     items.forEach((details, index) => {
       if (e.key === index.toString()) {
-        tempBoardId = details.boardId; 
+        tempBoardId = details.boardId;
         setBoardId(details.boardId);
-
       }
     });
-    getDataByFilterAndSearch()
+    let tempData = {
+      order: order,
+      boardId: tempBoardId,
+      statusFilter: selectedFilter,
+      searchData: searchData,
+    };
+    getDataByFilterAndSearch(tempData);
   };
 
   const menuProps = {
@@ -22,7 +35,6 @@ export const FilterByService = ({ items, setSelectedService, setBoardId , boardI
     defaultSelectedKeys: ["0"],
     onClick: handleMenuClick,
   };
-
 
   return (
     <Dropdown menu={menuProps}>

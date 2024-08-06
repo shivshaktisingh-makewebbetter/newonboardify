@@ -37,16 +37,24 @@ export const Track = () => {
   const [searchKeys, setSearchKeys] = useState([]);
   const [loadMoreValue, setLoadMoreValue] = useState(1);
   const [serviceOptions, setServiceOptions] = useState([]);
-  const initialRender = useRef(true);
 
   const onChangeRadio = (item) => {
+    let tempSelectedOrder = "";
     if (item === "ASC") {
+      tempSelectedOrder = 1;
       setSelectedOrder(1);
     }
     if (item === "DESC") {
+      tempSelectedOrder = 2;
       setSelectedOrder(2);
     }
-    getDataByFilterAndSearch();
+    let data = {
+      order: tempSelectedOrder,
+      boardId: boardId,
+      statusFilter: selectedFilter,
+      searchData: searchData,
+    };
+    getDataByFilterAndSearch(data);
   };
 
   const sortingItems = [
@@ -293,19 +301,19 @@ export const Track = () => {
     }
   };
 
-  const getDataByFilterAndSearch = async () => {
+  const getDataByFilterAndSearch = async (tempFilters) => {
     const rules = [];
-    if (selectedFilter != 9) {
+    if (tempFilters.statusFilter != 9) {
       rules.push({
         column_id: columnIdData.required_columns.overall_status,
-        compare_value: [Number(selectedFilter)],
+        compare_value: [Number(tempFilters.statusFilter)],
       });
     }
-    if (searchData.length > 0) {
+    if (tempFilters.searchData.length > 0) {
       searchKeys.forEach((item) => {
         rules.push({
           column_id: item,
-          compare_value: [searchData],
+          compare_value: [tempFilters.searchData],
           operator: "contains_text",
         });
       });
@@ -315,7 +323,7 @@ export const Track = () => {
       query_params: {
         order_by: [
           {
-            direction: selectedOrder === 1 ? "asc" : "desc",
+            direction: tempFilters.order === 1 ? "asc" : "desc",
             column_id: "__creation_log__",
           },
         ],
@@ -327,7 +335,7 @@ export const Track = () => {
 
     try {
       const response = await getRequestTrackingDataByBoardIdAndSearch(
-        boardId,
+        tempFilters.boardId,
         JSON.stringify(payload)
       );
       if (response.success) {
@@ -402,6 +410,9 @@ export const Track = () => {
         placeHolder={"Search By profession"}
         setSearchData={setSearchData}
         getDataByFilterAndSearch={getDataByFilterAndSearch}
+        boardId={boardId}
+        order={selectedOrder}
+        selectedFilter={selectedFilter}
       />
       <div
         style={{
@@ -416,7 +427,9 @@ export const Track = () => {
           setSelectedService={setSelectedService}
           setBoardId={setBoardId}
           getDataByFilterAndSearch={getDataByFilterAndSearch}
-          boardId={boardId}
+          order={selectedOrder}
+          selectedFilter={selectedFilter}
+          searchData={searchData}
         />
         <SortBy
           items={sortingItems}
@@ -426,6 +439,10 @@ export const Track = () => {
           items={statusItems}
           setSelectedFilter={setSelectedFilter}
           getDataByFilterAndSearch={getDataByFilterAndSearch}
+          boardId={boardId}
+          order={selectedOrder}
+          selectedFilter={selectedFilter}
+          searchData={searchData}
         />
         <ExportBy handleExport={handleExport} />
       </div>
