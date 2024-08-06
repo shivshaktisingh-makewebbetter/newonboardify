@@ -12,7 +12,6 @@ import { Track } from "./user/Track";
 import { Check } from "./user/Check";
 import { Request } from "./user/Request";
 import { AdminHome } from "./admin/AdminHome";
-import { Board } from "./admin/Board";
 import { CreateAdmin } from "./admin/CreateAdmin";
 import { Settings } from "./admin/Settings";
 import { ProtectedRoute } from "./routeWrapper/ProtectedRoute";
