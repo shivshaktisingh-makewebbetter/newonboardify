@@ -186,7 +186,7 @@ export const TrackDetails = () => {
           paddingTop: "20px",
         }}
       >
-        <div style={{ display: "flex", gap: "30px", flexDirection: "column" }}>
+        <div style={{ position: "sticky", top: 0, zIndex: 1 }}>
           <div
             className="d-flex mb-2 onboardin-padding-24"
             style={{ gap: "16px" }}
