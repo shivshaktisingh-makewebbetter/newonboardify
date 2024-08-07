@@ -179,12 +179,12 @@ export const TrackDetails = () => {
       <div
         style={{
           display: "flex",
-          marginTop: "36px",
-          gap: "20px",
-          justifyContent: "space-between",
+          flexDirection: "column",
+          height: "100vh",
+          overflow: "hidden",
         }}
       >
-        <div style={{ display: "flex", gap: "30px", flexDirection: "column" }}>
+        <div style={{ flex: "0 1 auto" }}>
           <div
             className="d-flex mb-2 onboardin-padding-24"
             style={{ gap: "16px" }}
@@ -401,8 +401,8 @@ export const TrackDetails = () => {
         </div>
         {Object.keys(columnData).length > 0 && (
           <div
-            className="col-6 d-flex flex-column onboarding-width"
-            style={{ gap: "30px" }}
+            className="col-6  onboarding-width"
+            style={{ flex: "1 1 auto", overflowY: "auto" }}
           >
             <div
               className="card border-0 border-1 p-4"
