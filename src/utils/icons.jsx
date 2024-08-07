@@ -543,8 +543,8 @@ export const TouchIcon = () => {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 100 125"
       version="1.1"
-       width="20"
-        height="20"
+       width="24"
+        height="24"
     >
       <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g fill="#497ed8">
