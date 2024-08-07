@@ -404,7 +404,7 @@ export const TrackDetails = () => {
         {Object.keys(columnData).length > 0 && (
           <div
             className="col-6 d-flex flex-column onboarding-width"
-            style={{ gap: "30px" }}
+            style={{ gap: "30px", overflowY: "auto" }}
           >
             <div
               className="card border-0 border-1 p-4"
