@@ -1,4 +1,5 @@
 import { Button , Dropdown  } from "antd"
+import { TouchIcon } from "../../utils/icons";
 
 
 export const SelectService = ({items}) =>{
@@ -21,7 +22,7 @@ export const SelectService = ({items}) =>{
                 placement="bottomRight"
                 key='order'
             >
-              <Button style={{display:'flex' , alignItems:'center' , gap:'5px' , color:settingData.button_bg}} type='text' className="governify-sortby-button"> <span><i className="bi bi-sort-down"></i></span><span className='fs-16 text-color-928f8f'>Select Service</span> </Button>
+              <Button style={{display:'flex' , alignItems:'center' , gap:'5px' , color:settingData.button_bg}} type='text' className="governify-sortby-button"> <span><TouchIcon/></span><span className='fs-16 text-color-928f8f'>Select Service</span> </Button>
             </Dropdown>
     )
 }
