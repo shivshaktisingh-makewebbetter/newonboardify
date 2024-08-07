@@ -14,8 +14,8 @@ const Replies = ({ item }) => {
         <span
           className="rounded-circle fw-bold text-white d-flex align-items-center justify-content-center"
           style={{
-            width: "30px",
-            height: "30px",
+            width: "35px",
+            height: "35px",
             background: "#497ed8",
             paddingTop: userName !== "Onboardify Team" ? "3px" : "0px",
           }}
