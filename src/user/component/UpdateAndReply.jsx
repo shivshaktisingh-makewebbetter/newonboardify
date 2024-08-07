@@ -9,8 +9,6 @@ import {
 import Replies from "./Replies";
 import {
   Clock,
-  Govern,
-  GovernifyTeam,
   Reply,
   ThumpsUp,
 } from "../../utils/icons";
@@ -24,7 +22,6 @@ const UpdateAndReply = ({
   replyValue,
   handleFileChange,
   handleChangeEmoji,
-  isUpdated,
   likeIds,
   unlikeComment,
   props,

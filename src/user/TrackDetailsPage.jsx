@@ -1,6 +1,5 @@
 import { useLocation } from "react-router-dom";
 import { BreadcrumbComponent } from "./component/BreadCrumbComponent";
-
 import {
   getBoardSettingDataCustomerByID,
   getSubItemDetails,

@@ -28,7 +28,6 @@ import {
 import { useEffect, useState } from "react";
 import { appendEmoji, fetcher } from "../../utils/helper";
 import UpdateAndReply from "./UpdateAndReply";
-
 import axios from "axios";
 import { toast } from "react-toastify";
 import UserTextEditor from "./UserTextEditor";
@@ -266,15 +265,6 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
     }
   };
 
-  // const getUrlArray = (tempData) => {
-  //   let urlData = [];
-  //   tempData.forEach((item) => {
-  //     if (item.id === settingsData.selectedColumn.update) {
-  //       urlData = item.text.split(",").map((url) => url.trim());
-  //     }
-  //   });
-  //   return urlData;
-  // };
 
   useEffect(() => {
     newFetchData();
@@ -424,7 +414,7 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
                         onFocus={() => {
                           setShowTextEditor(true);
                         }}
-                        // disabled={showTextEditor}
+           
                       />
                     </span>
                   )}
@@ -450,17 +440,10 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
                     })}
                   <Flex justify="center" className="mt-4">
                     {commentLoad && (
-                      // <span className="spinner">
-                      //   <Loading width="30px" height="30px" />
-                      // </span>
+               
                       <Skeleton avatar paragraph={{ rows: 3 }} />
                     )}
-                    {/* {showComments < data.updates.length && (<button
-                className="btn-outline-Show-more"
-                onClick={() => setShowComments((prev) => prev + 5)}
-              >
-                Load more
-              </button>)} */}
+               
                   </Flex>
                 </div>
               </div>
