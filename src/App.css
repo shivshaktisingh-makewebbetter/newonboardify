@@ -218,7 +218,7 @@ body,
   font-family: "Work Sans", sans-serif;
 }
 .ff-mont {
-  font-family: "Montserrat";
+  font-family: "Montserrat" , sans-serif;
 }
 
 .btn-to-link * {

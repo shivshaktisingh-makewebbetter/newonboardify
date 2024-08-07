@@ -95,6 +95,21 @@ export const Request = () => {
     fetchProfileData();
   }, []);
 
+  const buttonStyle = {
+    border: `1px solid ${settingsData.button_bg}`,
+    color: settingsData.button_bg,
+    transition: "all 0.3s ease",
+    height: "41px",
+    borderRadius: "10px",
+    fontSize: "12px",
+    fontWeight: "600",
+  };
+
+  const buttonHoverStyle = {
+    backgroundColor: settingsData.button_bg,
+    color: "#ffffff",
+  };
+
   return (
     <div style={{ padding: "1rem" }}>
       {loading && <Loader />}
@@ -116,7 +131,6 @@ export const Request = () => {
                       style={{
                         padding: "20px",
                         position: "relative",
-                        // marginBottom:"60px",
                         paddingBottom: "60px",
                       }}
                     >
@@ -161,7 +175,6 @@ export const Request = () => {
                           color: "#928f8f",
                           fontSize: "17px",
                           fontWeight: "400",
-
                           marginBottom: "0px",
                         }}
                       >
@@ -176,15 +189,34 @@ export const Request = () => {
                         }}
                       >
                         <Button
+                          className="ff-mont"
                           icon={
                             <PlusOutlined
-                              style={{ color: settingsData.button_bg }}
+                              style={{
+                                color: settingsData.button_bg,
+                                transition: "all 0.3s ease",
+                              }}
                             />
                           }
                           iconPosition="start"
-                          style={{
-                            border: `1px solid ${settingsData.button_bg}`,
-                            color: settingsData.button_bg,
+                          style={buttonStyle}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor =
+                              buttonHoverStyle.backgroundColor;
+                            e.currentTarget.style.color =
+                              buttonHoverStyle.color;
+                            e.currentTarget.querySelector(
+                              ".anticon"
+                            ).style.color = buttonHoverStyle.color;
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor =
+                              "transparent";
+                            e.currentTarget.style.color =
+                              settingsData.button_bg;
+                            e.currentTarget.querySelector(
+                              ".anticon"
+                            ).style.color = settingsData.button_bg;
                           }}
                           onClick={() => handleOpenModal(item)}
                           disabled={
