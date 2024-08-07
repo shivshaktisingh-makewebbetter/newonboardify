@@ -178,13 +178,23 @@ export const TrackDetails = () => {
       <BreadcrumbComponent data={breadCrumbData} name={state.name} />
       <div
         style={{
-          display: "flex",
-          marginTop: "36px",
-          gap: "20px",
+          // display: "flex",
+          // marginTop: "36px",
+        
           justifyContent: "space-between",
+          display: "flex" ,
+          gap: "20px",
+          height: "100%" ,
         }}
       >
-        <div style={{ display: "flex", gap: "30px", flexDirection: "column" }}>
+        <div style={{ 
+          // display: "flex", 
+          // gap: "30px", 
+          // flexDirection: "column"
+          position: "sticky" ,
+          top: 0 ,
+          zIndex:1
+          }}>
           <div
             className="d-flex mb-2 onboardin-padding-24"
             style={{ gap: "16px" }}
@@ -402,7 +412,13 @@ export const TrackDetails = () => {
         {Object.keys(columnData).length > 0 && (
           <div
             className="col-6 d-flex flex-column onboarding-width"
-            style={{ gap: "30px" }}
+            style={{
+               gap: "30px",
+              overflowY: "auto" ,
+              // height: calc(
+              //   100vh - 50px
+              // ) , 
+             }}
           >
             <div
               className="card border-0 border-1 p-4"
