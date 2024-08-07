@@ -178,20 +178,15 @@ export const TrackDetails = () => {
       <BreadcrumbComponent data={breadCrumbData} name={state.name} />
       <div
         style={{
-          // display: "flex",
-          // marginTop: "36px",
-        
           justifyContent: "space-between",
           display: "flex" ,
           alignItems:"flex-start" ,
           gap: "20px",
           height: "100%" ,
+          paddingTop:"20px"
         }}
       >
         <div style={{ 
-          // display: "flex", 
-          // gap: "30px", 
-          // flexDirection: "column"
           position: "sticky" ,
           top: 0 ,
           zIndex:1
