@@ -111,7 +111,7 @@ export const Request = () => {
   };
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div style={{ padding: "1rem", display: "flex", justifyContent: "center" }}>
       {loading && <Loader />}
       <div style={{ marginTop: "3rem", marginBottom: "1rem" }}>
         <Hero
@@ -244,7 +244,7 @@ export const Request = () => {
         width={700}
       >
         <div
-          style={{ margin: "0px", height: "75vh" , marginTop:"30px" }}
+          style={{ margin: "0px", height: "75vh", marginTop: "30px" }}
           id="iframe-signup"
           dangerouslySetInnerHTML={{ __html: formCode }}
         ></div>
