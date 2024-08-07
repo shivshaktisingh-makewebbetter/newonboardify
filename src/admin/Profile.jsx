@@ -107,7 +107,7 @@ export const Profile = () => {
         toast.success(response.message);
         getListOfAllProfiles();
       } else {
-        toast.error("Profile Not Cloned.");
+        toast.error(response.message);
       }
     } catch (err) {
     } finally {
