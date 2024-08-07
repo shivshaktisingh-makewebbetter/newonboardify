@@ -29,14 +29,48 @@ import { Profile } from "./admin/Profile";
 import { CreateProfile } from "./admin/components/CreateProfile";
 import { EditProfile } from "./admin/components/EditProfile";
 
-
 function App() {
   const router = createBrowserRouter([
-    { path: "", element: <ErrorBoundary><Login /></ErrorBoundary> },
-    { path: "register", element: <ErrorBoundary><Register /></ErrorBoundary> },
-    { path: "forgot", element: <ErrorBoundary><ForgotPassword /></ErrorBoundary> },
-    { path: "reset-password", element: <ErrorBoundary><ResetPassword /></ErrorBoundary> },
-    { path: "onboardify/verify", element: <ErrorBoundary><VerifyUser /></ErrorBoundary> },
+    {
+      path: "",
+      element: (
+        <ErrorBoundary>
+          <Login />
+        </ErrorBoundary>
+      ),
+    },
+    {
+      path: "register",
+      element: (
+        <ErrorBoundary>
+          <Register />
+        </ErrorBoundary>
+      ),
+    },
+    {
+      path: "forgot",
+      element: (
+        <ErrorBoundary>
+          <ForgotPassword />
+        </ErrorBoundary>
+      ),
+    },
+    {
+      path: "reset-password",
+      element: (
+        <ErrorBoundary>
+          <ResetPassword />
+        </ErrorBoundary>
+      ),
+    },
+    {
+      path: "onboardify/verify",
+      element: (
+        <ErrorBoundary>
+          <VerifyUser />
+        </ErrorBoundary>
+      ),
+    },
     {
       path: "user",
       element: <Layout />,
@@ -44,31 +78,66 @@ function App() {
         {
           path: "",
           element: (
-            <ProtectedRoute element={<ErrorBoundary><UserHome /></ErrorBoundary>} allowedRoles={["customer"]} />
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <UserHome />
+                </ErrorBoundary>
+              }
+              allowedRoles={["customer", "admin"]}
+            />
           ),
         },
         {
           path: "track",
           element: (
-            <ProtectedRoute element={<ErrorBoundary><Track /></ErrorBoundary>} allowedRoles={["customer"]} />
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <Track />
+                </ErrorBoundary>
+              }
+              allowedRoles={["customer", "admin"]}
+            />
           ),
         },
         {
           path: "track/details",
           element: (
-            <ProtectedRoute element={<ErrorBoundary><TrackDetails /></ErrorBoundary>} allowedRoles={["customer"]} />
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <TrackDetails />
+                </ErrorBoundary>
+              }
+              allowedRoles={["customer", "admin"]}
+            />
           ),
         },
         {
           path: "check",
           element: (
-            <ProtectedRoute element={<ErrorBoundary><Check /></ErrorBoundary>} allowedRoles={["customer"]} />
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <Check />
+                </ErrorBoundary>
+              }
+              allowedRoles={["customer", "admin"]}
+            />
           ),
         },
         {
           path: "request",
           element: (
-            <ProtectedRoute element={<ErrorBoundary><Request /></ErrorBoundary>} allowedRoles={["customer"]} />
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <Request />
+                </ErrorBoundary>
+              }
+              allowedRoles={["customer", "admin"]}
+            />
           ),
         },
       ],
@@ -79,32 +148,95 @@ function App() {
       children: [
         {
           path: "",
-          element: <ProtectedRoute element={<ErrorBoundary><AdminHome /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
+          element: (
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <AdminHome />
+                </ErrorBoundary>
+              }
+              allowedRoles={["superAdmin"]}
+            />
+          ),
         },
-        
+
         {
           path: "createAdmin",
-          element: <ProtectedRoute element={<ErrorBoundary><CreateAdmin /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
+          element: (
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <CreateAdmin />
+                </ErrorBoundary>
+              }
+              allowedRoles={["superAdmin"]}
+            />
+          ),
         },
         {
           path: "settings",
-          element: <ProtectedRoute element={<ErrorBoundary><Settings /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
+          element: (
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <Settings />
+                </ErrorBoundary>
+              }
+              allowedRoles={["superAdmin"]}
+            />
+          ),
         },
         {
           path: "userList",
-          element: <ProtectedRoute element={<ErrorBoundary><UserList /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
+          element: (
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <UserList />
+                </ErrorBoundary>
+              }
+              allowedRoles={["superAdmin"]}
+            />
+          ),
         },
         {
           path: "profile",
-          element: <ProtectedRoute element={<ErrorBoundary><Profile /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
+          element: (
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <Profile />
+                </ErrorBoundary>
+              }
+              allowedRoles={["superAdmin"]}
+            />
+          ),
         },
         {
           path: "createprofile",
-          element: <ProtectedRoute element={<ErrorBoundary><CreateProfile /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
+          element: (
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <CreateProfile />
+                </ErrorBoundary>
+              }
+              allowedRoles={["superAdmin"]}
+            />
+          ),
         },
         {
           path: "editprofile",
-          element: <ProtectedRoute element={<ErrorBoundary><EditProfile /></ErrorBoundary>} allowedRoles={["admin" , "superAdmin"]} />,
+          element: (
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <EditProfile />
+                </ErrorBoundary>
+              }
+              allowedRoles={["superAdmin"]}
+            />
+          ),
         },
       ],
     },

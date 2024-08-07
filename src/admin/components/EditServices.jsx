@@ -171,16 +171,14 @@ export const EditServices = ({
 
   const handleUserHeadingColumns = (e) => {
     const tempData = { ...boardVisiblityData };
-    const selectedData = [];
-    options.forEach((item) => {
-      if (e.includes(item.value)) {
-        selectedData.push({
-          id: item.value,
-          name: item.label,
-          icon: "",
-          custom_title: "",
-        });
-      }
+    const selectedData = e.map((value) => {
+      const item = options.find((option) => option.value === value);
+      return {
+        id: item.value,
+        name: item.label,
+        icon: "",
+        custom_title: "",
+      };
     });
     tempData.sub_headings_column = selectedData;
     setBoardVisibilityData(tempData);
@@ -188,16 +186,14 @@ export const EditServices = ({
 
   const handleChangeOnboardingStatusColumns = (e) => {
     const tempData = { ...boardVisiblityData };
-    const selectedData = [];
-    options.forEach((item) => {
-      if (e.includes(item.value)) {
-        selectedData.push({
-          id: item.value,
-          name: item.label,
-          icon: "",
-          custom_title: "",
-        });
-      }
+    const selectedData = e.map((value) => {
+      const item = options.find((option) => option.value === value);
+      return {
+        id: item.value,
+        name: item.label,
+        icon: "",
+        custom_title: "",
+      };
     });
     tempData.onboarding_columns = selectedData;
     setBoardVisibilityData(tempData);
@@ -205,24 +201,21 @@ export const EditServices = ({
 
   const handleChangeCandidateColumns = (e) => {
     const tempData = { ...boardVisiblityData };
-    const selectedData = [];
+    const selectedData = e.map((value) => {
+      const existingItem = tempData.candidate_coulmns.find(
+        (column) => column.id === value
+      );
 
-    options.forEach((item) => {
-      if (e.includes(item.value)) {
-        const existingItem = tempData.candidate_coulmns.find(
-          (column) => column.id === item.value
-        );
-
-        if (existingItem !== undefined) {
-          selectedData.push(existingItem);
-        } else {
-          selectedData.push({
-            id: item.value,
-            name: item.label,
-            icon: "",
-            custom_title: "",
-          });
-        }
+      if (existingItem !== undefined) {
+        return existingItem;
+      } else {
+        const item = options.find((option) => option.value === value);
+        return {
+          id: item.value,
+          name: item.label,
+          icon: "",
+          custom_title: "",
+        };
       }
     });
 

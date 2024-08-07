@@ -11,12 +11,8 @@ export const ProtectedRoute = ({ element, allowedRoles }) => {
   if (role === null){
     navigate('/');
    }
-   if(role === 'customer' && !allowedRoles.includes(role)){
+   if((role === 'customer' || role==='admin') && !allowedRoles.includes(role)){
     navigate('/user');
-   }
-
-   if(role === 'admin' && !allowedRoles.includes(role)){
-    navigate('/admin');
    }
 
    if(role === 'superAdmin' && !allowedRoles.includes(role)){

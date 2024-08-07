@@ -62,7 +62,7 @@ export const Login = () => {
           sessionStorage.setItem("userName", response1.data.data.name);
           sessionStorage.setItem("userId", response1.data.data.user_id);
         }
-        if (response.data.role === "customer") {
+        if (response.data.role === "customer" || response.data.role === "admin") {
           setTimeout(() => {
             navigate("/user");
           }, 1000);

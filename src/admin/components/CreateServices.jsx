@@ -50,7 +50,6 @@ export const CreateServices = ({
       service_setting_data: JSON.stringify(boardVisiblityData),
     };
 
-
     try {
       const response = await createService(payload);
       if (response.success) {
@@ -160,33 +159,30 @@ export const CreateServices = ({
 
   const handleUserHeadingColumns = (e) => {
     const tempData = { ...boardVisiblityData };
-    const selectedData = [];
-    options.forEach((item) => {
-      if (e.includes(item.value)) {
-        selectedData.push({
-          id: item.value,
-          name: item.label,
-          icon: "",
-          custom_title: "",
-        });
-      }
+    const selectedData = e.map((value) => {
+      const item = options.find((option) => option.value === value);
+      return {
+        id: item.value,
+        name: item.label,
+        icon: "",
+        custom_title: "",
+      };
     });
     tempData.sub_headings_column = selectedData;
     setBoardVisibilityData(tempData);
   };
+  
 
   const handleChangeOnboardingStatusColumns = (e) => {
     const tempData = { ...boardVisiblityData };
-    const selectedData = [];
-    options.forEach((item) => {
-      if (e.includes(item.value)) {
-        selectedData.push({
-          id: item.value,
-          name: item.label,
-          icon: "",
-          custom_title: "",
-        });
-      }
+    const selectedData = e.map((value) => {
+      const item = options.find((option) => option.value === value);
+      return {
+        id: item.value,
+        name: item.label,
+        icon: "",
+        custom_title: "",
+      };
     });
     tempData.onboarding_columns = selectedData;
     setBoardVisibilityData(tempData);
@@ -194,30 +190,28 @@ export const CreateServices = ({
 
   const handleChangeCandidateColumns = (e) => {
     const tempData = { ...boardVisiblityData };
-    const selectedData = [];
-
-    options.forEach((item) => {
-      if (e.includes(item.value)) {
-        const existingItem = tempData.candidate_coulmns.find(
-          (column) => column.id === item.value
-        );
-
-        if (existingItem !== undefined) {
-          selectedData.push(existingItem);
-        } else {
-          selectedData.push({
-            id: item.value,
-            name: item.label,
-            icon: "",
-            custom_title: "",
-          });
-        }
+    const selectedData = e.map((value) => {
+      const existingItem = tempData.candidate_coulmns.find(
+        (column) => column.id === value
+      );
+      
+      if (existingItem !== undefined) {
+        return existingItem;
+      } else {
+        const item = options.find((option) => option.value === value);
+        return {
+          id: item.value,
+          name: item.label,
+          icon: "",
+          custom_title: "",
+        };
       }
     });
-
+  
     tempData.candidate_coulmns = selectedData;
     setBoardVisibilityData(tempData);
   };
+  
 
   const handleChangeIcon = (e, item) => {
     const tempData = { ...boardVisiblityData };
@@ -239,11 +233,7 @@ export const CreateServices = ({
     setBoardVisibilityData(tempData);
   };
 
-  const handleChangeOnboardingUpdates = (e) => {
-    const tempData = { ...boardVisiblityData };
-    tempData.extra_details.key = e;
-    setBoardVisibilityData(tempData);
-  };
+
 
   const handleChangeCardSectionColumn1 = (e) => {
     const tempData = { ...boardVisiblityData };
@@ -440,6 +430,7 @@ export const CreateServices = ({
                       }
                     )}
                   />
+                  
                 </div>
                 <div
                   style={{
