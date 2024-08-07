@@ -1,6 +1,10 @@
 import React from "react";
 
-import { extractUsernameFromMessage, getFirstLettersOfName, showUserName } from "../../utils/helper";
+import {
+  extractUsernameFromMessage,
+  getFirstLettersOfName,
+  showUserName,
+} from "../../utils/helper";
 
 const Replies = ({ item }) => {
   let userName = showUserName(item.body);
@@ -9,9 +13,23 @@ const Replies = ({ item }) => {
       <div>
         <span
           className="rounded-circle fw-bold text-white d-flex align-items-center justify-content-center"
-          style={{width: "30px", height: "30px" , background: userName !== "Onboardify Team"?"#497ed8":'' , paddingTop:userName !== "Onboardify Team"?"3px":"0px" }}
+          style={{
+            width: "30px",
+            height: "30px",
+            background: "#497ed8",
+            paddingTop: userName !== "Onboardify Team" ? "3px" : "0px",
+          }}
         >
-          {userName === "Onboardify Team" ? <img src="/onboardify123.svg" alt="No Preview" width={30} height={30}/>  : getFirstLettersOfName(userName)}
+          {userName === "Onboardify Team" ? (
+            <img
+              src="/onboard123.svg"
+              alt="No Preview"
+              width={30}
+              height={30}
+            />
+          ) : (
+            getFirstLettersOfName(userName)
+          )}
         </span>
       </div>
       <div className="rounded-2 px-3 py-2" style={{ background: "#6f74900f" }}>
