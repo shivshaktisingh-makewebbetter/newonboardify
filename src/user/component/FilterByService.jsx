@@ -1,5 +1,5 @@
 import { Button, Dropdown, Space } from "antd";
-import { FilterIcon } from "../../utils/icons";
+import { FilterIcon, TouchIcon } from "../../utils/icons";
 
 export const FilterByService = ({
   items,
@@ -46,7 +46,7 @@ export const FilterByService = ({
           padding: "0px",
           marginRight: "14px",
         }}
-        icon={<FilterIcon style={{ color: "#497ed8" }} />}
+        icon={<TouchIcon style={{ color: "#497ed8" }} />}
         iconPosition="start"
       >
         <Space>Select Service</Space>
