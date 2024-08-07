@@ -422,7 +422,7 @@ export const EditServices = ({
                     borderRadius: "10px",
                   }}
                 >
-                  <p style={{ textAlign: "left" }}>User SubHeading Columns</p>
+                  <p style={{ textAlign: "left" }}>Single Page Heading</p>
                   <Select
                     mode="multiple"
                     allowClear
@@ -442,34 +442,6 @@ export const EditServices = ({
                         return item.id;
                       }
                     )}
-                  />
-                </div>
-                <div
-                  style={{
-                    marginTop: "10px",
-                    border: "1px solid #d9d9d9",
-                    padding: "10px",
-                    borderRadius: "10px",
-                  }}
-                >
-                  <p style={{ textAlign: "left" }}>Status Columns</p>
-                  <Select
-                    mode="multiple"
-                    allowClear
-                    style={{
-                      width: "100%",
-                    }}
-                    placeholder="Please select"
-                    defaultValue={boardVisiblityData.onboarding_columns.map(
-                      (item) => {
-                        return item.id;
-                      }
-                    )}
-                    onChange={handleChangeOnboardingStatusColumns}
-                    options={options}
-                    value={boardVisiblityData.onboarding_columns.map((item) => {
-                      return item.id;
-                    })}
                   />
                 </div>
                 <div
@@ -500,6 +472,35 @@ export const EditServices = ({
                     })}
                   />
                 </div>
+                <div
+                  style={{
+                    marginTop: "10px",
+                    border: "1px solid #d9d9d9",
+                    padding: "10px",
+                    borderRadius: "10px",
+                  }}
+                >
+                  <p style={{ textAlign: "left" }}>Status Columns</p>
+                  <Select
+                    mode="multiple"
+                    allowClear
+                    style={{
+                      width: "100%",
+                    }}
+                    placeholder="Please select"
+                    defaultValue={boardVisiblityData.onboarding_columns.map(
+                      (item) => {
+                        return item.id;
+                      }
+                    )}
+                    onChange={handleChangeOnboardingStatusColumns}
+                    options={options}
+                    value={boardVisiblityData.onboarding_columns.map((item) => {
+                      return item.id;
+                    })}
+                  />
+                </div>
+                
                 <div
                   style={{
                     marginTop: "10px",
@@ -611,7 +612,7 @@ export const EditServices = ({
                     }}
                   >
                     <p style={{ textAlign: "left", marginBottom: "5px" }}>
-                      Profession column
+                      Search column
                     </p>
                     <Select
                       mode="multiple"
@@ -634,7 +635,7 @@ export const EditServices = ({
                     }}
                   >
                     <p style={{ textAlign: "left", marginBottom: "5px" }}>
-                      Overall Status column
+                      Filter column
                     </p>
                     <Select
                       style={{
