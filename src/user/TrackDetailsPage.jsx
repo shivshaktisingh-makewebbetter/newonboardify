@@ -13,7 +13,7 @@ import { Loader } from "../common/Loader";
 
 export const TrackDetails = () => {
   const [columnData, setColumnData] = useState({});
-  const [allColumns, setAllColumns] = useState();
+  // const [allColumns, setAllColumns] = useState();
   const [itemDetails, setItemDetails] = useState({});
   const location = useLocation();
   const [likeIds, setLikeIds] = useState([]);
@@ -35,7 +35,7 @@ export const TrackDetails = () => {
 
       if (response.success) {
         let tempText = "";
-        setAllColumns(response.data.response.data.boards[0].columns);
+        // setAllColumns(response.data.response.data.boards[0].columns);
         state.subHeadingColumn.forEach((item, index) => {
           response.data.response.data.items[0].column_values.forEach(
             (subItem) => {
@@ -59,7 +59,7 @@ export const TrackDetails = () => {
 
   const getAllLikes = async () => {
     let ids = [];
-    let likes = await fetcher(`incorpify/listAllLikes`, "GET");
+    let likes = await fetcher(incorpify/listAllLikes, "GET");
     if (likes.success) {
       likes.data.map((item) => {
         ids.push(item.item_type_id);
@@ -179,12 +179,12 @@ export const TrackDetails = () => {
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          height: "100vh",
-          overflow: "hidden",
+          marginTop: "36px",
+          gap: "20px",
+          justifyContent: "space-between",
         }}
       >
-        <div style={{ flex: "0 1 auto" }}>
+        <div style={{ display: "flex", gap: "30px", flexDirection: "column" }}>
           <div
             className="d-flex mb-2 onboardin-padding-24"
             style={{ gap: "16px" }}
@@ -272,7 +272,7 @@ export const TrackDetails = () => {
               className="column-head text-start head-color fw-bold pb-4 border-bottom onboarding-fs-20"
               style={{ fontSize: "26px" }}
             >
-              Candidate Information
+              Basic Information
             </p>
             <ul className="list-group list-group-flush">
               {Object.keys(columnData).length > 0 &&
@@ -317,7 +317,7 @@ export const TrackDetails = () => {
 
           <div className="card border-0 border-1 p-4">
             <h4 className="text-start head-color fw-bold pb-4 border-bottom onboarding-fs-20">
-              Onboarding Status
+              Status Updates
             </h4>
             <ul className="list-group list-group-flush">
               {Object.keys(columnData).length > 0 &&
@@ -401,8 +401,8 @@ export const TrackDetails = () => {
         </div>
         {Object.keys(columnData).length > 0 && (
           <div
-            className="col-6  onboarding-width"
-            style={{ flex: "1 1 auto", overflowY: "auto" }}
+            className="col-6 d-flex flex-column onboarding-width"
+            style={{ gap: "30px" }}
           >
             <div
               className="card border-0 border-1 p-4"
@@ -412,7 +412,7 @@ export const TrackDetails = () => {
                 className="second-heading text-start head-color fw-bold pb-4 border-bottom"
                 style={{ fontSize: "26px" }}
               >
-                Progress Updates
+                Request Updates
               </p>
 
               <UpdateComponent
