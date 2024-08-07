@@ -1,5 +1,5 @@
 // ProtectedRoute.js
-import  { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRole } from '../utils/helper';
 
@@ -11,8 +11,12 @@ export const ProtectedRoute = ({ element, allowedRoles }) => {
   if (role === null){
     navigate('/');
    }
-   if((role === 'customer' || role==='admin') && !allowedRoles.includes(role)){
+   if(role === 'customer' && !allowedRoles.includes(role)){
     navigate('/user');
+   }
+
+   if(role === 'admin' && !allowedRoles.includes(role)){
+    navigate('/admin');
    }
 
    if(role === 'superAdmin' && !allowedRoles.includes(role)){
