@@ -183,6 +183,7 @@ export const TrackDetails = () => {
         
           justifyContent: "space-between",
           display: "flex" ,
+          alignItems:"flex-start" ,
           gap: "20px",
           height: "100%" ,
         }}
