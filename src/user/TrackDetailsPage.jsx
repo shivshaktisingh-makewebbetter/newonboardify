@@ -59,7 +59,7 @@ export const TrackDetails = () => {
 
   const getAllLikes = async () => {
     let ids = [];
-    let likes = await fetcher(incorpify/listAllLikes, "GET");
+    let likes = await fetcher(`incorpify/listAllLikes`, "GET");
     if (likes.success) {
       likes.data.map((item) => {
         ids.push(item.item_type_id);
