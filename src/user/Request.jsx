@@ -259,7 +259,7 @@ const CustomArrow = (props) => {
   // Common styles for the arrow container
   const commonStyle = {
     paddingRight: arrowType === "next" ? "0px" : "200px",
-    paddingLeft: arrowType === "prev" ? "0px" : "200px",
+    paddingLeft: arrowType === "prev" ? "0px" : "0px",
     borderRadius: "50%", // Makes the container circular
     cursor: "pointer",
     zIndex: 2,
