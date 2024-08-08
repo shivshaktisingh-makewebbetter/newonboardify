@@ -630,9 +630,7 @@ export const CreateServices = ({
                     borderRadius: "10px",
                   }}
                 >
-                  <p style={{ textAlign: "left" }}>
-                    Columns For Document Fetch
-                  </p>
+                  <p style={{ textAlign: "left" }}>Documents to user</p>
                   <Select
                     allowClear
                     mode="multiple"
@@ -653,9 +651,7 @@ export const CreateServices = ({
                     borderRadius: "10px",
                   }}
                 >
-                  <p style={{ textAlign: "left" }}>
-                    Column For Document Upload
-                  </p>
+                  <p style={{ textAlign: "left" }}>Documents From user</p>
                   <Select
                     style={{
                       width: "100%",
