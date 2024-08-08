@@ -14,6 +14,7 @@ import {
   getBoardSettingDataCustomerByID,
   getRequestTrackingDataByBoardIdAndSearch,
   getTrackingDataByBoardId,
+  exportServiceData,
 } from "../apiservice/ApiService";
 import { Loader } from "../common/Loader";
 import { FilterByService } from "./component/FilterByService";
@@ -36,6 +37,7 @@ export const Track = () => {
   const [searchKeys, setSearchKeys] = useState([]);
   const [loadMoreValue, setLoadMoreValue] = useState(1);
   const [serviceOptions, setServiceOptions] = useState([]);
+  const [profileData, setProfileData] = useState({});
 
   const onChangeRadio = (item) => {
     let tempSelectedOrder = "";
@@ -102,72 +104,37 @@ export const Track = () => {
     setStatusItems(updatedFilterColumn);
   };
 
-  const handleExport = () => {
-    let tempAllColumns = ["Name"];
-    let tempAllColumnsIds = ["name"];
-    if (columnIdData.candidate_coulmns === undefined) {
-      return;
-    }
-
-    let tempData = [...data];
-    columnIdData.candidate_coulmns.forEach((subItem) => {
-      if (!tempAllColumns.includes(subItem.name)) {
-        tempAllColumns.push(subItem.name);
-        tempAllColumnsIds.push(subItem.id);
-      }
-    });
-    columnIdData.onboarding_columns.forEach((subItem) => {
-      if (!tempAllColumns.includes(subItem.name)) {
-        tempAllColumns.push(subItem.name);
-        tempAllColumnsIds.push(subItem.id);
-      }
-    });
-    columnIdData.sub_headings_column.forEach((subItem) => {
-      if (!tempAllColumns.includes(subItem.name)) {
-        tempAllColumns.push(subItem.name);
-        tempAllColumnsIds.push(subItem.id);
-      }
-    });
-
-    const dataFormatToPrepare = [tempAllColumns];
-    tempData.forEach((item) => {
-      // Initialize clonedColumnId with empty strings
-      let clonedColumnId = new Array(tempAllColumnsIds.length).fill("");
-
-      // Set the first column value to item.name
-      clonedColumnId[0] = item.name;
-
-      item.column_values.forEach((subItem) => {
-        let index = tempAllColumnsIds.indexOf(subItem.id);
-        if (index !== -1) {
-          clonedColumnId[index] = subItem.text;
-        }
+  const handleExport = async () => {
+    try {
+      const data = [];
+      const response = await exportServiceData(boardId);
+      const tempResult = response.data.split("\n");
+      tempResult.forEach((item) => {
+        data.push(item);
       });
 
-      dataFormatToPrepare.push(clonedColumnId);
-    });
+      const csvContent = data.join("\n");
 
-    // Convert data array to CSV string
-    const csvContent = dataFormatToPrepare
-      .map((row) => row.join(","))
-      .join("\n");
+        // Create a Blob from the CSV string
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", "data.csv");
 
-    // Create a Blob from the CSV string
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", "data.csv");
+        // Append the link to the body (necessary for Firefox)
+        document.body.appendChild(link);
 
-    // Append the link to the body (necessary for Firefox)
-    document.body.appendChild(link);
+        // Trigger the download by simulating a click on the link
+        link.click();
 
-    // Trigger the download by simulating a click on the link
-    link.click();
-
-    // Remove the link from the document
-    document.body.removeChild(link);
+        // Remove the link from the document
+        document.body.removeChild(link);
+    } catch (err) {
+    } finally {
+    }
   };
+
   const getProfileData = async () => {
     try {
       const response = await getAllProfileDataByUser();
@@ -217,23 +184,6 @@ export const Track = () => {
         setData(response.data.response.data.boards[0].items_page.items);
         setCursor(response.data.response.data.boards[0].items_page.cursor);
         setAllColumns(response.data.response.data.boards[0].columns);
-        // setOriginalArray([]);
-      }
-    } catch (err) {
-    } finally {
-    }
-  };
-
-  const getBoardSettingData = async (tempBoardId) => {
-    try {
-      const response = await getBoardSettingDataCustomerByID(tempBoardId);
-      if (response.success) {
-        let tempData = JSON.parse(response.data.response[0].columns);
-        setColumnIdData(tempData);
-        setSearchKeys(
-          JSON.parse(response.data.response[0].columns).required_columns
-            .profession
-        );
       }
     } catch (err) {
     } finally {
@@ -270,8 +220,20 @@ export const Track = () => {
         setBoardId(tempData[0].boardId);
         setServiceOptions(tempData);
         setSelectedService(tempData[0].key);
+        setProfileData(profileResponse.data.response[0].services);
+
+        setColumnIdData(
+          JSON.parse(
+            profileResponse.data.response[0].services[0].service_setting_data
+          )
+        );
+        setSearchKeys(
+          JSON.parse(
+            profileResponse.data.response[0].services[0].service_setting_data
+          ).required_columns.profession
+        );
       }
-      await getBoardSettingData(tempBoardId);
+
       await getTrackData(tempBoardId);
       await getStatusFilterData(tempBoardId);
     } catch (err) {
@@ -281,7 +243,6 @@ export const Track = () => {
   };
 
   const loadMoreHandler = async () => {
-    console.log(selectedFilter, searchData, "searchData");
     setLoading(true);
     try {
       const response = await getTrackingDataByBoardId(
@@ -432,6 +393,9 @@ export const Track = () => {
           order={selectedOrder}
           selectedFilter={selectedFilter}
           searchData={searchData}
+          profileData={profileData}
+          setColumnIdData={setColumnIdData}
+          setSearchKeys={setSearchKeys}
         />
         <SortBy
           items={sortingItems}
@@ -453,6 +417,7 @@ export const Track = () => {
         boardId={boardId}
         columnIdData={columnIdData}
         allColumns={allColumns}
+        profileData={profileData}
       />
       {cursor !== null && !loading && (
         <div>

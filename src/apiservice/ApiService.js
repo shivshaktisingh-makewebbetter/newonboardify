@@ -63,6 +63,9 @@ export const cloneProfile = (id) =>
   Services.GET(`/newonboardify/admin/cloneOnboardifyProfile/${id}`);
 
 // Customer Endpoints
+export const exportServiceData = (id) => {
+  return Services.GET(`newonboardify/customer/exportDataByBoardId/${id}`);
+};
 export const getUserFormAndChart = () =>
   Services.GET(`newonboardify/customer/getUserFormAndChart`);
 export const getRequestTrackingData = () =>
@@ -82,8 +85,10 @@ export const getBoardSettingDataCustomerByIdAndEmail = (id, email) =>
   Services.GET(
     `newonboardify/customer/getboardVisibilityMapping?board_id=${id}&email=${email}`
   );
-export const getSubItemDetails = (id) =>
-  Services.GET(`newonboardify/customer/requestTrackingActivity/${id}`);
+export const getSubItemDetails = (id, boardId) =>
+  Services.GET(
+    `newonboardify/customer/requestTrackingActivity/?board_id=${boardId}&item_id=${id}`
+  );
 export const getColorMappingForUser = () =>
   Services.GET(`newonboardify/customer/getBoardColourMapping`);
 export const getAllProfileDataByUser = () =>

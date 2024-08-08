@@ -8,7 +8,10 @@ export const FilterByService = ({
   getDataByFilterAndSearch,
   order,
   searchData,
-  selectedFilter
+  selectedFilter ,
+  profileData ,
+  setColumnIdData ,
+  setSearchKeys
 }) => {
   const handleMenuClick = (e) => {
    
@@ -18,6 +21,14 @@ export const FilterByService = ({
       if (e.key === index.toString()) {
         tempBoardId = details.boardId;
         setBoardId(details.boardId);
+        profileData.forEach((item) => {
+          if (item.board_id === tempBoardId) {
+            setColumnIdData(JSON.parse(item.service_setting_data));
+            setSearchKeys(
+              JSON.parse(item.service_setting_data).required_columns.profession
+            );
+          }
+        });
       }
     });
     let tempData = {

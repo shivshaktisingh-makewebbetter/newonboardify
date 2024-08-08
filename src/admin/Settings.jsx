@@ -247,7 +247,6 @@ export const Settings = () => {
   };
 
   const handleFileSelect = (data, imageName, key) => {
-    console.log(key);
     const tempArr = [...homeSettingData];
     tempArr.forEach((item) => {
       if (item.key === key) {

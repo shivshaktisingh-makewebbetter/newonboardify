@@ -67,7 +67,6 @@ export const Request = () => {
     setLoading(true);
     try {
       const response = await getAllProfileDataByUser();
-      console.log(response , 'response')
       if (response.success) {
         if (response.data.response.length > 0) {
           setProfileData(response.data.response);
