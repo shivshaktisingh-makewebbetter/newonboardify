@@ -27,7 +27,6 @@ export const TrackDetails = () => {
 
     try {
       const response = await getSubItemDetails(state.id , state.boardId);
-      console.log(response , 'response');
     
 
       if (response.success) {
@@ -69,7 +68,6 @@ export const TrackDetails = () => {
 
   const getCountryCode = (item) => {
 
-    console.log(item , itemDetails , 'item')
 
     let countryName = "";
     itemDetails.items[0].column_values.forEach((subItem) => {
@@ -280,7 +278,6 @@ export const TrackDetails = () => {
                 columnData.candidate_coulmns.map((item, index) => {
                   const countryCode = getCountryCode(item);
                   const centerText = getCenterText(item);
-                  console.log(countryCode , centerText , 'centerText')
                   return (
                     <li
                       className="user-candidate-column list-group-item d-flex pb-0 align-items-center border-0 text-start"
@@ -423,6 +420,7 @@ export const TrackDetails = () => {
                 getAllLikes={getAllLikes}
                 description={""}
                 imageKey={columnData.image_key}
+                columnIdData={columnData}
               />
             </div>
           </div>

@@ -33,7 +33,13 @@ import { toast } from "react-toastify";
 import UserTextEditor from "./UserTextEditor";
 import { Loader } from "../../common/Loader";
 
-export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
+export const UpdateComponent = ({
+  id,
+  likeIds,
+  getAllLikes,
+  imageKey,
+  columnIdData,
+}) => {
   const [data, setData] = useState("");
   const [showTextEditor, setShowTextEditor] = useState(false);
   const [updateValue, setUpdateValue] = useState("");
@@ -52,6 +58,7 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
     header_bg: "#f7f7f7",
     head_title_color: "#497ed8",
   };
+
 
   const unlikeComment = async (commentId) => {
     setLoading(true);
@@ -151,6 +158,17 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
     } else {
       handleChangeReplyValue(value);
     }
+  };
+
+  const getUrlArray = (tempData) => {
+    let urlData = [];
+    tempData.forEach((item) => {
+      if (columnIdData.document_fetch_key.includes(item.id)) {
+        urlData = item.text.split(",").map((url) => url.trim());
+      }
+    });
+
+    return urlData;
   };
 
   const update = async () => {
@@ -265,7 +283,6 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
     }
   };
 
-
   useEffect(() => {
     newFetchData();
   }, []);
@@ -325,10 +342,9 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
                 {data.assets.length > 0 && (
                   <Flex gap={10} wrap>
                     {data.assets.map((item, i) => {
-                      // const urlList = getUrlArray(data.column_values);
-
-                      return (
-                   
+                      const urlList = getUrlArray(data.column_values);
+                      if (urlList.includes(item.url)) {
+                        return (
                           <div key={i}>
                             <a
                               href={item.public_url}
@@ -344,8 +360,8 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
                               </Popover>
                             </div>
                           </div>
-                      
-                      );
+                        );
+                      }
                     })}
                   </Flex>
                 )}
@@ -414,7 +430,6 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
                         onFocus={() => {
                           setShowTextEditor(true);
                         }}
-           
                       />
                     </span>
                   )}
@@ -439,11 +454,7 @@ export const UpdateComponent = ({ id, likeIds, getAllLikes, imageKey }) => {
                       }
                     })}
                   <Flex justify="center" className="mt-4">
-                    {commentLoad && (
-               
-                      <Skeleton avatar paragraph={{ rows: 3 }} />
-                    )}
-               
+                    {commentLoad && <Skeleton avatar paragraph={{ rows: 3 }} />}
                   </Flex>
                 </div>
               </div>
