@@ -8,6 +8,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { LeftOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import { Loader } from "../common/Loader";
+import { toast, ToastContainer } from "react-toastify";
 
 export const Request = () => {
   const [formCode, setFormCode] = useState("");
@@ -66,6 +67,7 @@ export const Request = () => {
     setLoading(true);
     try {
       const response = await getAllProfileDataByUser();
+      console.log(response , 'response')
       if (response.success) {
         if (response.data.response.length > 0) {
           setProfileData(response.data.response);
@@ -261,6 +263,8 @@ export const Request = () => {
           dangerouslySetInnerHTML={{ __html: formCode }}
         ></div>
       </Modal>
+
+      <ToastContainer position="bottom-right" />
     </div>
   );
 };
