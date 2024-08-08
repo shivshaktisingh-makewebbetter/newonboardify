@@ -217,6 +217,7 @@ export const EditProfile = () => {
         });
       }
       if (response.success && response.data.response[0].services.length === 0) {
+        
         setDataSource([]);
       }
       const response1 = await getAllBoards();

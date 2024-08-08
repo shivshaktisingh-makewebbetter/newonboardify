@@ -110,40 +110,23 @@ export const CreateServices = ({
 
   const handleChangeBoardId = async (e) => {
     setServiceData({ ...serviceData, board_id: e });
-    try {
-      await fetchAllColumnsOfBoard(e);
-
-      const response1 = await getBoardVisibilityData(e);
-
-      if (response1.success && response1.data.response.length > 0) {
-        let tempData = JSON.parse(response1.data.response[0].columns);
-        let tempEmailKey = tempData?.document_fetch_key || [];
-        let tempImageKey = tempData?.image_key || "";
-        setBoardVisibilityData(tempData);
-        setDocumentFetchKey(tempEmailKey);
-        setImageKey(tempImageKey);
-      }
-      if (response1.success && response1.data.response.length === 0) {
-        let tempData = {
-          candidate_coulmns: [],
-          card_section: { column1: "", column2: "" },
-          document_fetch_key: [],
-          email: "",
-          email_key: [],
-          extra_details: { chart_embed_code: "", form_embed_code: "", key: "" },
-          filterByUser: { key: "", value: "" },
-          image_key: "",
-          onboarding_columns: [],
-          required_columns: { profession: [], overall_status: "" },
-          sub_headings_column: [],
-        };
-        let tempEmailKey = tempData?.document_fetch_key || [];
-        let tempImageKey = tempData?.image_key || "";
-        setBoardVisibilityData(tempData);
-        setDocumentFetchKey(tempEmailKey);
-        setImageKey(tempImageKey);
-      }
-    } catch (err) {}
+    if (e === undefined) {
+      setBoardVisibilityData({});
+    }
+    setBoardVisibilityData({
+      candidate_coulmns: [],
+      card_section: { column1: "", column2: "" },
+      document_fetch_key: [],
+      email: "",
+      email_key: [],
+      extra_details: { chart_embed_code: "", form_embed_code: "", key: "" },
+      filterByUser: { key: "", value: "" },
+      image_key: "",
+      onboarding_columns: [],
+      required_columns: { profession: [], overall_status: "" },
+      sub_headings_column: [],
+    });
+ 
   };
 
   const handleChangeServiceColumnFilter = (e) => {
@@ -171,7 +154,6 @@ export const CreateServices = ({
     tempData.sub_headings_column = selectedData;
     setBoardVisibilityData(tempData);
   };
-  
 
   const handleChangeOnboardingStatusColumns = (e) => {
     const tempData = { ...boardVisiblityData };
@@ -194,7 +176,7 @@ export const CreateServices = ({
       const existingItem = tempData.candidate_coulmns.find(
         (column) => column.id === value
       );
-      
+
       if (existingItem !== undefined) {
         return existingItem;
       } else {
@@ -207,11 +189,10 @@ export const CreateServices = ({
         };
       }
     });
-  
+
     tempData.candidate_coulmns = selectedData;
     setBoardVisibilityData(tempData);
   };
-  
 
   const handleChangeIcon = (e, item) => {
     const tempData = { ...boardVisiblityData };
@@ -232,8 +213,6 @@ export const CreateServices = ({
     });
     setBoardVisibilityData(tempData);
   };
-
-
 
   const handleChangeCardSectionColumn1 = (e) => {
     const tempData = { ...boardVisiblityData };
@@ -430,7 +409,6 @@ export const CreateServices = ({
                       }
                     )}
                   />
-                  
                 </div>
                 <div
                   style={{
@@ -488,7 +466,7 @@ export const CreateServices = ({
                     })}
                   />
                 </div>
-                
+
                 <div
                   style={{
                     marginTop: "10px",
@@ -623,7 +601,7 @@ export const CreateServices = ({
                     }}
                   >
                     <p style={{ textAlign: "left", marginBottom: "5px" }}>
-                     Filter column
+                      Filter column
                     </p>
                     <Select
                       style={{
