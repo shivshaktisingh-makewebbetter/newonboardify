@@ -5,7 +5,6 @@ import { ImageUpload } from "../../common/ImageUpload";
 import {
   editServices,
   getAllColumnsOfBoard,
-  getBoardVisibilityData,
 } from "../../apiservice/ApiService";
 
 export const EditServices = ({
@@ -123,39 +122,33 @@ export const EditServices = ({
 
   const handleChangeBoardId = async (e) => {
     setServiceData({ ...serviceData, board_id: e });
+
+    if (e === undefined) {
+      setBoardVisibilityData({});
+    }
+    if (e === editServiceData.board_id) {
+      setBoardVisibilityData(JSON.parse(editServiceData.service_setting_data));
+    } else {
+      setBoardVisibilityData({
+        candidate_coulmns: [],
+        card_section: { column1: "", column2: "" },
+        document_fetch_key: [],
+        email: "",
+        email_key: [],
+        extra_details: { chart_embed_code: "", form_embed_code: "", key: "" },
+        filterByUser: { key: "", value: "" },
+        image_key: "",
+        onboarding_columns: [],
+        required_columns: { profession: [], overall_status: "" },
+        sub_headings_column: [],
+      });
+    }
+
     try {
       await fetchAllColumnsOfBoard(e);
-      const response1 = await getBoardVisibilityData(e);
-
-      if (response1.success && response1.data.response.length > 0) {
-        let tempData = JSON.parse(response1.data.response[0].columns);
-        let tempEmailKey = tempData?.document_fetch_key || [];
-        let tempImageKey = tempData?.image_key || "";
-        setBoardVisibilityData(tempData);
-        setDocumentFetchKey(tempEmailKey);
-        setImageKey(tempImageKey);
-      }
-      if (response1.success && response1.data.response.length === 0) {
-        let tempData = {
-          candidate_coulmns: [],
-          card_section: { column1: "", column2: "" },
-          document_fetch_key: [],
-          email: "",
-          email_key: [],
-          extra_details: { chart_embed_code: "", form_embed_code: "", key: "" },
-          filterByUser: { key: "", value: "" },
-          image_key: "",
-          onboarding_columns: [],
-          required_columns: { profession: [], overall_status: "" },
-          sub_headings_column: [],
-        };
-        let tempEmailKey = tempData?.document_fetch_key || [];
-        let tempImageKey = tempData?.image_key || "";
-        setBoardVisibilityData(tempData);
-        setDocumentFetchKey(tempEmailKey);
-        setImageKey(tempImageKey);
-      }
-    } catch (err) {}
+    } catch (err) {
+    } finally {
+    }
   };
 
   const handleChangeServiceColumnFilter = (e) => {
@@ -500,7 +493,7 @@ export const EditServices = ({
                     })}
                   />
                 </div>
-                
+
                 <div
                   style={{
                     marginTop: "10px",

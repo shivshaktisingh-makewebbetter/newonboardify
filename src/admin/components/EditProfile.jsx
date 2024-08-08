@@ -49,6 +49,13 @@ export const EditProfile = () => {
   const navigate = useNavigate();
 
   const handleEditModal = (item) => {
+   const boardOptions = [...boardIdOptions];
+    boardOptions.forEach((detail)=>{
+      if(detail.value === item.board_id){
+        detail.disabled = false;
+      }
+    })
+    setBoardIdOptions(boardOptions);
     setEditServiceData(item);
     setEditService(true);
   };
@@ -112,24 +119,7 @@ export const EditProfile = () => {
     },
   ];
 
-  const getAllBoardIds = async () => {
-    try {
-      const response = await getAllBoards();
-      if (response.success) {
-        let tempData = [];
-        response.data.response.boards.forEach((item) => {
-          tempData.push({
-            key: item.id,
-            label: item.name,
-            value: item.id,
-          });
-        });
-        setBoardIdOptions(tempData);
-      }
-    } catch (err) {
-      throw new Error("Network response was not ok ", err);
-    }
-  };
+
 
   const handleChangeProfileTitle = (event) => {
     setProfileData({ ...profileData, title: event.target.value });
