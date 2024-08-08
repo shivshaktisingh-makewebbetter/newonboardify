@@ -3,7 +3,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import { Input } from "antd";
 import { useState } from "react";
 
-export const SearchBox = ({placeHolder , setSearchData , getDataByFilterAndSearch , order , boardId , selectedFilter}) => {
+export const SearchBox = ({placeHolder , setSearchData , getDataByFilterAndSearch , order , boardId , selectedFilter , flag}) => {
     const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
 		image:
 		  "https://onboardify.tasc360.com/uploads/y22.png",
@@ -34,7 +34,9 @@ export const SearchBox = ({placeHolder , setSearchData , getDataByFilterAndSearc
     };
     if (event.keyCode === 13) {
       setSearchData(data);
+      if(flag){
       getDataByFilterAndSearch(tempData);
+      }
     }
   };
 

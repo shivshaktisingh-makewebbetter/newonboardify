@@ -303,6 +303,7 @@ export const UserList = () => {
           <SearchBox
             placeHolder={"Start Typing To Search By Name"}
             setSearchData={setSearchData}
+            flag={false}
           />
         </div>
         <Table

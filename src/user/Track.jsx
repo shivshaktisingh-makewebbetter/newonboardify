@@ -414,6 +414,7 @@ export const Track = () => {
         boardId={boardId}
         order={selectedOrder}
         selectedFilter={selectedFilter}
+        flag={true}
       />
       <div
         style={{

@@ -612,7 +612,7 @@ export const EditServices = ({
                     }}
                   >
                     <p style={{ textAlign: "left", marginBottom: "5px" }}>
-                      Search column
+                      Search
                     </p>
                     <Select
                       mode="multiple"
@@ -635,7 +635,7 @@ export const EditServices = ({
                     }}
                   >
                     <p style={{ textAlign: "left", marginBottom: "5px" }}>
-                      Filter column
+                      Filter
                     </p>
                     <Select
                       style={{
