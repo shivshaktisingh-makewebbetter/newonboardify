@@ -107,6 +107,13 @@ export const CreateProfile = () => {
     navigate("/admin/profile");
   };
 
+  const filterOption = (input, option) => {
+    return (
+      option.label.toLowerCase().includes(input.toLowerCase()) ||
+      option.value.toString().toLowerCase().includes(input.toLowerCase())
+    );
+  };
+
   useEffect(() => {
     getListOfAllCustomers();
   }, []);
@@ -169,6 +176,7 @@ export const CreateProfile = () => {
                 onChange={handleUserChange}
                 options={userListing}
                 value={profileData.users}
+                filterOption={filterOption}
                 optionRender={(option) => (
                   <div style={{display:"flex" , width:"100%" , justifyContent:"space-between"}}>
                     <span> {option.data.label}</span>

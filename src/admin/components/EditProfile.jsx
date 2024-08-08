@@ -258,10 +258,19 @@ export const EditProfile = () => {
     navigate("/admin/profile");
   };
 
+  const filterOption = (input, option) => {
+    return (
+      option.label.toLowerCase().includes(input.toLowerCase()) ||
+      option.value.toString().toLowerCase().includes(input.toLowerCase())
+    );
+  };
+
   useEffect(() => {
     getAllServiceListing();
     getListOfAllCustomers();
   }, []);
+
+
 
   return (
     <>
@@ -330,6 +339,7 @@ export const EditProfile = () => {
                 onChange={handleUserChange}
                 options={userListing}
                 value={profileData.users}
+                filterOption={filterOption}
                 optionRender={(option) => (
                   <div
                     style={{
