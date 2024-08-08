@@ -273,8 +273,8 @@ export const UserList = () => {
     <div className="pt-84">
       {loading && <Loader />}
       <Hero
-        heading={"Overall Status"}
-        subheading="Stay informed and in control of the overall status of your onboarding requests"
+        heading={"User Listing"}
+        subheading="Stay informed and control  the users of onboardify"
         forHome={true}
       />
       <div>
