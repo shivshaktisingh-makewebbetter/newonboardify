@@ -126,9 +126,14 @@ export const CreateServices = ({
       required_columns: { profession: [], overall_status: "" },
       sub_headings_column: [],
     });
- 
-  };
 
+    try {
+      await fetchAllColumnsOfBoard(e);
+    } catch (err) {
+      console.log(err);
+    } finally {
+    }
+  };
   const handleChangeServiceColumnFilter = (e) => {
     setServiceColumnValueFilter({ ...serviceColumnValueFilter, key: e });
   };
