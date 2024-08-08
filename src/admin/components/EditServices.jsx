@@ -452,7 +452,7 @@ export const EditServices = ({
                     borderRadius: "10px",
                   }}
                 >
-                  <p style={{ textAlign: "left" }}>Basic Information Columns</p>
+                  <p style={{ textAlign: "left" }}>Basic Information</p>
                   <Select
                     mode="multiple"
                     allowClear
@@ -480,7 +480,7 @@ export const EditServices = ({
                     borderRadius: "10px",
                   }}
                 >
-                  <p style={{ textAlign: "left" }}>Status Columns</p>
+                  <p style={{ textAlign: "left" }}>Request Statuses</p>
                   <Select
                     mode="multiple"
                     allowClear
@@ -554,7 +554,7 @@ export const EditServices = ({
                   }}
                 >
                   <p style={{ textAlign: "left" }} className="border-bottom">
-                    Request Card Info
+                    Request Card Information
                   </p>
                   <div
                     style={{
