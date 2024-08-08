@@ -71,6 +71,18 @@ export const Request = () => {
           setProfileData(response.data.response);
           setTimeout(setSlickTrackHeight, 1000);
         }
+        if (response.data.response.length === 0) {
+          setProfileData([]);
+          toast.error(response.message);
+          setLoading(false);
+        }
+      }
+      else{
+        if (response.data.response.length === 0) {
+          toast.error(response.message);
+          setProfileData([]);
+          setLoading(false);
+        }
       }
     } catch (err) {
     } finally {
