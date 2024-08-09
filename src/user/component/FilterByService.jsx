@@ -1,5 +1,5 @@
 import { Button, Dropdown, Space } from "antd";
-import { FilterIcon, TouchIcon } from "../../utils/icons";
+import { TouchIcon } from "../../utils/icons";
 
 export const FilterByService = ({
   items,
@@ -8,13 +8,15 @@ export const FilterByService = ({
   getDataByFilterAndSearch,
   order,
   searchData,
-  selectedFilter ,
-  profileData ,
-  setColumnIdData ,
-  setSearchKeys
+  selectedFilter,
+  profileData,
+  setColumnIdData,
+  setSearchKeys,
+  setSearchData,
+  tempSearchData ,
+  setTempSearchData
 }) => {
   const handleMenuClick = (e) => {
-   
     let tempBoardId = "";
     setSelectedService(e.key);
     items.forEach((details, index) => {
@@ -35,8 +37,10 @@ export const FilterByService = ({
       order: order,
       boardId: tempBoardId,
       statusFilter: selectedFilter,
-      searchData: searchData,
+      searchData: '',
     };
+    setSearchData('');
+    setTempSearchData('');
     getDataByFilterAndSearch(tempData);
   };
 

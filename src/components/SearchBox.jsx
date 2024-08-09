@@ -3,7 +3,8 @@ import { CloseOutlined } from "@ant-design/icons";
 import { Input } from "antd";
 import { useState } from "react";
 
-export const SearchBox = ({placeHolder , setSearchData , getDataByFilterAndSearch , order , boardId , selectedFilter , flag}) => {
+export const SearchBox = ({      tempSearchData , 
+  setTempSearchData ,placeHolder , setSearchData , getDataByFilterAndSearch , order , boardId , selectedFilter , flag}) => {
     const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
 		image:
 		  "https://onboardify.tasc360.com/uploads/y22.png",
@@ -16,10 +17,10 @@ export const SearchBox = ({placeHolder , setSearchData , getDataByFilterAndSearc
 		head_title_color: "#497ed8",
 	  };
 
-  const [data, setData] = useState("");
+ 
 
   const handleChange = (e) => {
-    setData(e.target.value);
+    setTempSearchData(e.target.value);
     if(e.target.value.length === 0){
       handleEraseData();
     }
@@ -30,10 +31,10 @@ export const SearchBox = ({placeHolder , setSearchData , getDataByFilterAndSearc
       order: order,
       boardId: boardId,
       statusFilter: selectedFilter,
-      searchData: data,
+      searchData: tempSearchData,
     };
     if (event.keyCode === 13) {
-      setSearchData(data);
+      setSearchData(tempSearchData);
       if(flag){
       getDataByFilterAndSearch(tempData);
       }
@@ -41,9 +42,16 @@ export const SearchBox = ({placeHolder , setSearchData , getDataByFilterAndSearc
   };
 
   const handleEraseData = () => {
+    let filterData = {
+      order: order,
+      boardId: boardId,
+      statusFilter: selectedFilter,
+      searchData: '',
+    };
     const tempData = "";
-    setData(tempData);
+    setTempSearchData(tempData);
     setSearchData(tempData);
+    getDataByFilterAndSearch(filterData);
   };
 
   return (
@@ -52,9 +60,9 @@ export const SearchBox = ({placeHolder , setSearchData , getDataByFilterAndSearc
       placeholder={placeHolder}
       onChange={handleChange}
       onKeyUp={handleEnterPressed}
-      value={data}
+      value={tempSearchData}
       suffix={
-        data.length > 0 ? (
+        tempSearchData.length > 0 ? (
           <CloseOutlined
             onClick={handleEraseData}
             style={{

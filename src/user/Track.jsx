@@ -38,6 +38,7 @@ export const Track = () => {
   const [loadMoreValue, setLoadMoreValue] = useState(1);
   const [serviceOptions, setServiceOptions] = useState([]);
   const [profileData, setProfileData] = useState({});
+  const [tempSearchData, setTempSearchData] = useState("");
 
   const onChangeRadio = (item) => {
     let tempSelectedOrder = "";
@@ -376,6 +377,8 @@ export const Track = () => {
         order={selectedOrder}
         selectedFilter={selectedFilter}
         flag={true}
+        tempSearchData={tempSearchData}
+        setTempSearchData={setTempSearchData}
       />
       <div
         style={{
@@ -396,6 +399,10 @@ export const Track = () => {
           profileData={profileData}
           setColumnIdData={setColumnIdData}
           setSearchKeys={setSearchKeys}
+          setSearchData={setSearchData}
+          tempSearchData={tempSearchData}
+          setTempSearchData={setTempSearchData}
+
         />
         <SortBy
           items={sortingItems}

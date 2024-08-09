@@ -161,13 +161,15 @@ export const UpdateComponent = ({
 
   const getUrlArray = (tempData) => {
     let urlData = [];
-   
+
     tempData.forEach((item) => {
-      if (columnIdData.document_fetch_key.includes(item.id) && item.text.length > 0) {
-                     
-         item.text.split(",").forEach((detail)=>{
-           urlData.push(detail.trim())
-         });
+      if (
+        columnIdData.document_fetch_key.includes(item.id) &&
+        item.text.length > 0
+      ) {
+        item.text.split(",").forEach((detail) => {
+          urlData.push(detail.trim());
+        });
       }
     });
 
