@@ -125,9 +125,13 @@ export const EditServices = ({
 
     if (e === undefined) {
       setBoardVisibilityData({});
+      setDocumentFetchKey([]);
+      setImageKey('');
     }
     if (e === editServiceData.board_id) {
       setBoardVisibilityData(JSON.parse(editServiceData.service_setting_data));
+      setDocumentFetchKey(JSON.parse(editServiceData.service_setting_data).document_fetch_key);
+      setImageKey(JSON.parse(editServiceData.service_setting_data).image_key);
     } else {
       setBoardVisibilityData({
         candidate_coulmns: [],
@@ -142,6 +146,8 @@ export const EditServices = ({
         required_columns: { profession: [], overall_status: "" },
         sub_headings_column: [],
       });
+      setDocumentFetchKey([]);
+      setImageKey('');
     }
 
     try {
