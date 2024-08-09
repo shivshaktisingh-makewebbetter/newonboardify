@@ -13,10 +13,12 @@ export const FilterByService = ({
   setColumnIdData,
   setSearchKeys,
   setSearchData,
-  tempSearchData ,
-  setTempSearchData
+  tempSearchData,
+  setTempSearchData,
+  getTrackData,
+  setLoading,
 }) => {
-  const handleMenuClick = (e) => {
+  const handleMenuClick = async (e) => {
     let tempBoardId = "";
     setSelectedService(e.key);
     items.forEach((details, index) => {
@@ -33,15 +35,12 @@ export const FilterByService = ({
         });
       }
     });
-    let tempData = {
-      order: order,
-      boardId: tempBoardId,
-      statusFilter: selectedFilter,
-      searchData: '',
-    };
-    setSearchData('');
-    setTempSearchData('');
-    getDataByFilterAndSearch(tempData);
+
+    setSearchData("");
+    setTempSearchData("");
+    setLoading(true);
+    await getTrackData(tempBoardId);
+    setLoading(false);
   };
 
   const menuProps = {

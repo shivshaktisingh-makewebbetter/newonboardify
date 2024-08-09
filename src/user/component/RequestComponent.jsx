@@ -7,7 +7,7 @@ export const RequestComponent = ({
   columnIdData,
   allColumns,
   boardId,
-  profileData ,
+  profileData,
 }) => {
   const settingData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -71,16 +71,15 @@ export const RequestComponent = ({
   };
 
   const openTrackRequest = (name, id, statusText, statusColor) => {
+    let service_setting_data = "";
+    let service_column_value_filter = "";
 
-   let service_setting_data = '';
-   let service_column_value_filter = '';
-
-     profileData.forEach((item)=>{
-      if(item.id === id){
+    profileData.forEach((item) => {
+      if (item.id === id) {
         service_setting_data = item.service_setting_data;
         service_column_value_filter = item.service_column_value_filter;
       }
-     })
+    });
 
     const dataToPass = {
       id: id,
@@ -88,11 +87,10 @@ export const RequestComponent = ({
       status: statusText,
       color: statusColor,
       boardId: boardId,
-      columnIdData: JSON.stringify(columnIdData) ,
+      columnIdData: JSON.stringify(columnIdData),
       subHeadingColumn: columnIdData.sub_headings_column,
-      service_setting_data: service_setting_data ,
-      service_column_value_filter: service_column_value_filter
-
+      service_setting_data: service_setting_data,
+      service_column_value_filter: service_column_value_filter,
     }; // Replace with your data
     navigate("details", { state: dataToPass });
   };

@@ -117,21 +117,21 @@ export const Track = () => {
 
       const csvContent = data.join("\n");
 
-        // Create a Blob from the CSV string
-        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.setAttribute("href", url);
-        link.setAttribute("download", "data.csv");
+      // Create a Blob from the CSV string
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "data.csv");
 
-        // Append the link to the body (necessary for Firefox)
-        document.body.appendChild(link);
+      // Append the link to the body (necessary for Firefox)
+      document.body.appendChild(link);
 
-        // Trigger the download by simulating a click on the link
-        link.click();
+      // Trigger the download by simulating a click on the link
+      link.click();
 
-        // Remove the link from the document
-        document.body.removeChild(link);
+      // Remove the link from the document
+      document.body.removeChild(link);
     } catch (err) {
     } finally {
     }
@@ -403,7 +403,8 @@ export const Track = () => {
           setSearchData={setSearchData}
           tempSearchData={tempSearchData}
           setTempSearchData={setTempSearchData}
-
+          getTrackData={getTrackData}
+          setLoading={setLoading}
         />
         <SortBy
           items={sortingItems}
@@ -420,14 +421,16 @@ export const Track = () => {
         />
         <ExportBy handleExport={handleExport} />
       </div>
-      <RequestComponent
-        data={data}
-        boardId={boardId}
-        columnIdData={columnIdData}
-        allColumns={allColumns}
-        profileData={profileData}
-      />
-      {!loading && data.length === 0 && <CustomEmptyMessage/>}
+      {!loading && (
+        <RequestComponent
+          data={data}
+          boardId={boardId}
+          columnIdData={columnIdData}
+          allColumns={allColumns}
+          profileData={profileData}
+        />
+      )}
+      {!loading && data.length === 0 && <CustomEmptyMessage />}
       {cursor !== null && !loading && (
         <div>
           <Button
