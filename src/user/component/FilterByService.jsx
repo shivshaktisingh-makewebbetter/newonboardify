@@ -39,11 +39,10 @@ export const FilterByService = ({
 
     setSearchData("");
     setTempSearchData("");
-    setSelectedFilter('9');
+    setSelectedFilter("9");
     setLoading(true);
     await getTrackData(tempBoardId);
     setLoading(false);
-   
   };
 
   const menuProps = {
