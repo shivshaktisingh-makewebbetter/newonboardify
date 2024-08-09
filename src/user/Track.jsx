@@ -18,6 +18,7 @@ import {
 } from "../apiservice/ApiService";
 import { Loader } from "../common/Loader";
 import { FilterByService } from "./component/FilterByService";
+import { CustomEmptyMessage } from "../common/CustomErrorComponent";
 
 export const Track = () => {
   const location = useLocation();
@@ -426,6 +427,7 @@ export const Track = () => {
         allColumns={allColumns}
         profileData={profileData}
       />
+      {!loading && data.length === 0 && <CustomEmptyMessage/>}
       {cursor !== null && !loading && (
         <div>
           <Button
