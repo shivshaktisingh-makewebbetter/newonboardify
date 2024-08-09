@@ -24,8 +24,8 @@ const Replies = ({ item }) => {
             <img
               src="/onboard123.svg"
               alt="No Preview"
-              width={30}
-              height={30}
+              width={20}
+              height={20}
             />
           ) : (
             getFirstLettersOfName(userName)
