@@ -630,7 +630,7 @@ export const CreateServices = ({
                     borderRadius: "10px",
                   }}
                 >
-                  <p style={{ textAlign: "left" }}>Documents to user</p>
+                  <p style={{ textAlign: "left" }}>Documents to User</p>
                   <Select
                     allowClear
                     mode="multiple"
@@ -651,7 +651,7 @@ export const CreateServices = ({
                     borderRadius: "10px",
                   }}
                 >
-                  <p style={{ textAlign: "left" }}>Documents From user</p>
+                  <p style={{ textAlign: "left" }}>Documents from User</p>
                   <Select
                     style={{
                       width: "100%",

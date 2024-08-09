@@ -59,7 +59,6 @@ export const UpdateComponent = ({
     head_title_color: "#497ed8",
   };
 
-
   const unlikeComment = async (commentId) => {
     setLoading(true);
     try {
@@ -162,9 +161,13 @@ export const UpdateComponent = ({
 
   const getUrlArray = (tempData) => {
     let urlData = [];
+   
     tempData.forEach((item) => {
-      if (columnIdData.document_fetch_key.includes(item.id)) {
-        urlData = item.text.split(",").map((url) => url.trim());
+      if (columnIdData.document_fetch_key.includes(item.id) && item.text.length > 0) {
+                     
+         item.text.split(",").forEach((detail)=>{
+           urlData.push(detail.trim())
+         });
       }
     });
 

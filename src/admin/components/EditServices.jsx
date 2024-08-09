@@ -653,7 +653,7 @@ export const EditServices = ({
                   }}
                 >
                   <p style={{ textAlign: "left" }}>
-                    Columns For Document Fetch
+                  Documents to User
                   </p>
                   <Select
                     allowClear
@@ -676,7 +676,7 @@ export const EditServices = ({
                   }}
                 >
                   <p style={{ textAlign: "left" }}>
-                    Column For Document Upload
+                  Documents from User
                   </p>
                   <Select
                     style={{
