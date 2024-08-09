@@ -17,6 +17,7 @@ export const FilterByService = ({
   setTempSearchData,
   getTrackData,
   setLoading,
+  setSelectedFilter,
 }) => {
   const handleMenuClick = async (e) => {
     let tempBoardId = "";
@@ -41,6 +42,7 @@ export const FilterByService = ({
     setLoading(true);
     await getTrackData(tempBoardId);
     setLoading(false);
+    setSelectedFilter(9);
   };
 
   const menuProps = {

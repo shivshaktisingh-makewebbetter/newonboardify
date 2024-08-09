@@ -11,7 +11,6 @@ import { RequestComponent } from "./component/RequestComponent";
 import {
   getAllProfileDataByUser,
   getAllFilters,
-  getBoardSettingDataCustomerByID,
   getRequestTrackingDataByBoardIdAndSearch,
   getTrackingDataByBoardId,
   exportServiceData,
@@ -405,6 +404,7 @@ export const Track = () => {
           setTempSearchData={setTempSearchData}
           getTrackData={getTrackData}
           setLoading={setLoading}
+          setSelectedFilter={setSelectedFilter}
         />
         <SortBy
           items={sortingItems}
