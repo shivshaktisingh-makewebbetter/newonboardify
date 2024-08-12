@@ -107,6 +107,7 @@ export const Track = () => {
   };
 
   const handleExport = async () => {
+    setLoading(true);
     try {
       const data = [];
       const response = await exportServiceData(boardId);
@@ -134,6 +135,7 @@ export const Track = () => {
       document.body.removeChild(link);
     } catch (err) {
     } finally {
+      setLoading(false);
     }
   };
 
