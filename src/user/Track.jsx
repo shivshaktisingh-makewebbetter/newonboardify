@@ -294,6 +294,13 @@ export const Track = () => {
         compare_value: [Number(tempFilters.statusFilter)],
       });
     }
+    if (Object.keys(filterKeyData).length > 0) {
+      rules.push({
+        column_id: filterKeyData.key,
+        compare_value: [filterKeyData.value],
+        operator: "contains_text",
+      });
+    }
     if (tempFilters.searchData.length > 0) {
       searchKeys.forEach((item) => {
         rules.push({
