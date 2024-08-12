@@ -291,8 +291,8 @@ export const TrackDetails = () => {
                         ></i>
                       </span>
                       <span style={{ color: "#928f8f", fontSize: "17px" }}>
-                        {item.custom_title.length > 0 && item.custom_title}
-                        {item.custom_title.length > 0 && " : "}
+                        {item.custom_title !== null && item.custom_title.length > 0 && item.custom_title}
+                        {item.custom_title !== null && item.custom_title.length > 0 && " : "}
                         {centerText}
                       </span>
                       {(item.name === "Nationality" ||
