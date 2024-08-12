@@ -135,6 +135,10 @@ export const CreateServices = ({
     }
   };
   const handleChangeServiceColumnFilter = (e) => {
+    if(e === undefined){
+      setServiceColumnValueFilter({ ...serviceColumnValueFilter, key: '' , value:'' });
+      return ;
+    }
     setServiceColumnValueFilter({ ...serviceColumnValueFilter, key: e });
   };
 
