@@ -53,7 +53,7 @@ const UpdateAndReply = ({
             style={{ width: "40px", height: "40px", background: "#497ed8" , paddingTop:userName !== "Onboardify Team"?"4px":"0px" , fontSize:"18px" }}
           >
             {userName === "Onboardify Team" ? (
-             <img src="/onboard123.svg" alt="No Preview" width={30} height={30}/> 
+             <img src="/onboard123.svg" alt="No Preview" style={{borderRadius:"50%"}} width={30} height={30}/> 
             ) : (
               getFirstLettersOfName(userName)
             )}

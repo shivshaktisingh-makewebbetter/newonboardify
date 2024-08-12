@@ -26,6 +26,7 @@ const Replies = ({ item }) => {
               alt="No Preview"
               width={20}
               height={20}
+              style={{borderRadius:"50%"}}
             />
           ) : (
             getFirstLettersOfName(userName)
