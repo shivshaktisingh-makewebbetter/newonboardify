@@ -154,12 +154,12 @@ export const Track = () => {
       return;
     }
     const rules = [];
-    if (selectedFilter != 9) {
-      rules.push({
-        column_id: columnIdData.required_columns.overall_status,
-        compare_value: [Number(selectedFilter)],
-      });
-    }
+    // if (selectedFilter != 9) {
+    //   rules.push({
+    //     column_id: columnIdData.required_columns.overall_status,
+    //     compare_value: [Number(selectedFilter)],
+    //   });
+    // }
     if (Object.keys(filterKeyDataByUser).length > 0) {
       rules.push({
         column_id: filterKeyDataByUser.key,
@@ -167,15 +167,15 @@ export const Track = () => {
         operator: "contains_text",
       });
     }
-    if (searchData.length > 0) {
-      searchKeys.forEach((item) => {
-        rules.push({
-          column_id: item,
-          compare_value: [searchData],
-          operator: "contains_text",
-        });
-      });
-    }
+    // if (searchData.length > 0) {
+    //   searchKeys.forEach((item) => {
+    //     rules.push({
+    //       column_id: item,
+    //       compare_value: [searchData],
+    //       operator: "contains_text",
+    //     });
+    //   });
+    // }
 
     const payload = {
       query_params: {
