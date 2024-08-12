@@ -39,6 +39,7 @@ export const Track = () => {
   const [serviceOptions, setServiceOptions] = useState([]);
   const [profileData, setProfileData] = useState({});
   const [tempSearchData, setTempSearchData] = useState("");
+  const [filterKeyData , setFilterKeyData] = useState({});
 
   const onChangeRadio = (item) => {
     let tempSelectedOrder = "";
@@ -146,7 +147,7 @@ export const Track = () => {
     }
   };
 
-  const getTrackData = async (tempBoardId) => {
+  const getTrackData = async (tempBoardId, filterKeyDataByUser) => {
     if (tempBoardId === "") {
       return;
     }
@@ -155,6 +156,13 @@ export const Track = () => {
       rules.push({
         column_id: columnIdData.required_columns.overall_status,
         compare_value: [Number(selectedFilter)],
+      });
+    }
+    if (Object.keys(filterKeyDataByUser).length > 0) {
+      rules.push({
+        column_id: filterKeyDataByUser.key,
+        compare_value: [filterKeyDataByUser.value],
+        operator: "contains_text",
       });
     }
     if (searchData.length > 0) {
@@ -204,6 +212,7 @@ export const Track = () => {
 
   const getTrackRequestData = async () => {
     let tempBoardId = "";
+    let filterKeyDataByUser = {};
     setLoading(true);
     try {
       const profileResponse = await getProfileData();
@@ -223,6 +232,19 @@ export const Track = () => {
         setSelectedService(tempData[0].key);
         setProfileData(profileResponse.data.response[0].services);
 
+        if (
+          JSON.parse(
+            profileResponse.data.response[0].services[0]
+              .service_column_value_filter
+          ).value.length > 0
+        ) {
+          filterKeyDataByUser = JSON.parse(
+            profileResponse.data.response[0].services[0]
+              .service_column_value_filter
+          );
+        }
+        setFilterKeyData(filterKeyDataByUser);
+
         setColumnIdData(
           JSON.parse(
             profileResponse.data.response[0].services[0].service_setting_data
@@ -235,7 +257,7 @@ export const Track = () => {
         );
       }
 
-      await getTrackData(tempBoardId);
+      await getTrackData(tempBoardId, filterKeyDataByUser);
       await getStatusFilterData(tempBoardId);
     } catch (err) {
     } finally {
@@ -405,6 +427,7 @@ export const Track = () => {
           getTrackData={getTrackData}
           setLoading={setLoading}
           setSelectedFilter={setSelectedFilter}
+          filterKeyData={filterKeyData}
         />
         <SortBy
           items={sortingItems}
