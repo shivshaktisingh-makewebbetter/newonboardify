@@ -15,6 +15,7 @@ import { CopyText } from "./components/CopyText";
 import { DeleteModal } from "./components/DeleteModal";
 import { Loader } from "../common/Loader";
 import { ToastContainer } from "react-toastify";
+import { NewSearchBox } from "../common/New SearchBox";
 
 export const UserList = () => {
   const navigate = useNavigate();
@@ -300,7 +301,7 @@ export const UserList = () => {
         </div>
 
         <div style={{ marginBottom: "20px" }}>
-          <SearchBox
+          <NewSearchBox
             placeHolder={"Start Typing To Search By Name"}
             setSearchData={setSearchData}
             flag={false}
