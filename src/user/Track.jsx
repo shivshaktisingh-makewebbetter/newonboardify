@@ -463,7 +463,7 @@ export const Track = () => {
         />
       )}
       {!loading && data.length === 0 && <CustomEmptyMessage />}
-      {cursor !== null && !loading && (
+      {cursor !== null && data.length !== 0 && !loading && (
         <div>
           <Button
             onClick={originalArray.length > 0 ? getMoreData : loadMoreHandler}
