@@ -39,7 +39,7 @@ export const Track = () => {
   const [serviceOptions, setServiceOptions] = useState([]);
   const [profileData, setProfileData] = useState({});
   const [tempSearchData, setTempSearchData] = useState("");
-  const [filterKeyData , setFilterKeyData] = useState({});
+  const [filterKeyData, setFilterKeyData] = useState({});
 
   const onChangeRadio = (item) => {
     let tempSelectedOrder = "";
@@ -183,7 +183,7 @@ export const Track = () => {
             column_id: "__creation_log__",
           },
         ],
-        ...(rules.length > 0 && { rules, operator: "or" }),
+        ...(rules.length > 0 && { rules, operator: "and" }),
       },
     };
 
@@ -319,7 +319,7 @@ export const Track = () => {
             column_id: "__creation_log__",
           },
         ],
-        ...(rules.length > 0 && { rules, operator: "or" }),
+        ...(rules.length > 0 && { rules, operator: "and" }),
       },
     };
 
