@@ -160,7 +160,7 @@ export const Track = () => {
     //     compare_value: [Number(selectedFilter)],
     //   });
     // }
-    if (Object.keys(filterKeyDataByUser).length > 0) {
+    if (Object.keys(filterKeyDataByUser).length > 0 && filterKeyDataByUser.key.length > 0 && filterKeyDataByUser.value.length > 0 ) {
       rules.push({
         column_id: filterKeyDataByUser.key,
         compare_value: [filterKeyDataByUser.value],
