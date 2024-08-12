@@ -70,7 +70,7 @@ export const Request = () => {
       if (response.success) {
         if (response.data.response.length > 0) {
           setProfileData(response.data.response);
-          setTimeout(setSlickTrackHeight, 1000);
+          setTimeout(setSlickTrackHeight, 2000);
         }
         if (response.data.response.length === 0) {
           setProfileData([]);
