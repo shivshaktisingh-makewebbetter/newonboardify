@@ -27,6 +27,8 @@ export const TrackDetails = () => {
 
     try {
       const response = await getSubItemDetails(state.id , state.boardId);
+      console.log(response , 'response');
+      console.log(state , 'state');
     
 
       if (response.success) {
