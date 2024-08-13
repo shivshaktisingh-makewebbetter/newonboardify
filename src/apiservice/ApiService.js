@@ -61,6 +61,8 @@ export const deleteServices = (id) =>
   Services.DELETE(`newonboardify/admin/serviceRequests/${id}`);
 export const cloneProfile = (id) =>
   Services.GET(`/newonboardify/admin/cloneOnboardifyProfile/${id}`);
+export const exportUserData = () =>
+  Services.GET(`/newonboardify/admin/exportUsersData`);
 
 // Customer Endpoints
 export const exportServiceData = (id) => {

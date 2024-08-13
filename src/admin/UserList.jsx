@@ -3,6 +3,7 @@ import { Hero } from "../components/Hero";
 import {
   assignBoard,
   deleteUser,
+  exportUserData,
   getAllBoards,
   getUserList,
 } from "../apiservice/ApiService";
@@ -181,9 +182,9 @@ export const UserList = () => {
             role: roleData[item.role],
             phone: item.phone,
             boardId: item.board_id,
-            utm_campaign:item.utm_campaign ,
-            utm_source:item.utm_source ,
-            utm_medium: item.utm_medium
+            utm_campaign: item.utm_campaign,
+            utm_source: item.utm_source,
+            utm_medium: item.utm_medium,
           });
         });
         setDataSource(tempData);
@@ -198,7 +199,7 @@ export const UserList = () => {
             value: item.id,
           });
         });
-  
+
         setBoardListing(tempData);
       }
     } catch {
@@ -251,6 +252,39 @@ export const UserList = () => {
     navigate(-1);
   };
 
+  const handleExportUser = async () => {
+    setLoading(true);
+    try {
+      const data = [];
+      const response = await exportUserData();
+      const tempResult = response.data.split("\n");
+      tempResult.forEach((item) => {
+        data.push(item);
+      });
+
+      const csvContent = data.join("\n");
+
+      // Create a Blob from the CSV string
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "data.csv");
+
+      // Append the link to the body (necessary for Firefox)
+      document.body.appendChild(link);
+
+      // Trigger the download by simulating a click on the link
+      link.click();
+
+      // Remove the link from the document
+      document.body.removeChild(link);
+    } catch (err) {
+    } finally {
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     fetchUserListing();
     fetchBoardListing();
@@ -261,7 +295,10 @@ export const UserList = () => {
     const tempSearchData = [];
     if (searchData.length > 0) {
       cloneData.forEach((item) => {
-        if (item.name.toLowerCase().includes(searchData.toLowerCase()) || item.email.toLowerCase().includes(searchData.toLowerCase())) {
+        if (
+          item.name.toLowerCase().includes(searchData.toLowerCase()) ||
+          item.email.toLowerCase().includes(searchData.toLowerCase())
+        ) {
           tempSearchData.push(item);
         }
       });
@@ -284,7 +321,7 @@ export const UserList = () => {
             marginTop: "10px",
             marginBottom: "10px",
             display: "flex",
-            justifyContent: "start",
+            justifyContent: "space-between",
           }}
         >
           <Button
@@ -298,6 +335,15 @@ export const UserList = () => {
             }
             onClick={handleBackNavigation}
           ></Button>
+          <Button
+            style={{
+              color: settingData.button_bg,
+              borderColor: settingData.button_bg,
+            }}
+            onClick={handleExportUser}
+          >
+            Export
+          </Button>
         </div>
 
         <div style={{ marginBottom: "20px" }}>
@@ -335,10 +381,10 @@ export const UserList = () => {
           open={open}
           handleCancel={handleCancel}
           handleDelete={handleDelete}
-          message={'Are you sure you want to delete this User?'}
+          message={"Are you sure you want to delete this User?"}
         />
       )}
-         <ToastContainer position="bottom-right" />
+      <ToastContainer position="bottom-right" />
     </div>
   );
 };
