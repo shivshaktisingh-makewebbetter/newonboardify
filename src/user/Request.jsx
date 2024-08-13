@@ -135,7 +135,7 @@ export const Request = () => {
 
         {profileData.length > 0 &&
           profileData[0].hasOwnProperty("services") &&
-          profileData[0].services.length > 4 && (
+          profileData[0].services.length > 0 && (
             <div className="carousel-container" style={{ maxWidth: "1200px" }}>
               <Slider {...settings}>
                 {profileData.length > 0 &&
