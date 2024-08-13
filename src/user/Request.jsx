@@ -250,7 +250,7 @@ export const Request = () => {
               </Slider>
             </div>
           )}
-      
+
       </div>
       <Modal
         open={open}
