@@ -261,12 +261,13 @@ export const Request = () => {
                   profileData[0].hasOwnProperty("services") &&
                   profileData[0].services.map((item) => {
                     return (
-                      <div className="carousel-slide-wrapper" key={item.title}>
+                      <div  key={item.title}>
                         <div
                           style={{
                             padding: "20px",
                             position: "relative",
-                            paddingBottom: "60px",
+                            paddingBottom: "70px",
+                            height: "100%",
                           }}
                         >
                           <div
@@ -320,7 +321,7 @@ export const Request = () => {
                               width: "100%",
                               textAlign: "left",
                               position: "absolute",
-                              bottom: "0px",
+                              bottom: "20px",
                             }}
                           >
                             <Button
