@@ -134,7 +134,7 @@ export const EditProfile = () => {
 
       if (customerResponse.success && profileResponse.success) {
         const customerList = customerResponse.data.response.map((item) => ({
-          label: item.name,
+          label: `${item.name} (${item.email}) / ${item.company_name}`,
           value: item.email,
           desc: "",
         }));

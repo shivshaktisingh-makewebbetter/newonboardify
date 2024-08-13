@@ -108,23 +108,7 @@ export const UserList = () => {
       // sortDirections: ["descend"],
       render: (_, record) => <CopyText email={record.email} />,
     },
-    {
-      title: "Assign Board",
-      dataIndex: "boardId",
-      render: (_, record) => (
-        <>
-          <Select
-            placeholder={"Select Board"}
-            style={{ width: "100%", borderRadius: "10px" }}
-            popupMatchSelectWidth={false}
-            placement="bottomLeft"
-            onChange={(e) => handleBoardChange(record, e)}
-            options={boardListing}
-            value={record.boardId}
-          />
-        </>
-      ),
-    },
+    
     {
       title: "Created Date",
       dataIndex: "createdAt",
