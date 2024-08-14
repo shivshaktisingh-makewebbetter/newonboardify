@@ -15,6 +15,8 @@ export const Request = () => {
   const [profileData, setProfileData] = useState([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [itemsPerView, setItemsPerView] = useState(4);
 
   const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -123,6 +125,32 @@ export const Request = () => {
     color: "#ffffff",
   };
 
+  const updateItemsPerView = () => {
+    const width = window.innerWidth;
+    if (width <= 772) setItemsPerView(1);
+    else if (width <= 972) setItemsPerView(2);
+    else if (width <= 1094) setItemsPerView(3);
+    else setItemsPerView(4);
+  };
+
+  useEffect(() => {
+    updateItemsPerView();
+    window.addEventListener("resize", updateItemsPerView);
+    return () => {
+      window.removeEventListener("resize", updateItemsPerView);
+    };
+  }, []);
+
+  const prev = () => {
+    setCurrentIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+  };
+
+  const next = () => {
+    setCurrentIndex((prevIndex) =>
+      Math.min(prevIndex + 1, profileData[0].services.length - itemsPerView)
+    );
+  };
+
   return (
     <div style={{ padding: "1rem", display: "flex", justifyContent: "center" }}>
       {loading && <Loader />}
@@ -135,119 +163,101 @@ export const Request = () => {
 
         {profileData.length > 0 &&
           profileData[0].hasOwnProperty("services") &&
-          profileData[0].services.length > 4 && (
-            <div className="carousel-container" style={{ maxWidth: "1200px" }}>
-              <Slider {...settings}>
-                {profileData.length > 0 &&
-                  profileData[0].hasOwnProperty("services") &&
-                  profileData[0].services.map((item) => {
-                    return (
-                      <div className="carousel-slide-wrapper" key={item.title}>
-                        <div
+          profileData[0].services.length > itemsPerView && (
+            <div className="carousel">
+              <Button onClick={prev} icon={<LeftOutlined />}></Button>
+              <div className="carousel-wrapper">
+                <div
+                  className="carousel-content"
+                  style={{
+                    transform: `translateX(-${
+                      currentIndex * (100 / itemsPerView)
+                    }%)`,
+                  }}
+                >
+                  {profileData[0].services.map((item, index) => (
+                    <div className="carousel-slide-wrapper" key={item.title}>
+                      <div className="craousel-slider-wrapper-child">
+                        <div className="img-container">
+                          <img src={item.file_location} alt="No Preview" />
+                        </div>
+                        <p
                           style={{
-                            padding: "20px",
-                            position: "relative",
-                            paddingBottom: "60px",
+                            textAlign: "left",
+                            width: "100%",
+                            maxWidth: "263px",
+                            color: "#434343",
+                            fontSize: "26px",
+                            fontWeight: "700",
+                            marginTop: "20px",
+                            marginBottom: "0px",
                           }}
                         >
-                          <div
-                            style={{
-                              maxWidth: "263px",
-                              maxHeight: "170px",
-                              borderRadius: "10px",
-                              overflow: "hidden",
+                          {item.title}
+                        </p>
+                        <p
+                          style={{
+                            textAlign: "left",
+                            width: "100%",
+                            maxWidth: "263px",
+                            color: "#928f8f",
+                            fontSize: "17px",
+                            fontWeight: "400",
+                            marginBottom: "0px",
+                          }}
+                        >
+                          {item.description}
+                        </p>
+                        <div
+                          style={{
+                            width: "100%",
+                            textAlign: "left",
+                            position: "absolute",
+                            bottom: "20px",
+                          }}
+                        >
+                          <Button
+                            className="ff-mont"
+                            icon={
+                              <PlusOutlined
+                                style={{
+                                  color: settingsData.button_bg,
+                                  transition: "all 0.3s ease",
+                                }}
+                              />
+                            }
+                            iconPosition="start"
+                            style={buttonStyle}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor =
+                                buttonHoverStyle.backgroundColor;
+                              e.currentTarget.style.color =
+                                buttonHoverStyle.color;
+                              e.currentTarget.querySelector(
+                                ".anticon"
+                              ).style.color = buttonHoverStyle.color;
                             }}
-                          >
-                            <img
-                              src={item.file_location}
-                              alt="No Preview"
-                              style={{
-                                width: "100%",
-                                borderRadius: "10px",
-                                objectFit: "contain",
-                                height: "auto",
-                              }}
-                            />
-                          </div>
-                          <p
-                            style={{
-                              textAlign: "left",
-                              width: "100%",
-                              maxWidth: "263px",
-                              color: "#434343",
-                              fontSize: "26px",
-                              fontWeight: "700",
-                              marginTop: "20px",
-                              marginBottom: "0px",
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor =
+                                "transparent";
+                              e.currentTarget.style.color =
+                                settingsData.button_bg;
+                              e.currentTarget.querySelector(
+                                ".anticon"
+                              ).style.color = settingsData.button_bg;
                             }}
+                            onClick={() => handleOpenModal(item)}
+                            disabled={!item.service_form_link}
                           >
-                            {item.title}
-                          </p>
-                          <p
-                            style={{
-                              textAlign: "left",
-                              width: "100%",
-                              maxWidth: "263px",
-                              color: "#928f8f",
-                              fontSize: "17px",
-                              fontWeight: "400",
-                              marginBottom: "0px",
-                            }}
-                          >
-                            {item.description}
-                          </p>
-                          <div
-                            style={{
-                              width: "100%",
-                              textAlign: "left",
-                              position: "absolute",
-                              bottom: "0px",
-                            }}
-                          >
-                            <Button
-                              className="ff-mont"
-                              icon={
-                                <PlusOutlined
-                                  style={{
-                                    color: settingsData.button_bg,
-                                    transition: "all 0.3s ease",
-                                  }}
-                                />
-                              }
-                              iconPosition="start"
-                              style={buttonStyle}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor =
-                                  buttonHoverStyle.backgroundColor;
-                                e.currentTarget.style.color =
-                                  buttonHoverStyle.color;
-                                e.currentTarget.querySelector(
-                                  ".anticon"
-                                ).style.color = buttonHoverStyle.color;
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.backgroundColor =
-                                  "transparent";
-                                e.currentTarget.style.color =
-                                  settingsData.button_bg;
-                                e.currentTarget.querySelector(
-                                  ".anticon"
-                                ).style.color = settingsData.button_bg;
-                              }}
-                              onClick={() => handleOpenModal(item)}
-                              disabled={
-                                item.service_form_link === undefined ||
-                                item.service_form_link.length === 0
-                              }
-                            >
-                              Submit Request
-                            </Button>
-                          </div>
+                            Submit Request
+                          </Button>
                         </div>
                       </div>
-                    );
-                  })}
-              </Slider>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <Button onClick={next} icon={<RightOutlined />}></Button>
             </div>
           )}
 
@@ -256,12 +266,12 @@ export const Request = () => {
           profileData[0].services.length > 0 &&
           profileData[0].services.length <= 4 && (
             <div className="carousel-container" style={{ maxWidth: "1200px" }}>
-              <div style={{display:"flex" , justifyContent:"center"}}>
+              <div style={{ display: "flex", justifyContent: "center" }}>
                 {profileData.length > 0 &&
                   profileData[0].hasOwnProperty("services") &&
                   profileData[0].services.map((item) => {
                     return (
-                      <div  key={item.title}>
+                      <div key={item.title}>
                         <div
                           style={{
                             padding: "20px",
