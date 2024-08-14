@@ -25,6 +25,7 @@ export const Login = () => {
   let tascRole = queryParameters.get("role");
   let id = queryParameters.get("id");
   let path = queryParameters.get("path");
+  let boardId = queryParameters.get("board");
 
   const handleSubmit = async () => {
     let payload = JSON.stringify({
