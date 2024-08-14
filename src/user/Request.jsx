@@ -163,9 +163,14 @@ export const Request = () => {
 
         {profileData.length > 0 &&
           profileData[0].hasOwnProperty("services") &&
+          profileData[0].services.length > 4 &&
           profileData[0].services.length > itemsPerView && (
             <div className="carousel">
-              <Button onClick={prev} icon={<LeftOutlined />}></Button>
+              <Button
+                onClick={prev}
+                icon={<LeftOutlined />}
+                style={{ marginRight: "20px" }}
+              ></Button>
               <div className="carousel-wrapper">
                 <div
                   className="carousel-content"
@@ -257,129 +262,67 @@ export const Request = () => {
                   ))}
                 </div>
               </div>
-              <Button onClick={next} icon={<RightOutlined />}></Button>
+              <Button
+                onClick={next}
+                icon={<RightOutlined />}
+                style={{ marginLeft: "20px" }}
+              ></Button>
             </div>
           )}
 
-        {profileData.length > 0 &&
-          profileData[0].hasOwnProperty("services") &&
-          profileData[0].services.length > 0 &&
-          profileData[0].services.length <= 4 && (
-            <div className="carousel-container" style={{ maxWidth: "1200px" }}>
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                {profileData.length > 0 &&
-                  profileData[0].hasOwnProperty("services") &&
-                  profileData[0].services.map((item) => {
-                    return (
-                      <div key={item.title}>
-                        <div
-                          style={{
-                            padding: "20px",
-                            position: "relative",
-                            paddingBottom: "70px",
-                            height: "100%",
-                          }}
-                        >
-                          <div
+        <div className="new-carousel-container">
+          <div className="new-grid">
+            {profileData.length > 0 &&
+              profileData[0].hasOwnProperty("services") &&
+              profileData[0].services.length > 0 &&
+              profileData[0].services.length <= 4 &&
+              profileData[0].services.map((item) => (
+                <div key={item.title} className="new-card">
+                  <div className="new-img-container">
+                    <img src={item.file_location} alt={item.title} />
+                  </div>
+                  <div className="new-content">
+                    <p className="new-title">{item.title}</p>
+                    <p className="new-description">{item.description}</p>
+
+                    <div className="new-button-container">
+                      <Button
+                        style={buttonStyle}
+                        icon={
+                          <PlusOutlined
                             style={{
-                              maxWidth: "263px",
-                              maxHeight: "170px",
-                              borderRadius: "10px",
-                              overflow: "hidden",
+                              color: settingsData.button_bg,
+                              transition: "all 0.3s ease",
                             }}
-                          >
-                            <img
-                              src={item.file_location}
-                              alt="No Preview"
-                              style={{
-                                width: "100%",
-                                borderRadius: "10px",
-                                objectFit: "contain",
-                                height: "auto",
-                              }}
-                            />
-                          </div>
-                          <p
-                            style={{
-                              textAlign: "left",
-                              width: "100%",
-                              maxWidth: "263px",
-                              color: "#434343",
-                              fontSize: "26px",
-                              fontWeight: "700",
-                              marginTop: "20px",
-                              marginBottom: "0px",
-                            }}
-                          >
-                            {item.title}
-                          </p>
-                          <p
-                            style={{
-                              textAlign: "left",
-                              width: "100%",
-                              maxWidth: "263px",
-                              color: "#928f8f",
-                              fontSize: "17px",
-                              fontWeight: "400",
-                              marginBottom: "0px",
-                            }}
-                          >
-                            {item.description}
-                          </p>
-                          <div
-                            style={{
-                              width: "100%",
-                              textAlign: "left",
-                              position: "absolute",
-                              bottom: "20px",
-                            }}
-                          >
-                            <Button
-                              className="ff-mont"
-                              icon={
-                                <PlusOutlined
-                                  style={{
-                                    color: settingsData.button_bg,
-                                    transition: "all 0.3s ease",
-                                  }}
-                                />
-                              }
-                              iconPosition="start"
-                              style={buttonStyle}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor =
-                                  buttonHoverStyle.backgroundColor;
-                                e.currentTarget.style.color =
-                                  buttonHoverStyle.color;
-                                e.currentTarget.querySelector(
-                                  ".anticon"
-                                ).style.color = buttonHoverStyle.color;
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.backgroundColor =
-                                  "transparent";
-                                e.currentTarget.style.color =
-                                  settingsData.button_bg;
-                                e.currentTarget.querySelector(
-                                  ".anticon"
-                                ).style.color = settingsData.button_bg;
-                              }}
-                              onClick={() => handleOpenModal(item)}
-                              disabled={
-                                item.service_form_link === undefined ||
-                                item.service_form_link.length === 0
-                              }
-                            >
-                              Submit Request
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
-          )}
+                          />
+                        }
+                        iconPosition="start"
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor =
+                            buttonHoverStyle.backgroundColor;
+                          e.currentTarget.style.color = buttonHoverStyle.color;
+                          e.currentTarget.querySelector(
+                            ".anticon"
+                          ).style.color = buttonHoverStyle.color;
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = "transparent";
+                          e.currentTarget.style.color = settingsData.button_bg;
+                          e.currentTarget.querySelector(
+                            ".anticon"
+                          ).style.color = settingsData.button_bg;
+                        }}
+                        onClick={() => handleOpenModal(item)}
+                        disabled={!item.service_form_link}
+                      >
+                        Submit Request
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
       </div>
       <Modal
         open={open}
