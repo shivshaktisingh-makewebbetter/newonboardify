@@ -14,6 +14,7 @@ import {
   getRequestTrackingDataByBoardIdAndSearch,
   getTrackingDataByBoardId,
   exportServiceData,
+  requestTrackingWithOrCondition,
 } from "../apiservice/ApiService";
 import { Loader } from "../common/Loader";
 import { FilterByService } from "./component/FilterByService";
@@ -154,15 +155,19 @@ export const Track = () => {
       return;
     }
     const rules = [];
- 
-    if (Object.keys(filterKeyDataByUser).length > 0 && filterKeyDataByUser.key.length > 0 && filterKeyDataByUser.value.length > 0 ) {
+
+    if (
+      Object.keys(filterKeyDataByUser).length > 0 &&
+      filterKeyDataByUser.key.length > 0 &&
+      filterKeyDataByUser.value.length > 0
+    ) {
       rules.push({
         column_id: filterKeyDataByUser.key,
         compare_value: [filterKeyDataByUser.value],
         operator: "contains_text",
       });
     }
-   
+
     const payload = {
       query_params: {
         order_by: [
@@ -276,6 +281,7 @@ export const Track = () => {
 
   const getDataByFilterAndSearch = async (tempFilters) => {
     const rules = [];
+    const newRules = [];
     if (tempFilters.statusFilter != 9) {
       rules.push({
         column_id: columnIdData.required_columns.overall_status,
@@ -291,7 +297,7 @@ export const Track = () => {
     }
     if (tempFilters.searchData.length > 0) {
       searchKeys.forEach((item) => {
-        rules.push({
+        newRules.push({
           column_id: item,
           compare_value: [tempFilters.searchData],
           operator: "contains_text",
@@ -311,6 +317,18 @@ export const Track = () => {
       },
     };
 
+    const newPayload = {
+      query_params: {
+        order_by: [
+          {
+            direction: tempFilters.order === 1 ? "asc" : "desc",
+            column_id: "__creation_log__",
+          },
+        ],
+        ...(newRules.length > 0 && { rules: newRules, operator: "or" }),
+      },
+    };
+
     setLoading(true);
 
     try {
@@ -318,17 +336,45 @@ export const Track = () => {
         tempFilters.boardId,
         JSON.stringify(payload)
       );
+
+      const response1 = await requestTrackingWithOrCondition(
+        tempFilters.boardId,
+        JSON.stringify(newPayload)
+      );
+      const arr1 = response.data.response.data.boards[0].items_page.items;
+      const arr2 = response1.data.response.data.boards[0].items_page.items;
+
+      const getCommonObjects = (arr1, arr2) => {
+        return arr1.filter((obj1) => arr2.some((obj2) => obj1.id === obj2.id));
+      };
+
+      const commonObjects = getCommonObjects(arr1, arr2);
+
+
       if (response.success) {
-        setData(
-          response.data.response.data.boards[0].items_page.items.slice(0, 10)
-        );
-        setOriginalArray(
-          response.data.response.data.boards[0].items_page.items
-        );
-        if (
-          response.data.response.data.boards[0].items_page.items.length <= 10
-        ) {
-          setCursor(null);
+        if (tempFilters.searchData.length > 0) {
+          setData(
+            commonObjects.slice(0, 10)
+          );
+          setOriginalArray(
+            commonObjects
+          );
+        } else {
+          setData(
+            response.data.response.data.boards[0].items_page.items.slice(0, 10)
+          );
+          setOriginalArray(
+            response.data.response.data.boards[0].items_page.items
+          );
+        }
+
+        if (tempFilters.searchData.length > 0) {
+        } else {
+          if (
+            response.data.response.data.boards[0].items_page.items.length <= 10
+          ) {
+            setCursor(null);
+          }
         }
       }
       if (
@@ -337,6 +383,7 @@ export const Track = () => {
       ) {
         setData([]);
         setOriginalArray([]);
+
         if (
           response.data.response.data.boards[0].items_page.items.length <= 10
         ) {

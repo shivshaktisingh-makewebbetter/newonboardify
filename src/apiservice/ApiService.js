@@ -65,6 +65,12 @@ export const exportUserData = () =>
   Services.GET(`/newonboardify/admin/exportUsersData`);
 
 // Customer Endpoints
+export const requestTrackingWithOrCondition = (id, data) => {
+  return Services.POST(
+    `newonboardify/customer/requestTrackingByBoardIdAndSearchWithOrCondition/${id}`,
+    data
+  );
+};
 export const exportServiceData = (id) => {
   return Services.GET(`newonboardify/customer/exportDataByBoardId/${id}`);
 };
