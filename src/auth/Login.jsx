@@ -4,12 +4,14 @@ import { ToastContainer } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Loader } from "../common/Loader";
 import {
+  getAllProfileDataByUser,
   getCustomerGeneralSettings,
   getGeneralSettingsData,
   getLoginUserDetails,
+  getSubItemDetails,
   loginApi,
 } from "../apiservice/ApiService";
-import { isTokenValid } from "../utils/helper";
+import { fetcher, isTokenValid } from "../utils/helper";
 
 export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -99,6 +101,16 @@ export const Login = () => {
       return false;
     }
     return true;
+  };
+
+  const getProfileData = async () => {
+    try {
+      const response = await getAllProfileDataByUser();
+
+      return response;
+    } catch (err) {
+    } finally {
+    }
   };
 
   useEffect(() => {
@@ -221,12 +233,98 @@ export const Login = () => {
     };
   }, [token, role, location]);
 
+  const getSubItemDetailsData = async (id) => {
+    try {
+      let url = `incorpify/getSubItemDetailsById/${id}`;
+      let method = "GET";
+      const response = await fetcher(url, method);
+      return response;
+    } catch (err) {
+      console.log(err, "error");
+    }
+  };
+
+  const getStatusText = (item , allColumns , columnIdData) => {
+    let tempId = "";
+    allColumns.forEach((subItem) => {
+      if (subItem.id === columnIdData.required_columns.overall_status) {
+        tempId = subItem.id;
+      }
+    });
+    let value;
+    item.column_values.forEach((subItem) => {
+      if (subItem.id === tempId) {
+        value = subItem.text;
+      }
+    });
+    return value.toUpperCase();
+  };
+
+  const getStatusColor = (item , settingData) => {
+    let tempBgColor = "#8080803b";
+    settingData.statusColorSetting.forEach((details) => {
+      if (details.status.trim().toLowerCase() === item.trim().toLowerCase()) {
+        tempBgColor = details.color;
+      }
+    });
+    return tempBgColor;
+  };
+
+  const getAllServiceData = (serviceData) => {
+    let tempService = {};
+    serviceData.forEach((item) => {
+      if (item.board_id == boardId) {
+        tempService = item;
+      }
+    });
+
+    return tempService;
+  };
+
+  const filterSubItemDetailData = (subItemData) => {
+    return subItemData.data.response.data.items[0];
+  };
+
+  const fetchColumnDetails = async () => {
+    try {
+      const response = await getSubItemDetails(id, boardId);
+
+      return response.data.response.data.boards[0].columns;
+    } catch (err) {
+    } finally {
+    }
+  };
+
   const adminLogin = async () => {
     let status = isTokenValid(adminToken);
     if (status.valid) {
       sessionStorage.setItem("token", adminToken);
       sessionStorage.setItem("role", tascRole);
       let res = await getLoginUserDetails(adminToken);
+      let profileData = await getProfileData();
+      let subItemDetailsResponse = await getSubItemDetailsData(id);
+      let columnData = await fetchColumnDetails();
+      const generalSettingData = await getCustomerGeneralSettings(tascRole);
+      let allServiceData = getAllServiceData(
+        profileData.data.response[0].services
+      );
+      let subItemDetailsData = filterSubItemDetailData(subItemDetailsResponse);
+      const statusText = getStatusText(subItemDetailsData , columnData , JSON.parse(allServiceData.service_setting_data));
+      const statusColor = getStatusColor(statusText , JSON.parse(generalSettingData.data.response.ui_settings));
+
+      const dataToPass = {
+        id: id,
+        name: subItemDetailsData.name,
+        status: statusText,
+        color: statusColor,
+        boardId: boardId,
+        columnIdData: allServiceData.service_setting_data,
+        subHeadingColumn: JSON.parse(allServiceData.service_setting_data)
+          .sub_headings_column,
+        service_setting_data: allServiceData.service_setting_data,
+        service_column_value_filter: allServiceData.service_column_value_filter,
+      };
+      console.log(dataToPass , 'dataToPass');
       if (res.success) {
         sessionStorage.setItem("userEmail", res.data.data.email);
         sessionStorage.setItem("userName", res.data.data.name);
@@ -236,10 +334,7 @@ export const Login = () => {
         const res2 = await getCustomerGeneralSettings(adminToken);
         if (res2.success) {
           // console.log(response2)
-          sessionStorage.setItem(
-            "settings",
-            res2.data.response.ui_settings
-          );
+          sessionStorage.setItem("settings", res2.data.response.ui_settings);
           sessionStorage.setItem(
             "logo_location",
             res2.data.response.logo_location
@@ -252,10 +347,7 @@ export const Login = () => {
         const res2 = await getCustomerGeneralSettings(adminToken);
         if (res2.success) {
           // console.log(response2)
-          sessionStorage.setItem(
-            "settings",
-            res2.data.response.ui_settings
-          );
+          sessionStorage.setItem("settings", res2.data.response.ui_settings);
           sessionStorage.setItem(
             "logo_location",
             res2.data.response.logo_location
@@ -266,10 +358,7 @@ export const Login = () => {
         const res = await getGeneralSettingsData();
         if (res?.success) {
           // console.log(response2)
-          sessionStorage.setItem(
-            "settings",
-            res?.data?.response.ui_settings
-          );
+          sessionStorage.setItem("settings", res?.data?.response.ui_settings);
           sessionStorage.setItem(
             "logo_location",
             res?.data?.response.logo_location

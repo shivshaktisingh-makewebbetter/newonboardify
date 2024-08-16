@@ -26,10 +26,7 @@ export const TrackDetails = () => {
     setLoading(true);
 
     try {
-      const response = await getSubItemDetails(state.id , state.boardId);
-      console.log(response , 'response');
-      console.log(state , 'state');
-    
+      const response = await getSubItemDetails(state.id , state.boardId); 
 
       if (response.success) {
         let tempText = "";
