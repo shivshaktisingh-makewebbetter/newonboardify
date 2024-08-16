@@ -324,7 +324,6 @@ export const Login = () => {
         service_setting_data: allServiceData.service_setting_data,
         service_column_value_filter: allServiceData.service_column_value_filter,
       };
-      console.log(dataToPass , 'dataToPass');
       if (res.success) {
         sessionStorage.setItem("userEmail", res.data.data.email);
         sessionStorage.setItem("userName", res.data.data.name);
@@ -342,7 +341,7 @@ export const Login = () => {
         }
         sessionStorage.setItem("itemId", id);
         // sessionStorage.setItem('count', count);
-        navigate(`/${path}`);
+        navigate(`/${path}`, { state: dataToPass });
       } else if (tascRole === "customer") {
         const res2 = await getCustomerGeneralSettings(adminToken);
         if (res2.success) {
