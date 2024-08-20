@@ -187,6 +187,10 @@ export const Track = () => {
         setData(response.data.response.data.boards[0].items_page.items);
         setCursor(response.data.response.data.boards[0].items_page.cursor);
         setAllColumns(response.data.response.data.boards[0].columns);
+      }else{
+        if(response.data.response.data.boards[0].items_page.items.length === 0){
+          setData([]);
+        }
       }
     } catch (err) {
     } finally {
