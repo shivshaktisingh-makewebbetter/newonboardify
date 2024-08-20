@@ -1,4 +1,4 @@
-import { Button, Input, Modal, Select, Table } from "antd";
+import { Button, Input, Modal, Select, Table, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { DeleteOutlined, EditOutlined, LeftOutlined } from "@ant-design/icons";
 import { toast, ToastContainer } from "react-toastify";
@@ -39,7 +39,10 @@ export const EditProfile = () => {
   const [editServiceData, setEditServiceData] = useState({});
   const [profileData, setProfileData] = useState({
     title: location.state.profileTitle || "",
-    users: location.state.users.length > 0 ? location.state.users.split(",").map((item) => item.trim()) : [],
+    users:
+      location.state.users.length > 0
+        ? location.state.users.split(",").map((item) => item.trim())
+        : [],
   });
   const [deleteModalOpen, setDeleteMOdalOpen] = useState({
     flag: false,
@@ -49,12 +52,12 @@ export const EditProfile = () => {
   const navigate = useNavigate();
 
   const handleEditModal = (item) => {
-   const boardOptions = [...boardIdOptions];
-    boardOptions.forEach((detail)=>{
-      if(detail.value === item.board_id){
+    const boardOptions = [...boardIdOptions];
+    boardOptions.forEach((detail) => {
+      if (detail.value === item.board_id) {
         detail.disabled = false;
       }
-    })
+    });
     setBoardIdOptions(boardOptions);
     setEditServiceData(item);
     setEditService(true);
@@ -62,6 +65,17 @@ export const EditProfile = () => {
 
   const handleDeleteModal = (id) => {
     setDeleteMOdalOpen({ flag: true, id: id });
+  };
+
+  const getBoardTitle = (id) => {
+    let tempBoardName = "";
+    boardIdOptions.forEach((item) => {
+      if (item.key === id) {
+        tempBoardName = item.label;
+      }
+    });
+
+    return tempBoardName;
   };
 
   const columns = [
@@ -82,17 +96,9 @@ export const EditProfile = () => {
       title: "Assign Board",
       dataIndex: "boardId",
       render: (_, record) => (
-        <>
-          <Select
-            placeholder={"Select Board"}
-            style={{ width: "100%", borderRadius: "10px" }}
-            popupMatchSelectWidth={false}
-            placement="bottomLeft"
-            onChange={() => {}}
-            options={boardIdOptions}
-            value={record.board_id}
-          />
-        </>
+        <Typography style={{ width: "100%", borderRadius: "10px" }}>
+          {getBoardTitle(record.board_id)}
+        </Typography>
       ),
     },
 
@@ -118,8 +124,6 @@ export const EditProfile = () => {
       ),
     },
   ];
-
-
 
   const handleChangeProfileTitle = (event) => {
     setProfileData({ ...profileData, title: event.target.value });
@@ -207,7 +211,6 @@ export const EditProfile = () => {
         });
       }
       if (response.success && response.data.response[0].services.length === 0) {
-        
         setDataSource([]);
       }
       const response1 = await getAllBoards();
@@ -260,8 +263,6 @@ export const EditProfile = () => {
     getAllServiceListing();
     getListOfAllCustomers();
   }, []);
-
-
 
   return (
     <>
