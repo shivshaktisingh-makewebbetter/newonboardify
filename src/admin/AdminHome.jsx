@@ -22,31 +22,33 @@ export const AdminHome = () => {
     {
       title: "Users List",
       description:
-        "Streamline your employee onboarding with TASC Outsourcing. Request here for a hassle-free experience, letting us handle the rest with care and efficiency.",
+        "Check details of all signed-up users, including their status and basic information. You can also reset passwords, delete accounts, and export the users list.",
       icon: <UserOutlined style={{ fontSize: "60px" }} />,
       buttonText: "Manage User",
       navigateKey: "userList",
     },
     {
-      title: "Profile Setting",
+      title: "Users Profile Settings",
       description:
-        "Track your onboarding requests seamlessly with us. Stay updated on the progress of your employee onboarding journey. Effortless tracking for a smoother onboarding experience.",
-      icon: <ProfileOutlined  style={{ fontSize: "60px" }} />,
+        "Edit or create user profiles, including the services within each profile, by customizing the service views, request forms, and status visibility.",
+      icon: <ProfileOutlined style={{ fontSize: "60px" }} />,
       buttonText: "Manage Profile",
       navigateKey: "profile",
     },
     {
-      title: "Create User",
+      title: "Create Users",
       description:
-        "Stay in the loop with ease! Check the overall status of your onboarding requests and keep tabs on your employee onboarding progress for a comprehensive overview of the entire process.",
+        "Manually sign up new users, assigning them roles such as Super Admins or Admins for backend management or create regular users.",
       icon: <ChangeRole />,
       buttonText: "Manage Role",
       navigateKey: "createAdmin",
     },
   ];
 
-
-  const filteredData = role === 'superAdmin' ? data : data.filter(item => item.title !== "Create User");
+  const filteredData =
+    role === "superAdmin"
+      ? data
+      : data.filter((item) => item.title !== "Create User");
 
   const navigate = useNavigate();
 
@@ -101,7 +103,7 @@ export const AdminHome = () => {
                     alignItems: "center",
                     position: "absolute",
                     bottom: "0px",
-                    cursor:"pointer"
+                    cursor: "pointer",
                   }}
                   onClick={() => handleAdminRoute(item.navigateKey)}
                 >

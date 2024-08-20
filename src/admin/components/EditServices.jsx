@@ -445,6 +445,7 @@ export const EditServices = ({
                         return item.id;
                       }
                     )}
+                    filterOption={filterOption}
                   />
                 </div>
                 <div
@@ -473,6 +474,7 @@ export const EditServices = ({
                     value={boardVisiblityData.candidate_coulmns.map((item) => {
                       return item.id;
                     })}
+                    filterOption={filterOption}
                   />
                 </div>
                 <div

@@ -41,6 +41,7 @@ export const Track = () => {
   const [profileData, setProfileData] = useState({});
   const [tempSearchData, setTempSearchData] = useState("");
   const [filterKeyData, setFilterKeyData] = useState({});
+  const [placeHolderSearch , setPlaceHolderSearch] = useState('');
 
   const onChangeRadio = (item) => {
     let tempSelectedOrder = "";
@@ -224,6 +225,7 @@ export const Track = () => {
         setServiceOptions(tempData);
         setSelectedService(tempData[0].key);
         setProfileData(profileResponse.data.response[0].services);
+    
 
         if (
           JSON.parse(
@@ -252,11 +254,31 @@ export const Track = () => {
 
       await getTrackData(tempBoardId, filterKeyDataByUser);
       await getStatusFilterData(tempBoardId);
+      // setPlaceHolderText(JSON.parse(
+      //   profileResponse.data.response[0].services[0].service_setting_data
+      // ));
     } catch (err) {
     } finally {
       setLoading(false);
     }
   };
+
+  const setPlaceHolderText = () =>{
+    let text = 'Search by ';
+    if(Object.keys(columnIdData).length > 0 && Object.keys(columnIdData.required_columns.profession).length > 0 && allColumns.length > 0){
+      allColumns.forEach((item)=>{
+        if(columnIdData.required_columns.profession.includes(item.id)){
+          text = text + item.title + ' or ';
+        }
+      })
+      text = text.slice(0, -4);
+      setPlaceHolderSearch(text);
+  
+    }else{
+     setPlaceHolderSearch('Search here')
+    }
+
+  }
 
   const loadMoreHandler = async () => {
     setLoading(true);
@@ -396,6 +418,8 @@ export const Track = () => {
     }
   };
 
+
+
   const getMoreData = () => {
     const startIndex = loadMoreValue * 10;
     const endIndex = startIndex + 10;
@@ -422,6 +446,10 @@ export const Track = () => {
     getTrackRequestData();
   }, []);
 
+  useEffect(()=>{
+    setPlaceHolderText();
+  } ,[profileData , allColumns])
+
   return (
     <div style={{ padding: "2rem" }}>
       {loading && <Loader />}
@@ -434,7 +462,7 @@ export const Track = () => {
       </div>
       <BreadcrumbComponent data={breadCrumbData} />
       <SearchBox
-        placeHolder={"Search By profession"}
+        placeHolder={placeHolderSearch}
         setSearchData={setSearchData}
         getDataByFilterAndSearch={getDataByFilterAndSearch}
         boardId={boardId}

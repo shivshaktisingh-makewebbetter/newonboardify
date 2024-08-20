@@ -162,6 +162,7 @@ export const Login = () => {
         location.pathname !== "/admin/board" &&
         location.pathname !== "/admin/createAdmin"
       ) {
+     
         // Set up intercomSettings
         window.intercomSettings = {
           api_base: "https://api-iam.intercom.io",
