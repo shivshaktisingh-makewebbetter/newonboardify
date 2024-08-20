@@ -44,6 +44,11 @@ export const CreateServices = ({
   const [boardVisiblityData, setBoardVisibilityData] = useState({});
 
   const handleCreateServices = async () => {
+    if(boardVisiblityData.required_columns.overall_status.length === 0 || boardVisiblityData.required_columns.profession.length === 0){
+      toast.error('Please fill the Search And Filter fields.');
+      return;
+    }
+
     let payload = {
       ...serviceData,
       service_column_value_filter: JSON.stringify(serviceColumnValueFilter),
