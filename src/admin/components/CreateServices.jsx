@@ -135,9 +135,13 @@ export const CreateServices = ({
     }
   };
   const handleChangeServiceColumnFilter = (e) => {
-    if(e === undefined){
-      setServiceColumnValueFilter({ ...serviceColumnValueFilter, key: '' , value:'' });
-      return ;
+    if (e === undefined) {
+      setServiceColumnValueFilter({
+        ...serviceColumnValueFilter,
+        key: "",
+        value: "",
+      });
+      return;
     }
     setServiceColumnValueFilter({ ...serviceColumnValueFilter, key: e });
   };
@@ -418,7 +422,6 @@ export const CreateServices = ({
                       }
                     )}
                     filterOption={filterOption}
-
                   />
                 </div>
                 <div
@@ -460,6 +463,7 @@ export const CreateServices = ({
                 >
                   <p style={{ textAlign: "left" }}>Request Statuses</p>
                   <Select
+                    showSearch
                     mode="multiple"
                     allowClear
                     style={{
@@ -476,6 +480,7 @@ export const CreateServices = ({
                     value={boardVisiblityData.onboarding_columns.map((item) => {
                       return item.id;
                     })}
+                    filterOption={filterOption}
                   />
                 </div>
 
@@ -543,6 +548,7 @@ export const CreateServices = ({
                       Top Details Columns
                     </p>
                     <Select
+                      showSearch
                       style={{
                         width: "100%",
                       }}
@@ -551,6 +557,7 @@ export const CreateServices = ({
                       onChange={handleChangeCardSectionColumn1}
                       options={options}
                       value={boardVisiblityData.card_section.column1}
+                      filterOption={filterOption}
                     />
                   </div>
                   <div
@@ -562,6 +569,7 @@ export const CreateServices = ({
                       Mid Heading Columns
                     </p>
                     <Select
+                      showSearch
                       style={{
                         width: "100%",
                       }}
@@ -570,6 +578,7 @@ export const CreateServices = ({
                       onChange={handleChangeCardSectionColumn2}
                       options={options}
                       value={boardVisiblityData.card_section.column2}
+                      filterOption={filterOption}
                     />
                   </div>
                 </div>
@@ -593,6 +602,7 @@ export const CreateServices = ({
                       Search column
                     </p>
                     <Select
+                      showSearch
                       mode="multiple"
                       allowClear
                       style={{
@@ -605,6 +615,7 @@ export const CreateServices = ({
                       onChange={handleChangeRequiredColumnProfession}
                       options={options}
                       value={boardVisiblityData.required_columns.profession}
+                      filterOption={filterOption}
                     />
                   </div>
                   <div
@@ -616,6 +627,7 @@ export const CreateServices = ({
                       Filter column
                     </p>
                     <Select
+                      showSearch
                       style={{
                         width: "100%",
                       }}
@@ -626,6 +638,7 @@ export const CreateServices = ({
                       onChange={handleChangeRequiredColumnStatus}
                       options={options}
                       value={boardVisiblityData.required_columns.overall_status}
+                      filterOption={filterOption}
                     />
                   </div>
                 </div>
@@ -639,6 +652,7 @@ export const CreateServices = ({
                 >
                   <p style={{ textAlign: "left" }}>Documents to User</p>
                   <Select
+                    showSearch
                     allowClear
                     mode="multiple"
                     style={{
@@ -648,6 +662,7 @@ export const CreateServices = ({
                     value={documentFetchKey}
                     onChange={handleChangColumnDocumentFetch}
                     options={options}
+                    filterOption={filterOption}
                   />
                 </div>
                 <div
@@ -660,6 +675,7 @@ export const CreateServices = ({
                 >
                   <p style={{ textAlign: "left" }}>Documents from User</p>
                   <Select
+                    showSearch
                     style={{
                       width: "100%",
                     }}
@@ -667,6 +683,7 @@ export const CreateServices = ({
                     value={imageKey}
                     onChange={handleChangeDocumentColumn}
                     options={options}
+                    filterOption={filterOption}
                   />
                 </div>
               </div>

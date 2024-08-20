@@ -126,11 +126,13 @@ export const EditServices = ({
     if (e === undefined) {
       setBoardVisibilityData({});
       setDocumentFetchKey([]);
-      setImageKey('');
+      setImageKey("");
     }
     if (e === editServiceData.board_id) {
       setBoardVisibilityData(JSON.parse(editServiceData.service_setting_data));
-      setDocumentFetchKey(JSON.parse(editServiceData.service_setting_data).document_fetch_key);
+      setDocumentFetchKey(
+        JSON.parse(editServiceData.service_setting_data).document_fetch_key
+      );
       setImageKey(JSON.parse(editServiceData.service_setting_data).image_key);
     } else {
       setBoardVisibilityData({
@@ -147,7 +149,7 @@ export const EditServices = ({
         sub_headings_column: [],
       });
       setDocumentFetchKey([]);
-      setImageKey('');
+      setImageKey("");
     }
 
     try {
@@ -158,9 +160,13 @@ export const EditServices = ({
   };
 
   const handleChangeServiceColumnFilter = (e) => {
-    if(e === undefined){
-      setServiceColumnValueFilter({ ...serviceColumnValueFilter, key: '' , value:'' });
-      return ;
+    if (e === undefined) {
+      setServiceColumnValueFilter({
+        ...serviceColumnValueFilter,
+        key: "",
+        value: "",
+      });
+      return;
     }
     setServiceColumnValueFilter({ ...serviceColumnValueFilter, key: e });
   };
@@ -487,6 +493,7 @@ export const EditServices = ({
                 >
                   <p style={{ textAlign: "left" }}>Request Statuses</p>
                   <Select
+                    showSearch
                     mode="multiple"
                     allowClear
                     style={{
@@ -503,6 +510,7 @@ export const EditServices = ({
                     value={boardVisiblityData.onboarding_columns.map((item) => {
                       return item.id;
                     })}
+                    filterOption={filterOption}
                   />
                 </div>
 
@@ -570,6 +578,7 @@ export const EditServices = ({
                       Top Details Columns
                     </p>
                     <Select
+                      showSearch
                       style={{
                         width: "100%",
                       }}
@@ -578,6 +587,7 @@ export const EditServices = ({
                       onChange={handleChangeCardSectionColumn1}
                       options={options}
                       value={boardVisiblityData.card_section.column1}
+                      filterOption={filterOption}
                     />
                   </div>
                   <div
@@ -589,6 +599,7 @@ export const EditServices = ({
                       Mid Heading Columns
                     </p>
                     <Select
+                      showSearch
                       style={{
                         width: "100%",
                       }}
@@ -597,6 +608,7 @@ export const EditServices = ({
                       onChange={handleChangeCardSectionColumn2}
                       options={options}
                       value={boardVisiblityData.card_section.column2}
+                      filterOption={filterOption}
                     />
                   </div>
                 </div>
@@ -620,6 +632,7 @@ export const EditServices = ({
                       Search
                     </p>
                     <Select
+                      showSearch
                       mode="multiple"
                       allowClear
                       style={{
@@ -632,6 +645,7 @@ export const EditServices = ({
                       onChange={handleChangeRequiredColumnProfession}
                       options={options}
                       value={boardVisiblityData.required_columns.profession}
+                      filterOption={filterOption}
                     />
                   </div>
                   <div
@@ -643,6 +657,7 @@ export const EditServices = ({
                       Filter
                     </p>
                     <Select
+                      showSearch
                       style={{
                         width: "100%",
                       }}
@@ -653,6 +668,7 @@ export const EditServices = ({
                       onChange={handleChangeRequiredColumnStatus}
                       options={options}
                       value={boardVisiblityData.required_columns.overall_status}
+                      filterOption={filterOption}
                     />
                   </div>
                 </div>
@@ -664,10 +680,9 @@ export const EditServices = ({
                     borderRadius: "10px",
                   }}
                 >
-                  <p style={{ textAlign: "left" }}>
-                  Documents to User
-                  </p>
+                  <p style={{ textAlign: "left" }}>Documents to User</p>
                   <Select
+                    showSearch
                     allowClear
                     mode="multiple"
                     style={{
@@ -677,6 +692,7 @@ export const EditServices = ({
                     value={documentFetchKey}
                     onChange={handleChangColumnDocumentFetch}
                     options={options}
+                    filterOption={filterOption}
                   />
                 </div>
                 <div
@@ -687,10 +703,9 @@ export const EditServices = ({
                     borderRadius: "10px",
                   }}
                 >
-                  <p style={{ textAlign: "left" }}>
-                  Documents from User
-                  </p>
+                  <p style={{ textAlign: "left" }}>Documents from User</p>
                   <Select
+                    showSearch
                     style={{
                       width: "100%",
                     }}
@@ -698,6 +713,7 @@ export const EditServices = ({
                     value={imageKey}
                     onChange={handleChangeDocumentColumn}
                     options={options}
+                    filterOption={filterOption}
                   />
                 </div>
               </div>
