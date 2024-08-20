@@ -171,6 +171,7 @@ export function showUserName(value) {
 }
 
 export function appendEmoji(value, emoji) {
+
   const parser = new DOMParser();
   const doc = parser.parseFromString(value, "text/html");
 
@@ -188,3 +189,12 @@ export function appendEmoji(value, emoji) {
   const modifiedHtmlString = doc.body.innerHTML;
   return value === "" ? emoji : modifiedHtmlString;
 }
+
+
+
+export function formatDateNewFormat(inputDate) {
+  const date = new Date(inputDate);
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return date.toLocaleDateString('en-US', options);
+}
+

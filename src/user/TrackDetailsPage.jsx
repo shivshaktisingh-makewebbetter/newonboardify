@@ -1,12 +1,9 @@
 import { useLocation } from "react-router-dom";
 import { BreadcrumbComponent } from "./component/BreadCrumbComponent";
-import {
-  getBoardSettingDataCustomerByID,
-  getSubItemDetails,
-} from "../apiservice/ApiService";
+import { getSubItemDetails } from "../apiservice/ApiService";
 import { useEffect, useState } from "react";
 import { countries } from "../utils/assets";
-import { fetcher, formatDateNew } from "../utils/helper";
+import { fetcher, formatDateNew, formatDateNewFormat } from "../utils/helper";
 import { UpdateComponent } from "./component/UpdateComponent";
 import { Loader } from "../common/Loader";
 
@@ -21,12 +18,11 @@ export const TrackDetails = () => {
   const [subHeadingString, setSubHeadingString] = useState("");
   const breadCrumbData = location.pathname.split("/");
 
-
   const fetchSubItemsDetails = async () => {
     setLoading(true);
 
     try {
-      const response = await getSubItemDetails(state.id , state.boardId); 
+      const response = await getSubItemDetails(state.id, state.boardId);
 
       if (response.success) {
         let tempText = "";
@@ -66,8 +62,6 @@ export const TrackDetails = () => {
   };
 
   const getCountryCode = (item) => {
-
-
     let countryName = "";
     itemDetails.items[0].column_values.forEach((subItem) => {
       if (subItem.type === "country") {
@@ -88,7 +82,12 @@ export const TrackDetails = () => {
     let value = "";
     itemDetails.items[0].column_values.forEach((subItem) => {
       if (subItem.id === item.id) {
-        value = subItem.text;
+        if(subItem.hasOwnProperty('type') && subItem.type === 'date'){
+         console.log(subItem.text);
+         value = formatDateNewFormat(subItem.text);
+        }else{
+          value = subItem.text;
+        }
       }
     });
 
@@ -273,42 +272,49 @@ export const TrackDetails = () => {
               Basic Information
             </p>
             <ul className="list-group list-group-flush">
-              {Object.keys(columnData).length > 0 && Object.keys(itemDetails).length > 0 &&
+              {Object.keys(columnData).length > 0 &&
+                Object.keys(itemDetails).length > 0 &&
                 columnData.candidate_coulmns.map((item, index) => {
                   const countryCode = getCountryCode(item);
                   const centerText = getCenterText(item);
-                  return (
-                    <li
-                      className="user-candidate-column list-group-item d-flex pb-0 align-items-center border-0 text-start"
-                      style={{ background: "inherit", gap: "12px" }}
-                      key={index}
-                    >
-                      <span className="mb-2">
-                        <i
-                          className={item.icon}
-                          style={{ color: "#928f8f" }}
-                        ></i>
-                      </span>
-                      <span style={{ color: "#928f8f", fontSize: "17px" }}>
-                        {item.custom_title !== null && item.custom_title.length > 0 && item.custom_title}
-                        {item.custom_title !== null && item.custom_title.length > 0 && ": "}
-                        {centerText}
-                      </span>
-                      {(item.name === "Nationality" ||
-                        item.name === "Country of Residency") && (
-                        <span>
-                          {countryCode.length > 0 && (
-                            <img
-                              height="20"
-                              width="22"
-                              src={`https://onboardify.tasc360.com/flags/${countryCode.toLowerCase()}.svg`}
-                              alt={`${countryCode.toUpperCase()} Flag`}
-                            />
-                          )}
+                  if (centerText.length > 0) {
+                    return (
+                      <li
+                        className="user-candidate-column list-group-item d-flex pb-0 align-items-center border-0 text-start"
+                        style={{ background: "inherit", gap: "12px" }}
+                        key={index}
+                      >
+                        <span className="mb-2">
+                          <i
+                            className={item.icon}
+                            style={{ color: "#928f8f" }}
+                          ></i>
                         </span>
-                      )}
-                    </li>
-                  );
+                        <span style={{ color: "#928f8f", fontSize: "17px" }}>
+                          {item.custom_title !== null &&
+                            item.custom_title.length > 0 &&
+                            item.custom_title}
+                          {item.custom_title !== null &&
+                            item.custom_title.length > 0 &&
+                            ": "}
+                          {centerText}
+                        </span>
+                        {(item.name === "Nationality" ||
+                          item.name === "Country of Residency") && (
+                          <span>
+                            {countryCode.length > 0 && (
+                              <img
+                                height="20"
+                                width="22"
+                                src={`https://onboardify.tasc360.com/flags/${countryCode.toLowerCase()}.svg`}
+                                alt={`${countryCode.toUpperCase()} Flag`}
+                              />
+                            )}
+                          </span>
+                        )}
+                      </li>
+                    );
+                  }
                 })}
             </ul>
           </div>
@@ -318,7 +324,8 @@ export const TrackDetails = () => {
               Status Updates
             </h4>
             <ul className="list-group list-group-flush">
-              {Object.keys(columnData).length > 0 && Object.keys(itemDetails).length > 0 &&
+              {Object.keys(columnData).length > 0 &&
+                Object.keys(itemDetails).length > 0 &&
                 columnData.onboarding_columns.map((item, index) => {
                   const initialAction = getInitialAction(item);
                   const initialDate = getInitialDate();
