@@ -9,6 +9,7 @@ export const FilterBy = ({
   boardId,
   order,
   searchData,
+  selectedFilter
 }) => {
   const handleMenuClick = (e) => {
     let tempData = {
@@ -23,14 +24,17 @@ export const FilterBy = ({
   };
 
   const menuProps = {
+
     items,
     selectable: true,
     defaultSelectedKeys: ["9"],
     onClick: handleMenuClick,
+    selectedKeys:selectedFilter
   };
 
   return (
     <Dropdown menu={menuProps}>
+      
       <Button
         type="text"
         style={{

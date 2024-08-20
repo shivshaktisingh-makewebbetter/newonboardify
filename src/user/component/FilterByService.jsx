@@ -40,9 +40,10 @@ export const FilterByService = ({
 
     setSearchData("");
     setTempSearchData("");
-    setSelectedFilter("9");
+    
     setLoading(true);
     await getTrackData(tempBoardId , filterKeyData);
+    setSelectedFilter("9");
     setLoading(false);
   };
 
@@ -51,10 +52,12 @@ export const FilterByService = ({
     selectable: true,
     defaultSelectedKeys: ["0"],
     onClick: handleMenuClick,
+    
   };
 
   return (
-    <Dropdown menu={menuProps}>
+    <Dropdown menu={menuProps} >
+      
       <Button
         type="text"
         style={{

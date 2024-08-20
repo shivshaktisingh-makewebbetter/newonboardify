@@ -31,7 +31,7 @@ export const Track = () => {
   const [allColumns, setAllColumns] = useState([]);
   const [originalArray, setOriginalArray] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(1);
-  const [selectedFilter, setSelectedFilter] = useState(9);
+  const [selectedFilter, setSelectedFilter] = useState("9");
   const [selectedService, setSelectedService] = useState(0);
   const [statusItems, setStatusItems] = useState([]);
   const [cursor, setCursor] = useState("");
@@ -107,6 +107,7 @@ export const Track = () => {
 
     setStatusItems(updatedFilterColumn);
   };
+
 
   const handleExport = async () => {
     setLoading(true);
@@ -194,6 +195,7 @@ export const Track = () => {
       }
     } catch (err) {
     } finally {
+      setSelectedFilter("9");
     }
   };
 
