@@ -57,6 +57,14 @@ export const EditServices = ({
   }
 
   const handleUpdateServices = async () => {
+    if (
+      boardVisiblityData.required_columns.overall_status.length === 0 ||
+      boardVisiblityData.required_columns.profession.length === 0
+    ) {
+      toast.error("Please fill the Search And Filter fields.");
+      return;
+    }
+
     let tempServiceData = { ...serviceData };
     tempServiceData.image_name = startsWithHttp(serviceData.image)
       ? ""
