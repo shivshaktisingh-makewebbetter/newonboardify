@@ -83,7 +83,7 @@ export const TrackDetails = () => {
     itemDetails.items[0].column_values.forEach((subItem) => {
       if (subItem.id === item.id) {
         if(subItem.hasOwnProperty('type') && subItem.type === 'date'){
-         value = formatDateNewFormat(subItem.text);
+         value = subItem.text === "" ? subItem.text : formatDateNewFormat(subItem.text);
         }else{
           value = subItem.text;
         }
