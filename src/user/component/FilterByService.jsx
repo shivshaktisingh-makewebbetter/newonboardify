@@ -19,9 +19,11 @@ export const FilterByService = ({
   setLoading,
   setSelectedFilter,
   filterKeyData ,
+  setFilterKeyData ,
 }) => {
   const handleMenuClick = async (e) => {
     let tempBoardId = "";
+    let tempFilterKeyData = {};
     setSelectedService(e.key);
     items.forEach((details, index) => {
       if (e.key === index.toString()) {
@@ -30,6 +32,8 @@ export const FilterByService = ({
         profileData.forEach((item) => {
           if (item.board_id === tempBoardId) {
             setColumnIdData(JSON.parse(item.service_setting_data));
+            setFilterKeyData(JSON.parse(item.service_column_value_filter));
+            tempFilterKeyData = JSON.parse(item.service_column_value_filter);
             setSearchKeys(
               JSON.parse(item.service_setting_data).required_columns.profession
             );
@@ -40,10 +44,9 @@ export const FilterByService = ({
 
     setSearchData("");
     setTempSearchData("");
-    
+    setSelectedFilter("9");    
     setLoading(true);
-    await getTrackData(tempBoardId , filterKeyData);
-    setSelectedFilter("9");
+    await getTrackData(tempBoardId , tempFilterKeyData);
     setLoading(false);
   };
 

@@ -43,6 +43,7 @@ export const Track = () => {
   const [filterKeyData, setFilterKeyData] = useState({});
   const [placeHolderSearch , setPlaceHolderSearch] = useState('');
 
+
   const onChangeRadio = (item) => {
     let tempSelectedOrder = "";
     if (item === "ASC") {
@@ -156,6 +157,7 @@ export const Track = () => {
     if (tempBoardId === "") {
       return;
     }
+    console.log(filterKeyDataByUser , 'filyrtr')
     const rules = [];
 
     if (
@@ -198,6 +200,7 @@ export const Track = () => {
       setSelectedFilter("9");
     }
   };
+
 
   const getStatusFilterData = async (tempBoardId) => {
     try {
@@ -260,9 +263,7 @@ export const Track = () => {
 
       await getTrackData(tempBoardId, filterKeyDataByUser);
       await getStatusFilterData(tempBoardId);
-      // setPlaceHolderText(JSON.parse(
-      //   profileResponse.data.response[0].services[0].service_setting_data
-      // ));
+     
     } catch (err) {
     } finally {
       setLoading(false);
@@ -504,6 +505,7 @@ export const Track = () => {
           setLoading={setLoading}
           setSelectedFilter={setSelectedFilter}
           filterKeyData={filterKeyData}
+          setFilterKeyData={setFilterKeyData}
         />
         <SortBy
           items={sortingItems}
