@@ -68,6 +68,10 @@ export const CreateProfile = () => {
   };
   
   const handleUserChange = (e) => {
+    // console.log(e , userListing);
+    // userListing.forEach((item)=>{
+    //   if(item.value)
+    // })
     setProfileData({ ...profileData, users: e });
   };
 

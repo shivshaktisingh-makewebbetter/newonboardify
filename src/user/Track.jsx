@@ -317,7 +317,7 @@ export const Track = () => {
         compare_value: [Number(tempFilters.statusFilter)],
       });
     }
-    if (Object.keys(filterKeyData).length > 0) {
+    if (Object.keys(filterKeyData).length > 0 && filterKeyData.key.length > 0) {
       rules.push({
         column_id: filterKeyData.key,
         compare_value: [filterKeyData.value],

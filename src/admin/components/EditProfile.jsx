@@ -376,6 +376,7 @@ export const EditProfile = () => {
     getListOfAllCustomers();
   }, []);
 
+
   return (
     <>
       {loading && <Loader />}
