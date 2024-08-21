@@ -122,6 +122,12 @@ export const getRequestTrackingDataByBoardIdAndSearch = (id, data) =>
 export const getAllFilters = (id) =>
   Services.GET(`/newonboardify/customer/getFilterColumnByBoardId/${id}`);
 
+export const swapService = (data) =>
+  Services.POST(`newonboardify/admin/onboardifyServiceCategories/swap`, data);
+
+export const updateServiceVisibility = (data) =>
+  Services.POST(`newonboardify/admin/updateServiceVisibility`, data);
+
 // Common Endpoints
 export const loginApi = (data) => Services.POST(`commom-login`, data);
 export const registerApi = (data) =>

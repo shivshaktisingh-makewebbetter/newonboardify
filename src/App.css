@@ -1508,8 +1508,10 @@ body,
 
 /* Grid Style */
 .new-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Ensure four columns for larger screens */
+  display: flex;
+  justify-content: center;
+
+  /* grid-template-columns: repeat(4, 1fr); Ensure four columns for larger screens */
   gap: 20px;
 }
 
@@ -1522,6 +1524,7 @@ body,
 /* Card Style */
 .new-card {
   display: flex;
+  max-width:292px;
   flex-direction: column;
   border-radius: 8px;
   background-color: #fff;

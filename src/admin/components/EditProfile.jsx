@@ -1,4 +1,4 @@
-import { Button, Input, Modal, Select, Table, Typography } from "antd";
+import { Button, Input, Modal, Select, Switch, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { DeleteOutlined, EditOutlined, LeftOutlined } from "@ant-design/icons";
 import { toast, ToastContainer } from "react-toastify";
@@ -9,7 +9,9 @@ import {
   getAllCustomers,
   getProfileListing,
   getServicesByProfileId,
+  swapService,
   updateProfile,
+  updateServiceVisibility,
 } from "../../apiservice/ApiService";
 import { Loader } from "../../common/Loader";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -31,6 +33,52 @@ export const EditProfile = () => {
     head_title_color: "#497ed8",
   };
 
+  const styles = {
+    headerParent: {
+      backgroundColor: data.head_title_color,
+    },
+    header: {
+      padding: "10px",
+      textAlign: "left",
+      borderBottom: "2px solid #ddd",
+      color: "white",
+      paddingTop: "15px",
+      paddingBottom: "15px",
+    },
+    headerFirst: {
+      padding: "10px",
+      textAlign: "left",
+      borderBottom: "2px solid #ddd",
+      color: "white",
+      paddingTop: "15px",
+      paddingBottom: "15px",
+      borderTopLeftRadius: "5px",
+    },
+    headerLast: {
+      padding: "10px",
+      textAlign: "left",
+      borderBottom: "2px solid #ddd",
+      color: "white",
+      paddingTop: "15px",
+      paddingBottom: "15px",
+      borderTopRightRadius: "5px",
+    },
+    row: {
+      backgroundColor: "#ffffff",
+      transition: "background-color 0.3s ease",
+    },
+    cell: {
+      padding: "8px",
+      borderBottom: "1px solid #ddd",
+      paddingTop: "15px",
+      paddingBottom: "15px",
+      textAlign: "left",
+    },
+    spanPadding: {
+      paddingRight: "10px",
+    },
+  };
+  const [draggedItem, setDraggedItem] = useState(null);
   const [loading, setLoading] = useState(false);
   const [userListing, setUserListing] = useState([]);
   const [dataSource, setDataSource] = useState([]);
@@ -90,6 +138,10 @@ export const EditProfile = () => {
     {
       title: "Description",
       dataIndex: "description",
+    },
+    {
+      title: "Visibility",
+      dataIndex: "service_visibility",
     },
 
     {
@@ -259,6 +311,66 @@ export const EditProfile = () => {
     );
   };
 
+  const handleDragStart = (e, item) => {
+    setDraggedItem(item);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+
+  const handleDrop = async (e, targetItem) => {
+    e.preventDefault();
+    let payloadData = [];
+
+    const updatedData = [...dataSource];
+    const fromIndex = updatedData.findIndex((i) => i.id === draggedItem.id);
+    const toIndex = updatedData.findIndex((i) => i.id === targetItem.id);
+
+    if (fromIndex !== toIndex) {
+      const [removed] = updatedData.splice(fromIndex, 1);
+      updatedData.splice(toIndex, 0, removed);
+      dataSource.forEach((item, index) => {
+        payloadData.push({ from: updatedData[index].id, to: index + 1 });
+      });
+
+      let payload = {
+        service_categorie: payloadData,
+      };
+      setDataSource(updatedData);
+      const response = await swapService(payload);
+      console.log(response, "response");
+      // if(response.status){
+      // updateDataSource(response.response)
+
+      // }
+    }
+
+    setDraggedItem(null);
+  };
+
+  const onChange = async (e, item) => {
+    let payload = {
+      id: item.id,
+      service_visibility: e,
+    };
+    setLoading(true);
+    try {
+      const response = await updateServiceVisibility(payload);
+      if (response.success) {
+        await getAllServiceListing();
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (err) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     getAllServiceListing();
     getListOfAllCustomers();
@@ -360,29 +472,80 @@ export const EditProfile = () => {
             </Button>
           </div>
         </div>
-        <div style={{ marginTop: "20px" }}>
-          <Table
-            columns={columns}
-            dataSource={dataSource}
-            showSorterTooltip={{
-              target: "sorter-icon",
-            }}
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              maxWidth: "1320px",
-              overflowX: "auto",
-            }}
-            pagination={{
-              showTotal: (total) => `Total ${total} items`,
-              defaultPageSize: 5,
-              showQuickJumper: true,
-              showSizeChanger: true,
-              pageSizeOptions: [5, 10, 15, 20],
-              defaultCurrent: 1,
-            }}
-          />
-        </div>
+
+        {dataSource.length > 0 && (
+          <div className="mt-10">
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr style={styles.headerParent}>
+                  {/* <th style={styles.headerFirst}>Index</th> */}
+                  <th style={styles.headerFirst}>Title</th>
+                  <th style={styles.header}>
+                    <span style={styles.spanPadding}>|</span>Description
+                  </th>
+                  <th style={styles.header}>
+                    <span style={styles.spanPadding}>|</span>Assign Board
+                  </th>
+                  <th style={styles.header}>
+                    <span style={styles.spanPadding}>|</span>Visibility
+                  </th>
+                  <th style={styles.headerLast}>
+                    <span style={styles.spanPadding}>|</span>Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {dataSource.map((item) => {
+                  return (
+                    <tr
+                      style={styles.row}
+                      key={item.id}
+                      onDragStart={(e) => handleDragStart(e, item)}
+                      onDragOver={handleDragOver}
+                      onDrop={(e) => handleDrop(e, item)}
+                      draggable
+                    >
+                      {/* <td style={styles.cell}>{item.id}</td> */}
+                      <td style={styles.cell}>{item.title}</td>
+                      <td style={styles.cell}>{item.description}</td>
+                      <td style={styles.cell}>
+                        {getBoardTitle(item.board_id)}
+                      </td>
+                      <td style={styles.cell}>
+                        <Switch
+                          checked={
+                            item.service_visibility === undefined ||
+                            item.service_visibility === null
+                              ? true
+                              : item.service_visibility === 1
+                              ? true
+                              : false
+                          }
+                          onChange={(e) => onChange(e, item)}
+                        />
+                      </td>
+                      <td>
+                        {" "}
+                        <Button
+                          className="governify-delete-icon"
+                          type="plain"
+                          icon={<EditOutlined />}
+                          onClick={() => handleEditModal(item)}
+                        ></Button>
+                        <Button
+                          className="governify-delete-icon"
+                          type="plain"
+                          icon={<DeleteOutlined />}
+                          onClick={() => handleDeleteModal(item.id)}
+                        ></Button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
 
         <Modal
           open={openService}

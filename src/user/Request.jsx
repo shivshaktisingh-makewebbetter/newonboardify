@@ -17,6 +17,7 @@ export const Request = () => {
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(4);
+  const [services, setServices] = useState([]);
 
   const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -72,6 +73,19 @@ export const Request = () => {
       if (response.success) {
         if (response.data.response.length > 0) {
           setProfileData(response.data.response);
+          const tempServices = [];
+          response.data.response[0].services.forEach((item) => {
+            if (
+              item.hasOwnProperty("service_visibility") &&
+              item.service_visibility !== null &&
+              item.service_visibility === 1
+            ) {
+              tempServices.push(item);
+            }
+          });
+
+          console.log( response.data.response[0].services)
+          setServices(tempServices);
           setTimeout(setSlickTrackHeight, 2000);
         }
         if (response.data.response.length === 0) {
@@ -163,8 +177,8 @@ export const Request = () => {
 
         {profileData.length > 0 &&
           profileData[0].hasOwnProperty("services") &&
-          profileData[0].services.length > 4 &&
-          profileData[0].services.length > itemsPerView && (
+          services.length > 4 &&
+          services.length > itemsPerView && (
             <div className="carousel">
               <Button
                 onClick={prev}
@@ -180,7 +194,7 @@ export const Request = () => {
                     }%)`,
                   }}
                 >
-                  {profileData[0].services.map((item, index) => (
+                  {services.map((item, index) => (
                     <div className="carousel-slide-wrapper" key={item.title}>
                       <div className="craousel-slider-wrapper-child">
                         <div className="img-container">
@@ -274,9 +288,9 @@ export const Request = () => {
           <div className="new-grid">
             {profileData.length > 0 &&
               profileData[0].hasOwnProperty("services") &&
-              profileData[0].services.length > 0 &&
-              profileData[0].services.length <= 4 &&
-              profileData[0].services.map((item) => (
+              services.length > 0 &&
+              services.length <= 4 &&
+              services.map((item) => (
                 <div key={item.title} className="new-card">
                   <div className="new-img-container">
                     <img src={item.file_location} alt={item.title} />
