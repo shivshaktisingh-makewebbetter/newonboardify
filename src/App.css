@@ -470,6 +470,7 @@ body,
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  width:80%;
 }
 
 .governify-header-major-div-logo {
@@ -477,7 +478,7 @@ body,
 }
 
 .governify-header-major-div-buttons {
-  /* width: 40%; */
+  width: 20%;
   display: flex;
   align-items: center;
   justify-content: end;
@@ -1182,13 +1183,13 @@ body,
     flex-direction: column;
   }
 
-  .governify-header-major-div {
+  /* .governify-header-major-div {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
+  } */
 
-  .governify-header-buttons {
+  /* .governify-header-buttons {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -1198,16 +1199,16 @@ body,
     justify-content: center;
     display: flex;
     /* width: 100%; */
-  }
+  /* } */
 
-  .governify-header-major-div-buttons {
+  /* .governify-header-major-div-buttons {
     width: 60%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     gap: 5px;
-  }
+  } */ 
 }
 
 @media (max-width: 540px) {
@@ -1609,7 +1610,14 @@ body,
   display: flex;
   padding-left: 24px;
   margin-bottom: 8px;
-  gap:16px;
+  gap: 16px;
+}
+
+.onboardify-header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 @media (max-width: 994px) {
@@ -1634,13 +1642,6 @@ body,
   }
 
   .onboardify-comment-information-container {
-    /* display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 20px;
-    height: 100%;
-    padding-top: 20px; */
-
     flex-direction: column;
   }
 
@@ -1720,3 +1721,35 @@ body,
     flex-direction: column;
   }
 }
+
+
+@media (max-width: 1176px){
+  .governify-header-major-div{
+    width:76%;
+  }
+}
+
+
+ @media (max-width: 1000px){
+  .governify-header-major-div{
+    width:65%;
+  }
+}
+
+
+@media (max-width: 778px){
+  .governify-header-major-div{
+    width:100%;
+  }
+
+  .onboardify-header-container{
+    flex-direction: column;
+    gap:10px;
+  }
+
+  .governify-header-major-div-buttons{
+    width:100%;
+    justify-content: center;
+  }
+}
+

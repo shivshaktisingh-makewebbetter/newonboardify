@@ -108,7 +108,7 @@ export const UserList = () => {
       // sortDirections: ["descend"],
       render: (_, record) => <CopyText email={record.email} />,
     },
-    
+
     {
       title: "Created Date",
       dataIndex: "createdAt",
@@ -338,6 +338,7 @@ export const UserList = () => {
           />
         </div>
         <Table
+          responsive={["xxl", "xl", "lg", "md", "sm", "xs"]}
           columns={columns}
           dataSource={dataSource}
           onChange={onChange}
