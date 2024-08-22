@@ -80,7 +80,9 @@ export const EditProfile = () => {
   };
   const [draggedItem, setDraggedItem] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [userConfirmationModal, setUserConfirmationModal] = useState(false);
   const [userListing, setUserListing] = useState([]);
+  const [tempUser, setTempUser] = useState([]);
   const [dataSource, setDataSource] = useState([]);
   const [openService, setOpenService] = useState(false);
   const [editService, setEditService] = useState(false);
@@ -181,6 +183,13 @@ export const EditProfile = () => {
     setProfileData({ ...profileData, title: event.target.value });
   };
 
+  const handleConfirm = () => {
+    setProfileData({ ...profileData, users: tempUser });
+    setTempUser([]);
+    setUserConfirmationModal(false);
+  };
+
+
   const getListOfAllCustomers = async () => {
     try {
       const [customerResponse, profileResponse] = await Promise.all([
@@ -221,6 +230,23 @@ export const EditProfile = () => {
   };
 
   const handleUserChange = (e) => {
+    let tempDesc = "";
+    if (e.length > profileData.users.length) {
+      const missingElement = e.find(
+        (element) => !profileData.users.includes(element)
+      );
+
+      userListing.forEach((item) => {
+        if (item.value === missingElement) {
+          tempDesc = item.desc;
+        }
+      });
+    }
+    if (tempDesc.length > 0) {
+      setTempUser(e);
+      setUserConfirmationModal(true);
+      return;
+    }
     setProfileData({ ...profileData, users: e });
   };
 
@@ -598,6 +624,44 @@ export const EditProfile = () => {
             message={"Are you sure you want to delete this Service?"}
           />
         )}
+
+<Modal
+          open={userConfirmationModal}
+          title="Assign User"
+          centered
+          footer={(_, record) => (
+            <>
+              <Button
+                style={{
+                  background: data.button_bg,
+                  color: "#fff",
+                  border: "none",
+                }}
+                onClick={handleConfirm}
+              >
+                Confirm
+              </Button>
+              <Button
+                style={{ border: "none" }}
+                onClick={() => {
+                  setTempUser([]);
+                  setUserConfirmationModal(false);
+                }}
+              >
+                Cancel
+              </Button>
+            </>
+          )}
+          onCancel={() => {
+            setTempUser([]);
+            setUserConfirmationModal(false);
+          }}
+        >
+          <Typography>
+            This user is already assigned to another user profile!
+          </Typography>
+        </Modal>
+
 
         <ToastContainer position="bottom-right" />
       </div>

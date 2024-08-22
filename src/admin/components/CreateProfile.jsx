@@ -1,4 +1,4 @@
-import { Button, Input, Select } from "antd";
+import { Button, Input, Modal, Select, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { LeftOutlined } from "@ant-design/icons";
 import { toast, ToastContainer } from "react-toastify";
@@ -23,7 +23,9 @@ export const CreateProfile = () => {
   };
 
   const [loading, setLoading] = useState(false);
+  const [userConfirmationModal, setUserConfirmationModal] = useState(false);
   const [userListing, setUserListing] = useState([]);
+  const [tempUser, setTempUser] = useState([]);
   const [profileData, setProfileData] = useState({
     title: "",
     users: [],
@@ -35,43 +37,62 @@ export const CreateProfile = () => {
 
   const getListOfAllCustomers = async () => {
     try {
-      const [customerResponse, profileResponse] = await Promise.all([getAllCustomers(), getProfileListing()]);
-      
+      const [customerResponse, profileResponse] = await Promise.all([
+        getAllCustomers(),
+        getProfileListing(),
+      ]);
+
       if (customerResponse.success && profileResponse.success) {
-        const customerList = customerResponse.data.response.map(item => ({
+        const customerList = customerResponse.data.response.map((item) => ({
           label: `${item.name} (${item.email}) / ${item.company_name}`,
           value: item.email,
-          desc: ""
+          desc: "",
         }));
-  
+
         const profileMap = new Map();
-        profileResponse.data.response.forEach(profile => {
-          profile.users.split(',').forEach(userEmail => {
+        profileResponse.data.response.forEach((profile) => {
+          profile.users.split(",").forEach((userEmail) => {
             if (!profileMap.has(userEmail)) {
               profileMap.set(userEmail, []);
             }
             profileMap.get(userEmail).push(profile.title);
           });
         });
-  
-        customerList.forEach(customer => {
+
+        customerList.forEach((customer) => {
           if (profileMap.has(customer.value)) {
-            customer.desc = `Assigned to: ${profileMap.get(customer.value).join(', ')}`;
+            customer.desc = `Assigned to: ${profileMap
+              .get(customer.value)
+              .join(", ")}`;
           }
         });
-  
+
         setUserListing(customerList);
       }
     } catch (err) {
       console.error("Error fetching data:", err);
     }
   };
-  
+
   const handleUserChange = (e) => {
-    // console.log(e , userListing);
-    // userListing.forEach((item)=>{
-    //   if(item.value)
-    // })
+    let tempDesc = "";
+    if (e.length > profileData.users.length) {
+      const missingElement = e.find(
+        (element) => !profileData.users.includes(element)
+      );
+
+      userListing.forEach((item) => {
+        if (item.value === missingElement) {
+          tempDesc = item.desc;
+        }
+      });
+    }
+    if (tempDesc.length > 0) {
+      setTempUser(e);
+      setUserConfirmationModal(true);
+      return;
+    }
+  
     setProfileData({ ...profileData, users: e });
   };
 
@@ -109,6 +130,12 @@ export const CreateProfile = () => {
 
   const handleBackNavigation = () => {
     navigate("/admin/profile");
+  };
+
+  const handleConfirm = () => {
+    setProfileData({ ...profileData, users: tempUser });
+    setTempUser([]);
+    setUserConfirmationModal(false);
   };
 
   const filterOption = (input, option) => {
@@ -182,7 +209,13 @@ export const CreateProfile = () => {
                 value={profileData.users}
                 filterOption={filterOption}
                 optionRender={(option) => (
-                  <div style={{display:"flex" , width:"100%" , justifyContent:"space-between"}}>
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      justifyContent: "space-between",
+                    }}
+                  >
                     <span> {option.data.label}</span>
                     <span> {option.data.desc}</span>
                   </div>
@@ -203,6 +236,43 @@ export const CreateProfile = () => {
             </Button>
           </div>
         </div>
+
+        <Modal
+          open={userConfirmationModal}
+          title="Assign User"
+          centered
+          footer={(_, record) => (
+            <>
+              <Button
+                style={{
+                  background: data.button_bg,
+                  color: "#fff",
+                  border: "none",
+                }}
+                onClick={handleConfirm}
+              >
+                Confirm
+              </Button>
+              <Button
+                style={{ border: "none" }}
+                onClick={() => {
+                  setTempUser([]);
+                  setUserConfirmationModal(false);
+                }}
+              >
+                Cancel
+              </Button>
+            </>
+          )}
+          onCancel={() => {
+            setTempUser([]);
+            setUserConfirmationModal(false);
+          }}
+        >
+          <Typography>
+            This user is already assigned to another user profile!
+          </Typography>
+        </Modal>
 
         <ToastContainer position="bottom-right" />
       </div>
