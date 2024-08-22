@@ -147,6 +147,10 @@ export const TrackDetails = () => {
     return tempColor;
   };
 
+  const getInitialDate = () => {
+    return formatDateNew(itemDetails.items[0].created_at);
+  };
+
   const getUpdatedDate = (item) => {
     let updatedDate = "";
     const activityLogs = itemDetails.boards[0].activity_logs;
@@ -337,6 +341,7 @@ export const TrackDetails = () => {
                   const initialAction = getInitialAction(item);
                   const color = getColor(initialAction);
                   const updatedDate = getUpdatedDate(item);
+                  const initialDate = getInitialDate();
 
                   return (
                     <li
@@ -371,7 +376,8 @@ export const TrackDetails = () => {
                         {initialAction !== "" &&
                           initialAction !== "Awaiting Action" && (
                             <span className="text-secondary">
-                              {initialAction} | {updatedDate}
+                              {initialAction} |{" "}
+                              {updatedDate === "" ? initialDate : updatedDate}
                             </span>
                           )}
                       </div>
