@@ -77,14 +77,12 @@ export const Request = () => {
           response.data.response[0].services.forEach((item) => {
             if (
               item.hasOwnProperty("service_visibility") &&
-              item.service_visibility !== null &&
               item.service_visibility === 1
             ) {
               tempServices.push(item);
             }
           });
 
-          console.log( response.data.response[0].services)
           setServices(tempServices);
           setTimeout(setSlickTrackHeight, 2000);
         }

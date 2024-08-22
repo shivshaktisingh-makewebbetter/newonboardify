@@ -189,7 +189,6 @@ export const EditProfile = () => {
     setUserConfirmationModal(false);
   };
 
-
   const getListOfAllCustomers = async () => {
     try {
       const [customerResponse, profileResponse] = await Promise.all([
@@ -402,7 +401,6 @@ export const EditProfile = () => {
     getListOfAllCustomers();
   }, []);
 
-
   return (
     <>
       {loading && <Loader />}
@@ -543,10 +541,8 @@ export const EditProfile = () => {
                           checked={
                             item.service_visibility === undefined ||
                             item.service_visibility === null
-                              ? true
-                              : item.service_visibility === 1
-                              ? true
-                              : false
+                              ? false
+                              : item.service_visibility
                           }
                           onChange={(e) => onChange(e, item)}
                         />
@@ -625,7 +621,7 @@ export const EditProfile = () => {
           />
         )}
 
-<Modal
+        <Modal
           open={userConfirmationModal}
           title="Assign User"
           centered
@@ -661,7 +657,6 @@ export const EditProfile = () => {
             This user is already assigned to another user profile!
           </Typography>
         </Modal>
-
 
         <ToastContainer position="bottom-right" />
       </div>
