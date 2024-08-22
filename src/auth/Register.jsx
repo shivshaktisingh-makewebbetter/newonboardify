@@ -25,6 +25,45 @@ export const Register = () => {
   });
 
   const [isFormValid, setIsFormValid] = useState(false);
+  const [params, setParams] = useState({});
+  const [filteredParams, setFilteredParams] = useState({});
+
+  useEffect(() => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+
+    // Initialize an object to hold the final decoded params
+    const paramsObj = {};
+
+    urlParams.forEach((value, key) => {
+      const decodedKey = decodeURIComponent(key);
+      const decodedValue = decodeURIComponent(value);
+
+      // Check if the key is something like plateform[0] or plateform[1]
+      const arrayKeyMatch = decodedKey.match(/^(.*)\[(\d+)\]$/);
+      if (arrayKeyMatch) {
+        const baseKey = arrayKeyMatch[1];
+        if (!paramsObj[baseKey]) {
+          paramsObj[baseKey] = [];
+        }
+        paramsObj[baseKey].push(decodedValue);
+      } else {
+        paramsObj[decodedKey] = decodedValue;
+      }
+    });
+
+    // Set the original params state
+    setParams(paramsObj);
+
+    // Filter out specific keys and set the filteredParams state
+    const filteredObj = Object.fromEntries(
+      Object.entries(paramsObj).filter(([key]) => 
+        !['company_name', 'invited_user_email', 'user_email'].includes(key)
+      )
+    );
+
+    setFilteredParams(filteredObj);
+  }, []);
 
   const onRecaptchaExpired = () => {
     setRecaptchaToken(null);
@@ -35,6 +74,12 @@ export const Register = () => {
     setRecaptchaToken(token);
     setRecaptchaExpired(false);
   };
+
+  useEffect(() => {
+    if(params?.company_name) {
+      setFormData({...formData, company_name: params.company_name, email: params.invited_user_email});
+    }
+  }, [params]);
 
   useEffect(() => {
     const { name, company_name, email, password } = formData;
@@ -65,7 +110,10 @@ export const Register = () => {
     formData.utm_campaign = utmCampaign;
 
     formData.domain = "onboardify";
-    let payload = JSON.stringify(formData);
+    let payload = JSON.stringify({
+      ...formData,
+      ...(filteredParams?.profile_id && filteredParams),
+    });
     try {
       setLoading(true);
       const response = await registerApi(payload);
