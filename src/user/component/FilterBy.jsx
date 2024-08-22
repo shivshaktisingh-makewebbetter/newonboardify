@@ -42,8 +42,9 @@ export const FilterBy = ({
           color: "#928f8f",
           padding: "0px",
           marginRight: "14px",
+          paddingLeft:"10px"
         }}
-        icon={<FilterIcon style={{ color: "#497ed8" }} />}
+        icon={<FilterIcon style={{ color: "#497ed8"   }} />}
         iconPosition="start"
       >
         <Space>Filter</Space>

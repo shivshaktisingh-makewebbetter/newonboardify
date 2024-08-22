@@ -471,13 +471,10 @@ export const Track = () => {
         setTempSearchData={setTempSearchData}
       />
       <div
-        style={{
-          display: "flex",
-          justifyContent: "left",
-          paddingTop: "8px",
-          marginBottom: "32px",
-        }}
+      className="onboardify-filter-sort-container"
+      
       >
+        <div className="onboardify-service-sort">
         <FilterByService
           items={serviceOptions}
           setSelectedService={setSelectedService}
@@ -502,6 +499,8 @@ export const Track = () => {
           items={sortingItems}
           getDataByFilterAndSearch={getDataByFilterAndSearch}
         />
+        </div>
+        <div className="onboardify-filter-export">
         <FilterBy
           items={statusItems}
           setSelectedFilter={setSelectedFilter}
@@ -512,6 +511,7 @@ export const Track = () => {
           searchData={searchData}
         />
         <ExportBy handleExport={handleExport} />
+        </div>
       </div>
       {!loading && (
         <RequestComponent

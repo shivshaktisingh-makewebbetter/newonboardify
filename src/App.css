@@ -390,7 +390,7 @@ body,
   }
 
   .onboarding-min-height-120 {
-    min-height: 120px !important;
+    /* min-height: 120px !important; */
   }
 
   .onboarding-text-align-end {
@@ -1178,7 +1178,7 @@ body,
   .governify-option-list {
     display: flex;
     justify-content: space-around;
-    gap: 10px;
+    gap: 40px;
     flex-direction: column;
   }
 
@@ -1493,11 +1493,6 @@ body,
   }
 }
 
-
-
-
-
-
 /* Container Style */
 .new-carousel-container {
   max-width: 1200px;
@@ -1517,14 +1512,17 @@ body,
 
 @media (max-width: 1200px) {
   .new-grid {
-    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); /* Responsive grid */
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(270px, 1fr)
+    ); /* Responsive grid */
   }
 }
 
 /* Card Style */
 .new-card {
   display: flex;
-  max-width:292px;
+  max-width: 292px;
   flex-direction: column;
   border-radius: 8px;
   background-color: #fff;
@@ -1601,6 +1599,58 @@ body,
   color: #fff;
 }
 
+.onboardify-information-container {
+  position: sticky;
+  top: -300;
+  z-index: 1;
+}
+
+.onboardify-information-icon-container {
+  display: flex;
+  padding-left: 24px;
+  margin-bottom: 8px;
+  gap:16px;
+}
+
+@media (max-width: 994px) {
+  .new-carousel-container {
+    max-width: 500px;
+  }
+
+  .new-grid {
+    flex-direction: column;
+  }
+
+  .new-card {
+    display: flex;
+    max-width: 500px;
+    flex-direction: column;
+    border-radius: 8px;
+    background-color: #fff;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    padding-bottom: 70px;
+  }
+
+  .onboardify-comment-information-container {
+    /* display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    height: 100%;
+    padding-top: 20px; */
+
+    flex-direction: column;
+  }
+
+  .onboardify-information-container {
+    position: relative;
+    top: 0;
+    z-index: 1;
+  }
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
   .new-title {
@@ -1617,10 +1667,41 @@ body,
   }
 }
 
+.onboardify-filter-export {
+  display: flex;
+  justify-content: space-between;
+}
+
+.onboardify-service-sort {
+  display: flex;
+  justify-content: space-between;
+}
+
+.onboardify-filter-sort-container {
+  display: flex;
+  justify-content: left;
+  padding-top: 8px;
+  margin-bottom: 32px;
+}
+
+.onboardify-comment-information-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  height: 100%;
+  padding-top: 20px;
+}
+
+.onboardify-chat-container {
+  gap: 30px;
+  overflow-y: visible;
+}
+
 @media (max-width: 480px) {
-  /* .new-img-container {
-    height: 150px;
-  } */
+  .onboardify-filter-sort-container {
+    flex-direction: column;
+  }
 
   .new-title {
     font-size: 18px;
@@ -1634,5 +1715,8 @@ body,
     font-size: 10px;
     padding: 6px 12px;
   }
-}
 
+  .onboardify-information-icon-container {
+    flex-direction: column;
+  }
+}

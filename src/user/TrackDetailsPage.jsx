@@ -182,20 +182,11 @@ export const TrackDetails = () => {
     <div style={{ padding: "2rem" }}>
       {loading && <Loader />}
       <BreadcrumbComponent data={breadCrumbData} name={state.name} />
-      <div
-        style={{
-          justifyContent: "space-between",
-          display: "flex",
-          alignItems: "flex-start",
-          gap: "20px",
-          height: "100%",
-          paddingTop: "20px",
-        }}
-      >
-        <div style={{ position: "sticky", top: -300, zIndex: 1 }}>
+      <div className="onboardify-comment-information-container">
+        <div className="onboardify-information-container">
           <div
-            className="d-flex mb-2 onboardin-padding-24"
-            style={{ gap: "16px" }}
+            className="onboardify-information-icon-container"
+          
           >
             <div
               className="rounded-circle p-4 onboarding-rounded-circle"
@@ -389,8 +380,7 @@ export const TrackDetails = () => {
         </div>
         {Object.keys(columnData).length > 0 && (
           <div
-            className="col-6 d-flex flex-column onboarding-width"
-            style={{ gap: "30px", overflowY: "auto" }}
+            className="col-6 d-flex flex-column onboarding-width onboardify-chat-container"
           >
             <div
               className="card border-0 border-1 p-4"
