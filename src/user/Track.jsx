@@ -41,8 +41,7 @@ export const Track = () => {
   const [profileData, setProfileData] = useState({});
   const [tempSearchData, setTempSearchData] = useState("");
   const [filterKeyData, setFilterKeyData] = useState({});
-  const [placeHolderSearch , setPlaceHolderSearch] = useState('');
-
+  const [placeHolderSearch, setPlaceHolderSearch] = useState("");
 
   const onChangeRadio = (item) => {
     let tempSelectedOrder = "";
@@ -109,7 +108,6 @@ export const Track = () => {
     setStatusItems(updatedFilterColumn);
   };
 
-
   const handleExport = async () => {
     setLoading(true);
     try {
@@ -157,7 +155,6 @@ export const Track = () => {
     if (tempBoardId === "") {
       return;
     }
-    console.log(filterKeyDataByUser , 'filyrtr')
     const rules = [];
 
     if (
@@ -190,8 +187,10 @@ export const Track = () => {
         setData(response.data.response.data.boards[0].items_page.items);
         setCursor(response.data.response.data.boards[0].items_page.cursor);
         setAllColumns(response.data.response.data.boards[0].columns);
-      }else{
-        if(response.data.response.data.boards[0].items_page.items.length === 0){
+      } else {
+        if (
+          response.data.response.data.boards[0].items_page.items.length === 0
+        ) {
           setData([]);
         }
       }
@@ -200,7 +199,6 @@ export const Track = () => {
       setSelectedFilter("9");
     }
   };
-
 
   const getStatusFilterData = async (tempBoardId) => {
     try {
@@ -234,7 +232,6 @@ export const Track = () => {
         setServiceOptions(tempData);
         setSelectedService(tempData[0].key);
         setProfileData(profileResponse.data.response[0].services);
-    
 
         if (
           JSON.parse(
@@ -263,29 +260,30 @@ export const Track = () => {
 
       await getTrackData(tempBoardId, filterKeyDataByUser);
       await getStatusFilterData(tempBoardId);
-     
     } catch (err) {
     } finally {
       setLoading(false);
     }
   };
 
-  const setPlaceHolderText = () =>{
-    let text = 'Search by ';
-    if(Object.keys(columnIdData).length > 0 && Object.keys(columnIdData.required_columns.profession).length > 0 && allColumns.length > 0){
-      allColumns.forEach((item)=>{
-        if(columnIdData.required_columns.profession.includes(item.id)){
-          text = text + item.title + ' or ';
+  const setPlaceHolderText = () => {
+    let text = "Search by ";
+    if (
+      Object.keys(columnIdData).length > 0 &&
+      Object.keys(columnIdData.required_columns.profession).length > 0 &&
+      allColumns.length > 0
+    ) {
+      allColumns.forEach((item) => {
+        if (columnIdData.required_columns.profession.includes(item.id)) {
+          text = text + item.title + " or ";
         }
-      })
+      });
       text = text.slice(0, -4);
       setPlaceHolderSearch(text);
-  
-    }else{
-     setPlaceHolderSearch('Search here')
+    } else {
+      setPlaceHolderSearch("Search here");
     }
-
-  }
+  };
 
   const loadMoreHandler = async () => {
     setLoading(true);
@@ -379,15 +377,10 @@ export const Track = () => {
 
       const commonObjects = getCommonObjects(arr1, arr2);
 
-
       if (response.success) {
         if (tempFilters.searchData.length > 0) {
-          setData(
-            commonObjects.slice(0, 10)
-          );
-          setOriginalArray(
-            commonObjects
-          );
+          setData(commonObjects.slice(0, 10));
+          setOriginalArray(commonObjects);
         } else {
           setData(
             response.data.response.data.boards[0].items_page.items.slice(0, 10)
@@ -425,8 +418,6 @@ export const Track = () => {
     }
   };
 
-
-
   const getMoreData = () => {
     const startIndex = loadMoreValue * 10;
     const endIndex = startIndex + 10;
@@ -453,9 +444,9 @@ export const Track = () => {
     getTrackRequestData();
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     setPlaceHolderText();
-  } ,[profileData , allColumns])
+  }, [profileData, allColumns]);
 
   return (
     <div style={{ padding: "2rem" }}>

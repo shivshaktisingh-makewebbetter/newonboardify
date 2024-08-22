@@ -8,8 +8,8 @@ import { UpdateComponent } from "./component/UpdateComponent";
 import { Loader } from "../common/Loader";
 
 export const TrackDetails = () => {
-  // const [allColumns, setAllColumns] = useState();
   const [itemDetails, setItemDetails] = useState({});
+  const [subItemDetails, setSubItemDetails] = useState([]);
   const location = useLocation();
   const [likeIds, setLikeIds] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -18,11 +18,23 @@ export const TrackDetails = () => {
   const [subHeadingString, setSubHeadingString] = useState("");
   const breadCrumbData = location.pathname.split("/");
 
+  const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
+    image: "https://onboardify.tasc360.com/uploads/y22.png",
+    site_bg: "#ffffff",
+    button_bg: "#497ed8",
+    banner_bg: "#497ed8",
+    banner_content:
+      "Hire an attitude, not just experience and qualification. Greg Savage.",
+    header_bg: "#f7f7f7",
+    head_title_color: "#497ed8",
+  };
+
   const fetchSubItemsDetails = async () => {
     setLoading(true);
 
     try {
       const response = await getSubItemDetails(state.id, state.boardId);
+      await newFetchData();
 
       if (response.success) {
         let tempText = "";
@@ -82,9 +94,12 @@ export const TrackDetails = () => {
     let value = "";
     itemDetails.items[0].column_values.forEach((subItem) => {
       if (subItem.id === item.id) {
-        if(subItem.hasOwnProperty('type') && subItem.type === 'date'){
-         value = subItem.text === "" ? subItem.text : formatDateNewFormat(subItem.text);
-        }else{
+        if (subItem.hasOwnProperty("type") && subItem.type === "date") {
+          value =
+            subItem.text === ""
+              ? subItem.text
+              : formatDateNewFormat(subItem.text);
+        } else {
           value = subItem.text;
         }
       }
@@ -92,60 +107,53 @@ export const TrackDetails = () => {
 
     return value;
   };
+  const newFetchData = async () => {
+    // setLoading(true);
+    try {
+      let url = `incorpify/getSubItemDetailsById/${state.id}`;
+      let method = "GET";
+      const response = await fetcher(url, method);
+      if (response.success) {
+        setSubItemDetails(response.data.response.data.items[0].column_values);
+      }
+    } catch (err) {
+      console.log(err, "error");
+    } finally {
+      // setLoading(false);
+    }
+  };
 
   const getInitialAction = (item) => {
     let tempInitialAction = "";
-    const activityLogs = itemDetails.boards[0].activity_logs;
 
-    for (let i = 0; i < activityLogs.length; i++) {
-      const subItem = activityLogs[i];
-      const tempData = JSON.parse(subItem.data);
-
-      if (item.id === tempData.column_id) {
-        //  if(!tempData.column_type === 'long_text'){
-        if (tempData.hasOwnProperty("value") && tempData.value !== null) {
-          tempInitialAction = tempData.value.label.text;
-        }
-        //  }
-
-        break;
+    subItemDetails.forEach((subItem) => {
+      if (item.id === subItem.id) {
+        tempInitialAction = subItem.text;
       }
-    }
+    });
 
     return tempInitialAction;
   };
 
   const getColor = (item) => {
     let tempColor = "";
-    const activityLogs = itemDetails.boards[0].activity_logs;
 
-    for (let i = 0; i < activityLogs.length; i++) {
-      const subItem = activityLogs[i];
-      const tempData = JSON.parse(subItem.data);
-
-      if (item.id === tempData.column_id) {
-        // if(!tempData.column_type === 'long_text'){
-        if (tempData.hasOwnProperty("value") && tempData.value !== null) {
-          tempColor = tempData.value.label.style.color;
-        }
-        // }
-        break;
+    settingsData.statusColorSetting.forEach((detail) => {
+      if (detail.status.toLowerCase() === item.toLowerCase()) {
+        tempColor = detail.color;
       }
-    }
-    return tempColor;
-  };
+    });
 
-  const getInitialDate = () => {
-    return formatDateNew(itemDetails.items[0].created_at);
+    return tempColor;
   };
 
   const getUpdatedDate = (item) => {
     let updatedDate = "";
     const activityLogs = itemDetails.boards[0].activity_logs;
-
     for (let i = 0; i < activityLogs.length; i++) {
       const subItem = activityLogs[i];
       const tempData = JSON.parse(subItem.data);
+      console.log(item.id, tempData);
 
       if (item.id === tempData.column_id) {
         if (tempData.hasOwnProperty("value") && tempData.value !== null) {
@@ -327,8 +335,7 @@ export const TrackDetails = () => {
                 Object.keys(itemDetails).length > 0 &&
                 columnData.onboarding_columns.map((item, index) => {
                   const initialAction = getInitialAction(item);
-                  const initialDate = getInitialDate();
-                  const color = getColor(item);
+                  const color = getColor(initialAction);
                   const updatedDate = getUpdatedDate(item);
 
                   return (
@@ -361,38 +368,9 @@ export const TrackDetails = () => {
                         <span className="fw-bold text-secondary fs-5">
                           {item.name}
                         </span>
-                        <span className="text-secondary">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            className="bi bi-arrow-right-short"
-                            viewBox="0 0 16 16"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"
-                            ></path>
-                          </svg>
-                          Awaiting Action | {initialDate}
-                        </span>
                         {initialAction !== "" &&
                           initialAction !== "Awaiting Action" && (
                             <span className="text-secondary">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="16"
-                                height="16"
-                                fill="currentColor"
-                                className="bi bi-arrow-right-short"
-                                viewBox="0 0 16 16"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"
-                                ></path>
-                              </svg>
                               {initialAction} | {updatedDate}
                             </span>
                           )}
