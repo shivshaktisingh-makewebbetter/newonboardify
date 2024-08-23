@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, Collapse, Input } from "antd";
+import { Button, Collapse, Input, Select } from "antd";
 import { LeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -69,7 +69,7 @@ export const Settings = () => {
 
   const addField = () => {
     let fields = statusFields;
-    fields.push({ status: "", color: "", bgcolor: "" });
+    fields.push({ status: [], color: "", bgcolor: "" });
     setStatusFields([...fields]);
   };
 
@@ -303,6 +303,8 @@ export const Settings = () => {
       ),
     }));
   }, [homeSettingData]);
+
+  console.log(statusFields , 'statusFields');
 
   return (
     <>
@@ -538,7 +540,7 @@ export const Settings = () => {
                       >
                         Status
                       </label>
-                      <input
+                      {/* <input
                         type="text"
                         placeholder="Enter Label"
                         style={{
@@ -549,6 +551,16 @@ export const Settings = () => {
                         }}
                         value={item.status}
                         onChange={(e) => changeStatus(i, e.target.value)}
+                      /> */}
+                      <Select
+                        mode="tags"
+                        style={{
+                          width: "100%",
+                        }}
+                        value={item.status}
+                        placeholder="Create Options"
+                        onChange={(e) => changeStatus(i, e)}
+                        options={[]}
                       />
                     </div>
                     <div style={{ flex: 1, minWidth: "200px" }}>

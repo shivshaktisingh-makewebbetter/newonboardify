@@ -53,8 +53,14 @@ export const RequestComponent = ({
     });
     let value;
     item.column_values.forEach((subItem) => {
+      console.log(allColumns , columnIdData ,subItem , tempId)
       if (subItem.id === tempId) {
-        value = subItem.text;
+        if(subItem.text === null){
+          value = 'Awaiting Action'
+        }else{
+          value = subItem.text;
+
+        }
       }
     });
     return value.toUpperCase();
@@ -63,7 +69,11 @@ export const RequestComponent = ({
   const getStatusColor = (item) => {
     let tempBgColor = "#8080803b";
     settingData.statusColorSetting.forEach((details) => {
-      if (details.status.trim().toLowerCase() === item.trim().toLowerCase()) {
+      const newArr = details.status.map(item => item.trim().toLowerCase());
+
+      if (newArr.includes(item.trim().toLowerCase())) {
+
+     
         tempBgColor = details.color;
       }
     });
@@ -98,7 +108,9 @@ export const RequestComponent = ({
   const getBgColor = (item) => {
     let tempBgColor = "#8080803b";
     settingData.statusColorSetting.forEach((details) => {
-      if (details.status.trim().toLowerCase() === item.trim().toLowerCase()) {
+      const newArr = details.status.map(item => item.trim().toLowerCase());
+
+      if (newArr.includes(item.trim().toLowerCase())) {
         tempBgColor = details.bgcolor;
       }
     });

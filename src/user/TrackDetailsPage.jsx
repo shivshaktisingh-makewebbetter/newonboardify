@@ -152,7 +152,9 @@ export const TrackDetails = () => {
 
 
     settingsData.statusColorSetting.forEach((detail) => {
-      if (detail.status.toLowerCase() === item.toLowerCase()) {
+      const newArr = detail.status.map(item => item.trim().toLowerCase());
+
+      if (newArr.includes(item.trim().toLowerCase())) {
         tempColor = detail.color;
       }
     });
