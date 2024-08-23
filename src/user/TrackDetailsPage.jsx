@@ -291,7 +291,7 @@ export const TrackDetails = () => {
                 columnData.candidate_coulmns.map((item, index) => {
                   const countryCode = getCountryCode(item);
                   const centerText = getCenterText(item);
-                  if (centerText.length > 0) {
+                  if (centerText && centerText.length > 0) {
                     return (
                       <li
                         className="user-candidate-column list-group-item d-flex pb-0 align-items-center border-0 text-start"
