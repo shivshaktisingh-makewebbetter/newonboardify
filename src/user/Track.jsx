@@ -273,17 +273,20 @@ export const Track = () => {
 
         profileResponse.data.response[0].services.forEach((item) => {
           if (item.board_id === tempBoardId) {
+         
             if (JSON.parse(item.service_column_value_filter).value.length > 0) {
               filterKeyDataByUser = JSON.parse(
                 item.service_column_value_filter
               );
               setFilterKeyData(filterKeyDataByUser);
+            }
+             
               setColumnIdData(JSON.parse(item.service_setting_data));
               setSearchKeys(
                 JSON.parse(item.service_setting_data).required_columns
                   .profession
               );
-            }
+           
           }
         });
       }
