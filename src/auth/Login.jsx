@@ -33,7 +33,7 @@ export const Login = () => {
     let payload = JSON.stringify({
       email: userDetails.email,
       password: userDetails.password,
-      domain: window.location.origin,
+      domain: "onboardify",
     });
 
     try {
