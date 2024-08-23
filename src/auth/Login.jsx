@@ -162,7 +162,6 @@ export const Login = () => {
         location.pathname !== "/admin/board" &&
         location.pathname !== "/admin/createAdmin"
       ) {
-     
         // Set up intercomSettings
         window.intercomSettings = {
           api_base: "https://api-iam.intercom.io",
@@ -245,7 +244,7 @@ export const Login = () => {
     }
   };
 
-  const getStatusText = (item , allColumns , columnIdData) => {
+  const getStatusText = (item, allColumns, columnIdData) => {
     let tempId = "";
     allColumns.forEach((subItem) => {
       if (subItem.id === columnIdData.required_columns.overall_status) {
@@ -261,7 +260,7 @@ export const Login = () => {
     return value.toUpperCase();
   };
 
-  const getStatusColor = (item , settingData) => {
+  const getStatusColor = (item, settingData) => {
     let tempBgColor = "#8080803b";
     settingData.statusColorSetting.forEach((details) => {
       if (details.status.trim().toLowerCase() === item.trim().toLowerCase()) {
@@ -302,35 +301,68 @@ export const Login = () => {
       sessionStorage.setItem("token", adminToken);
       sessionStorage.setItem("role", tascRole);
       let res = await getLoginUserDetails(adminToken);
-      let profileData = await getProfileData();
-      let subItemDetailsResponse = await getSubItemDetailsData(id);
-      let columnData = await fetchColumnDetails();
-      const generalSettingData = await getCustomerGeneralSettings(tascRole);
-      let allServiceData = getAllServiceData(
-        profileData.data.response[0].services
-      );
-      let subItemDetailsData = filterSubItemDetailData(subItemDetailsResponse);
-      const statusText = getStatusText(subItemDetailsData , columnData , JSON.parse(allServiceData.service_setting_data));
-      const statusColor = getStatusColor(statusText , JSON.parse(generalSettingData.data.response.ui_settings));
+      // let profileData = await getProfileData();
+      // let subItemDetailsResponse = await getSubItemDetailsData(id);
+      // let columnData = await fetchColumnDetails();
+      // const generalSettingData = await getCustomerGeneralSettings(tascRole);
+      // let allServiceData = getAllServiceData(
+      //   profileData.data.response[0].services
+      // );
+      // let subItemDetailsData = filterSubItemDetailData(subItemDetailsResponse);
+      // const statusText = getStatusText(subItemDetailsData , columnData , JSON.parse(allServiceData.service_setting_data));
+      // const statusColor = getStatusColor(statusText , JSON.parse(generalSettingData.data.response.ui_settings));
 
-      const dataToPass = {
-        id: id,
-        name: subItemDetailsData.name,
-        status: statusText,
-        color: statusColor,
-        boardId: boardId,
-        columnIdData: allServiceData.service_setting_data,
-        subHeadingColumn: JSON.parse(allServiceData.service_setting_data)
-          .sub_headings_column,
-        service_setting_data: allServiceData.service_setting_data,
-        service_column_value_filter: allServiceData.service_column_value_filter,
-      };
+      // const dataToPass = {
+      //   id: id,
+      //   name: subItemDetailsData.name,
+      //   status: statusText,
+      //   color: statusColor,
+      //   boardId: boardId,
+      //   columnIdData: allServiceData.service_setting_data,
+      //   subHeadingColumn: JSON.parse(allServiceData.service_setting_data)
+      //     .sub_headings_column,
+      //   service_setting_data: allServiceData.service_setting_data,
+      //   service_column_value_filter: allServiceData.service_column_value_filter,
+      // };
       if (res.success) {
         sessionStorage.setItem("userEmail", res.data.data.email);
         sessionStorage.setItem("userName", res.data.data.name);
         sessionStorage.setItem("userId", res.data.data.user_id);
       }
       if (id && tascRole === "customer") {
+        let profileData = await getProfileData();
+        let subItemDetailsResponse = await getSubItemDetailsData(id);
+        let columnData = await fetchColumnDetails();
+        const generalSettingData = await getCustomerGeneralSettings(tascRole);
+        let allServiceData = getAllServiceData(
+          profileData.data.response[0].services
+        );
+        let subItemDetailsData = filterSubItemDetailData(
+          subItemDetailsResponse
+        );
+        const statusText = getStatusText(
+          subItemDetailsData,
+          columnData,
+          JSON.parse(allServiceData.service_setting_data)
+        );
+        const statusColor = getStatusColor(
+          statusText,
+          JSON.parse(generalSettingData.data.response.ui_settings)
+        );
+
+        const dataToPass = {
+          id: id,
+          name: subItemDetailsData.name,
+          status: statusText,
+          color: statusColor,
+          boardId: boardId,
+          columnIdData: allServiceData.service_setting_data,
+          subHeadingColumn: JSON.parse(allServiceData.service_setting_data)
+            .sub_headings_column,
+          service_setting_data: allServiceData.service_setting_data,
+          service_column_value_filter:
+            allServiceData.service_column_value_filter,
+        };
         const res2 = await getCustomerGeneralSettings(adminToken);
         if (res2.success) {
           // console.log(response2)
