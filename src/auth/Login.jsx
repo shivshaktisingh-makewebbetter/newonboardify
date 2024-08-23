@@ -263,7 +263,8 @@ export const Login = () => {
   const getStatusColor = (item, settingData) => {
     let tempBgColor = "#8080803b";
     settingData.statusColorSetting.forEach((details) => {
-      if (details.status.trim().toLowerCase() === item.trim().toLowerCase()) {
+      const newArr = details.status.map((item) => item.trim().toLowerCase())
+      if (newArr.includes(item.trim().toLowerCase())) {
         tempBgColor = details.color;
       }
     });
