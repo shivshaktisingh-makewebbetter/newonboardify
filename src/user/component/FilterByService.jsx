@@ -15,7 +15,8 @@ export const FilterByService = ({
   setSelectedFilter,
   setFilterKeyData,
   updateSelectedService,
-  profileId
+  profileId ,
+  selectedService
 }) => {
   const handleMenuClick = async (e) => {
     let tempBoardId = "";
@@ -54,10 +55,12 @@ export const FilterByService = ({
     setLoading(false);
   };
 
+
   const menuProps = {
     items,
     selectable: true,
     defaultSelectedKeys: ["0"],
+    selectedKeys:selectedService.toString() ,
     onClick: handleMenuClick,
   };
 

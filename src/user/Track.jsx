@@ -217,7 +217,8 @@ export const Track = () => {
   const getPreviousSelectedService = async () => {
     try {
       const response = await getLastServiceUsedByUser();
-      console.log(response, "response");
+
+      return response;
     } catch (err) {
     } finally {
     }
@@ -226,7 +227,6 @@ export const Track = () => {
   const updateSelectedService = async (data) => {
     try {
       const response = await updateLastServiceUsedByUser(data);
-      console.log(response, "response");
     } catch (err) {
     } finally {
     }
@@ -237,6 +237,8 @@ export const Track = () => {
     let filterKeyDataByUser = {};
     setLoading(true);
     try {
+      const lastServiceResponse = await getPreviousSelectedService();
+
       const profileResponse = await getProfileData();
       if (profileResponse.success) {
         let tempData = [];
@@ -248,38 +250,44 @@ export const Track = () => {
             key: index,
           });
         });
-        tempBoardId = tempData[0].boardId;
-        setBoardId(tempData[0].boardId);
         setServiceOptions(tempData);
-        setSelectedService(tempData[0].key);
         setProfileData(profileResponse.data.response[0].services);
         setProfileId(profileResponse.data.response[0].id);
 
-        if (
-          JSON.parse(
-            profileResponse.data.response[0].services[0]
-              .service_column_value_filter
-          ).value.length > 0
-        ) {
-          filterKeyDataByUser = JSON.parse(
-            profileResponse.data.response[0].services[0]
-              .service_column_value_filter
-          );
+        if (lastServiceResponse.success) {
+          tempData.forEach((detail) => {
+            if (
+              detail.value.toString() ===
+              lastServiceResponse.data.response[0].service_id
+            ) {
+              setSelectedService(detail.key);
+              setBoardId(detail.boardId);
+              tempBoardId = detail.boardId;
+            }
+          });
+        } else {
+          setSelectedService(tempData[0].key);
+          setBoardId(tempData[0].boardId);
+          tempBoardId = tempData[0].boardId;
         }
-        setFilterKeyData(filterKeyDataByUser);
 
-        setColumnIdData(
-          JSON.parse(
-            profileResponse.data.response[0].services[0].service_setting_data
-          )
-        );
-        setSearchKeys(
-          JSON.parse(
-            profileResponse.data.response[0].services[0].service_setting_data
-          ).required_columns.profession
-        );
+        profileResponse.data.response[0].services.forEach((item) => {
+          if (item.board_id === tempBoardId) {
+            if (JSON.parse(item.service_column_value_filter).value.length > 0) {
+              filterKeyDataByUser = JSON.parse(
+                item.service_column_value_filter
+              );
+              setFilterKeyData(filterKeyDataByUser);
+              setColumnIdData(JSON.parse(item.service_setting_data));
+              setSearchKeys(
+                JSON.parse(item.service_setting_data).required_columns
+                  .profession
+              );
+            }
+          }
+        });
       }
-      await getPreviousSelectedService();
+
       await getTrackData(tempBoardId, filterKeyDataByUser);
       await getStatusFilterData(tempBoardId);
     } catch (err) {
@@ -515,6 +523,7 @@ export const Track = () => {
             setFilterKeyData={setFilterKeyData}
             updateSelectedService={updateSelectedService}
             profileId={profileId}
+            selectedService={selectedService}
           />
           <SortBy
             items={sortingItems}

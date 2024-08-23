@@ -366,11 +366,7 @@ export const EditProfile = () => {
       };
       setDataSource(updatedData);
       const response = await swapService(payload);
-      console.log(response, "response");
-      // if(response.status){
-      // updateDataSource(response.response)
-
-      // }
+     
     }
 
     setDraggedItem(null);
