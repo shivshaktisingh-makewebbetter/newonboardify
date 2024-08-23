@@ -124,19 +124,32 @@ export const TrackDetails = () => {
   };
 
   const getInitialAction = (item) => {
+ 
     let tempInitialAction = "";
 
+
     subItemDetails.forEach((subItem) => {
+   
       if (item.id === subItem.id) {
-        tempInitialAction = subItem.text;
+        if(subItem.text === null){
+          tempInitialAction = '';
+        }else{
+          tempInitialAction = subItem.text;
+
+        }
+     
+
       }
     });
+
+  
 
     return tempInitialAction;
   };
 
   const getColor = (item) => {
     let tempColor = "";
+
 
     settingsData.statusColorSetting.forEach((detail) => {
       if (detail.status.toLowerCase() === item.toLowerCase()) {
@@ -157,7 +170,6 @@ export const TrackDetails = () => {
     for (let i = 0; i < activityLogs.length; i++) {
       const subItem = activityLogs[i];
       const tempData = JSON.parse(subItem.data);
-      console.log(item.id, tempData);
 
       if (item.id === tempData.column_id) {
         if (tempData.hasOwnProperty("value") && tempData.value !== null) {

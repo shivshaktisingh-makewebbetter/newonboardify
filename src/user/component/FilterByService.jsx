@@ -5,24 +5,21 @@ export const FilterByService = ({
   items,
   setSelectedService,
   setBoardId,
-  getDataByFilterAndSearch,
-  order,
-  searchData,
-  selectedFilter,
   profileData,
   setColumnIdData,
   setSearchKeys,
   setSearchData,
-  tempSearchData,
   setTempSearchData,
   getTrackData,
   setLoading,
   setSelectedFilter,
-  filterKeyData ,
-  setFilterKeyData ,
+  setFilterKeyData,
+  updateSelectedService,
+  profileId
 }) => {
   const handleMenuClick = async (e) => {
     let tempBoardId = "";
+    let service_id = "";
     let tempFilterKeyData = {};
     setSelectedService(e.key);
     items.forEach((details, index) => {
@@ -42,11 +39,18 @@ export const FilterByService = ({
       }
     });
 
+    profileData.forEach((detail) => {
+      if (detail.board_id === items[e.key].boardId) {
+        service_id = detail.id;
+      }
+    });
+
     setSearchData("");
     setTempSearchData("");
-    setSelectedFilter("9");    
+    setSelectedFilter("9");
     setLoading(true);
-    await getTrackData(tempBoardId , tempFilterKeyData);
+    await updateSelectedService({profile_id:profileId , service_id:service_id});
+    await getTrackData(tempBoardId, tempFilterKeyData);
     setLoading(false);
   };
 
@@ -55,12 +59,10 @@ export const FilterByService = ({
     selectable: true,
     defaultSelectedKeys: ["0"],
     onClick: handleMenuClick,
-    
   };
 
   return (
-    <Dropdown menu={menuProps} >
-      
+    <Dropdown menu={menuProps}>
       <Button
         type="text"
         style={{

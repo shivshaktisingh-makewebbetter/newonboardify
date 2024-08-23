@@ -128,6 +128,10 @@ export const swapService = (data) =>
 export const updateServiceVisibility = (data) =>
   Services.POST(`newonboardify/admin/updateServiceVisibility`, data);
 
+export const updateLastServiceUsedByUser = (data) => Services.POST(`newonboardify/customer/lastServiceUsedByUser` , data);
+
+export const getLastServiceUsedByUser = () => Services.GET(`newonboardify/customer/lastServiceUsedByUser`);
+
 // Common Endpoints
 export const loginApi = (data) => Services.POST(`commom-login`, data);
 export const registerApi = (data) =>

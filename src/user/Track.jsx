@@ -15,6 +15,8 @@ import {
   getTrackingDataByBoardId,
   exportServiceData,
   requestTrackingWithOrCondition,
+  getLastServiceUsedByUser,
+  updateLastServiceUsedByUser,
 } from "../apiservice/ApiService";
 import { Loader } from "../common/Loader";
 import { FilterByService } from "./component/FilterByService";
@@ -42,6 +44,7 @@ export const Track = () => {
   const [tempSearchData, setTempSearchData] = useState("");
   const [filterKeyData, setFilterKeyData] = useState({});
   const [placeHolderSearch, setPlaceHolderSearch] = useState("");
+  const [profileId, setProfileId] = useState("");
 
   const onChangeRadio = (item) => {
     let tempSelectedOrder = "";
@@ -211,6 +214,24 @@ export const Track = () => {
     }
   };
 
+  const getPreviousSelectedService = async () => {
+    try {
+      const response = await getLastServiceUsedByUser();
+      console.log(response, "response");
+    } catch (err) {
+    } finally {
+    }
+  };
+
+  const updateSelectedService = async (data) => {
+    try {
+      const response = await updateLastServiceUsedByUser(data);
+      console.log(response, "response");
+    } catch (err) {
+    } finally {
+    }
+  };
+
   const getTrackRequestData = async () => {
     let tempBoardId = "";
     let filterKeyDataByUser = {};
@@ -232,6 +253,7 @@ export const Track = () => {
         setServiceOptions(tempData);
         setSelectedService(tempData[0].key);
         setProfileData(profileResponse.data.response[0].services);
+        setProfileId(profileResponse.data.response[0].id);
 
         if (
           JSON.parse(
@@ -257,7 +279,7 @@ export const Track = () => {
           ).required_columns.profession
         );
       }
-
+      await getPreviousSelectedService();
       await getTrackData(tempBoardId, filterKeyDataByUser);
       await getStatusFilterData(tempBoardId);
     } catch (err) {
@@ -470,47 +492,46 @@ export const Track = () => {
         tempSearchData={tempSearchData}
         setTempSearchData={setTempSearchData}
       />
-      <div
-      className="onboardify-filter-sort-container"
-      
-      >
+      <div className="onboardify-filter-sort-container">
         <div className="onboardify-service-sort">
-        <FilterByService
-          items={serviceOptions}
-          setSelectedService={setSelectedService}
-          setBoardId={setBoardId}
-          getDataByFilterAndSearch={getDataByFilterAndSearch}
-          order={selectedOrder}
-          selectedFilter={selectedFilter}
-          searchData={searchData}
-          profileData={profileData}
-          setColumnIdData={setColumnIdData}
-          setSearchKeys={setSearchKeys}
-          setSearchData={setSearchData}
-          tempSearchData={tempSearchData}
-          setTempSearchData={setTempSearchData}
-          getTrackData={getTrackData}
-          setLoading={setLoading}
-          setSelectedFilter={setSelectedFilter}
-          filterKeyData={filterKeyData}
-          setFilterKeyData={setFilterKeyData}
-        />
-        <SortBy
-          items={sortingItems}
-          getDataByFilterAndSearch={getDataByFilterAndSearch}
-        />
+          <FilterByService
+            items={serviceOptions}
+            setSelectedService={setSelectedService}
+            setBoardId={setBoardId}
+            getDataByFilterAndSearch={getDataByFilterAndSearch}
+            order={selectedOrder}
+            selectedFilter={selectedFilter}
+            searchData={searchData}
+            profileData={profileData}
+            setColumnIdData={setColumnIdData}
+            setSearchKeys={setSearchKeys}
+            setSearchData={setSearchData}
+            tempSearchData={tempSearchData}
+            setTempSearchData={setTempSearchData}
+            getTrackData={getTrackData}
+            setLoading={setLoading}
+            setSelectedFilter={setSelectedFilter}
+            filterKeyData={filterKeyData}
+            setFilterKeyData={setFilterKeyData}
+            updateSelectedService={updateSelectedService}
+            profileId={profileId}
+          />
+          <SortBy
+            items={sortingItems}
+            getDataByFilterAndSearch={getDataByFilterAndSearch}
+          />
         </div>
         <div className="onboardify-filter-export">
-        <FilterBy
-          items={statusItems}
-          setSelectedFilter={setSelectedFilter}
-          getDataByFilterAndSearch={getDataByFilterAndSearch}
-          boardId={boardId}
-          order={selectedOrder}
-          selectedFilter={selectedFilter}
-          searchData={searchData}
-        />
-        <ExportBy handleExport={handleExport} />
+          <FilterBy
+            items={statusItems}
+            setSelectedFilter={setSelectedFilter}
+            getDataByFilterAndSearch={getDataByFilterAndSearch}
+            boardId={boardId}
+            order={selectedOrder}
+            selectedFilter={selectedFilter}
+            searchData={searchData}
+          />
+          <ExportBy handleExport={handleExport} />
         </div>
       </div>
       {!loading && (
