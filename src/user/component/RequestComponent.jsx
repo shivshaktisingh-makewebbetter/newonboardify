@@ -45,7 +45,6 @@ export const RequestComponent = ({
   };
 
   const getStatusText = (item) => {
-    console.log(columnIdData , 'csdk');
     let tempId = "";
     allColumns.forEach((subItem) => {
       if (subItem.id === columnIdData.required_columns.overall_status) {
