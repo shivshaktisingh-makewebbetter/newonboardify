@@ -53,7 +53,6 @@ export const RequestComponent = ({
     });
     let value;
     item.column_values.forEach((subItem) => {
-      console.log(allColumns , columnIdData ,subItem , tempId)
       if (subItem.id === tempId) {
         if(subItem.text === null){
           value = 'Awaiting Action'

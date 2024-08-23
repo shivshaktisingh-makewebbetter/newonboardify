@@ -124,25 +124,17 @@ export const TrackDetails = () => {
   };
 
   const getInitialAction = (item) => {
- 
     let tempInitialAction = "";
 
-
     subItemDetails.forEach((subItem) => {
-   
       if (item.id === subItem.id) {
-        if(subItem.text === null){
-          tempInitialAction = '';
-        }else{
+        if (subItem.text === null) {
+          tempInitialAction = "";
+        } else {
           tempInitialAction = subItem.text;
-
         }
-     
-
       }
     });
-
-  
 
     return tempInitialAction;
   };
@@ -150,9 +142,8 @@ export const TrackDetails = () => {
   const getColor = (item) => {
     let tempColor = "";
 
-
     settingsData.statusColorSetting.forEach((detail) => {
-      const newArr = detail.status.map(item => item.trim().toLowerCase());
+      const newArr = detail.status.map((item) => item.trim().toLowerCase());
 
       if (newArr.includes(item.trim().toLowerCase())) {
         tempColor = detail.color;
@@ -198,10 +189,7 @@ export const TrackDetails = () => {
       <BreadcrumbComponent data={breadCrumbData} name={state.name} />
       <div className="onboardify-comment-information-container">
         <div className="onboardify-information-container">
-          <div
-            className="onboardify-information-icon-container"
-          
-          >
+          <div className="onboardify-information-icon-container">
             <div
               className="rounded-circle p-4 onboarding-rounded-circle"
               style={{ background: state.color }}
@@ -378,13 +366,12 @@ export const TrackDetails = () => {
                         <span className="fw-bold text-secondary fs-5">
                           {item.name}
                         </span>
-                        {initialAction !== "" &&
-                          initialAction !== "Awaiting Action" && (
-                            <span className="text-secondary">
-                              {initialAction} |{" "}
-                              {updatedDate === "" ? initialDate : updatedDate}
-                            </span>
-                          )}
+                        {initialAction !== "" && (
+                          <span className="text-secondary">
+                            {initialAction} |{" "}
+                            {updatedDate === "" ? initialDate : updatedDate}
+                          </span>
+                        )}
                       </div>
                     </li>
                   );
@@ -393,9 +380,7 @@ export const TrackDetails = () => {
           </div>
         </div>
         {Object.keys(columnData).length > 0 && (
-          <div
-            className="col-6 d-flex flex-column onboarding-width onboardify-chat-container"
-          >
+          <div className="col-6 d-flex flex-column onboarding-width onboardify-chat-container">
             <div
               className="card border-0 border-1 p-4"
               style={{ background: "rgba(111, 116, 144, 0.06)" }}
