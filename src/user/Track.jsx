@@ -406,18 +406,40 @@ export const Track = () => {
       };
 
       const commonObjects = getCommonObjects(arr1, arr2);
-      if (commonObjects.length > 0) {
-        if (commonObjects.length > 10) {
-          setData(commonObjects.slice(0, 10));
-          setOriginalArray(commonObjects);
-          setCursor('');
+      if(tempFilters.searchData.length > 0){
+        if (commonObjects.length > 0) {
+          if (commonObjects.length > 10) {
+            setData(commonObjects.slice(0, 10));
+            setOriginalArray(commonObjects);
+            setCursor('');
+          } else {
+            setData(commonObjects);
+            setCursor(null)
+          }
         } else {
-          setData(commonObjects);
-          setCursor(null)
+          setData([]);
+          setCursor(null);
         }
-      } else {
-      }
+  
+      }else{
 
+        if(arr1.length > 0){
+         if(arr1.length > 10){
+          setData(arr1.slice(0, 10));
+          setOriginalArray(arr1);
+          setCursor('');
+         }else{
+          setData(arr1);
+          setCursor(null)
+         }
+        }else{
+          setData([]);
+          setCursor(null);
+
+        }
+          
+      }
+      
       // if (response.success) {
       //   if (tempFilters.searchData.length > 0) {
       //     setData(commonObjects.slice(0, 10));
