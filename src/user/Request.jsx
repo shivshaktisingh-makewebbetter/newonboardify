@@ -7,6 +7,7 @@ import { LeftOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import { Loader } from "../common/Loader";
 import { toast, ToastContainer } from "react-toastify";
+import { LazyImage } from "../common/LazyImage";
 
 export const Request = () => {
   const [formCode, setFormCode] = useState("");
@@ -289,7 +290,15 @@ export const Request = () => {
               services.map((item) => (
                 <div key={item.title} className="new-card">
                   <div className="new-img-container">
-                    <img src={item.file_location} alt={item.title} />
+                  
+                  
+<LazyImage
+  src={item.file_location} 
+  alt={item.title} 
+  // width={300} 
+  // height={200} 
+ 
+/>
                   </div>
                   <div className="new-content">
                     <p className="new-title">{item.title}</p>
