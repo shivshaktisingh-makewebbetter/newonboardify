@@ -2,25 +2,34 @@ import { SearchOutlined } from "@ant-design/icons";
 import { CloseOutlined } from "@ant-design/icons";
 import { Input } from "antd";
 
-export const SearchBox = ({      tempSearchData , 
-  setTempSearchData ,placeHolder , setSearchData , getDataByFilterAndSearch , order , boardId , selectedFilter , flag}) => {
-    const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
-		image:
-		  "https://onboardify.tasc360.com/uploads/y22.png",
-		site_bg: "#ffffff",
-		button_bg: "#497ed8",
-		banner_bg: "#497ed8",
-		banner_content:
-		  "Hire an attitude, not just experience and qualification. Greg Savage.",
-		header_bg: "#f7f7f7",
-		head_title_color: "#497ed8",
-	  };
-
- 
+export const SearchBox = ({
+  tempSearchData,
+  getTrackData,
+  setTempSearchData,
+  placeHolder,
+  setSearchData,
+  getDataByFilterAndSearch,
+  order,
+  boardId,
+  selectedFilter,
+  filterKeyData,
+  flag,
+  setLoading
+}) => {
+  const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
+    image: "https://onboardify.tasc360.com/uploads/y22.png",
+    site_bg: "#ffffff",
+    button_bg: "#497ed8",
+    banner_bg: "#497ed8",
+    banner_content:
+      "Hire an attitude, not just experience and qualification. Greg Savage.",
+    header_bg: "#f7f7f7",
+    head_title_color: "#497ed8",
+  };
 
   const handleChange = (e) => {
     setTempSearchData(e.target.value);
-    if(e.target.value.length === 0){
+    if (e.target.value.length === 0) {
       handleEraseData();
     }
   };
@@ -34,23 +43,30 @@ export const SearchBox = ({      tempSearchData ,
     };
     if (event.keyCode === 13) {
       setSearchData(tempSearchData);
-      if(flag){
-      getDataByFilterAndSearch(tempData);
+      if (flag) {
+        getDataByFilterAndSearch(tempData);
       }
     }
   };
 
-  const handleEraseData = () => {
+  const handleEraseData = async() => {
     let filterData = {
       order: order,
       boardId: boardId,
       statusFilter: selectedFilter,
-      searchData: '',
+      searchData: "",
     };
     const tempData = "";
     setTempSearchData(tempData);
     setSearchData(tempData);
-    getDataByFilterAndSearch(filterData);
+   
+    if (selectedFilter == 9) {
+      setLoading(true);
+     await getTrackData(boardId, filterKeyData);
+     setLoading(false);
+    } else {
+      getDataByFilterAndSearch(filterData);
+    }
   };
 
   return (

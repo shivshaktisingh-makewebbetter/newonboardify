@@ -406,7 +406,6 @@ export const Track = () => {
       };
 
       const commonObjects = getCommonObjects(arr1, arr2);
-      console.log(commonObjects, "common");
       if (commonObjects.length > 0) {
         if (commonObjects.length > 10) {
           setData(commonObjects.slice(0, 10));
@@ -510,7 +509,10 @@ export const Track = () => {
         selectedFilter={selectedFilter}
         flag={true}
         tempSearchData={tempSearchData}
+        filterKeyData={filterKeyData}
         setTempSearchData={setTempSearchData}
+        getTrackData={getTrackData}
+        setLoading={setLoading}
       />
       <div className="onboardify-filter-sort-container">
         <div className="onboardify-service-sort">
