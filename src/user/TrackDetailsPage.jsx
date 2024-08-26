@@ -6,6 +6,8 @@ import { countries } from "../utils/assets";
 import { fetcher, formatDateNew, formatDateNewFormat } from "../utils/helper";
 import { UpdateComponent } from "./component/UpdateComponent";
 import { Loader } from "../common/Loader";
+import { InfoCircleOutlined } from "@ant-design/icons";
+import { Tooltip } from "antd";
 
 export const TrackDetails = () => {
   const [itemDetails, setItemDetails] = useState({});
@@ -175,6 +177,16 @@ export const TrackDetails = () => {
     return updatedDate;
   };
 
+  const getDescription = (item) =>{
+    let tempDescription = '';
+    itemDetails.boards[0].columns.forEach((detail)=>{
+     if(item.id === detail.id){
+      tempDescription = detail.description === null ? '' : detail.description;
+     }
+    })
+    return tempDescription;
+  }
+
   useEffect(() => {
     fetchSubItemsDetails();
   }, []);
@@ -335,6 +347,7 @@ export const TrackDetails = () => {
                   const color = getColor(initialAction);
                   const updatedDate = getUpdatedDate(item);
                   const initialDate = getInitialDate();
+                  const description = getDescription(item);
 
                   return (
                     <li
@@ -364,7 +377,7 @@ export const TrackDetails = () => {
                       </span>
                       <div className="d-flex flex-column">
                         <span className="fw-bold text-secondary fs-5">
-                          {item.name}
+                          {item.name} {description.length > 0 &&  <Tooltip placement="top" title={description}> <InfoCircleOutlined style={{fontSize:"14px"}}/> </Tooltip>}
                         </span>
                         {initialAction !== "" && (
                           <span className="text-secondary">
