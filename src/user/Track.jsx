@@ -273,20 +273,17 @@ export const Track = () => {
 
         profileResponse.data.response[0].services.forEach((item) => {
           if (item.board_id === tempBoardId) {
-         
             if (JSON.parse(item.service_column_value_filter).value.length > 0) {
               filterKeyDataByUser = JSON.parse(
                 item.service_column_value_filter
               );
               setFilterKeyData(filterKeyDataByUser);
             }
-             
-              setColumnIdData(JSON.parse(item.service_setting_data));
-              setSearchKeys(
-                JSON.parse(item.service_setting_data).required_columns
-                  .profession
-              );
-           
+
+            setColumnIdData(JSON.parse(item.service_setting_data));
+            setSearchKeys(
+              JSON.parse(item.service_setting_data).required_columns.profession
+            );
           }
         });
       }
@@ -409,42 +406,54 @@ export const Track = () => {
       };
 
       const commonObjects = getCommonObjects(arr1, arr2);
-
-      if (response.success) {
-        if (tempFilters.searchData.length > 0) {
+      console.log(commonObjects, "common");
+      if (commonObjects.length > 0) {
+        if (commonObjects.length > 10) {
           setData(commonObjects.slice(0, 10));
           setOriginalArray(commonObjects);
+          setCursor('');
         } else {
-          setData(
-            response.data.response.data.boards[0].items_page.items.slice(0, 10)
-          );
-          setOriginalArray(
-            response.data.response.data.boards[0].items_page.items
-          );
+          setData(commonObjects);
+          setCursor(null)
         }
-
-        if (tempFilters.searchData.length > 0) {
-        } else {
-          if (
-            response.data.response.data.boards[0].items_page.items.length <= 10
-          ) {
-            setCursor(null);
-          }
-        }
+      } else {
       }
-      if (
-        response.success &&
-        response.data.response.data.boards[0].items_page.items.length === 0
-      ) {
-        setData([]);
-        setOriginalArray([]);
 
-        if (
-          response.data.response.data.boards[0].items_page.items.length <= 10
-        ) {
-          setCursor(null);
-        }
-      }
+      // if (response.success) {
+      //   if (tempFilters.searchData.length > 0) {
+      //     setData(commonObjects.slice(0, 10));
+      //     setOriginalArray(commonObjects);
+      //   } else {
+      //     setData(
+      //       response.data.response.data.boards[0].items_page.items.slice(0, 10)
+      //     );
+      //     setOriginalArray(
+      //       response.data.response.data.boards[0].items_page.items
+      //     );
+      //   }
+
+      //   if (tempFilters.searchData.length > 0) {
+      //   } else {
+      //     if (
+      //       response.data.response.data.boards[0].items_page.items.length <= 10
+      //     ) {
+      //       setCursor(null);
+      //     }
+      //   }
+      // }
+      // if (
+      //   response.success &&
+      //   response.data.response.data.boards[0].items_page.items.length === 0
+      // ) {
+      //   setData([]);
+      //   setOriginalArray([]);
+
+      //   if (
+      //     response.data.response.data.boards[0].items_page.items.length <= 10
+      //   ) {
+      //     setCursor(null);
+      //   }
+      // }
     } catch (err) {
     } finally {
       setLoading(false);

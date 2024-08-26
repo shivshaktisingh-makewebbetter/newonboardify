@@ -7,10 +7,9 @@ import {
   getAllBoards,
   getUserList,
 } from "../apiservice/ApiService";
-import { Button, Select, Table } from "antd";
+import { Button, Table } from "antd";
 import { extractDateTime, roleData } from "../utils/helper";
 import { DeleteOutlined, LeftOutlined } from "@ant-design/icons";
-import { SearchBox } from "../components/SearchBox";
 import { useNavigate } from "react-router-dom";
 import { CopyText } from "./components/CopyText";
 import { DeleteModal } from "./components/DeleteModal";

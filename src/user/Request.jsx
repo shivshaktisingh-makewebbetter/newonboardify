@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Hero } from "../components/Hero";
 import { getAllProfileDataByUser } from "../apiservice/ApiService";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+
 
 import { LeftOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";

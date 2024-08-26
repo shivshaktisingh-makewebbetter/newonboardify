@@ -1,7 +1,6 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { CloseOutlined } from "@ant-design/icons";
 import { Input } from "antd";
-import { useState } from "react";
 
 export const SearchBox = ({      tempSearchData , 
   setTempSearchData ,placeHolder , setSearchData , getDataByFilterAndSearch , order , boardId , selectedFilter , flag}) => {
