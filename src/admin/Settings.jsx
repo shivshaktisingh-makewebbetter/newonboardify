@@ -304,7 +304,6 @@ export const Settings = () => {
     }));
   }, [homeSettingData]);
 
-  console.log(statusFields , 'statusFields');
 
   return (
     <>
