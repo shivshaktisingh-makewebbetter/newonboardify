@@ -516,7 +516,6 @@ export const Login = () => {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-
                     transition: "0.5s",
                     height: "46px",
                     opacity:

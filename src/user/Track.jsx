@@ -32,7 +32,7 @@ export const Track = () => {
   const [columnIdData, setColumnIdData] = useState({});
   const [allColumns, setAllColumns] = useState([]);
   const [originalArray, setOriginalArray] = useState([]);
-  const [selectedOrder, setSelectedOrder] = useState(1);
+  const [selectedOrder, setSelectedOrder] = useState(2);
   const [selectedFilter, setSelectedFilter] = useState("9");
   const [selectedService, setSelectedService] = useState(0);
   const [statusItems, setStatusItems] = useState([]);
