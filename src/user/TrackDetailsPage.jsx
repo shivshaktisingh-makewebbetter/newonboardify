@@ -177,15 +177,15 @@ export const TrackDetails = () => {
     return updatedDate;
   };
 
-  const getDescription = (item) =>{
-    let tempDescription = '';
-    itemDetails.boards[0].columns.forEach((detail)=>{
-     if(item.id === detail.id){
-      tempDescription = detail.description === null ? '' : detail.description;
-     }
-    })
+  const getDescription = (item) => {
+    let tempDescription = "";
+    itemDetails.boards[0].columns.forEach((detail) => {
+      if (item.id === detail.id) {
+        tempDescription = detail.description === null ? "" : detail.description;
+      }
+    });
     return tempDescription;
-  }
+  };
 
   useEffect(() => {
     fetchSubItemsDetails();
@@ -196,7 +196,7 @@ export const TrackDetails = () => {
   }, []);
 
   return (
-    <div style={{ padding: "2rem" }}>
+    <div className="onboardify-trackdetails-padding">
       {loading && <Loader />}
       <BreadcrumbComponent data={breadCrumbData} name={state.name} />
       <div className="onboardify-comment-information-container">
@@ -300,21 +300,28 @@ export const TrackDetails = () => {
                         style={{ background: "inherit", gap: "12px" }}
                         key={index}
                       >
-                        <span className="mb-2">
+                        <div className="onboardify-icon-label-text-container">
+                        <span className="mb-2 onboardify-icon-label-container">
+                          <span className="onboardify-icon-container-track">
                           <i
                             className={item.icon}
                             style={{ color: "#928f8f" }}
                           ></i>
+                          </span>
+                          <span style={{ color: "#928f8f", fontSize: "17px" }} className="onboardify-label-container-track">{" "}
+                            {item.custom_title !== null &&
+                              item.custom_title.length > 0 &&
+                              item.custom_title}
+                            {item.custom_title !== null &&
+                              item.custom_title.length > 0 &&
+                              ": "}
+                          </span>
                         </span>
                         <span style={{ color: "#928f8f", fontSize: "17px" }}>
-                          {item.custom_title !== null &&
-                            item.custom_title.length > 0 &&
-                            item.custom_title}
-                          {item.custom_title !== null &&
-                            item.custom_title.length > 0 &&
-                            ": "}
+                          
                           {centerText}
                         </span>
+                        </div>
                         {(item.name === "Nationality" ||
                           item.name === "Country of Residency") && (
                           <span>
@@ -377,7 +384,15 @@ export const TrackDetails = () => {
                       </span>
                       <div className="d-flex flex-column">
                         <span className="fw-bold text-secondary fs-5">
-                          {item.name} {description.length > 0 &&  <Tooltip placement="top" title={description}> <InfoCircleOutlined style={{fontSize:"14px"}}/> </Tooltip>}
+                          {item.name}{" "}
+                          {description.length > 0 && (
+                            <Tooltip placement="top" title={description}>
+                              {" "}
+                              <InfoCircleOutlined
+                                style={{ fontSize: "14px" }}
+                              />{" "}
+                            </Tooltip>
+                          )}
                         </span>
                         {initialAction !== "" && (
                           <span className="text-secondary">

@@ -470,7 +470,7 @@ body,
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  width:80%;
+  width: 80%;
 }
 
 .governify-header-major-div-logo {
@@ -1208,7 +1208,7 @@ body,
     align-items: center;
     justify-content: space-between;
     gap: 5px;
-  } */ 
+  } */
 }
 
 @media (max-width: 540px) {
@@ -1620,52 +1620,8 @@ body,
   width: 100%;
 }
 
-@media (max-width: 994px) {
-  .new-carousel-container {
-    max-width: 500px;
-  }
-
-  .new-grid {
-    flex-direction: column;
-  }
-
-  .new-card {
-    display: flex;
-    max-width: 500px;
-    flex-direction: column;
-    border-radius: 8px;
-    background-color: #fff;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    padding-bottom: 70px;
-  }
-
-  .onboardify-comment-information-container {
-    flex-direction: column;
-  }
-
-  .onboardify-information-container {
-    position: relative;
-    top: 0;
-    z-index: 1;
-  }
-}
-
-/* Responsive Styles */
-@media (max-width: 768px) {
-  .new-title {
-    font-size: 20px;
-  }
-
-  .new-description {
-    font-size: 14px;
-  }
-
-  .new-button-container button {
-    font-size: 12px;
-    padding: 8px 16px;
-  }
+.onboardify-trackdetails-padding {
+  padding: 2rem;
 }
 
 .onboardify-filter-export {
@@ -1699,6 +1655,96 @@ body,
   overflow-y: visible;
 }
 
+.onboardify-icon-label-text-container {
+  display: flex;
+  gap: 5px;
+}
+
+.onboardify-icon-label-container {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+
+
+.onboardify-icon-container-track {
+  display: flex;
+  align-items: center; /* Aligns children vertically in the center */
+}
+
+.onboardify-icon-container-track i::before {
+  display: inline-block; /* Ensures the icon respects the flex container */
+  vertical-align: middle; /* Aligns the icon vertically in the middle */
+}
+
+@media (max-width: 994px) {
+  .new-carousel-container {
+    max-width: 500px;
+  }
+
+  .new-grid {
+    flex-direction: column;
+  }
+
+  .new-card {
+    display: flex;
+    max-width: 500px;
+    flex-direction: column;
+    border-radius: 8px;
+    background-color: #fff;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    padding-bottom: 70px;
+  }
+
+  .onboardify-comment-information-container {
+    flex-direction: column;
+  }
+
+  .onboardify-information-container {
+    position: relative;
+    top: 0;
+    z-index: 1;
+  }
+
+  .new-button-container {
+    padding-left: 0px;
+  }
+
+  .onboardify-comment-information-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    height: 100%;
+    padding-top: 20px;
+  }
+
+  .onboardify-chat-container {
+    gap: 30px;
+    width: 100%;
+    overflow-y: visible;
+  }
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .new-title {
+    font-size: 20px;
+  }
+
+  .new-description {
+    font-size: 14px;
+  }
+
+  .new-button-container button {
+    font-size: 12px;
+    padding: 8px 16px;
+  }
+}
+
 @media (max-width: 480px) {
   .onboardify-filter-sort-container {
     flex-direction: column;
@@ -1720,36 +1766,47 @@ body,
   .onboardify-information-icon-container {
     flex-direction: column;
   }
-}
 
-
-@media (max-width: 1176px){
-  .governify-header-major-div{
-    width:76%;
-  }
-}
-
-
- @media (max-width: 1000px){
-  .governify-header-major-div{
-    width:65%;
-  }
-}
-
-
-@media (max-width: 778px){
-  .governify-header-major-div{
-    width:100%;
+  .onboardify-trackdetails-padding {
+    padding: 0.5rem;
   }
 
-  .onboardify-header-container{
+  .inc-comment-header {
     flex-direction: column;
-    gap:10px;
   }
 
-  .governify-header-major-div-buttons{
-    width:100%;
+  /* .onboardify-icon-label-text-container {
+   flex-direction: column;
+  } */
+}
+
+@media (max-width: 1176px) {
+  .governify-header-major-div {
+    width: 76%;
+  }
+}
+
+@media (max-width: 1000px) {
+  .governify-header-major-div {
+    width: 65%;
+  }
+}
+
+@media (max-width: 778px) {
+  .governify-header-major-div {
+    width: 100%;
+  }
+
+  .onboardify-header-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .governify-header-major-div-buttons {
+    width: 100%;
     justify-content: center;
   }
+  .new-button-container {
+    padding-left: 0px;
+  }
 }
-
