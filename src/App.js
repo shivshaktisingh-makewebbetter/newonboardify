@@ -155,7 +155,7 @@ function App() {
                   <AdminHome />
                 </ErrorBoundary>
               }
-              allowedRoles={["superAdmin" , "admin"]}
+              allowedRoles={["superAdmin", "admin"]}
             />
           ),
         },
@@ -169,7 +169,7 @@ function App() {
                   <CreateAdmin />
                 </ErrorBoundary>
               }
-              allowedRoles={["superAdmin" , "admin"]}
+              allowedRoles={["superAdmin", "admin"]}
             />
           ),
         },
@@ -182,7 +182,7 @@ function App() {
                   <Settings />
                 </ErrorBoundary>
               }
-              allowedRoles={["superAdmin" , "admin"]}
+              allowedRoles={["superAdmin", "admin"]}
             />
           ),
         },
@@ -195,7 +195,7 @@ function App() {
                   <UserList />
                 </ErrorBoundary>
               }
-              allowedRoles={["superAdmin" , "admin"]}
+              allowedRoles={["superAdmin", "admin"]}
             />
           ),
         },
@@ -208,7 +208,7 @@ function App() {
                   <Profile />
                 </ErrorBoundary>
               }
-              allowedRoles={["superAdmin" , "admin"]}
+              allowedRoles={["superAdmin", "admin"]}
             />
           ),
         },
@@ -221,7 +221,7 @@ function App() {
                   <CreateProfile />
                 </ErrorBoundary>
               }
-              allowedRoles={["superAdmin" , "admin"]}
+              allowedRoles={["superAdmin", "admin"]}
             />
           ),
         },
@@ -234,7 +234,7 @@ function App() {
                   <EditProfile />
                 </ErrorBoundary>
               }
-              allowedRoles={["superAdmin" , "admin"]}
+              allowedRoles={["superAdmin", "admin"]}
             />
           ),
         },

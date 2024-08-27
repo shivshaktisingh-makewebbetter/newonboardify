@@ -406,6 +406,7 @@ export const Track = () => {
       };
 
       const commonObjects = getCommonObjects(arr1, arr2);
+
       if(tempFilters.searchData.length > 0){
         if (commonObjects.length > 0) {
           if (commonObjects.length > 10) {
@@ -482,10 +483,10 @@ export const Track = () => {
   };
 
   const getMoreData = () => {
-    const startIndex = loadMoreValue * 10;
+    const startIndex = data.length;
     const endIndex = startIndex + 10;
     const validEndIndex = Math.min(endIndex, originalArray.length - 1);
-    const subArray = originalArray.slice(startIndex, validEndIndex + 1);
+    const subArray = originalArray.slice(startIndex, validEndIndex);
     if (subArray.length > 0) {
       setLoading(true);
       setTimeout(() => {
