@@ -1,4 +1,4 @@
-import { Button, Input, Select } from "antd";
+import { Button, Input, Modal, Select, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { ImageUpload } from "../../common/ImageUpload";
@@ -48,6 +48,12 @@ export const EditServices = ({
     service_chart_link: editServiceData.service_chart_link || "",
     service_form_link: editServiceData.service_form_link || "",
   });
+
+  const [boardRemovalConfirmationModal, setBoardRemovalConfirmationModal] =
+    useState(false);
+  const [boardChangeConfirmationModal, setBoardChangeConfirmationModal] =
+    useState(false);
+  const [tempBoardId, setTempBoardId] = useState("");
 
   function startsWithHttp(url) {
     return (
@@ -129,13 +135,20 @@ export const EditServices = ({
   };
 
   const handleChangeBoardId = async (e) => {
-    setServiceData({ ...serviceData, board_id: e });
+
 
     if (e === undefined) {
-      setBoardVisibilityData({});
-      setDocumentFetchKey([]);
-      setImageKey("");
+      setBoardRemovalConfirmationModal(true);
+      return;
+    } else {
+      if (serviceData.board_id !== undefined && serviceData.board_id !== "") {
+        setBoardChangeConfirmationModal(true);
+        setTempBoardId(e);
+        return;
+      }
     }
+    setServiceData({ ...serviceData, board_id: e });
+
     if (e === editServiceData.board_id) {
       setBoardVisibilityData(JSON.parse(editServiceData.service_setting_data));
       setDocumentFetchKey(
@@ -303,6 +316,49 @@ export const EditServices = ({
       option.label.toLowerCase().includes(input.toLowerCase()) ||
       option.value.toString().toLowerCase().includes(input.toLowerCase())
     );
+  };
+
+  const handleConfirm = () => {
+    setBoardVisibilityData({});
+    setDocumentFetchKey([]);
+    setImageKey("");
+    setServiceData({ ...serviceData, board_id: undefined });
+    setBoardRemovalConfirmationModal(false);
+  };
+
+  const handleConfirmChange = async () => {
+    if (tempBoardId === editServiceData.board_id) {
+      setBoardVisibilityData(JSON.parse(editServiceData.service_setting_data));
+      setDocumentFetchKey(
+        JSON.parse(editServiceData.service_setting_data).document_fetch_key
+      );
+      setImageKey(JSON.parse(editServiceData.service_setting_data).image_key);
+    } else {
+      setBoardVisibilityData({
+        candidate_coulmns: [],
+        card_section: { column1: "", column2: "" },
+        document_fetch_key: [],
+        email: "",
+        email_key: [],
+        extra_details: { chart_embed_code: "", form_embed_code: "", key: "" },
+        filterByUser: { key: "", value: "" },
+        image_key: "",
+        onboarding_columns: [],
+        required_columns: { profession: [], overall_status: "" },
+        sub_headings_column: [],
+      });
+      setDocumentFetchKey([]);
+      setImageKey("");
+    }
+    setServiceData({ ...serviceData, board_id: tempBoardId });
+
+    try {
+      await fetchAllColumnsOfBoard(tempBoardId);
+    } catch (err) {
+      console.log(err);
+    }
+    setTempBoardId("");
+    setBoardChangeConfirmationModal(false);
   };
 
   useEffect(() => {
@@ -745,6 +801,71 @@ export const EditServices = ({
           </div>
         </div>
       </div>
+      <Modal
+        open={boardRemovalConfirmationModal}
+        title="Assign Board"
+        centered
+        footer={(_, record) => (
+          <>
+            <Button
+              style={{
+                background: settingsData.button_bg,
+                color: "#fff",
+                border: "none",
+              }}
+              onClick={handleConfirm}
+            >
+              Confirm
+            </Button>
+            <Button
+              style={{ border: "none" }}
+              onClick={() => {
+                setBoardRemovalConfirmationModal(false);
+              }}
+            >
+              Cancel
+            </Button>
+          </>
+        )}
+        onCancel={() => {
+          setBoardRemovalConfirmationModal(false);
+        }}
+      >
+        <Typography>Are you sure you want to remove the board?</Typography>
+      </Modal>
+
+      <Modal
+        open={boardChangeConfirmationModal}
+        title="Assign Board"
+        centered
+        footer={(_, record) => (
+          <>
+            <Button
+              style={{
+                background: settingsData.button_bg,
+                color: "#fff",
+                border: "none",
+              }}
+              onClick={handleConfirmChange}
+            >
+              Confirm
+            </Button>
+            <Button
+              style={{ border: "none" }}
+              onClick={() => {
+                setBoardChangeConfirmationModal(false);
+              }}
+            >
+              Cancel
+            </Button>
+          </>
+        )}
+        onCancel={() => {
+          setBoardChangeConfirmationModal(false);
+        }}
+      >
+        <Typography>Are you sure you want to change the board?</Typography>
+      </Modal>
     </div>
   );
 };

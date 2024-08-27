@@ -1,11 +1,10 @@
-import { Button, Input, Select } from "antd";
+import { Button, Input, Modal, Select, Typography } from "antd";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { ImageUpload } from "../../common/ImageUpload";
 import {
   createService,
   getAllColumnsOfBoard,
-  getBoardVisibilityData,
 } from "../../apiservice/ApiService";
 
 export const CreateServices = ({
@@ -42,10 +41,18 @@ export const CreateServices = ({
   const [documentFetchKey, setDocumentFetchKey] = useState([]);
   const [imageKey, setImageKey] = useState("");
   const [boardVisiblityData, setBoardVisibilityData] = useState({});
+  const [boardRemovalConfirmationModal, setBoardRemovalConfirmationModal] =
+    useState(false);
+  const [boardChangeConfirmationModal, setBoardChangeConfirmationModal] =
+    useState(false);
+  const [tempBoardId, setTempBoardId] = useState("");
 
   const handleCreateServices = async () => {
-    if(boardVisiblityData.required_columns.overall_status.length === 0 || boardVisiblityData.required_columns.profession.length === 0){
-      toast.error('Please fill the Search And Filter fields.');
+    if (
+      boardVisiblityData.required_columns.overall_status.length === 0 ||
+      boardVisiblityData.required_columns.profession.length === 0
+    ) {
+      toast.error("Please fill the Search And Filter fields.");
       return;
     }
 
@@ -108,16 +115,22 @@ export const CreateServices = ({
 
         setOptions(tempArr);
       }
-    } catch (err) {
-    } finally {
-    }
+    } catch (err) {}
   };
 
   const handleChangeBoardId = async (e) => {
-    setServiceData({ ...serviceData, board_id: e });
     if (e === undefined) {
-      setBoardVisibilityData({});
+      setBoardRemovalConfirmationModal(true);
+      return;
+    } else {
+      if (serviceData.board_id !== undefined && serviceData.board_id !== "") {
+        setBoardChangeConfirmationModal(true);
+        setTempBoardId(e);
+        return;
+      }
     }
+    setServiceData({ ...serviceData, board_id: e });
+
     setBoardVisibilityData({
       candidate_coulmns: [],
       card_section: { column1: "", column2: "" },
@@ -136,7 +149,6 @@ export const CreateServices = ({
       await fetchAllColumnsOfBoard(e);
     } catch (err) {
       console.log(err);
-    } finally {
     }
   };
   const handleChangeServiceColumnFilter = (e) => {
@@ -275,6 +287,38 @@ export const CreateServices = ({
       option.label.toLowerCase().includes(input.toLowerCase()) ||
       option.value.toString().toLowerCase().includes(input.toLowerCase())
     );
+  };
+
+  const handleConfirm = () => {
+    setBoardVisibilityData({});
+    setServiceData({ ...serviceData, board_id: undefined });
+    setBoardRemovalConfirmationModal(false);
+  };
+
+  const handleConfirmChange = async () => {
+    setServiceData({ ...serviceData, board_id: tempBoardId });
+
+    setBoardVisibilityData({
+      candidate_coulmns: [],
+      card_section: { column1: "", column2: "" },
+      document_fetch_key: [],
+      email: "",
+      email_key: [],
+      extra_details: { chart_embed_code: "", form_embed_code: "", key: "" },
+      filterByUser: { key: "", value: "" },
+      image_key: "",
+      onboarding_columns: [],
+      required_columns: { profession: [], overall_status: "" },
+      sub_headings_column: [],
+    });
+
+    try {
+      await fetchAllColumnsOfBoard(tempBoardId);
+    } catch (err) {
+      console.log(err);
+    }
+    setTempBoardId("");
+    setBoardChangeConfirmationModal(false);
   };
 
   return (
@@ -712,6 +756,72 @@ export const CreateServices = ({
           </div>
         </div>
       </div>
+
+      <Modal
+        open={boardRemovalConfirmationModal}
+        title="Assign Board"
+        centered
+        footer={(_, record) => (
+          <>
+            <Button
+              style={{
+                background: settingsData.button_bg,
+                color: "#fff",
+                border: "none",
+              }}
+              onClick={handleConfirm}
+            >
+              Confirm
+            </Button>
+            <Button
+              style={{ border: "none" }}
+              onClick={() => {
+                setBoardRemovalConfirmationModal(false);
+              }}
+            >
+              Cancel
+            </Button>
+          </>
+        )}
+        onCancel={() => {
+          setBoardRemovalConfirmationModal(false);
+        }}
+      >
+        <Typography>Are you sure you want to remove the board?</Typography>
+      </Modal>
+
+      <Modal
+        open={boardChangeConfirmationModal}
+        title="Assign Board"
+        centered
+        footer={(_, record) => (
+          <>
+            <Button
+              style={{
+                background: settingsData.button_bg,
+                color: "#fff",
+                border: "none",
+              }}
+              onClick={handleConfirmChange}
+            >
+              Confirm
+            </Button>
+            <Button
+              style={{ border: "none" }}
+              onClick={() => {
+                setBoardChangeConfirmationModal(false);
+              }}
+            >
+              Cancel
+            </Button>
+          </>
+        )}
+        onCancel={() => {
+          setBoardChangeConfirmationModal(false);
+        }}
+      >
+        <Typography>Are you sure you want to change the board?</Typography>
+      </Modal>
     </div>
   );
 };
