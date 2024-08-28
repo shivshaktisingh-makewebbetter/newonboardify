@@ -53,7 +53,7 @@ export const BreadcrumbComponent = ({ data, name }) => {
 
           // Determine the display text for the breadcrumb
           const displayText = isLastIndex && screenWidth < 400 && breadcrumbObject[item] !== 'Request Tracking'
-            ? `${breadcrumbObject[item].substring(0, 5)}...`
+            ? `${breadcrumbObject[item].substring(0, 8)}...`
             : breadcrumbObject[item];
 
           return (

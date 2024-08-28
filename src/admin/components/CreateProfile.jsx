@@ -9,6 +9,7 @@ import {
 } from "../../apiservice/ApiService";
 import { Loader } from "../../common/Loader";
 import { useNavigate } from "react-router-dom";
+import { ImageUpload } from "../../common/ImageUpload";
 
 export const CreateProfile = () => {
   const data = JSON.parse(sessionStorage.getItem("settings")) || {
@@ -29,6 +30,8 @@ export const CreateProfile = () => {
   const [profileData, setProfileData] = useState({
     title: "",
     users: [],
+    image:'' ,
+    image_name:''
   });
   const navigate = useNavigate();
   const handleChangeProfileTitle = (event) => {
@@ -103,6 +106,8 @@ export const CreateProfile = () => {
       let tempProfileData = {
         title: profileData.title,
         users: profileData.users.join(","),
+        image:profileData.image ,
+        image_name:profileData.image_name
       };
       const response = await createProfileEndPoint(
         JSON.stringify(tempProfileData)
@@ -143,6 +148,11 @@ export const CreateProfile = () => {
       option.label.toLowerCase().includes(input.toLowerCase()) ||
       option.value.toString().toLowerCase().includes(input.toLowerCase())
     );
+  };
+
+
+  const handleFileSelect = (data, imageName) => {
+    setProfileData({ ...profileData, image: data, image_name: imageName });
   };
 
   useEffect(() => {
@@ -222,6 +232,13 @@ export const CreateProfile = () => {
                 )}
               />
             </div>
+            <div className="mt-10">
+            <ImageUpload
+              onFileSelect={handleFileSelect}
+              imageName={profileData.image_name}
+              imageUrl={profileData.image}
+            />
+          </div>
 
             <Button
               className="mt-10"

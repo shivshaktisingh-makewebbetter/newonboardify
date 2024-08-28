@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 export const ImageUpload = ({ onFileSelect, imageName, imageUrl , filter}) => {
   const [logoData, setLogoData] = useState({ logo_name: imageName, logo_image: imageUrl });
 
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {

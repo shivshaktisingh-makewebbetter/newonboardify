@@ -29,6 +29,18 @@ export const Login = () => {
   let path = queryParameters.get("path");
   let boardId = queryParameters.get("board");
 
+  const getProfileData = async () => {
+    try {
+      const response = await getAllProfileDataByUser();
+      if(response.success){
+        sessionStorage.setItem('logo' , response.data.response[0].file_location)
+      }
+      return response;
+    } catch (err) {
+    } finally {
+    }
+  };
+
   const handleSubmit = async () => {
     let payload = JSON.stringify({
       email: userDetails.email,
@@ -40,9 +52,11 @@ export const Login = () => {
       setLoading(true);
       const response = await loginApi(payload);
       if (response.success) {
+       
         toast.success("Logged In Successfull.");
         sessionStorage.setItem("token", response.data.token);
         const response2 = await getCustomerGeneralSettings(response.data.role);
+        await getProfileData();
 
         // console.log(response1)
         if (response2.success) {
@@ -66,6 +80,7 @@ export const Login = () => {
           sessionStorage.setItem("userId", response1.data.data.user_id);
         }
         if (response.data.role === "customer") {
+         
           setTimeout(() => {
             navigate("/user");
           }, 1000);
@@ -103,15 +118,7 @@ export const Login = () => {
     return true;
   };
 
-  const getProfileData = async () => {
-    try {
-      const response = await getAllProfileDataByUser();
-
-      return response;
-    } catch (err) {
-    } finally {
-    }
-  };
+ 
 
   useEffect(() => {
     setTimeout(() => {
@@ -296,35 +303,15 @@ export const Login = () => {
     }
   };
 
+ 
+
   const adminLogin = async () => {
     let status = isTokenValid(adminToken);
     if (status.valid) {
       sessionStorage.setItem("token", adminToken);
       sessionStorage.setItem("role", tascRole);
       let res = await getLoginUserDetails(adminToken);
-      // let profileData = await getProfileData();
-      // let subItemDetailsResponse = await getSubItemDetailsData(id);
-      // let columnData = await fetchColumnDetails();
-      // const generalSettingData = await getCustomerGeneralSettings(tascRole);
-      // let allServiceData = getAllServiceData(
-      //   profileData.data.response[0].services
-      // );
-      // let subItemDetailsData = filterSubItemDetailData(subItemDetailsResponse);
-      // const statusText = getStatusText(subItemDetailsData , columnData , JSON.parse(allServiceData.service_setting_data));
-      // const statusColor = getStatusColor(statusText , JSON.parse(generalSettingData.data.response.ui_settings));
-
-      // const dataToPass = {
-      //   id: id,
-      //   name: subItemDetailsData.name,
-      //   status: statusText,
-      //   color: statusColor,
-      //   boardId: boardId,
-      //   columnIdData: allServiceData.service_setting_data,
-      //   subHeadingColumn: JSON.parse(allServiceData.service_setting_data)
-      //     .sub_headings_column,
-      //   service_setting_data: allServiceData.service_setting_data,
-      //   service_column_value_filter: allServiceData.service_column_value_filter,
-      // };
+    
       if (res.success) {
         sessionStorage.setItem("userEmail", res.data.data.email);
         sessionStorage.setItem("userName", res.data.data.name);

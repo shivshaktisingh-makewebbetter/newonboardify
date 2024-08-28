@@ -115,7 +115,7 @@ export const Header = () => {
                   <img
                     height="80"
                     alt="TASC logo"
-                    src={sessionStorage.getItem("logo_location")}
+                    src={sessionStorage.getItem("logo") === null ? sessionStorage.getItem("logo_location") : sessionStorage.getItem("logo") }
                   />
                 </span>
               </a>

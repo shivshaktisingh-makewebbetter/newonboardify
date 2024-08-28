@@ -18,6 +18,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { CreateServices } from "./CreateServices";
 import { EditServices } from "./EditServices";
 import { DeleteModal } from "./DeleteModal";
+import { ImageUpload } from "../../common/ImageUpload";
 
 export const EditProfile = () => {
   const location = useLocation();
@@ -93,6 +94,8 @@ export const EditProfile = () => {
       location.state.users.length > 0
         ? location.state.users.split(",").map((item) => item.trim())
         : [],
+    image: "",
+    image_name: "",
   });
   const [deleteModalOpen, setDeleteMOdalOpen] = useState({
     flag: false,
@@ -127,57 +130,6 @@ export const EditProfile = () => {
 
     return tempBoardName;
   };
-
-  const columns = [
-    {
-      title: "#",
-      dataIndex: "id",
-    },
-    {
-      title: "Title",
-      dataIndex: "title",
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
-    },
-    {
-      title: "Visibility",
-      dataIndex: "service_visibility",
-    },
-
-    {
-      title: "Assign Board",
-      dataIndex: "boardId",
-      render: (_, record) => (
-        <Typography style={{ width: "100%", borderRadius: "10px" }}>
-          {getBoardTitle(record.board_id)}
-        </Typography>
-      ),
-    },
-
-    {
-      title: "Action",
-      dataIndex: "",
-      key: "x",
-      render: (_, record) => (
-        <>
-          <Button
-            className="governify-delete-icon"
-            type="plain"
-            icon={<EditOutlined />}
-            onClick={() => handleEditModal(record)}
-          ></Button>
-          <Button
-            className="governify-delete-icon"
-            type="plain"
-            icon={<DeleteOutlined />}
-            onClick={() => handleDeleteModal(record.id)}
-          ></Button>
-        </>
-      ),
-    },
-  ];
 
   const handleChangeProfileTitle = (event) => {
     setProfileData({ ...profileData, title: event.target.value });
@@ -255,6 +207,8 @@ export const EditProfile = () => {
       let tempProfileData = {
         title: profileData.title,
         users: profileData.users.join(","),
+        image:profileData.image ,
+        image_name:profileData.image_name
       };
 
       const response = await updateProfile(
@@ -281,6 +235,13 @@ export const EditProfile = () => {
 
     try {
       const response = await getServicesByProfileId(location.state.profileId);
+      if (response.success) {
+        setProfileData({
+          ...profileData,
+          image: response.data.response[0].file_location,
+          image_name: response.data.response[0].image,
+        });
+      }
       if (response.success && response.data.response[0].services.length > 0) {
         setDataSource(response.data.response[0].services);
         response.data.response[0].services.forEach((item) => {
@@ -366,7 +327,6 @@ export const EditProfile = () => {
       };
       setDataSource(updatedData);
       const response = await swapService(payload);
-     
     }
 
     setDraggedItem(null);
@@ -392,10 +352,15 @@ export const EditProfile = () => {
     }
   };
 
+  const handleFileSelect = (data, imageName) => {
+    setProfileData({ ...profileData, image: data, image_name: imageName });
+  };
+
   useEffect(() => {
     getAllServiceListing();
     getListOfAllCustomers();
   }, []);
+
 
   return (
     <>
@@ -479,7 +444,14 @@ export const EditProfile = () => {
                 )}
               />
             </div>
-
+            <div className="mt-10">
+              <ImageUpload
+                key={profileData.image}
+                onFileSelect={handleFileSelect}
+                imageName={profileData.image_name}
+                imageUrl={profileData.image}
+              />
+            </div>
             <Button
               className="mt-10"
               style={{
