@@ -56,7 +56,7 @@ export const Login = () => {
         toast.success("Logged In Successfull.");
         sessionStorage.setItem("token", response.data.token);
         const response2 = await getCustomerGeneralSettings(response.data.role);
-        await getProfileData();
+ 
 
         // console.log(response1)
         if (response2.success) {
@@ -80,6 +80,7 @@ export const Login = () => {
           sessionStorage.setItem("userId", response1.data.data.user_id);
         }
         if (response.data.role === "customer") {
+          await getProfileData();
          
           setTimeout(() => {
             navigate("/user");
