@@ -162,7 +162,7 @@ export const Request = () => {
   };
 
   return (
-    <div style={{ padding: "1rem", display: "flex", justifyContent: "center" }}>
+    <div style={{display: "flex", justifyContent: "center" }} className="onboardify-requestpage-padding">
       {loading && <Loader />}
       <div style={{ marginTop: "3rem", marginBottom: "1rem" }}>
         <Hero

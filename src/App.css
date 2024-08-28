@@ -1541,6 +1541,7 @@ body,
 /* Image Container Style */
 .new-img-container {
   width: 100%;
+  max-width:270px;
   overflow: hidden;
 }
 
@@ -1678,6 +1679,10 @@ body,
   vertical-align: middle; /* Aligns the icon vertically in the middle */
 }
 
+.onboardify-requestpage-padding{
+  padding:1rem;
+}
+
 @media (max-width: 994px) {
   .new-carousel-container {
     max-width: 500px;
@@ -1727,6 +1732,10 @@ body,
     width: 100%;
     overflow-y: visible;
   }
+
+  .new-img-container{
+    max-width: 460px;
+  }
 }
 
 /* Responsive Styles */
@@ -1773,6 +1782,10 @@ body,
 
   .inc-comment-header {
     flex-direction: column;
+  }
+
+  .onboardify-requestpage-padding{
+    padding:0px;
   }
 
   /* .onboardify-icon-label-text-container {
