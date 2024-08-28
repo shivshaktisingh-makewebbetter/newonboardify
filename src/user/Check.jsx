@@ -36,11 +36,17 @@ export const Check = () => {
           }
 
           if (response1.success) {
+            let flag = true;
             tempArr.forEach((item) => {
               if (item.value == response1.data.response[0].service_id) {
+                flag = false;
                 setSelectedRequest(item.value);
               }
             });
+
+            if (flag) {
+              setSelectedRequest(tempArr[0].value);
+            }
           } else {
             setSelectedRequest(tempArr[0].value);
           }
