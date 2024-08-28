@@ -895,6 +895,11 @@ body,
   vertical-align: middle !important;
 }
 
+.governify-category-icon-parent-new i::before{
+  vertical-align: text-top !important;
+}  
+
+
 .governify-search-box {
   padding: 10px 15px;
   width: 100%;

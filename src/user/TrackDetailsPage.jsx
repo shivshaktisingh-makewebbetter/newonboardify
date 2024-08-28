@@ -296,45 +296,46 @@ export const TrackDetails = () => {
                   if (centerText && centerText.length > 0) {
                     return (
                       <li
-                        className="user-candidate-column list-group-item d-flex pb-0 align-items-center border-0 text-start"
-                        style={{ background: "inherit", gap: "12px" }}
+                        className="list-group-item d-flex align-items-start border-0 text-start mb-1"
+                        style={{ background: "inherit", gap: "10px" }}
                         key={index}
                       >
-                        <div className="onboardify-icon-label-text-container">
-                        <span className="mb-2 onboardify-icon-label-container">
-                          <span className="onboardify-icon-container-track">
+                        <span
+                          style={{ width: "20px", height: "20px" }}
+                          className="text-warning mt-1 governify-category-icon-parent-new"
+                        >
                           <i
                             className={item.icon}
                             style={{ color: "#928f8f" }}
                           ></i>
-                          </span>
-                          <span style={{ color: "#928f8f", fontSize: "17px" }} className="onboardify-label-container-track">{" "}
+                        </span>
+                        <div className="d-flex flex-column">
+                          <span
+                            className="text-secondary"
+                            style={{ fontSize: "17px", color: "#928f8f" }}
+                          >
                             {item.custom_title !== null &&
                               item.custom_title.length > 0 &&
                               item.custom_title}
                             {item.custom_title !== null &&
                               item.custom_title.length > 0 &&
                               ": "}
-                          </span>
-                        </span>
-                        <span style={{ color: "#928f8f", fontSize: "17px" }}>
-                          
-                          {centerText}
-                        </span>
-                        </div>
-                        {(item.name === "Nationality" ||
-                          item.name === "Country of Residency") && (
-                          <span>
-                            {countryCode.length > 0 && (
-                              <img
-                                height="20"
-                                width="22"
-                                src={`https://onboardify.tasc360.com/flags/${countryCode.toLowerCase()}.svg`}
-                                alt={`${countryCode.toUpperCase()} Flag`}
-                              />
+                            {centerText}
+                            {(item.name === "Nationality" ||
+                              item.name === "Country of Residency") && (
+                              <span style={{marginLeft:"5px"}}>
+                                {countryCode.length > 0 && (
+                                  <img
+                                    height="20"
+                                    width="22"
+                                    src={`https://onboardify.tasc360.com/flags/${countryCode.toLowerCase()}.svg`}
+                                    alt={`${countryCode.toUpperCase()} Flag`}
+                                  />
+                                )}
+                              </span>
                             )}
                           </span>
-                        )}
+                        </div>
                       </li>
                     );
                   }
