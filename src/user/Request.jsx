@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Hero } from "../components/Hero";
 import { getAllProfileDataByUser } from "../apiservice/ApiService";
 
-
 import { LeftOutlined, PlusOutlined, RightOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import { Loader } from "../common/Loader";
@@ -290,15 +289,7 @@ export const Request = () => {
               services.map((item) => (
                 <div key={item.title} className="new-card">
                   <div className="new-img-container">
-                  
-                  
-<LazyImage
-  src={item.file_location} 
-  alt={item.title} 
-  // width={300} 
-  // height={200} 
- 
-/>
+                    <LazyImage src={item.file_location} alt={item.title} />
                   </div>
                   <div className="new-content">
                     <p className="new-title">{item.title}</p>
