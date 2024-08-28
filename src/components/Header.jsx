@@ -127,10 +127,10 @@ export const Header = () => {
                   </span>
                 </a>
               </div>
-              <Typography className="d-none  d-md-flex d-lg-flex d-xl-flex d-xxl-flex">
-                <span className="onboardify-welcome">Welcome</span>{" "}
+              <Typography className="d-none  d-md-flex d-lg-flex d-xl-flex d-xxl-flex" style={{gap:"5px"}}>
+                <span className="onboardify-welcome">Welcome </span>{" "}
                 <span className="onboardify-welcome-text-hani">
-                  {sessionStorage.getItem("userName")}
+                {" "}{sessionStorage.getItem("userName")}
                 </span>
               </Typography>
             </div>
