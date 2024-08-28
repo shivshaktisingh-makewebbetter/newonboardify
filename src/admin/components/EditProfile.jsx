@@ -201,14 +201,26 @@ export const EditProfile = () => {
     setProfileData({ ...profileData, users: e });
   };
 
+
+  function startsWithHttp(url) {
+    return (
+      url.toLowerCase().startsWith("http://") ||
+      url.toLowerCase().startsWith("https://")
+    );
+  }
+
   const handleUpdateProfile = async () => {
     setLoading(true);
     try {
       let tempProfileData = {
         title: profileData.title,
         users: profileData.users.join(","),
-        image:profileData.image ,
-        image_name:profileData.image_name
+        image:startsWithHttp(profileData.image)
+        ? ""
+        : profileData.image,
+        image_name: startsWithHttp(profileData.image)
+        ? ""
+        : profileData.image_name,
       };
 
       const response = await updateProfile(
@@ -230,6 +242,7 @@ export const EditProfile = () => {
     setOpenService(true);
   };
 
+
   const getAllServiceListing = async () => {
     const allAlreadyAssignedBoard = [];
 
@@ -240,6 +253,12 @@ export const EditProfile = () => {
           ...profileData,
           image: response.data.response[0].file_location,
           image_name: response.data.response[0].image,
+          users:
+            response.data.response[0].users.length > 0
+              ? response.data.response[0].users
+                  .split(",")
+                  .map((item) => item.trim())
+              : [],
         });
       }
       if (response.success && response.data.response[0].services.length > 0) {
@@ -360,7 +379,6 @@ export const EditProfile = () => {
     getAllServiceListing();
     getListOfAllCustomers();
   }, []);
-
 
   return (
     <>

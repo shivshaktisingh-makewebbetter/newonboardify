@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Button,  Typography } from "antd";
+import { Button,  Drawer,  Flex,  Typography } from "antd";
 import {
+  CloseOutlined,
   HomeOutlined,
   LogoutOutlined,
+  MenuOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -26,6 +28,7 @@ export const Header = () => {
   const [notification, setNotification] = useState(
     sessionStorage.getItem("notification_bar") === "false" ? false : true
   );
+  const [openDrawer, setOpenDrawer] = useState(false);
   const role = getRole();
 
   const navigateToSettings = () => {
@@ -120,14 +123,14 @@ export const Header = () => {
                 </span>
               </a>
             </div>
-            <Typography>
+            <Typography className="d-none d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex">
               <span className="onboardify-welcome">Welcome</span>{" "}
               <span className="onboardify-welcome-text-hani">
                 {sessionStorage.getItem("userName")}
               </span>
             </Typography>
           </div>
-          <div className="governify-header-major-div-buttons">
+          <div className="governify-header-major-div-buttons d-none d-sm-flex d-md-flex d-lg-flex d-xl-flex d-xxl-flex">
             <div className="governify-header-buttons">
               {role === "customer" ? (
                 location.pathname.includes("user") ? (
@@ -197,8 +200,60 @@ export const Header = () => {
             </div>
           </div>
           </div>
+          <div className="d-block d-sm-none d-md-none d-lg-none d-xl-none d-xxl-none lh-1">
+            <MenuOutlined
+              style={{ color: data.button_bg, fontSize: "20px" }}
+              onClick={() => setOpenDrawer(true)}
+            />
+          </div>
         </div>
+
+
       </header>
+
+      <Drawer
+        title={
+          <Flex justify="space-between">
+            <span>Welcome, {sessionStorage.getItem("userName")}</span>{" "}
+            <CloseOutlined
+              onClick={() => setOpenDrawer(false)}
+              style={{ cursor: "pointer" }}
+            />{" "}
+          </Flex>
+        }
+        placement="right"
+        closable={false}
+        onClose={() => setOpenDrawer(false)}
+        open={openDrawer}
+        width="90%"
+        key="right"
+      >
+        <Flex align="start" vertical gap={10}>
+          <Button
+            type="text"
+            onClick={() => {
+              setOpenDrawer(false);
+              // setIsHelpModalOpen(!isHelpModalOpen);
+            }}
+          >
+            Book a meeting
+          </Button>
+          <Button
+            type="text"
+            onClick={() => {
+              // setLoading(true);
+              setOpenDrawer(false);
+              // setTimeout(() => {
+              //   setLoading(false);
+              //   removeSessions();
+              //   navigate("/signin");
+              // }, 3000);
+            }}
+          >
+            Logout
+          </Button>
+        </Flex>
+      </Drawer>
     </>
   );
 };
