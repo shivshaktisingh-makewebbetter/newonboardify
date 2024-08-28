@@ -1,16 +1,25 @@
 import { useEffect, useState } from "react";
 import { Hero } from "../components/Hero";
-import { getAllProfileDataByUser } from "../apiservice/ApiService";
+import {
+  getAllProfileDataByUser,
+  lastSelectedChart,
+  updateLastSelectedChart,
+} from "../apiservice/ApiService";
 import { Select } from "antd";
 
 export const Check = () => {
   const [options, setOptions] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(undefined);
+  const [profileId, setProfileId] = useState("");
 
   const fetchProfiledata = async () => {
     try {
       const response = await getAllProfileDataByUser();
+      const response1 = await lastSelectedChart();
+
       if (response.success) {
+        setProfileId(response.data.response[0].id);
+
         if (response.data.response.length > 0) {
           let tempArr = [];
           if (
@@ -25,8 +34,17 @@ export const Check = () => {
               });
             });
           }
+
+          if (response1.success) {
+            tempArr.forEach((item) => {
+              if (item.value == response1.data.response[0].service_id) {
+                setSelectedRequest(item.value);
+              }
+            });
+          } else {
+            setSelectedRequest(tempArr[0].value);
+          }
           setOptions(tempArr);
-          setSelectedRequest(tempArr[0].value);
           let element = document.getElementById("iframe-chart");
           element.innerHTML =
             tempArr[0].chart +
@@ -38,7 +56,8 @@ export const Check = () => {
     }
   };
 
-  const handleChangeRequest = (item) => {
+  const handleChangeRequest = async (item) => {
+    await updateLastSelectedChart({ profile_id: profileId, service_id: item });
     setIsBlurry(true);
     const tempOptions = [...options];
     tempOptions.forEach((subItem) => {

@@ -65,6 +65,10 @@ export const exportUserData = () =>
   Services.GET(`/newonboardify/admin/exportUsersData`);
 
 // Customer Endpoints
+
+export const lastSelectedChart = () => Services.GET(`/newonboardify/customer/lastChartUsedByUser`);
+export const updateLastSelectedChart = (data) => Services.POST(`/newonboardify/customer/lastChartUsedByUser` , data);
+
 export const requestTrackingWithOrCondition = (id, data) => {
   return Services.POST(
     `newonboardify/customer/requestTrackingByBoardIdAndSearchWithOrCondition/${id}`,
