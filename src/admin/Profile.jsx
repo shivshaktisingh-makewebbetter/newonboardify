@@ -43,8 +43,8 @@ export const Profile = () => {
   };
 
   const onChangeSwitch = async (e, id) => {
-    if(!e){
-      toast.error('One Profile must be default.');
+    if (!e) {
+      toast.error("One Profile must be default.");
       return;
     }
     const tempDataSource = [...dataSource];
@@ -120,12 +120,14 @@ export const Profile = () => {
 
   const columns = [
     {
-      title: "#",
+      title: "ID",
       dataIndex: "id",
+      width:60
     },
     {
       title: "Name",
       dataIndex: "title",
+      width:200
     },
     {
       title: "User List",
@@ -142,13 +144,14 @@ export const Profile = () => {
           />
         </>
       ),
+      width:150
     },
     {
       title: "Action",
       dataIndex: "",
       key: "x",
       render: (_, record) => (
-        <>
+        <div style={{ display: "flex", gap: "4px" }}>
           <Button
             className="governify-delete-icon"
             type="plain"
@@ -168,8 +171,10 @@ export const Profile = () => {
             icon={<CopyOutlined />}
             onClick={() => handleCloneProfile(record.id)}
           ></Button>
-        </>
+        </div>
       ),
+      width: 100,
+      fixed: "right",
     },
   ];
 
@@ -257,12 +262,7 @@ export const Profile = () => {
           showSorterTooltip={{
             target: "sorter-icon",
           }}
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            maxWidth: "1320px",
-            overflowX: "auto",
-          }}
+          scroll={{ x: 768 }}
           pagination={{
             showTotal: (total) => `Total ${total} items`,
             defaultPageSize: 5,

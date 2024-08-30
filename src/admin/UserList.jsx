@@ -3,7 +3,6 @@ import { Hero } from "../components/Hero";
 import {
   deleteUser,
   exportUserData,
-  getAllBoards,
   getUserList,
 } from "../apiservice/ApiService";
 import { Button, Table } from "antd";
@@ -21,7 +20,6 @@ export const UserList = () => {
   const [loading, setLoading] = useState(false);
   const [cloneDataSource, setCloneDataSource] = useState([]);
   const [dataSource, setDataSource] = useState([]);
-  const [boardListing, setBoardListing] = useState([]);
   const [searchData, setSearchData] = useState("");
   const [open, setOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState({});
@@ -41,8 +39,6 @@ export const UserList = () => {
     setUserToDelete(item);
     setOpen(true);
   };
-
-
 
   const handleForgotPassword = (item) => {
     navigate(`/forgot?email=${item.email}`);
@@ -147,7 +143,6 @@ export const UserList = () => {
     setLoading(true);
     try {
       const response = await getUserList();
-      const response1 = await getAllBoards();
       if (response.success) {
         const tempData = [];
         response.data.response.forEach((item) => {
@@ -176,8 +171,6 @@ export const UserList = () => {
       setLoading(false);
     }
   };
-
-
 
   const onChange = (pagination, filters, sorter, extra) => {
     // console.log("params", pagination, filters, sorter, extra);
@@ -242,7 +235,6 @@ export const UserList = () => {
 
   useEffect(() => {
     fetchUserListing();
-    // fetchBoardListing();
   }, []);
 
   useEffect(() => {
