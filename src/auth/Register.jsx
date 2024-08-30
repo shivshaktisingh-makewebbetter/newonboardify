@@ -285,6 +285,7 @@ export const Register = () => {
                 onChange={handleInputChange}
                 style={{ background: "#e8f0fe" }}
                 className="input-customer-focus form-control"
+                disabled={params?.company_name}
               />
               <input
                 type="text"
@@ -303,6 +304,7 @@ export const Register = () => {
                 onChange={handleInputChange}
                 style={{ background: "#e8f0fe" }}
                 className="input-customer-focus form-control"
+                disabled={params?.invited_user_email}
               />
               <div className="input-group flex-nowrap" id="password-filled">
                 <input
