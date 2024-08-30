@@ -3299,8 +3299,6 @@ export function Emoji() {
 export const EmptyImage = () => {
   return (
     <svg
-      width="184"
-      height="152"
       viewBox="0 0 184 152"
       xmlns="http://www.w3.org/2000/svg"
     >

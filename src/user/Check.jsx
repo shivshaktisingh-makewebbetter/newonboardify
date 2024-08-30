@@ -123,18 +123,21 @@ export const Check = () => {
           forHome={true}
         />
       </div>
-      <div style={{ maxWidth: "200px" }}>
-        <Select
-          style={{
-            width: "100%",
-          }}
-          placeholder="Please select Request"
-          onChange={handleChangeRequest}
-          options={options}
-          value={selectedRequest || undefined}
-          disabled={mobileView}
-        />
-      </div>
+      {!mobileView && (
+        <div style={{ maxWidth: "200px" }}>
+          <Select
+            style={{
+              width: "100%",
+            }}
+            placeholder="Please select Request"
+            onChange={handleChangeRequest}
+            options={options}
+            value={selectedRequest || undefined}
+            disabled={mobileView}
+          />
+        </div>
+      )}
+
       {mobileView ? (
         <div
           style={{
