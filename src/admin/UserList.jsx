@@ -91,10 +91,10 @@ export const UserList = () => {
       title: "Role",
       dataIndex: "role",
     },
-    {
-      title: "Email Verification Date",
-      dataIndex: "role",
-    },
+    // {
+    //   title: "Email Verification Date",
+    //   dataIndex: "role",
+    // },
     {
       title: "Status",
       dataIndex: "status",
