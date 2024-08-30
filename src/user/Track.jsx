@@ -266,7 +266,7 @@ export const Track = () => {
             }
           });
 
-          if ((tempBoardId === "", "tempBoardId")) {
+          if ((tempBoardId === "")) {
             setSelectedService(tempData[0].key);
             setBoardId(tempData[0].boardId);
             tempBoardId = tempData[0].boardId;
