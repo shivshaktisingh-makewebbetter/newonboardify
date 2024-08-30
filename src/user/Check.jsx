@@ -80,6 +80,27 @@ export const Check = () => {
     }, 5000);
   };
   const [isBlurry, setIsBlurry] = useState(true);
+  const [mobileView, setMobileView] = useState(false);
+
+  function checkScreenWidth() {
+    if (window.innerWidth < 768) {
+      setMobileView(true);
+    } else {
+      setMobileView(false);
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("resize", checkScreenWidth);
+    window.addEventListener("load", checkScreenWidth);
+    checkScreenWidth();
+
+    // Cleanup function to remove the listeners on component unmount
+    return () => {
+      window.removeEventListener("resize", checkScreenWidth);
+      window.removeEventListener("load", checkScreenWidth);
+    };
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -111,28 +132,49 @@ export const Check = () => {
           onChange={handleChangeRequest}
           options={options}
           value={selectedRequest || undefined}
+          disabled={mobileView}
         />
       </div>
-
-      <div className="w-100 mt-5" style={{ position: "relative" }}>
-        <div
-          id="loader"
-          className="blurry w-100"
-          style={{ height: "100vh", display: "none" }}
-        ></div>
-
+      {mobileView ? (
         <div
           style={{
-            margin: "0px",
-            height: "130vh",
-            position: "relative",
-            transition: "filter 0.5s", // Smooth transition for filter change
-            filter: isBlurry ? "blur(5px)" : "none",
+            minHeight: "40vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
           }}
-          className="w-100"
-          id="iframe-chart"
-        ></div>
-      </div>
+        >
+          <div class="responsive-image-container">
+            <img src="/img.png" alt="Chart Not Available" />
+          </div>
+
+          <div>
+            This feature is currently unavailable on mobile. Please go to
+            desktop to use it.
+          </div>
+        </div>
+      ) : (
+        <div className="w-100 mt-5" style={{ position: "relative" }}>
+          <div
+            id="loader"
+            className="blurry w-100"
+            style={{ height: "100vh", display: "none" }}
+          ></div>
+
+          <div
+            style={{
+              margin: "0px",
+              height: "130vh",
+              position: "relative",
+              transition: "filter 0.5s", // Smooth transition for filter change
+              filter: isBlurry ? "blur(5px)" : "none",
+            }}
+            className="w-100"
+            id="iframe-chart"
+          ></div>
+        </div>
+      )}
     </div>
   );
 };

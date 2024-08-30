@@ -67,59 +67,52 @@ export const UserList = () => {
 
   const columns = [
     {
-      title: "#",
+      title: "Account ID",
       dataIndex: "id",
-      // sorter: (a, b) => a.name.length - b.name.length,
-      // sortDirections: ["descend"],
     },
     {
       title: "Name",
       dataIndex: "name",
-      // sorter: (a, b) => a.name.length - b.name.length,
-      // sortDirections: ["descend"],
     },
     {
       title: "Company Name",
       dataIndex: "company",
-      // sorter: (a, b) => a.age - b.age,
-      // sortDirections: ["descend"],
     },
     {
       title: "Phone",
       dataIndex: "phone",
     },
     {
-      title: "Source",
-      dataIndex: "utm_source",
-    },
-    {
-      title: "Medium",
-      dataIndex: "utm_medium",
-    },
-    {
-      title: "Campaign",
-      dataIndex: "utm_campaign",
-    },
-    {
       title: "Email",
       dataIndex: "email",
-      // sorter: (a, b) => a.age - b.age,
-      // sortDirections: ["descend"],
       render: (_, record) => <CopyText email={record.email} />,
-    },
-
-    {
-      title: "Created Date",
-      dataIndex: "createdAt",
-      // sorter: (a, b) => a.age - b.age,
-      // sortDirections: ["descend"],
     },
     {
       title: "Role",
       dataIndex: "role",
-      // sorter: (a, b) => a.age - b.age,
-      // sortDirections: ["descend"],
     },
+    {
+      title: "Email Verification Date",
+      dataIndex: "role",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+    },
+    {
+      title: "Source",
+      dataIndex: "utm_source",
+    },
+
+    {
+      title: "Creation Date",
+      dataIndex: "createdAt",
+    },
+    {
+      title: "Last Update",
+      dataIndex: "updated_at",
+    },
+
     {
       title: "Forgot Pass",
       dataIndex: "",
@@ -162,12 +155,14 @@ export const UserList = () => {
             email: item.email,
             company: item.company_name,
             createdAt: extractDateTime(item.created_at),
+            updated_at: extractDateTime(item.updated_at),
             role: roleData[item.role],
             phone: item.phone,
             boardId: item.board_id,
             utm_campaign: item.utm_campaign,
             utm_source: item.utm_source,
             utm_medium: item.utm_medium,
+            status: item.status === 1 ? "Verified" : "Not Verified",
           });
         });
         setDataSource(tempData);
