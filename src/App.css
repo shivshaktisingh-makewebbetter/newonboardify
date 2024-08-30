@@ -1083,14 +1083,7 @@ body,
 
 
 @media (max-width: 1000px) {
-  /* 	
-	.governify-header-major-div-logo{
-		width:35%;
-	}
-	
-	.governify-header-major-div-buttons{
-		width:65%;
-	} */
+
 
   .service-parent-div {
     display: flex;
