@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Hero } from "../components/Hero";
 import {
-  assignBoard,
   deleteUser,
   exportUserData,
   getAllBoards,
@@ -43,23 +42,7 @@ export const UserList = () => {
     setOpen(true);
   };
 
-  const handleBoardChange = async (item, e) => {
-    let tempData = JSON.stringify({
-      user_id: item.id,
-      board_id: e,
-      email_id: item.email,
-    });
-    try {
-      setLoading(true);
-      const response = await assignBoard(tempData);
-      if (response.success) {
-        await fetchUserListing();
-      }
-    } catch (err) {
-    } finally {
-      setLoading(false);
-    }
-  };
+
 
   const handleForgotPassword = (item) => {
     navigate(`/forgot?email=${item.email}`);
@@ -69,27 +52,39 @@ export const UserList = () => {
     {
       title: "Account ID",
       dataIndex: "id",
+      key: "id",
+      width: 100,
     },
     {
       title: "Name",
       dataIndex: "name",
+      key: "name",
+      width: 100,
     },
     {
       title: "Company Name",
       dataIndex: "company",
+      key: "company",
+      width: 100,
     },
     {
       title: "Phone",
       dataIndex: "phone",
+      key: "phone",
+      width: 120,
     },
     {
       title: "Email",
       dataIndex: "email",
+      key: "email",
       render: (_, record) => <CopyText email={record.email} />,
+      width: 300,
     },
     {
       title: "Role",
       dataIndex: "role",
+      key: "role",
+      width: 100,
     },
     // {
     //   title: "Email Verification Date",
@@ -98,19 +93,24 @@ export const UserList = () => {
     {
       title: "Status",
       dataIndex: "status",
+      key: "status",
+      width: 100,
     },
     {
       title: "Source",
       dataIndex: "utm_source",
+      width: 150,
     },
 
     {
       title: "Creation Date",
       dataIndex: "createdAt",
+      width: 100,
     },
     {
       title: "Last Update",
       dataIndex: "updated_at",
+      width: 100,
     },
 
     {
@@ -124,6 +124,7 @@ export const UserList = () => {
           onClick={() => handleForgotPassword(record)}
         ></Button>
       ),
+      width: 100,
     },
     {
       title: "Action",
@@ -137,6 +138,8 @@ export const UserList = () => {
           onClick={() => handleOpenModal(record)}
         ></Button>
       ),
+      width: 80,
+      fixed: "right",
     },
   ];
 
@@ -168,39 +171,13 @@ export const UserList = () => {
         setDataSource(tempData);
         setCloneDataSource(tempData);
       }
-      if (response1.success) {
-        const tempData = [];
-        response1.data.response.boards.forEach((item) => {
-          tempData.push({
-            key: item.id,
-            label: item.name,
-            value: item.id,
-          });
-        });
-
-        setBoardListing(tempData);
-      }
     } catch {
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchBoardListing = async () => {
-    const response = await getAllBoards();
-    if (response.success) {
-      const tempData = [];
-      response.data.response.boards.forEach((item) => {
-        tempData.push({
-          key: item.id,
-          label: item.name,
-          value: item.id,
-        });
-      });
 
-      setBoardListing(tempData);
-    }
-  };
 
   const onChange = (pagination, filters, sorter, extra) => {
     // console.log("params", pagination, filters, sorter, extra);
@@ -265,7 +242,7 @@ export const UserList = () => {
 
   useEffect(() => {
     fetchUserListing();
-    fetchBoardListing();
+    // fetchBoardListing();
   }, []);
 
   useEffect(() => {
@@ -332,18 +309,12 @@ export const UserList = () => {
           />
         </div>
         <Table
-          responsive={["xxl", "xl", "lg", "md", "sm", "xs"]}
+          scroll={{ x: 768 }}
           columns={columns}
           dataSource={dataSource}
           onChange={onChange}
           showSorterTooltip={{
             target: "sorter-icon",
-          }}
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            maxWidth: "1320px",
-            overflowX: "auto",
           }}
           pagination={{
             showTotal: (total) => `Total ${total} items`,
