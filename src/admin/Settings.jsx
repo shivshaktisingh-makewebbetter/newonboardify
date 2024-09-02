@@ -539,18 +539,6 @@ export const Settings = () => {
                       >
                         Status
                       </label>
-                      {/* <input
-                        type="text"
-                        placeholder="Enter Label"
-                        style={{
-                          width: "100%",
-                          padding: "0.5rem",
-                          border: "1px solid #ced4da",
-                          borderRadius: "4px",
-                        }}
-                        value={item.status}
-                        onChange={(e) => changeStatus(i, e.target.value)}
-                      /> */}
                       <Select
                         mode="tags"
                         style={{

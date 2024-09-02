@@ -115,7 +115,7 @@ export const Check = () => {
   }, []);
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div style={{ padding: mobileView ?"2rem":"1rem" }}>
       <div style={{ marginTop: "3rem", marginBottom: "1rem" }}>
         <Hero
           heading={"Overall Status"}
