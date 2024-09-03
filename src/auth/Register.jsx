@@ -283,7 +283,7 @@ export const Register = () => {
                 name="company_name"
                 value={formData.company_name}
                 onChange={handleInputChange}
-                // style={{ background: "#e8f0fe" }}
+                style={{ background: params?.company_name ? "#ececec" : "#e8f0fe" }}
                 className="input-customer-focus form-control"
                 disabled={params?.company_name}
               />
@@ -302,7 +302,7 @@ export const Register = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                // style={{ background: "#e8f0fe" }}
+                style={{ background: params?.invited_user_email ? "#ececec" : "#e8f0fe" }}
                 className="input-customer-focus form-control"
                 disabled={params?.invited_user_email}
               />
