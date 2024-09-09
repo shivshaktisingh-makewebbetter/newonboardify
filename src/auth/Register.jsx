@@ -57,8 +57,9 @@ export const Register = () => {
 
     // Filter out specific keys and set the filteredParams state
     const filteredObj = Object.fromEntries(
-      Object.entries(paramsObj).filter(([key]) => 
-        !['company_name', 'invited_user_email', 'user_email'].includes(key)
+      Object.entries(paramsObj).filter(
+        ([key]) =>
+          !["company_name", "invited_user_email", "user_email"].includes(key)
       )
     );
 
@@ -76,8 +77,12 @@ export const Register = () => {
   };
 
   useEffect(() => {
-    if(params?.company_name) {
-      setFormData({...formData, company_name: params.company_name, email: params.invited_user_email});
+    if (params?.company_name) {
+      setFormData({
+        ...formData,
+        company_name: params.company_name,
+        email: params.invited_user_email,
+      });
     }
   }, [params]);
 
@@ -283,7 +288,10 @@ export const Register = () => {
                 name="company_name"
                 value={formData.company_name}
                 onChange={handleInputChange}
-                style={{ background: params?.company_name ? "#ececec" : "#e8f0fe" }}
+                style={{
+                  background: params?.company_name ? "#ececec" : "#e8f0fe",
+                  color: params?.company_name ? "darkgrey" : "",
+                }}
                 className="input-customer-focus form-control"
                 disabled={params?.company_name}
               />
@@ -302,7 +310,12 @@ export const Register = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                style={{ background: params?.invited_user_email ? "#ececec" : "#e8f0fe" }}
+                style={{
+                  background: params?.invited_user_email
+                    ? "#ececec"
+                    : "#e8f0fe",
+                  color: params?.invited_user_email ? "darkgrey" : "",
+                }}
                 className="input-customer-focus form-control"
                 disabled={params?.invited_user_email}
               />
