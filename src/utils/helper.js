@@ -133,12 +133,21 @@ export function getDateAndTime(time) {
   return newDate;
 }
 
-export function getFirstLettersOfName(value) {
+export function getFirstLettersOfName(value, message) {
   let name = value.split(" ");
+  let msg = message.split(":");
   let firstLetters = "";
   name.forEach((item) => {
     firstLetters += item[0].toUpperCase();
   });
+  if (
+    msg[0].includes("From") &&
+    msg[0].includes(localStorage.getItem("userEmail"))
+  ) {
+  } else if (msg[0].includes("From")) {
+    let newFirstLetter = msg[0].split(" ")[1][0].toUpperCase();
+    firstLetters = newFirstLetter;
+  }
 
   return firstLetters;
 }
@@ -146,7 +155,7 @@ export function getFirstLettersOfName(value) {
 export function extractUsernameFromMessage(value) {
   let message = "";
   let newValue = value.split(":");
-  if (value.includes(sessionStorage.getItem("userEmail"))) {
+  if (newValue[0].includes("From")) {
     newValue.forEach((msg, i) => {
       if (i !== 0) {
         message += msg.replace("https", "https:");
@@ -159,10 +168,21 @@ export function extractUsernameFromMessage(value) {
   return message;
 }
 
-export function showUserName(value) {
+export function showUserName(value, userEmailData) {
   let userName = "";
-  if (value.includes(sessionStorage.getItem("userEmail"))) {
-    userName = sessionStorage.getItem("userName");
+  if (value.includes(localStorage.getItem("userEmail"))) {
+    userName = localStorage.getItem("userName");
+  } else if (value.split(":")[0].includes("From")) {
+    let email = userEmailData.filter(
+      (item) => item.email === value.split(":")[0].split(" ")[1]
+    );
+    if (email.length) {
+      userName = userEmailData.filter(
+        (item) => item.email === value.split(":")[0].split(" ")[1]
+      )[0].username;
+    } else {
+      userName = value.split(":")[0].split(" ")[1];
+    }
   } else {
     userName = "Onboardify Team";
   }
@@ -171,7 +191,6 @@ export function showUserName(value) {
 }
 
 export function appendEmoji(value, emoji) {
-
   const parser = new DOMParser();
   const doc = parser.parseFromString(value, "text/html");
 
@@ -190,11 +209,8 @@ export function appendEmoji(value, emoji) {
   return value === "" ? emoji : modifiedHtmlString;
 }
 
-
-
 export function formatDateNewFormat(inputDate) {
   const date = new Date(inputDate);
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  return date.toLocaleDateString('en-US', options);
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  return date.toLocaleDateString("en-US", options);
 }
-

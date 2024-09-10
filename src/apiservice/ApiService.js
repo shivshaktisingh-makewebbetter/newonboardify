@@ -66,8 +66,10 @@ export const exportUserData = () =>
 
 // Customer Endpoints
 
-export const lastSelectedChart = () => Services.GET(`/newonboardify/customer/lastChartUsedByUser`);
-export const updateLastSelectedChart = (data) => Services.POST(`/newonboardify/customer/lastChartUsedByUser` , data);
+export const lastSelectedChart = () =>
+  Services.GET(`/newonboardify/customer/lastChartUsedByUser`);
+export const updateLastSelectedChart = (data) =>
+  Services.POST(`/newonboardify/customer/lastChartUsedByUser`, data);
 
 export const requestTrackingWithOrCondition = (id, data) => {
   return Services.POST(
@@ -132,9 +134,13 @@ export const swapService = (data) =>
 export const updateServiceVisibility = (data) =>
   Services.POST(`newonboardify/admin/updateServiceVisibility`, data);
 
-export const updateLastServiceUsedByUser = (data) => Services.POST(`newonboardify/customer/lastServiceUsedByUser` , data);
+export const updateLastServiceUsedByUser = (data) =>
+  Services.POST(`newonboardify/customer/lastServiceUsedByUser`, data);
 
-export const getLastServiceUsedByUser = () => Services.GET(`newonboardify/customer/lastServiceUsedByUser`);
+export const getLastServiceUsedByUser = () =>
+  Services.GET(`newonboardify/customer/lastServiceUsedByUser`);
+
+export const getEmailData = (data) => Services.POST('/tasc360/getEmailData', data);
 
 // Common Endpoints
 export const loginApi = (data) => Services.POST(`commom-login`, data);

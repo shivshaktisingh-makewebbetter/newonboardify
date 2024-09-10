@@ -32,6 +32,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import UserTextEditor from "./UserTextEditor";
 import { Loader } from "../../common/Loader";
+import { getEmailData } from "../../apiservice/ApiService";
 
 export const UpdateComponent = ({
   id,
@@ -47,6 +48,7 @@ export const UpdateComponent = ({
   const [replyValue, setReplyValue] = useState("");
   const [showComments, setShowComments] = useState(5);
   const [commentLoad, setCommentLoad] = useState(false);
+  const [userEmailData, setUserEmailData] = useState([]);
 
   const settingsData = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -293,6 +295,39 @@ export const UpdateComponent = ({
   }, []);
 
   useEffect(() => {
+    if (data) {
+      if (data.updates.length) {
+        let users = [];
+        data.updates.forEach((item) => {
+          if (item.text_body.includes("From")) {
+            let name = item.text_body.split(":")[0].split(" ")[1];
+            users.push(name);
+          }
+          if (item.replies.length) {
+            item.replies.forEach((repli) => {
+              if (repli.text_body.includes("From")) {
+                let name = repli.text_body.split(":")[0].split(" ")[1];
+                users.push(name);
+              }
+            });
+          }
+        });
+        if (users.length) {
+          async function fetchUserFromEmails() {
+            setLoading(true);
+            let data = await getEmailData({ emails: users });
+            if (data.success) {
+              setUserEmailData([...data.data.data]);
+            }
+            setLoading(false);
+          }
+          fetchUserFromEmails();
+        }
+      }
+    }
+  }, [data]);
+
+  useEffect(() => {
     const handleScroll = () => {
       if (
         window.innerHeight + window.scrollY >=
@@ -454,6 +489,7 @@ export const UpdateComponent = ({
                             likeIds={likeIds.includes(item.id)}
                             unlikeComment={unlikeComment}
                             props={props}
+                            userEmailData={userEmailData}
                           />
                         );
                       }

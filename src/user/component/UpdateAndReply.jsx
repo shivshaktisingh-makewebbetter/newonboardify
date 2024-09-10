@@ -25,10 +25,11 @@ const UpdateAndReply = ({
   likeIds,
   unlikeComment,
   props,
+  userEmailData
 }) => {
   const [showReplyEditor, setShowReplyEditor] = useState(false);
 
-  let userName = showUserName(item.body);
+  let userName = showUserName(item.body, userEmailData);
   const cancelReply = () => {
     setShowReplyEditor(false);
   };
@@ -55,7 +56,7 @@ const UpdateAndReply = ({
             {userName === "Onboardify Team" ? (
              <img src="/onboard123.svg" alt="No Preview" style={{borderRadius:"50%"}} width={30} height={30}/> 
             ) : (
-              getFirstLettersOfName(userName)
+              getFirstLettersOfName(userName, item.body)
             )}
           </span>
         </div>
@@ -70,7 +71,7 @@ const UpdateAndReply = ({
               fontWeight: "500",
             }}
           >
-            {showUserName(item.body)}
+            {showUserName(item.body, userEmailData)}
           </span>
 
           <span style={{ color: "#6F7490" }}>
@@ -132,7 +133,7 @@ const UpdateAndReply = ({
         item.replies.map((reply , i) => {
           return (
             <div className="px-4 pt-3" key={i}>
-              <Replies item={reply} />
+              <Replies item={reply} userEmailData={userEmailData} />
             </div>
           );
         })}
@@ -143,7 +144,7 @@ const UpdateAndReply = ({
               className="rounded-circle fw-bold text-white d-flex align-items-center justify-content-center"
               style={{ width: "35px", height: "35px", background: "#497ed8" , paddingTop:"4px" }}
             >
-              {getFirstLettersOfName(sessionStorage.getItem("userName"))}
+              {getFirstLettersOfName(sessionStorage.getItem("userName"), item.body)}
             </span>
           </div>
           <span className="d-block w-100">
@@ -174,7 +175,7 @@ const UpdateAndReply = ({
             }}
           >
             <span style={{ lineHeight: 1, display: "inline-block" }}>
-              {getFirstLettersOfName(sessionStorage.getItem("userName"))}
+              {getFirstLettersOfName(sessionStorage.getItem("userName"), item.body)}
             </span>
           </div>
           <div className="w-100">

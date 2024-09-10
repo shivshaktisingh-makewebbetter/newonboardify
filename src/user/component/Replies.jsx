@@ -6,8 +6,8 @@ import {
   showUserName,
 } from "../../utils/helper";
 
-const Replies = ({ item }) => {
-  let userName = showUserName(item.body);
+const Replies = ({ item, userEmailData }) => {
+  let userName = showUserName(item.body, userEmailData);
   return (
     <div className="d-flex align-items-center" style={{ gap: "5px" }}>
       <div>
@@ -29,12 +29,12 @@ const Replies = ({ item }) => {
               style={{borderRadius:"50%"}}
             />
           ) : (
-            getFirstLettersOfName(userName)
+            getFirstLettersOfName(userName, item.body)
           )}
         </span>
       </div>
       <div className="rounded-2 px-3 py-2" style={{ background: "#6f74900f" }}>
-        <div className="text-primary">{showUserName(item.body)}</div>
+        <div className="text-primary">{showUserName(item.body, userEmailData)}</div>
         <div
           className="inc-reply-container"
           style={{ color: "#6F7490" }}

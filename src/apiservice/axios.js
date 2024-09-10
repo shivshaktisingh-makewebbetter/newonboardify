@@ -63,7 +63,7 @@ const handleResponse = async (request) => {
         const responseData = response.data;
         
         // Check the 'status' field in the response data
-        if (responseData.status === true) {
+        if (responseData.status === true || responseData.status === 'success') {
             return { success: true, data: responseData, message: responseData.message || '' };
         } else {
             return { success: false, data: responseData, message: responseData.message || 'Request failed' };
