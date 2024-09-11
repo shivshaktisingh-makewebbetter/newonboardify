@@ -169,7 +169,6 @@ export function extractUsernameFromMessage(value) {
 }
 
 export function showUserName(value, userEmailData) {
-  console.log('ss', value, '0123', userEmailData);
   let userName = "";
   if (value.includes(localStorage.getItem("userEmail"))) {
     userName = localStorage.getItem("userName");
