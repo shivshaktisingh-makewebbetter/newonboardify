@@ -13,7 +13,6 @@ import { Check } from "./user/Check";
 import { Request } from "./user/Request";
 import { AdminHome } from "./admin/AdminHome";
 import { CreateAdmin } from "./admin/CreateAdmin";
-import { Settings } from "./admin/Settings";
 import { ProtectedRoute } from "./routeWrapper/ProtectedRoute";
 import { Register } from "./auth/Register";
 import { Layout } from "./layout/Layout";
@@ -28,6 +27,10 @@ import ErrorPage from "./common/ErrorPage";
 import { Profile } from "./admin/Profile";
 import { CreateProfile } from "./admin/components/CreateProfile";
 import { EditProfile } from "./admin/components/EditProfile";
+import { GeneralSettings } from "./admin/GeneralSettings";
+import { ReportSettings } from "./admin/ReportSetting";
+import { ComplianceReportSettings } from "./admin/ComplianceReportSettings";
+import { ServiceReportSettings } from "./admin/ServiceReportSettings";
 
 function App() {
   const router = createBrowserRouter([
@@ -174,12 +177,51 @@ function App() {
           ),
         },
         {
-          path: "settings",
+          path: "generalSettings",
           element: (
             <ProtectedRoute
               element={
                 <ErrorBoundary>
-                  <Settings />
+                  <GeneralSettings />
+                </ErrorBoundary>
+              }
+              allowedRoles={["superAdmin", "admin"]}
+            />
+          ),
+        },
+        {
+          path: "reportSettings",
+          element: (
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <ReportSettings />
+                </ErrorBoundary>
+              }
+              allowedRoles={["superAdmin", "admin"]}
+            />
+          ),
+        },
+        {
+          path: "complianceReport",
+          element: (
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <ComplianceReportSettings />
+                </ErrorBoundary>
+              }
+              allowedRoles={["superAdmin", "admin"]}
+            />
+          ),
+        },
+        {
+          path: "serviceReport",
+          element: (
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <ServiceReportSettings />
                 </ErrorBoundary>
               }
               allowedRoles={["superAdmin", "admin"]}

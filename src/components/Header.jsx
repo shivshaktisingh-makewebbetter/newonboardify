@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Drawer, Flex, Typography } from "antd";
+import { Button, Drawer, Dropdown, Flex, Typography } from "antd";
 import {
   CloseOutlined,
   HomeOutlined,
@@ -69,6 +69,35 @@ export const Header = () => {
     }
   };
 
+  const navigateToGeneralSettings = () => {
+    navigate("generalSettings");
+  };
+
+  const navigateToReportSettings = () => {
+    navigate("reportSettings");
+  };
+
+  const navigateToAdminHome = () => {
+    if (!window.location.href.endsWith("/admin")) {
+      navigate("/admin");
+    }
+  };
+
+  const items = [
+    {
+      key: "1",
+      label: <span onClick={navigateToGeneralSettings}>General Setting</span>,
+    },
+    {
+      key: "2",
+      label: <span onClick={navigateToReportSettings}>Report Setting</span>,
+    },
+    {
+      key: "3",
+      label: <span onClick={navigateToAdminHome}>Admin Home</span>,
+    },
+  ];
+
   return (
     <>
       {notification && (
@@ -127,10 +156,14 @@ export const Header = () => {
                   </span>
                 </a>
               </div>
-              <Typography className="d-none  d-md-flex d-lg-flex d-xl-flex d-xxl-flex" style={{gap:"5px"}}>
+              <Typography
+                className="d-none  d-md-flex d-lg-flex d-xl-flex d-xxl-flex"
+                style={{ gap: "5px" }}
+              >
                 <span className="onboardify-welcome">Welcome </span>{" "}
                 <span className="onboardify-welcome-text-hani">
-                {" "}{sessionStorage.getItem("userName")}
+                  {" "}
+                  {sessionStorage.getItem("userName")}
                 </span>
               </Typography>
             </div>
@@ -163,27 +196,34 @@ export const Header = () => {
                     <></>
                   )
                 ) : (
-                  <Button
-                    className="governify-secondary-btn fs_12 fw-700 border-radius-10"
-                    style={{
-                      display: "flex",
-                      gap: "5px",
-                      alignItems: "center",
-                      border: settingButtonHovered
-                        ? `1px solid #928f8f`
-                        : `1px solid ${data.button_bg}`,
-                      color: settingButtonHovered ? `#928f8f` : data.button_bg,
-                      background: "transparent",
+                  <Dropdown
+                    menu={{
+                      items,
                     }}
-                    onClick={navigateToSettings}
-                    onMouseEnter={() => handleHoverSetting(true)}
-                    onMouseLeave={() => handleHoverSetting(false)}
+                    placement="bottom"
+                    arrow
                   >
-                    <span className="font-family-montse fs-12 fw-700">
-                      Settings
-                    </span>
-                    <SettingOutlined className="fs_20 fw-700" />
-                  </Button>
+                    <Button
+                      className="governify-secondary-btn fs_12 fw-700 border-radius-10"
+                      style={{
+                        display: "flex",
+                        gap: "5px",
+                        alignItems: "center",
+                        border: settingButtonHovered
+                          ? `1px solid #928f8f`
+                          : `1px solid ${data.button_bg}`,
+                        color: settingButtonHovered
+                          ? `#928f8f`
+                          : data.button_bg,
+                        background: "transparent",
+                      }}
+                    >
+                      <span className="font-family-montse fs-12 fw-700">
+                        Settings
+                      </span>
+                      <SettingOutlined className="fs_20 fw-700" />
+                    </Button>
+                  </Dropdown>
                 )}
 
                 <Button
@@ -237,62 +277,56 @@ export const Header = () => {
             location.pathname.includes("user") ? (
               <Button
                 type="text"
-                // className="governify-secondary-btn border-radius-10"
-                // style={{
-                //   display: "flex",
-                //   gap: "5px",
-                //   alignItems: "center",
-                //   border: homeBUttonHovered
-                //     ? `1px solid #928f8f`
-                //     : `1px solid ${data.button_bg}`,
-                //   color: homeBUttonHovered ? `#928f8f` : data.button_bg,
-                //   background: "transparent",
-                // }}
-                onClick={()=>{
+                onClick={() => {
                   setOpenDrawer(false);
                   navigateToHome();
                 }}
-                // onMouseEnter={() => handleHoverHome(true)}
-                // onMouseLeave={() => handleHoverHome(false)}
               >
                 <span className="font-family-montse fs-12 fw-700">Home</span>
-                {/* <HomeOutlined className="fs_20 fw-700" /> */}
               </Button>
             ) : (
               <></>
             )
           ) : (
-            <Button
-              type="text"
-              // className="governify-secondary-btn fs_12 fw-700 border-radius-10"
-              // style={{
-              //   display: "flex",
-              //   gap: "5px",
-              //   alignItems: "center",
-              //   border: settingButtonHovered
-              //     ? `1px solid #928f8f`
-              //     : `1px solid ${data.button_bg}`,
-              //   color: settingButtonHovered ? `#928f8f` : data.button_bg,
-              //   background: "transparent",
-              // }}
-              onClick={() => {
-                setOpenDrawer(false);
-                navigateToSettings();
-              }}
-            >
-              <span className="font-family-montse fs-12 fw-700">Settings</span>
-              {/* <SettingOutlined className="fs_20 fw-700" /> */}
-            </Button>
+            <>
+              <Button
+                type="text"
+                onClick={() => {
+                  navigateToGeneralSettings();
+                  setOpenDrawer(false);
+                }}
+              >
+                <span className="font-family-montse fs-12 fw-700">
+                  General Settings
+                </span>
+              </Button>
+              <Button
+                type="text"
+                onClick={() => {
+                  navigateToReportSettings();
+                  setOpenDrawer(false);
+                }}
+              >
+                <span className="font-family-montse fs-12 fw-700">
+                  Report Settings
+                </span>
+              </Button>
+              <Button
+                type="text"
+                onClick={() => {
+                  navigateToAdminHome();
+                  setOpenDrawer(false);
+                }}
+              >
+                <span className="font-family-montse fs-12 fw-700">
+                  Admin Home
+                </span>
+              </Button>
+            </>
           )}
 
-          <Button
-            type="text"
-            // className="governify-primary-btn border-radius-10"
-
-            onClick={logoutFunction}
-          >
+          <Button type="text" onClick={logoutFunction}>
             <span className="font-family-montse fs-12 fw-700">Log out</span>
-            {/* <LogoutOutlined className="fs_20" /> */}
           </Button>
         </Flex>
       </Drawer>

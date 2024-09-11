@@ -11,7 +11,7 @@ import {
 } from "../apiservice/ApiService";
 import { ImageUpload } from "../common/ImageUpload";
 
-export const Settings = () => {
+export const GeneralSettings = () => {
   const data = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
     site_bg: "#ffffff",
