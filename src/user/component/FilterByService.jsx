@@ -16,7 +16,8 @@ export const FilterByService = ({
   setFilterKeyData,
   updateSelectedService,
   profileId ,
-  selectedService
+  selectedService ,
+  getStatusFilterData
 }) => {
   const handleMenuClick = async (e) => {
     let tempBoardId = "";
@@ -51,6 +52,7 @@ export const FilterByService = ({
     setSelectedFilter("9");
     setLoading(true);
     await updateSelectedService({profile_id:profileId , service_id:service_id});
+    await getStatusFilterData(tempBoardId);
     await getTrackData(tempBoardId, tempFilterKeyData);
     setLoading(false);
   };
