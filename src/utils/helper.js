@@ -169,6 +169,7 @@ export function extractUsernameFromMessage(value) {
 }
 
 export function showUserName(value, userEmailData) {
+  console.log('ss', value, '0123', userEmailData);
   let userName = "";
   if (value.includes(localStorage.getItem("userEmail"))) {
     userName = localStorage.getItem("userName");
@@ -181,7 +182,7 @@ export function showUserName(value, userEmailData) {
         (item) => item.email === value.split(":")[0].split(" ")[1]
       )[0].username;
     } else {
-      userName = value.split(":")[0].split(" ")[1];
+      userName = "Onboardify Team";  
     }
   } else {
     userName = "Onboardify Team";
