@@ -168,11 +168,8 @@ export const ReportSettings = () => {
           tempListing.push({
             id: item.id,
             title: item.title,
-            users: item.users
-              .split(",")
-              .map((user) => user.trim())
-              .join(" , "),
-            default: item.make_default === 0 ? false : true,
+            governify_board_id: item.governify_board_id,
+            governify_table_settings: item.governify_table_settings,
           });
         });
         setDataSource(tempListing);
