@@ -440,41 +440,6 @@ export const Track = () => {
         }
       }
 
-      // if (response.success) {
-      //   if (tempFilters.searchData.length > 0) {
-      //     setData(commonObjects.slice(0, 10));
-      //     setOriginalArray(commonObjects);
-      //   } else {
-      //     setData(
-      //       response.data.response.data.boards[0].items_page.items.slice(0, 10)
-      //     );
-      //     setOriginalArray(
-      //       response.data.response.data.boards[0].items_page.items
-      //     );
-      //   }
-
-      //   if (tempFilters.searchData.length > 0) {
-      //   } else {
-      //     if (
-      //       response.data.response.data.boards[0].items_page.items.length <= 10
-      //     ) {
-      //       setCursor(null);
-      //     }
-      //   }
-      // }
-      // if (
-      //   response.success &&
-      //   response.data.response.data.boards[0].items_page.items.length === 0
-      // ) {
-      //   setData([]);
-      //   setOriginalArray([]);
-
-      //   if (
-      //     response.data.response.data.boards[0].items_page.items.length <= 10
-      //   ) {
-      //     setCursor(null);
-      //   }
-      // }
     } catch (err) {
     } finally {
       setLoading(false);
@@ -560,6 +525,7 @@ export const Track = () => {
             updateSelectedService={updateSelectedService}
             profileId={profileId}
             selectedService={selectedService}
+            getStatusFilterData={getStatusFilterData}
           />
           <SortBy
             items={sortingItems}
