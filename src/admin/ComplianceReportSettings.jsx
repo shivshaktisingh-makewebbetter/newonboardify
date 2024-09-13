@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 // import Hero from "../common/Hero";
 import { useLocation } from "react-router-dom";
 import { Hero } from "../components/Hero";
+import { getAllColumnsOfBoard } from "../apiservice/ApiService";
 // import { fetcher } from "../../utils/helper";
 
 export const ComplianceReportSettings = () => {
@@ -21,9 +22,8 @@ export const ComplianceReportSettings = () => {
       let tempCompanyData = [...companyChartData];
       tempCompanyData.push({
         type: "Text Chart",
-        heading: "",
-        mainText: "",
-        tag: "",
+        column1: "",
+        column2: "",
       });
       setCompanyChartData(tempCompanyData);
     }
@@ -31,9 +31,8 @@ export const ComplianceReportSettings = () => {
       let tempSaudizationData = [...saudizationChartData];
       tempSaudizationData.push({
         type: "Text Chart",
-        heading: "",
-        mainText: "",
-        tag: "",
+        column1: "",
+        column2: "",
       });
       setSaudizationChartData(tempSaudizationData);
     }
@@ -42,9 +41,8 @@ export const ComplianceReportSettings = () => {
       let tempVisaData = [...visaChartData];
       tempVisaData.push({
         type: "Text Chart",
-        heading: "",
-        mainText: "",
-        tag: "",
+        column1: "",
+        column2: "",
       });
       setVisaChartData(tempVisaData);
     }
@@ -53,9 +51,8 @@ export const ComplianceReportSettings = () => {
       let tempEmployeeData = [...employeesChartData];
       tempEmployeeData.push({
         type: "Text Chart",
-        heading: "",
-        mainText: "",
-        tag: "",
+        column1: "",
+        column2: "",
       });
       setEmployeesChartData(tempEmployeeData);
     }
@@ -92,43 +89,6 @@ export const ComplianceReportSettings = () => {
       let tempEmployeeData = [...employeesChartData];
       tempEmployeeData.push({
         type: "Value Chart",
-        mainColumn: "",
-      });
-      setEmployeesChartData(tempEmployeeData);
-    }
-  };
-
-  const handleSelectChartTypePercentage = (type) => {
-    if (type === "company") {
-      let tempCompanyData = [...companyChartData];
-      tempCompanyData.push({
-        type: "Percentage Chart",
-        mainColumn: "",
-      });
-      setCompanyChartData(tempCompanyData);
-    }
-    if (type === "saudization") {
-      let tempSaudizationData = [...saudizationChartData];
-      tempSaudizationData.push({
-        type: "Percentage Chart",
-        mainColumn: "",
-      });
-      setSaudizationChartData(tempSaudizationData);
-    }
-
-    if (type === "visa") {
-      let tempVisaData = [...visaChartData];
-      tempVisaData.push({
-        type: "Percentage Chart",
-        mainColumn: "",
-      });
-      setVisaChartData(tempVisaData);
-    }
-
-    if (type === "employees") {
-      let tempEmployeeData = [...employeesChartData];
-      tempEmployeeData.push({
-        type: "Percentage Chart",
         mainColumn: "",
       });
       setEmployeesChartData(tempEmployeeData);
@@ -172,8 +132,6 @@ export const ComplianceReportSettings = () => {
     }
   };
 
-  const typesOfChart = [];
-
   const typesOfChartCompany = [
     {
       key: "1",
@@ -191,16 +149,9 @@ export const ComplianceReportSettings = () => {
         </span>
       ),
     },
+
     {
       key: "3",
-      label: (
-        <span onClick={() => handleSelectChartTypePercentage("company")}>
-          Percentage Chart
-        </span>
-      ),
-    },
-    {
-      key: "4",
       label: (
         <span onClick={() => handleSelectChartTypeBar("company")}>
           Bar Chart
@@ -226,16 +177,9 @@ export const ComplianceReportSettings = () => {
         </span>
       ),
     },
+
     {
       key: "3",
-      label: (
-        <span onClick={() => handleSelectChartTypePercentage("saudization")}>
-          Percentage Chart
-        </span>
-      ),
-    },
-    {
-      key: "4",
       label: (
         <span onClick={() => handleSelectChartTypeBar("saudization")}>
           Bar Chart
@@ -261,16 +205,9 @@ export const ComplianceReportSettings = () => {
         </span>
       ),
     },
+
     {
       key: "3",
-      label: (
-        <span onClick={() => handleSelectChartTypePercentage("visa")}>
-          Percentage Chart
-        </span>
-      ),
-    },
-    {
-      key: "4",
       label: (
         <span onClick={() => handleSelectChartTypeBar("visa")}>Bar Chart</span>
       ),
@@ -294,16 +231,9 @@ export const ComplianceReportSettings = () => {
         </span>
       ),
     },
+
     {
       key: "3",
-      label: (
-        <span onClick={() => handleSelectChartTypePercentage("employees")}>
-          Percentage Chart
-        </span>
-      ),
-    },
-    {
-      key: "4",
       label: (
         <span onClick={() => handleSelectChartTypeBar("employees")}>
           Bar Chart
@@ -320,77 +250,52 @@ export const ComplianceReportSettings = () => {
     setRecommendationText(e.target.value);
   };
 
-  const handlChangeTextChartHeadingCompany = (e, index) => {
+  const handlChangeColumn1ChartHeadingCompany = (e, index) => {
     let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].heading = e.target.value;
+    tempCompanyChartData[index].column1 = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
-  const handlChangeTextChartHeadingSaudization = (e, index) => {
+  const handlChangeColumn1ChartHeadingSaudization = (e, index) => {
     let tempSaudizationChartData = [...saudizationChartData];
-    tempSaudizationChartData[index].heading = e.target.value;
+    tempSaudizationChartData[index].column1 = e;
     setSaudizationChartData(tempSaudizationChartData);
   };
 
-  const handlChangeTextChartHeadingEmployees = (e, index) => {
-    let tempEmployeesChartData = [...employeesChartData];
-    tempEmployeesChartData[index].heading = e.target.value;
-    setEmployeesChartData(tempEmployeesChartData);
+  const handlChangeColumn1ChartHeadingEmployees = (e, index) => {
+    let tempEmployeeChartData = [...employeesChartData];
+    tempEmployeeChartData[index].column1 = e;
+    setEmployeesChartData(tempEmployeeChartData);
   };
 
-  const handlChangeTextChartHeadingVisa = (e, index) => {
+  const handlChangeColumn1ChartHeadingVisa = (e, index) => {
     let tempVisaChartData = [...visaChartData];
-    tempVisaChartData[index].heading = e.target.value;
+    tempVisaChartData[index].column1 = e;
     setVisaChartData(tempVisaChartData);
   };
 
-  const handlChangeMainTextChartHeadingCompany = (e, index) => {
-    // let tempCompanyChartData = [...companyChartData];
-    // tempCompanyChartData[index].heading = e.target.value;
-    // setCompanyChartData(tempCompanyChartData);
-    console.log(e, index, "sdssdsdfsd");
-  };
-
-  const handlChangeMainTextChartHeadingSaudization = (e, index) => {
-    // let tempCompanyChartData = [...companyChartData];
-    // tempCompanyChartData[index].heading = e.target.value;
-    // setCompanyChartData(tempCompanyChartData);
-  };
-
-  const handlChangeMainTextChartHeadingEmployees = (e, index) => {
-    // let tempCompanyChartData = [...companyChartData];
-    // tempCompanyChartData[index].heading = e.target.value;
-    // setCompanyChartData(tempCompanyChartData);
-  };
-
-  const handlChangeMainTextChartHeadingVisa = (e, index) => {
-    // let tempCompanyChartData = [...companyChartData];
-    // tempCompanyChartData[index].heading = e.target.value;
-    // setCompanyChartData(tempCompanyChartData);
-  };
-
-  const handlChangeTagTextChartHeadingCompany = (e, index) => {
+  const handlChangeColumn2ChartHeadingCompany = (e, index) => {
     let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].heading = e.target.value;
+    tempCompanyChartData[index].column2 = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
-  const handlChangeTagTextChartHeadingSaudization = (e, index) => {
+  const handlChangeColumn2ChartHeadingSaudization = (e, index) => {
     let tempSaudizationChartData = [...saudizationChartData];
-    tempSaudizationChartData[index].heading = e.target.value;
+    tempSaudizationChartData[index].column2 = e;
     setSaudizationChartData(tempSaudizationChartData);
   };
 
-  const handlChangeTagTextChartHeadingVisa = (e, index) => {
-    let tempVisaChartData = [...visaChartData];
-    tempVisaChartData[index].heading = e.target.value;
-    setVisaChartData(tempVisaChartData);
+  const handlChangeColumn2ChartHeadingEmployees = (e, index) => {
+    let tempEmployeesChartData = [...employeesChartData];
+    tempEmployeesChartData[index].column2 = e;
+    setEmployeesChartData(tempEmployeesChartData);
   };
 
-  const handlChangeTagTextChartHeadingEmployees = (e, index) => {
-    let tempEmployeesChartData = [...employeesChartData];
-    tempEmployeesChartData[index].heading = e.target.value;
-    setEmployeesChartData(tempEmployeesChartData);
+  const handlChangeColumn2ChartHeadingVisa = (e, index) => {
+    let tempVisaChartData = [...visaChartData];
+    tempVisaChartData[index].column2 = e;
+    setVisaChartData(tempVisaChartData);
   };
 
   const handlChangeValueChartColumnCompany = (e, index) => {
@@ -482,18 +387,6 @@ export const ComplianceReportSettings = () => {
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Input
-                  addonBefore="Heading"
-                  style={{
-                    width: "50%",
-                  }}
-                  value={item.heading}
-                  onChange={(e) => {
-                    handlChangeTextChartHeadingCompany(e, index);
-                  }}
-                />
-              </div>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
                   placeholder="Select Column Id For Main Text"
@@ -501,7 +394,7 @@ export const ComplianceReportSettings = () => {
                     width: "50%",
                   }}
                   onChange={(e) => {
-                    handlChangeMainTextChartHeadingCompany(e, index);
+                    handlChangeColumn1ChartHeadingCompany(e, index);
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
@@ -515,7 +408,7 @@ export const ComplianceReportSettings = () => {
                     width: "50%",
                   }}
                   onChange={(e) => {
-                    handlChangeTagTextChartHeadingCompany(e, index);
+                    handlChangeColumn2ChartHeadingCompany(e, index);
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
@@ -536,6 +429,7 @@ export const ComplianceReportSettings = () => {
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
+                  mode="multiple"
                   showSearch
                   placeholder="Select Column"
                   style={{
@@ -544,33 +438,6 @@ export const ComplianceReportSettings = () => {
                   onChange={(e) => {
                     handlChangeValueChartColumnCompany(e, index);
                   }}
-                  options={columnOptions}
-                  filterOption={filterOption}
-                />
-              </div>
-            </>
-          ),
-        },
-      ];
-    }
-
-    if (item.type === "Percentage Chart") {
-      return [
-        {
-          key: index,
-          label: item.type + " " + newIndex,
-          children: (
-            <>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  placeholder="Select Column"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) =>
-                    handlChangePercentageChartColumnCompany(e, index)
-                  }
                   options={columnOptions}
                   filterOption={filterOption}
                 />
@@ -618,18 +485,6 @@ export const ComplianceReportSettings = () => {
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Input
-                  addonBefore="Heading"
-                  style={{
-                    width: "50%",
-                  }}
-                  value={item.heading}
-                  onChange={(e) => {
-                    handlChangeTextChartHeadingSaudization(e, index);
-                  }}
-                />
-              </div>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
                   placeholder="Select Column Id For Main Text"
@@ -637,7 +492,7 @@ export const ComplianceReportSettings = () => {
                     width: "50%",
                   }}
                   onChange={(e) => {
-                    handlChangeMainTextChartHeadingSaudization(e, index);
+                    handlChangeColumn1ChartHeadingSaudization(e, index);
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
@@ -651,7 +506,7 @@ export const ComplianceReportSettings = () => {
                     width: "50%",
                   }}
                   onChange={(e) => {
-                    handlChangeTagTextChartHeadingSaudization(e, index);
+                    handlChangeColumn2ChartHeadingSaudization(e, index);
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
@@ -672,6 +527,7 @@ export const ComplianceReportSettings = () => {
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
+                  mode="multiple"
                   showSearch
                   placeholder="Select Column"
                   style={{
@@ -680,33 +536,6 @@ export const ComplianceReportSettings = () => {
                   onChange={(e) => {
                     handlChangeValueChartColumnSaudization(e, index);
                   }}
-                  options={columnOptions}
-                  filterOption={filterOption}
-                />
-              </div>
-            </>
-          ),
-        },
-      ];
-    }
-
-    if (item.type === "Percentage Chart") {
-      return [
-        {
-          key: index,
-          label: item.type + " " + newIndex,
-          children: (
-            <>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  placeholder="Select Column"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) =>
-                    handlChangePercentageChartColumnSaudization(e, index)
-                  }
                   options={columnOptions}
                   filterOption={filterOption}
                 />
@@ -756,18 +585,6 @@ export const ComplianceReportSettings = () => {
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Input
-                  addonBefore="Heading"
-                  style={{
-                    width: "50%",
-                  }}
-                  value={item.heading}
-                  onChange={(e) => {
-                    handlChangeTextChartHeadingEmployees(e, index);
-                  }}
-                />
-              </div>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
                   placeholder="Select Column Id For Main Text"
@@ -775,7 +592,7 @@ export const ComplianceReportSettings = () => {
                     width: "50%",
                   }}
                   onChange={(e) => {
-                    handlChangeMainTextChartHeadingEmployees(e, index);
+                    handlChangeColumn1ChartHeadingEmployees(e, index);
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
@@ -789,7 +606,7 @@ export const ComplianceReportSettings = () => {
                     width: "50%",
                   }}
                   onChange={(e) => {
-                    handlChangeTagTextChartHeadingEmployees(e, index);
+                    handlChangeColumn2ChartHeadingEmployees(e, index);
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
@@ -810,6 +627,7 @@ export const ComplianceReportSettings = () => {
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
+                  mode="multiple"
                   showSearch
                   placeholder="Select Column"
                   style={{
@@ -818,33 +636,6 @@ export const ComplianceReportSettings = () => {
                   onChange={(e) => {
                     handlChangeValueChartColumnEmployees(e, index);
                   }}
-                  options={columnOptions}
-                  filterOption={filterOption}
-                />
-              </div>
-            </>
-          ),
-        },
-      ];
-    }
-
-    if (item.type === "Percentage Chart") {
-      return [
-        {
-          key: index,
-          label: item.type + " " + newIndex,
-          children: (
-            <>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  placeholder="Select Column"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) =>
-                    handlChangePercentageChartColumnEmployees(e, index)
-                  }
                   options={columnOptions}
                   filterOption={filterOption}
                 />
@@ -892,18 +683,6 @@ export const ComplianceReportSettings = () => {
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Input
-                  addonBefore="Heading"
-                  style={{
-                    width: "50%",
-                  }}
-                  value={item.heading}
-                  onChange={(e) => {
-                    handlChangeTextChartHeadingVisa(e, index);
-                  }}
-                />
-              </div>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
                   placeholder="Select Column Id For Main Text"
@@ -911,7 +690,7 @@ export const ComplianceReportSettings = () => {
                     width: "50%",
                   }}
                   onChange={(e) => {
-                    handlChangeMainTextChartHeadingVisa(e, index);
+                    handlChangeColumn1ChartHeadingVisa(e, index);
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
@@ -925,7 +704,7 @@ export const ComplianceReportSettings = () => {
                     width: "50%",
                   }}
                   onChange={(e) => {
-                    handlChangeTagTextChartHeadingVisa(e, index);
+                    handlChangeColumn2ChartHeadingVisa(e, index);
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
@@ -946,6 +725,8 @@ export const ComplianceReportSettings = () => {
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
+                  mode="multiple"
+                  showSearch
                   placeholder="Select Tag"
                   style={{
                     width: "50%",
@@ -954,31 +735,7 @@ export const ComplianceReportSettings = () => {
                     handlChangeValueChartColumnVisa(e, index);
                   }}
                   options={columnOptions}
-                />
-              </div>
-            </>
-          ),
-        },
-      ];
-    }
-
-    if (item.type === "Percentage Chart") {
-      return [
-        {
-          key: index,
-          label: item.type + " " + newIndex,
-          children: (
-            <>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  placeholder="Select Tag"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) =>
-                    handlChangePercentageChartColumnVisa(e, index)
-                  }
-                  options={columnOptions}
+                  filterOption={filterOption}
                 />
               </div>
             </>
@@ -996,6 +753,7 @@ export const ComplianceReportSettings = () => {
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
+                  showSearch
                   mode="multiple"
                   placeholder="Select Tag"
                   style={{
@@ -1003,6 +761,7 @@ export const ComplianceReportSettings = () => {
                   }}
                   onChange={(e) => handlChangeBarChartColumnVisa(e, index)}
                   options={columnOptions}
+                  filterOption={filterOption}
                 />
               </div>
             </>
@@ -1180,20 +939,20 @@ export const ComplianceReportSettings = () => {
   ];
 
   const fetchData = async () => {
-    // try {
-    //   const url = `newonboardify/admin/get-board-columns/${location.state.selectedProfileData.governify_board_id}`;
-    //   const method = "GET";
-    //   const response = await fetcher(url, method);
-    //   if (response.status) {
-    //     const tempData = [];
-    //     response.response.forEach((item) => {
-    //       tempData.push({ label: item.title, value: item.id });
-    //     });
-    //     setColumnOptions(tempData);
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    try {
+      const response = await getAllColumnsOfBoard(
+        location.state.selectedProfileData.governify_board_id
+      );
+      if (response.success) {
+        const tempData = [];
+        response.data.response.forEach((item) => {
+          tempData.push({ label: item.title, value: item.id });
+        });
+        setColumnOptions(tempData);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {

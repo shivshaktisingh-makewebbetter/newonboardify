@@ -118,20 +118,31 @@ export const Profile = () => {
     }
   };
 
+  const openReportPage = (item) => {
+    navigate("/admin/reportSettings", { state: item });
+  };
+
   const columns = [
     {
       title: "ID",
       dataIndex: "id",
-      width:60
+      width: 60,
     },
     {
       title: "Name",
       dataIndex: "title",
-      width:200
+      width: 200,
     },
     {
       title: "User List",
       dataIndex: "users",
+    },
+    {
+      title: "Report Settings",
+      dataIndex: "report",
+      render: (_, record) => (
+        <Button onClick={() => openReportPage(record)}> Open</Button>
+      ),
     },
     {
       title: "Default Profile",
@@ -144,7 +155,7 @@ export const Profile = () => {
           />
         </>
       ),
-      width:150
+      width: 150,
     },
     {
       title: "Action",
@@ -198,6 +209,9 @@ export const Profile = () => {
               .map((user) => user.trim())
               .join(" , "),
             default: item.make_default === 0 ? false : true,
+            governify_board_id: item.governify_board_id,
+            governify_table_settings: item.governify_table_settings,
+            governify_filter_key: item.governify_filter_key,
           });
         });
         setDataSource(tempListing);

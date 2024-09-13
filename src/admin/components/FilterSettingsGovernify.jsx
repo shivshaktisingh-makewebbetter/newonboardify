@@ -1,23 +1,28 @@
 import { Button, Select } from "antd";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { getAllColumnsOfBoard, governifyAdminTableSettings } from "../../apiservice/ApiService";
+import {
+  getAllColumnsOfBoard,
+  governifyFilterKeyAssociation,
+} from "../../apiservice/ApiService";
 
-export const ComplianceTableSettings = ({
+export const FilterSettingsGovernify = ({
   selectedProfileData,
-  setTableSettingModal,
+  setFilterSettingModal,
 }) => {
   const settingData = JSON.parse(sessionStorage.getItem("settings"));
   const [columnOptions, setColumnOptions] = useState([]);
   const [selectedColumn, setSelectedColumn] = useState(
-    selectedProfileData.governify_table_settings !== null
-      ? JSON.parse(selectedProfileData.governify_table_settings)
-      : []
+    selectedProfileData.governify_filter_key !== null
+      ? selectedProfileData.governify_filter_key
+      : ""
   );
 
   const fetchData = async () => {
     try {
-      const response = await getAllColumnsOfBoard(selectedProfileData.governify_board_id);
+      const response = await getAllColumnsOfBoard(
+        selectedProfileData.governify_board_id
+      );
       if (response.success) {
         const tempData = [];
         response.data.response.forEach((item) => {
@@ -29,7 +34,6 @@ export const ComplianceTableSettings = ({
       console.log(err);
     }
   };
-
 
   const filterOption = (input, option) => {
     return (
@@ -45,13 +49,13 @@ export const ComplianceTableSettings = ({
   const handleSubmit = async () => {
     const payloadData = JSON.stringify({
       profile_id: selectedProfileData.id.toString(),
-      governify_table_settings: selectedColumn,
+      governify_filter_key: selectedColumn,
     });
     try {
-      const response = await governifyAdminTableSettings(payloadData);
+      const response = await governifyFilterKeyAssociation(payloadData);
       if (response.success) {
         toast.success(response.message);
-        setTableSettingModal(false);
+        setFilterSettingModal(false);
       }
     } catch (err) {}
   };
@@ -59,7 +63,7 @@ export const ComplianceTableSettings = ({
   useEffect(() => {
     fetchData();
   }, []);
-  
+
   return (
     <div style={{ maxWidth: "550px", width: "100%", marginTop: "25px" }}>
       <div
@@ -70,7 +74,7 @@ export const ComplianceTableSettings = ({
           className="p-2 m-0 fs-5"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <strong>Compliance Table Settings</strong>
+          <strong>Filter Setting</strong>
           <span style={{ display: "flex", alignItems: "center" }}></span>
         </p>
       </div>
@@ -81,7 +85,6 @@ export const ComplianceTableSettings = ({
         <p>Select Columns</p>
         <Select
           showSearch
-          mode="multiple"
           allowClear
           style={{
             width: "100%",

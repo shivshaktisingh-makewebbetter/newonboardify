@@ -63,6 +63,12 @@ export const cloneProfile = (id) =>
   Services.GET(`/newonboardify/admin/cloneOnboardifyProfile/${id}`);
 export const exportUserData = () =>
   Services.GET(`/newonboardify/admin/exportUsersData`);
+export const governifyAdminTableSettings = (data) =>
+  Services.POST(`governify/admin/tableSettings`, data);
+export const governifyBoardAssociation = (data) =>
+  Services.POST(`governify/admin/profileBoardAssociation`, data);
+export const governifyFilterKeyAssociation = (data) =>
+  Services.POST(`governify/admin/governifyAddFilterKey`, data);
 
 // Customer Endpoints
 
@@ -140,7 +146,8 @@ export const updateLastServiceUsedByUser = (data) =>
 export const getLastServiceUsedByUser = () =>
   Services.GET(`newonboardify/customer/lastServiceUsedByUser`);
 
-export const getEmailData = (data) => Services.POST('/tasc360/getEmailData', data);
+export const getEmailData = (data) =>
+  Services.POST("/tasc360/getEmailData", data);
 
 // Common Endpoints
 export const loginApi = (data) => Services.POST(`commom-login`, data);

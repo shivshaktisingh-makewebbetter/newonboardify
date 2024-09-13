@@ -24,16 +24,15 @@ export const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [homeBUttonHovered, setHomeButtonHovered] = useState(false);
-  const [settingButtonHovered, setSettingButtonHovered] = useState(false);
   const [notification, setNotification] = useState(
     sessionStorage.getItem("notification_bar") === "false" ? false : true
   );
   const [openDrawer, setOpenDrawer] = useState(false);
   const role = getRole();
 
-  const navigateToSettings = () => {
-    navigate("settings");
-  };
+  // const navigateToSettings = () => {
+  //   navigate("settings");
+  // };
 
   const navigateToHome = () => {
     if (role === "customer") {
@@ -61,13 +60,13 @@ export const Header = () => {
     }
   };
 
-  const handleHoverSetting = (flag) => {
-    if (flag) {
-      setSettingButtonHovered(true);
-    } else {
-      setSettingButtonHovered(false);
-    }
-  };
+  // const handleHoverSetting = (flag) => {
+  //   if (flag) {
+  //     setSettingButtonHovered(true);
+  //   } else {
+  //     setSettingButtonHovered(false);
+  //   }
+  // };
 
   const navigateToGeneralSettings = () => {
     navigate("generalSettings");
@@ -209,12 +208,8 @@ export const Header = () => {
                         display: "flex",
                         gap: "5px",
                         alignItems: "center",
-                        border: settingButtonHovered
-                          ? `1px solid #928f8f`
-                          : `1px solid ${data.button_bg}`,
-                        color: settingButtonHovered
-                          ? `#928f8f`
-                          : data.button_bg,
+                        border: `1px solid ${data.button_bg}`,
+                        color: data.button_bg,
                         background: "transparent",
                       }}
                     >
@@ -282,6 +277,7 @@ export const Header = () => {
                   navigateToHome();
                 }}
               >
+                <HomeOutlined className="fs_20 fw-700" />
                 <span className="font-family-montse fs-12 fw-700">Home</span>
               </Button>
             ) : (
@@ -296,36 +292,16 @@ export const Header = () => {
                   setOpenDrawer(false);
                 }}
               >
+                <SettingOutlined className="fs_20 fw-700" />
                 <span className="font-family-montse fs-12 fw-700">
                   General Settings
-                </span>
-              </Button>
-              <Button
-                type="text"
-                onClick={() => {
-                  navigateToReportSettings();
-                  setOpenDrawer(false);
-                }}
-              >
-                <span className="font-family-montse fs-12 fw-700">
-                  Report Settings
-                </span>
-              </Button>
-              <Button
-                type="text"
-                onClick={() => {
-                  navigateToAdminHome();
-                  setOpenDrawer(false);
-                }}
-              >
-                <span className="font-family-montse fs-12 fw-700">
-                  Admin Home
                 </span>
               </Button>
             </>
           )}
 
           <Button type="text" onClick={logoutFunction}>
+            <LogoutOutlined className="fs_20" />
             <span className="font-family-montse fs-12 fw-700">Log out</span>
           </Button>
         </Flex>
