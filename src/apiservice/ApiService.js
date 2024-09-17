@@ -69,6 +69,16 @@ export const governifyBoardAssociation = (data) =>
   Services.POST(`governify/admin/profileBoardAssociation`, data);
 export const governifyFilterKeyAssociation = (data) =>
   Services.POST(`governify/admin/governifyAddFilterKey`, data);
+export const governifyComplianceReportAdminSetting = (data) =>
+  Services.POST(`governify/admin/governifyComplianceReport`, data);
+export const governifyServiceReportAdminSetting = (data) =>
+  Services.POST(`governify/admin/governifyServiceReport`, data);
+export const getComplianceReportDataAdmin = (id) =>
+  Services.GET(`governify/admin/getComplianceReport/${id}`);
+export const saveAdminComplianceView = (data) =>
+  Services.POST(`governify/admin/governifyComplianceReportView`, data);
+export const saveAdminServiceView = (data) =>
+  Services.POST(`governify/admin/governifyServiceReportView`, data);
 
 // Customer Endpoints
 

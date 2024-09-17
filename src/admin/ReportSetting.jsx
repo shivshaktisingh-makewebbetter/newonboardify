@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 // import { fetcher } from "../../utils/helper";
-import { Button, Collapse, Dropdown, Modal, Select, Table } from "antd";
+import { Button, Collapse, Select } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { Hero } from "../components/Hero";
-import { ComplianceTableSettings } from "./components/ComplianceTableSettings";
 import {
   getAllBoards,
   getAllColumnsOfBoard,
@@ -13,14 +12,10 @@ import {
   governifyFilterKeyAssociation,
 } from "../apiservice/ApiService";
 import { Loader } from "../common/Loader";
-import { FilterSettingsGovernify } from "./components/FilterSettingsGovernify";
 
 export const ReportSettings = () => {
   const location = useLocation();
-  const [dataSource, setDataSource] = useState([]);
   const [allBoardId, setAllBoardId] = useState([]);
-  const [selectedProfileData, setSelectedProfileData] = useState({});
-  const [tableSettingModal, setTableSettingModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [columnOptions, setColumnOptions] = useState([]);
   const [selectedFilterColumn, setSelectedFilterColumn] = useState("");
@@ -30,7 +25,7 @@ export const ReportSettings = () => {
 
   const handleChangeBoardId = async (e) => {
     let data = JSON.stringify({
-      profile_id: location.state.id.toString(),
+      profile_id: location.state.toString(),
       governify_board_id: e,
     });
     try {
@@ -48,38 +43,6 @@ export const ReportSettings = () => {
     }
   };
 
-  //   const navigateToComplianceReportSetting = (item) => {
-  //     const dataToPass = {
-  //       selectedProfileData: item,
-  //     };
-  //     navigate("/admin/complianceReport", { state: dataToPass });
-  //   };
-
-  //   const navigateToServiceReportSetting = (item) => {
-  //     const dataToPass = {
-  //       selectedProfileData: item,
-  //     };
-  //     navigate("/admin/serviceReport", { state: dataToPass });
-  //   };
-
-  //   const openModalToComplianceTableSetting = (item) => {
-  //     setSelectedProfileData(item);
-  //     if (
-  //       item.governify_board_id === undefined ||
-  //       item.governify_board_id === null ||
-  //       item.governify_board_id === ""
-  //     ) {
-  //       toast.error("Please assign Board First.");
-  //       return;
-  //     }
-  //     setTableSettingModal(true);
-  //   };
-
-  //   const openModalForFilterSelection = (item) => {
-  //     setSelectedProfileData(item);
-  //     setFilterSettingModal(true);
-  //   };
-
   const filterOption = (input, option) => {
     return (
       option.label.toLowerCase().includes(input.toLowerCase()) ||
@@ -90,7 +53,7 @@ export const ReportSettings = () => {
   const handleSelectColumn = async (e) => {
     setSelectedFilterColumn(e);
     const payloadData = JSON.stringify({
-      profile_id: location.state.id.toString(),
+      profile_id: location.state.toString(),
       governify_filter_key: e,
     });
     try {
@@ -101,146 +64,31 @@ export const ReportSettings = () => {
     } catch (err) {}
   };
 
-  //   const columns = [
-  //     {
-  //       title: "ID",
-  //       dataIndex: "id",
-  //     },
-  //     {
-  //       title: "Name",
-  //       dataIndex: "title",
-  //     },
-  //     {
-  //       title: "Assign Board",
-  //       dataIndex: "title",
-  //       render: (_, record) => (
-  //         <Select
-  //           key={record.governify_board_id}
-  //           showSearch
-  //           onChange={(e) => handleChangeBoardId(record.id, e)}
-  //           options={allBoardId}
-  //           value={record.governify_board_id}
-  //           style={{
-  //             width: 200,
-  //           }}
-  //           filterOption={filterOption}
-  //         />
-  //       ),
-  //     },
-  //     {
-  //       title: "Action",
-  //       dataIndex: "",
-  //       key: "x",
-  //       render: (_, record) => {
-  //         const items1 = [
-  //           {
-  //             key: "1",
-  //             label: (
-  //               <span onClick={() => navigateToComplianceReportSetting(record)}>
-  //                 Compliance Chart
-  //               </span>
-  //             ),
-  //           },
-  //           {
-  //             key: "2",
-  //             label: (
-  //               <span onClick={() => navigateToServiceReportSetting(record)}>
-  //                 Service Chart
-  //               </span>
-  //             ),
-  //           },
-  //           {
-  //             key: "3",
-  //             label: (
-  //               <span onClick={() => openModalToComplianceTableSetting(record)}>
-  //                 Compliance Table
-  //               </span>
-  //             ),
-  //           },
-  //           {
-  //             key: "4",
-  //             label: (
-  //               <span onClick={() => openModalForFilterSelection(record)}>
-  //                 Select Filter
-  //               </span>
-  //             ),
-  //           },
-  //         ];
-  //         const items2 = [
-  //           {
-  //             key: "1",
-  //             label: (
-  //               <span onClick={() => navigateToComplianceReportSetting(record)}>
-  //                 Compliance Chart
-  //               </span>
-  //             ),
-  //           },
-  //           {
-  //             key: "2",
-  //             label: (
-  //               <span onClick={() => navigateToServiceReportSetting(record)}>
-  //                 Service Chart
-  //               </span>
-  //             ),
-  //           },
-  //           {
-  //             key: "3",
-  //             label: (
-  //               <span onClick={() => openModalToComplianceTableSetting(record)}>
-  //                 Compliance Table
-  //               </span>
-  //             ),
-  //           },
-  //         ];
-  //         return (
-  //           <div style={{ display: "flex", gap: "10px" }}>
-  //             <Dropdown
-  //               menu={{
-  //                 items: items1,
-  //               }}
-  //               placement="bottom"
-  //               arrow
-  //             >
-  //               <Button>Edit</Button>
-  //             </Dropdown>
-
-  //             <Dropdown
-  //               menu={{
-  //                 items: items2,
-  //               }}
-  //               placement="bottom"
-  //               arrow
-  //             >
-  //               <Button>View</Button>
-  //             </Dropdown>
-  //           </div>
-  //         );
-  //       },
-
-  //       fixed: "right",
-  //     },
-  //   ];
-
-  const navigateToReportSetting = (type) =>{
-    if(type === 'compliance'){
-      navigate("/admin/complianceReport");
+  const navigateToReportSetting = (type) => {
+    const dataToPass = { boardId: selectedBoard, profileId: location.state };
+    if (type === "compliance") {
+      navigate("/admin/complianceReport", { state: dataToPass });
     }
 
-    if(type === 'service'){
-      navigate("/admin/serviceReport");
+    if (type === "service") {
+      navigate("/admin/serviceReport", { state: dataToPass });
     }
-  }
+  };
 
+  const navigateToReportView = (type) => {
+    const dataToPass = {
+      boardId: selectedBoard,
+      profileId: location.state,
+      filterKey: selectedFilterColumn,
+    };
+    if (type === "compliance") {
+      navigate("/admin/complianceReportAdminView", { state: dataToPass });
+    }
 
-  const navigateToReportView = (type) =>{
-    if(type === 'compliance'){
-      navigate("/admin/complianceReport");
+    if (type === "service") {
+      navigate("/admin/serviceReportAdminView" ,  { state: dataToPass });
     }
-    
-    if(type === 'service'){
-      navigate("/admin/serviceReport");
-    }
-  }
+  };
 
   const getListOfAllBoard = async () => {
     let selectedBoardId = "";
@@ -251,7 +99,7 @@ export const ReportSettings = () => {
       const response1 = await getProfileListing();
       if (response1.success) {
         response1.data.response.forEach((item) => {
-          if (item.id === location.state.id) {
+          if (item.id === location.state) {
             setSelectedBoard(item.governify_board_id);
             setSelectedFilterColumn(item.governify_filter_key);
             setSelectedTableColumns(JSON.parse(item.governify_table_settings));
@@ -389,55 +237,18 @@ export const ReportSettings = () => {
           >
             <span>{item.label}</span>
             <div style={{ display: "flex", gap: "10px" }}>
-              <Button onClick={() => navigateToReportSetting(item.type)}>Edit</Button>
-              <Button onClick={() => navigateToReportView(item.type)}>View</Button>
+              <Button onClick={() => navigateToReportSetting(item.type)}>
+                Edit
+              </Button>
+              <Button onClick={() => navigateToReportView(item.type)}>
+                View
+              </Button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* <Table
-        columns={columns}
-        dataSource={dataSource}
-        showSorterTooltip={{
-          target: "sorter-icon",
-        }}
-        scroll={{ x: 768 }}
-        pagination={{
-          showTotal: (total) => `Total ${total} items`,
-          defaultPageSize: 5,
-          showQuickJumper: true,
-          showSizeChanger: true,
-          pageSizeOptions: [5, 10, 15, 20],
-          defaultCurrent: 1,
-        }}
-      /> */}
       <ToastContainer position="bottom-right" />
-
-      <Modal
-        open={tableSettingModal}
-        centered
-        footer={(_) => <></>}
-        onCancel={() => setTableSettingModal(false)}
-      >
-        <ComplianceTableSettings
-          selectedProfileData={selectedProfileData}
-          setTableSettingModal={setTableSettingModal}
-        />
-      </Modal>
-      {/* 
-      <Modal
-        key={selectedProfileData.id}
-        open={filterSettingModal}
-        centered
-        footer={(_) => <></>}
-        onCancel={() => setFilterSettingModal(false)}
-      >
-        <FilterSettingsGovernify
-          selectedProfileData={selectedProfileData}
-          setFilterSettingModal={setFilterSettingModal}
-        />
-      </Modal> */}
     </div>
   );
 };

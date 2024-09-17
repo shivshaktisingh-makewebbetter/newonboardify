@@ -1,10 +1,13 @@
-import { Button, Collapse, Dropdown, Input, Select } from "antd";
+import { Button, Collapse, Dropdown, Input, Select, Switch } from "antd";
 import { useEffect, useState } from "react";
-// import Hero from "../common/Hero";
 import { useLocation } from "react-router-dom";
 import { Hero } from "../components/Hero";
-import { getAllColumnsOfBoard } from "../apiservice/ApiService";
-// import { fetcher } from "../../utils/helper";
+import {
+  getAllColumnsOfBoard,
+  getProfileListing,
+  governifyComplianceReportAdminSetting,
+} from "../apiservice/ApiService";
+import { toast, ToastContainer } from "react-toastify";
 
 export const ComplianceReportSettings = () => {
   const location = useLocation();
@@ -17,6 +20,17 @@ export const ComplianceReportSettings = () => {
   const [activeKey, setActiveKey] = useState([]);
   const [columnOptions, setColumnOptions] = useState([]);
 
+  const data = JSON.parse(sessionStorage.getItem("settings")) || {
+    image: "https://onboardify.tasc360.com/uploads/y22.png",
+    site_bg: "#ffffff",
+    button_bg: "#497ed8",
+    banner_bg: "#497ed8",
+    banner_content:
+      "Hire an attitude, not just experience and qualification. Greg Savage.",
+    header_bg: "#f7f7f7",
+    head_title_color: "#497ed8",
+  };
+
   const handleSelectChartTypeText = (type) => {
     if (type === "company") {
       let tempCompanyData = [...companyChartData];
@@ -24,6 +38,10 @@ export const ComplianceReportSettings = () => {
         type: "Text Chart",
         column1: "",
         column2: "",
+        id: tempCompanyData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setCompanyChartData(tempCompanyData);
     }
@@ -33,6 +51,10 @@ export const ComplianceReportSettings = () => {
         type: "Text Chart",
         column1: "",
         column2: "",
+        id: tempSaudizationData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setSaudizationChartData(tempSaudizationData);
     }
@@ -43,6 +65,10 @@ export const ComplianceReportSettings = () => {
         type: "Text Chart",
         column1: "",
         column2: "",
+        id: tempVisaData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setVisaChartData(tempVisaData);
     }
@@ -53,6 +79,10 @@ export const ComplianceReportSettings = () => {
         type: "Text Chart",
         column1: "",
         column2: "",
+        id: tempEmployeeData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setEmployeesChartData(tempEmployeeData);
     }
@@ -63,7 +93,12 @@ export const ComplianceReportSettings = () => {
       let tempCompanyData = [...companyChartData];
       tempCompanyData.push({
         type: "Value Chart",
-        mainColumn: "",
+        column: "",
+        id: tempCompanyData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
+        
       });
       setCompanyChartData(tempCompanyData);
     }
@@ -71,7 +106,11 @@ export const ComplianceReportSettings = () => {
       let tempSaudizationData = [...saudizationChartData];
       tempSaudizationData.push({
         type: "Value Chart",
-        mainColumn: "",
+        column: "",
+        id: tempSaudizationData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setSaudizationChartData(tempSaudizationData);
     }
@@ -80,7 +119,11 @@ export const ComplianceReportSettings = () => {
       let tempVisaData = [...visaChartData];
       tempVisaData.push({
         type: "Value Chart",
-        mainColumn: "",
+        column: "",
+        id: tempVisaData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setVisaChartData(tempVisaData);
     }
@@ -89,7 +132,11 @@ export const ComplianceReportSettings = () => {
       let tempEmployeeData = [...employeesChartData];
       tempEmployeeData.push({
         type: "Value Chart",
-        mainColumn: "",
+        column: "",
+        id: tempEmployeeData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setEmployeesChartData(tempEmployeeData);
     }
@@ -100,7 +147,12 @@ export const ComplianceReportSettings = () => {
       let tempCompanyData = [...companyChartData];
       tempCompanyData.push({
         type: "Bar Chart",
+        horizontal: false,
         selectedColumns: [],
+        id: tempCompanyData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setCompanyChartData(tempCompanyData);
     }
@@ -108,7 +160,12 @@ export const ComplianceReportSettings = () => {
       let tempSaudizationData = [...saudizationChartData];
       tempSaudizationData.push({
         type: "Bar Chart",
+        horizontal: false,
         selectedColumns: [],
+        id: tempSaudizationData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setSaudizationChartData(tempSaudizationData);
     }
@@ -117,7 +174,12 @@ export const ComplianceReportSettings = () => {
       let tempVisaData = [...visaChartData];
       tempVisaData.push({
         type: "Bar Chart",
+        horizontal: false,
         selectedColumns: [],
+        id: tempVisaData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setVisaChartData(tempVisaData);
     }
@@ -126,11 +188,74 @@ export const ComplianceReportSettings = () => {
       let tempEmployeeData = [...employeesChartData];
       tempEmployeeData.push({
         type: "Bar Chart",
+        horizontal: false,
         selectedColumns: [],
+        id: tempEmployeeData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setEmployeesChartData(tempEmployeeData);
     }
   };
+
+  const handleSelectChartTypePercentage = (type) => {
+    if (type === "company") {
+      let tempCompanyData = [...companyChartData];
+      tempCompanyData.push({
+        type: "Multi Value Chart",
+        selectedColumns: [],
+        id: tempCompanyData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
+      });
+      setCompanyChartData(tempCompanyData);
+    }
+    if (type === "saudization") {
+      let tempSaudizationData = [...saudizationChartData];
+      tempSaudizationData.push({
+        type: "Multi Value Chart",
+        selectedColumns: [],
+        id: tempSaudizationData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
+      });
+      setSaudizationChartData(tempSaudizationData);
+    }
+
+    if (type === "visa") {
+      let tempVisaData = [...visaChartData];
+      tempVisaData.push({
+        type: "Multi Value Chart",
+        selectedColumns: [],
+        id: tempVisaData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
+      });
+      setVisaChartData(tempVisaData);
+    }
+
+    if (type === "employees") {
+      let tempEmployeeData = [...employeesChartData];
+      tempEmployeeData.push({
+        type: "Multi Value Chart",
+        selectedColumns: [],
+        id: tempEmployeeData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
+      });
+      setEmployeesChartData(tempEmployeeData);
+    }
+  };
+
+  const barTypeChartOptions = [
+    { label: "Horizontal chart", value: true },
+    { label: "Vertical Chart", value: false },
+  ];
 
   const typesOfChartCompany = [
     {
@@ -155,6 +280,14 @@ export const ComplianceReportSettings = () => {
       label: (
         <span onClick={() => handleSelectChartTypeBar("company")}>
           Bar Chart
+        </span>
+      ),
+    },
+    {
+      key: "4",
+      label: (
+        <span onClick={() => handleSelectChartTypePercentage("company")}>
+          Multi Value Chart
         </span>
       ),
     },
@@ -186,6 +319,14 @@ export const ComplianceReportSettings = () => {
         </span>
       ),
     },
+    {
+      key: "4",
+      label: (
+        <span onClick={() => handleSelectChartTypePercentage("saudization")}>
+          Multi Value Chart
+        </span>
+      ),
+    },
   ];
 
   const typesOfChartVisa = [
@@ -210,6 +351,14 @@ export const ComplianceReportSettings = () => {
       key: "3",
       label: (
         <span onClick={() => handleSelectChartTypeBar("visa")}>Bar Chart</span>
+      ),
+    },
+    {
+      key: "4",
+      label: (
+        <span onClick={() => handleSelectChartTypePercentage("visa")}>
+          Multi Value Chart
+        </span>
       ),
     },
   ];
@@ -240,6 +389,14 @@ export const ComplianceReportSettings = () => {
         </span>
       ),
     },
+    {
+      key: "4",
+      label: (
+        <span onClick={() => handleSelectChartTypePercentage("employees")}>
+          Multi Value Chart
+        </span>
+      ),
+    },
   ];
 
   const onChange = (key) => {
@@ -247,7 +404,7 @@ export const ComplianceReportSettings = () => {
   };
 
   const onChangeRecommendtionText = (e) => {
-    setRecommendationText(e.target.value);
+    setRecommendationText(e);
   };
 
   const handlChangeColumn1ChartHeadingCompany = (e, index) => {
@@ -300,13 +457,13 @@ export const ComplianceReportSettings = () => {
 
   const handlChangeValueChartColumnCompany = (e, index) => {
     let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].mainColumn = e;
+    tempCompanyChartData[index].column = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
   const handlChangePercentageChartColumnCompany = (e, index) => {
     let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].mainColumn = e;
+    tempCompanyChartData[index].selectedColumns = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
@@ -318,13 +475,13 @@ export const ComplianceReportSettings = () => {
 
   const handlChangeValueChartColumnSaudization = (e, index) => {
     let tempSaudizationChartData = [...saudizationChartData];
-    tempSaudizationChartData[index].mainColumn = e;
+    tempSaudizationChartData[index].column = e;
     setSaudizationChartData(tempSaudizationChartData);
   };
 
   const handlChangePercentageChartColumnSaudization = (e, index) => {
     let tempSaudizationChartData = [...saudizationChartData];
-    tempSaudizationChartData[index].mainColumn = e;
+    tempSaudizationChartData[index].selectedColumns = e;
     setSaudizationChartData(tempSaudizationChartData);
   };
 
@@ -336,13 +493,13 @@ export const ComplianceReportSettings = () => {
 
   const handlChangeValueChartColumnEmployees = (e, index) => {
     let tempEmployeesChartData = [...employeesChartData];
-    tempEmployeesChartData[index].mainColumn = e;
+    tempEmployeesChartData[index].column = e;
     setEmployeesChartData(tempEmployeesChartData);
   };
 
   const handlChangePercentageChartColumnEmployees = (e, index) => {
     let tempEmployeesChartData = [...employeesChartData];
-    tempEmployeesChartData[index].mainColumn = e;
+    tempEmployeesChartData[index].selectedColumns = e;
     setEmployeesChartData(tempEmployeesChartData);
   };
 
@@ -354,13 +511,13 @@ export const ComplianceReportSettings = () => {
 
   const handlChangeValueChartColumnVisa = (e, index) => {
     let tempVisaChartData = [...visaChartData];
-    tempVisaChartData[index].mainColumn = e;
+    tempVisaChartData[index].column = e;
     setVisaChartData(tempVisaChartData);
   };
 
   const handlChangePercentageChartColumnVisa = (e, index) => {
     let tempVisaChartData = [...visaChartData];
-    tempVisaChartData[index].mainColumn = e;
+    tempVisaChartData[index].selectedColumns = e;
     setVisaChartData(tempVisaChartData);
   };
 
@@ -370,11 +527,58 @@ export const ComplianceReportSettings = () => {
     setVisaChartData(tempVisaChartData);
   };
 
+  const onChangeSwitchCompany = (e, index) => {
+    const tempCompanyChartData = [...companyChartData];
+    tempCompanyChartData[index].horizontal = e;
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const onChangeSwitchVisa = (e, index) => {
+    const tempVisaChartData = [...visaChartData];
+    tempVisaChartData[index].horizontal = e;
+    setVisaChartData(tempVisaChartData);
+  };
+
+  const onChangeSwitchEmployees = (e, index) => {
+    const tempEmployeesChartData = [...employeesChartData];
+    tempEmployeesChartData[index].horizontal = e;
+    setEmployeesChartData(tempEmployeesChartData);
+  };
+
+  const onChangeSwitchSaudization = (e, index) => {
+    const tempSaudizationChartData = [...saudizationChartData];
+    tempSaudizationChartData[index].horizontal = e;
+    setSaudizationChartData(tempSaudizationChartData);
+  };
+
   const filterOption = (input, option) => {
     return (
       option.label.toLowerCase().includes(input.toLowerCase()) ||
       option.value.toString().toLowerCase().includes(input.toLowerCase())
     );
+  };
+
+  const handleChangeDelete = (index, type) => {
+    if (type === "company") {
+      const tempCompanyChartData = [...companyChartData];
+      tempCompanyChartData.splice(index, 1);
+      setCompanyChartData(tempCompanyChartData);
+    }
+    if (type === "employees") {
+      const tempEmployeesChartData = [...employeesChartData];
+      tempEmployeesChartData.splice(index, 1);
+      setEmployeesChartData(tempEmployeesChartData);
+    }
+    if (type === "visa") {
+      const tempVisaChartData = [...visaChartData];
+      tempVisaChartData.splice(index, 1);
+      setVisaChartData(tempVisaChartData);
+    }
+    if (type === "saudization") {
+      const tempSaudizationChartData = [...saudizationChartData];
+      tempSaudizationChartData.splice(index, 1);
+      setSaudizationChartData(tempSaudizationChartData);
+    }
   };
 
   const getCollapseItemsTypeCompany = (item, index) => {
@@ -383,13 +587,26 @@ export const ComplianceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "company")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
-                  placeholder="Select Column Id For Main Text"
+                  placeholder="Select Id For Column1"
                   style={{
                     width: "50%",
                   }}
@@ -398,12 +615,13 @@ export const ComplianceReportSettings = () => {
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.column1}
                 />
               </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
-                  placeholder="Select Tag"
+                  placeholder="Select Id For Column2"
                   style={{
                     width: "50%",
                   }}
@@ -412,6 +630,7 @@ export const ComplianceReportSettings = () => {
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.column2}
                 />
               </div>
             </>
@@ -424,12 +643,24 @@ export const ComplianceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "company")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
-                  mode="multiple"
                   showSearch
                   placeholder="Select Column"
                   style={{
@@ -440,6 +671,7 @@ export const ComplianceReportSettings = () => {
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.column}
                 />
               </div>
             </>
@@ -452,9 +684,36 @@ export const ComplianceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "company")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <div>Bar Chart Type :</div>
+                <Select
+                  showSearch
+                  placeholder="Select Bar Chart Type"
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) => onChangeSwitchCompany(e, index)}
+                  options={barTypeChartOptions}
+                  filterOption={filterOption}
+                  value={item.horizontal}
+                />
+              </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
@@ -466,6 +725,49 @@ export const ComplianceReportSettings = () => {
                   onChange={(e) => handlChangeBarChartColumnCompany(e, index)}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.selectedColumns}
+                />
+              </div>
+            </>
+          ),
+        },
+      ];
+    }
+
+    if (item.type === "Multi Value Chart") {
+      return [
+        {
+          key: index,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "company")}>
+                Delete
+              </Button>
+            </div>
+          ),
+          children: (
+            <>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <Select
+                  showSearch
+                  mode="multiple"
+                  placeholder="Select Columns"
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) =>
+                    handlChangePercentageChartColumnCompany(e, index)
+                  }
+                  options={columnOptions}
+                  filterOption={filterOption}
+                  value={item.selectedColumns}
                 />
               </div>
             </>
@@ -481,13 +783,26 @@ export const ComplianceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "saudization")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
-                  placeholder="Select Column Id For Main Text"
+                  placeholder="Select Id For Column1"
                   style={{
                     width: "50%",
                   }}
@@ -496,12 +811,13 @@ export const ComplianceReportSettings = () => {
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.column1}
                 />
               </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
-                  placeholder="Select Tag"
+                  placeholder="Select Id For Column2"
                   style={{
                     width: "50%",
                   }}
@@ -510,6 +826,7 @@ export const ComplianceReportSettings = () => {
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.column2}
                 />
               </div>
             </>
@@ -522,14 +839,26 @@ export const ComplianceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "saudization")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
-                  mode="multiple"
                   showSearch
-                  placeholder="Select Column"
+                  placeholder="Select Columns"
                   style={{
                     width: "50%",
                   }}
@@ -538,6 +867,7 @@ export const ComplianceReportSettings = () => {
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.column}
                 />
               </div>
             </>
@@ -550,9 +880,36 @@ export const ComplianceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "saudization")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <div>Bar Chart Type :</div>
+                <Select
+                  showSearch
+                  placeholder="Select Bar Chart Type"
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) => onChangeSwitchSaudization(e, index)}
+                  options={barTypeChartOptions}
+                  filterOption={filterOption}
+                  value={item.horizontal}
+                />
+              </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
@@ -566,6 +923,59 @@ export const ComplianceReportSettings = () => {
                   }
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.selectedColumns}
+                />
+              </div>
+
+              {/* <div>
+                {item.selectedColumns.map((item) =>{
+                  return (
+                  <div>
+                    
+                  </div>
+                  )
+                  })}
+              </div> */}
+            </>
+          ),
+        },
+      ];
+    }
+
+    if (item.type === "Multi Value Chart") {
+      return [
+        {
+          key: index,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "saudization")}>
+                Delete
+              </Button>
+            </div>
+          ),
+          children: (
+            <>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <Select
+                  showSearch
+                  mode="multiple"
+                  placeholder="Select Columns"
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) =>
+                    handlChangePercentageChartColumnSaudization(e, index)
+                  }
+                  options={columnOptions}
+                  filterOption={filterOption}
+                  value={item.selectedColumns}
                 />
               </div>
             </>
@@ -581,13 +991,26 @@ export const ComplianceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "employees")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
-                  placeholder="Select Column Id For Main Text"
+                  placeholder="Select Id For Column1"
                   style={{
                     width: "50%",
                   }}
@@ -596,12 +1019,13 @@ export const ComplianceReportSettings = () => {
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.column1}
                 />
               </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
-                  placeholder="Select Tag"
+                  placeholder="Select Id For Column2"
                   style={{
                     width: "50%",
                   }}
@@ -610,6 +1034,7 @@ export const ComplianceReportSettings = () => {
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.column2}
                 />
               </div>
             </>
@@ -622,12 +1047,24 @@ export const ComplianceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "employees")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
-                  mode="multiple"
                   showSearch
                   placeholder="Select Column"
                   style={{
@@ -638,6 +1075,7 @@ export const ComplianceReportSettings = () => {
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.column}
                 />
               </div>
             </>
@@ -650,9 +1088,36 @@ export const ComplianceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "employees")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <div>Bar Chart Type :</div>
+                <Select
+                  showSearch
+                  placeholder="Select Bar Chart Type"
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) => onChangeSwitchEmployees(e, index)}
+                  options={barTypeChartOptions}
+                  filterOption={filterOption}
+                  value={item.horizontal}
+                />
+              </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
@@ -664,6 +1129,49 @@ export const ComplianceReportSettings = () => {
                   onChange={(e) => handlChangeBarChartColumnEmployees(e, index)}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.selectedColumns}
+                />
+              </div>
+            </>
+          ),
+        },
+      ];
+    }
+
+    if (item.type === "Multi Value Chart") {
+      return [
+        {
+          key: index,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "employees")}>
+                Delete
+              </Button>
+            </div>
+          ),
+          children: (
+            <>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <Select
+                  showSearch
+                  mode="multiple"
+                  placeholder="Select Columns"
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) =>
+                    handlChangePercentageChartColumnEmployees(e, index)
+                  }
+                  options={columnOptions}
+                  filterOption={filterOption}
+                  value={item.selectedColumns}
                 />
               </div>
             </>
@@ -679,13 +1187,26 @@ export const ComplianceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "visa")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
-                  placeholder="Select Column Id For Main Text"
+                  placeholder="Select Id For Column1"
                   style={{
                     width: "50%",
                   }}
@@ -694,12 +1215,13 @@ export const ComplianceReportSettings = () => {
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.column1}
                 />
               </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
-                  placeholder="Select Tag"
+                  placeholder="Select Id For Column2"
                   style={{
                     width: "50%",
                   }}
@@ -708,6 +1230,7 @@ export const ComplianceReportSettings = () => {
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.column2}
                 />
               </div>
             </>
@@ -720,12 +1243,24 @@ export const ComplianceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "visa")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
-                  mode="multiple"
                   showSearch
                   placeholder="Select Tag"
                   style={{
@@ -736,6 +1271,7 @@ export const ComplianceReportSettings = () => {
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.column}
                 />
               </div>
             </>
@@ -748,20 +1284,90 @@ export const ComplianceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "visa")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <div>Bar Chart Type :</div>
+                <Select
+                  showSearch
+                  placeholder="Select Bar Chart Type"
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) => onChangeSwitchVisa(e, index)}
+                  options={barTypeChartOptions}
+                  filterOption={filterOption}
+                  value={item.horizontal}
+                />
+              </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
                   mode="multiple"
-                  placeholder="Select Tag"
+                  placeholder="Select Columns"
                   style={{
                     width: "50%",
                   }}
                   onChange={(e) => handlChangeBarChartColumnVisa(e, index)}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.selectedColumns}
+                />
+              </div>
+            </>
+          ),
+        },
+      ];
+    }
+
+    if (item.type === "Multi Value Chart") {
+      return [
+        {
+          key: index,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "visa")}>
+                Delete
+              </Button>
+            </div>
+          ),
+          children: (
+            <>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <Select
+                  showSearch
+                  mode="multiple"
+                  placeholder="Select Columns"
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) =>
+                    handlChangePercentageChartColumnVisa(e, index)
+                  }
+                  options={columnOptions}
+                  filterOption={filterOption}
+                  value={item.selectedColumns}
                 />
               </div>
             </>
@@ -804,7 +1410,10 @@ export const ComplianceReportSettings = () => {
             return (
               <div key={index}>
                 <div style={{ marginTop: "10px" }}>
-                  <Collapse items={getCollapseItemsTypeCompany(item, index)} />
+                  <Collapse
+                    items={getCollapseItemsTypeCompany(item, index)}
+                    collapsible="icon"
+                  />
                 </div>
               </div>
             );
@@ -936,13 +1545,44 @@ export const ComplianceReportSettings = () => {
         </div>
       ),
     },
+    {
+      key: "5",
+      label: (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <span>Recommendation</span>{" "}
+        </div>
+      ),
+      children: (
+        <div style={{ marginTop: "10px" }}>
+          <div style={{ marginTop: "20px", textAlign: "left" }}>
+            <Select
+              showSearch
+              placeholder="Select Id For Recommendation Text"
+              style={{
+                width: "50%",
+              }}
+              onChange={onChangeRecommendtionText}
+              options={columnOptions}
+              filterOption={filterOption}
+              value={recommendationText}
+            />
+          </div>
+        </div>
+      ),
+    },
   ];
 
   const fetchData = async () => {
     try {
-      const response = await getAllColumnsOfBoard(
-        location.state.selectedProfileData.governify_board_id
-      );
+      const response = await getAllColumnsOfBoard(location.state.boardId);
+      const response1 = await getProfileListing();
+
       if (response.success) {
         const tempData = [];
         response.data.response.forEach((item) => {
@@ -950,8 +1590,45 @@ export const ComplianceReportSettings = () => {
         });
         setColumnOptions(tempData);
       }
+      if (response1.success) {
+        response1.data.response.forEach((item) => {
+          if (item.id.toString() === location.state.profileId.toString()) {
+            const tempData = JSON.parse(item.governify_compliance_report);
+            setCompanyChartData(tempData.companyChartData);
+            setVisaChartData(tempData.visaChartData);
+            setEmployeesChartData(tempData.employeesChartData);
+            setSaudizationChartData(tempData.saudizationChartData);
+            setRecommendationText(tempData.recommendation_text);
+          }
+        });
+      }
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const handleSubmit = async () => {
+    const governify_compliance_report = JSON.stringify({
+      companyChartData: companyChartData,
+      saudizationChartData: saudizationChartData,
+      visaChartData: visaChartData,
+      employeesChartData: employeesChartData,
+      recommendation_text: recommendationText,
+    });
+    const payloadData = {
+      profile_id: location.state.profileId.toString(),
+      governify_compliance_report: governify_compliance_report,
+    };
+
+    try {
+      const response = await governifyComplianceReportAdminSetting(payloadData);
+      if (response.success) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (err) {
+      console.log(err, "err");
     }
   };
 
@@ -968,22 +1645,22 @@ export const ComplianceReportSettings = () => {
           forHome={false}
         />
       </div>
-      <div style={{ marginTop: "20px", marginBottom: "20px" }}>
-        <div style={{ textAlign: "left" }}>
-          <span>Recommendation Text</span>
-        </div>
-        <TextArea
-          rows={4}
-          value={recommendationText}
-          onChange={onChangeRecommendtionText}
-        />
-      </div>
+
       <Collapse
         collapsible="icon"
         items={items}
         onChange={onChange}
         activeKey={activeKey}
       />
+      <div style={{ marginTop: "20px" }}>
+        <Button
+          style={{ background: data.button_bg, color: "white", border: "none" }}
+          onClick={handleSubmit}
+        >
+          Save
+        </Button>
+      </div>
+      <ToastContainer position="bottom-right" />
     </div>
   );
 };

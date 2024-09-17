@@ -31,6 +31,8 @@ import { GeneralSettings } from "./admin/GeneralSettings";
 import { ReportSettings } from "./admin/ReportSetting";
 import { ComplianceReportSettings } from "./admin/ComplianceReportSettings";
 import { ServiceReportSettings } from "./admin/ServiceReportSettings";
+import { ComplianceReportAdminView } from "./admin/ComplianceReportAdminView";
+import { ServiceReportAdminView } from "./admin/ServiceReportAdminView";
 
 function App() {
   const router = createBrowserRouter([
@@ -209,6 +211,32 @@ function App() {
               element={
                 <ErrorBoundary>
                   <ComplianceReportSettings />
+                </ErrorBoundary>
+              }
+              allowedRoles={["superAdmin", "admin"]}
+            />
+          ),
+        },
+        {
+          path: "complianceReportAdminView",
+          element: (
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <ComplianceReportAdminView />
+                </ErrorBoundary>
+              }
+              allowedRoles={["superAdmin", "admin"]}
+            />
+          ),
+        },
+        {
+          path: "serviceReportAdminView",
+          element: (
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <ServiceReportAdminView />
                 </ErrorBoundary>
               }
               allowedRoles={["superAdmin", "admin"]}

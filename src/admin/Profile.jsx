@@ -119,7 +119,7 @@ export const Profile = () => {
   };
 
   const openReportPage = (item) => {
-    navigate("/admin/reportSettings", { state: item });
+    navigate("/admin/reportSettings", { state: item.id });
   };
 
   const columns = [

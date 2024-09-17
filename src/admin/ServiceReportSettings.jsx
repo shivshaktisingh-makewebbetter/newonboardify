@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 // import Hero from "../common/Hero";
 import { useLocation } from "react-router-dom";
 import { Hero } from "../components/Hero";
+import { getAllColumnsOfBoard, getProfileListing, governifyComplianceReportAdminSetting, governifyServiceReportAdminSetting } from "../apiservice/ApiService";
+import { toast, ToastContainer } from "react-toastify";
 // import { fetcher } from "../../utils/helper";
 
 export const ServiceReportSettings = () => {
@@ -12,14 +14,28 @@ export const ServiceReportSettings = () => {
   const [activeKey, setActiveKey] = useState([]);
   const [columnOptions, setColumnOptions] = useState([]);
 
+  const data = JSON.parse(sessionStorage.getItem("settings")) || {
+    image: "https://onboardify.tasc360.com/uploads/y22.png",
+    site_bg: "#ffffff",
+    button_bg: "#497ed8",
+    banner_bg: "#497ed8",
+    banner_content:
+      "Hire an attitude, not just experience and qualification. Greg Savage.",
+    header_bg: "#f7f7f7",
+    head_title_color: "#497ed8",
+  };
+
   const handleSelectChartTypeText = (type) => {
     if (type === "company") {
       let tempCompanyData = [...companyChartData];
       tempCompanyData.push({
         type: "Text Chart",
-        heading: "",
-        mainText: "",
-        tag: "",
+        column1: "",
+        column2: "",
+        id: tempCompanyData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setCompanyChartData(tempCompanyData);
     }
@@ -27,47 +43,12 @@ export const ServiceReportSettings = () => {
       let tempInsightsData = [...insightsChartData];
       tempInsightsData.push({
         type: "Text Chart",
-        heading: "",
-        mainText: "",
-        tag: "",
-      });
-      setInsightsChartData(tempInsightsData);
-    }
-  };
-
-  const handleSelectChartTypeValue = (type) => {
-    if (type === "company") {
-      let tempCompanyData = [...companyChartData];
-      tempCompanyData.push({
-        type: "Value Chart",
-        mainColumn: "",
-      });
-      setCompanyChartData(tempCompanyData);
-    }
-    if (type === "insights") {
-      let tempInsightsData = [...insightsChartData];
-      tempInsightsData.push({
-        type: "Value Chart",
-        mainColumn: "",
-      });
-      setInsightsChartData(tempInsightsData);
-    }
-  };
-
-  const handleSelectChartTypePercentage = (type) => {
-    if (type === "company") {
-      let tempCompanyData = [...companyChartData];
-      tempCompanyData.push({
-        type: "Percentage Chart",
-        mainColumn: "",
-      });
-      setCompanyChartData(tempCompanyData);
-    }
-    if (type === "insights") {
-      let tempInsightsData = [...insightsChartData];
-      tempInsightsData.push({
-        type: "Percentage Chart",
-        mainColumn: "",
+        column1: "",
+        column2: "",
+        id: tempInsightsData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setInsightsChartData(tempInsightsData);
     }
@@ -78,7 +59,12 @@ export const ServiceReportSettings = () => {
       let tempCompanyData = [...companyChartData];
       tempCompanyData.push({
         type: "Bar Chart",
+        horizontal: false,
         selectedColumns: [],
+        id: tempCompanyData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setCompanyChartData(tempCompanyData);
     }
@@ -86,7 +72,12 @@ export const ServiceReportSettings = () => {
       let tempInsightsData = [...insightsChartData];
       tempInsightsData.push({
         type: "Bar Chart",
+        horizontal: false,
         selectedColumns: [],
+        id: tempInsightsData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setInsightsChartData(tempInsightsData);
     }
@@ -98,6 +89,10 @@ export const ServiceReportSettings = () => {
       tempCompanyData.push({
         type: "Pie Chart",
         selectedColumns: [],
+        id: tempCompanyData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setCompanyChartData(tempCompanyData);
     }
@@ -106,6 +101,10 @@ export const ServiceReportSettings = () => {
       tempInsightsData.push({
         type: "Pie Chart",
         selectedColumns: [],
+        id: tempInsightsData.length + 1,
+        position: { x: 0, y: 0 },
+        size: { width: 200, height: 200 },
+        showDragHandle: false,
       });
       setInsightsChartData(tempInsightsData);
     }
@@ -123,30 +122,13 @@ export const ServiceReportSettings = () => {
     {
       key: "2",
       label: (
-        <span onClick={() => handleSelectChartTypeValue("company")}>
-          Value Chart
-        </span>
-      ),
-    },
-    {
-      key: "3",
-      label: (
-        <span onClick={() => handleSelectChartTypePercentage("company")}>
-          Percentage Chart
-        </span>
-      ),
-    },
-    {
-      key: "4",
-      label: (
         <span onClick={() => handleSelectChartTypePie("company")}>
           Pie Chart
         </span>
       ),
     },
-
     {
-      key: "5",
+      key: "3",
       label: (
         <span onClick={() => handleSelectChartTypeBar("company")}>
           Bar Chart
@@ -167,30 +149,13 @@ export const ServiceReportSettings = () => {
     {
       key: "2",
       label: (
-        <span onClick={() => handleSelectChartTypeValue("insights")}>
-          Value Chart
-        </span>
-      ),
-    },
-    {
-      key: "3",
-      label: (
-        <span onClick={() => handleSelectChartTypePercentage("insights")}>
-          Percentage Chart
-        </span>
-      ),
-    },
-    {
-      key: "4",
-      label: (
         <span onClick={() => handleSelectChartTypePie("insights")}>
           Pie Chart
         </span>
       ),
     },
-
     {
-      key: "5",
+      key: "3",
       label: (
         <span onClick={() => handleSelectChartTypeBar("insights")}>
           Bar Chart
@@ -203,47 +168,28 @@ export const ServiceReportSettings = () => {
     setActiveKey(key);
   };
 
-  const handlChangeTextChartHeadingCompany = (e, index) => {
+  const handlChangeColumn1ChartHeadingCompany = (e, index) => {
     let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].heading = e.target.value;
+    tempCompanyChartData[index].column1 = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
-  const handlChangeTextChartHeadingInsights = (e, index) => {
+  const handlChangeColumn1ChartHeadingInsights = (e, index) => {
     let tempInsightsChartData = [...insightsChartData];
-    tempInsightsChartData[index].heading = e.target.value;
+    tempInsightsChartData[index].column2 = e;
     setInsightsChartData(tempInsightsChartData);
   };
 
-  const handlChangeMainTextChartHeadingCompany = (e, index) => {
-    // let tempCompanyChartData = [...companyChartData];
-    // tempCompanyChartData[index].heading = e.target.value;
-    // setCompanyChartData(tempCompanyChartData);
-    console.log(e, index, "sdssdsdfsd");
-  };
-
-  const handlChangeMainTextChartHeadingInsights = (e, index) => {
-    // let tempCompanyChartData = [...companyChartData];
-    // tempCompanyChartData[index].heading = e.target.value;
-    // setCompanyChartData(tempCompanyChartData);
-  };
-
-  const handlChangeTagTextChartHeadingCompany = (e, index) => {
+  const handlChangeColumn2ChartHeadingCompany = (e, index) => {
     let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].mainColumn = e;
+    tempCompanyChartData[index].column2 = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
-  const handlChangeValueChartColumnCompany = (e, index) => {
-    let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].mainColumn = e;
-    setCompanyChartData(tempCompanyChartData);
-  };
-
-  const handlChangePercentageChartColumnCompany = (e, index) => {
-    let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].mainColumn = e;
-    setCompanyChartData(tempCompanyChartData);
+  const handlChangeColumn2ChartHeadingInsights = (e, index) => {
+    let tempInsightsChartData = [...insightsChartData];
+    tempInsightsChartData[index].column2 = e;
+    setInsightsChartData(tempInsightsChartData);
   };
 
   const handlChangeBarChartColumnCompany = (e, index) => {
@@ -256,20 +202,6 @@ export const ServiceReportSettings = () => {
     let tempCompanyChartData = [...companyChartData];
     tempCompanyChartData[index].selectedColumns = e;
     setCompanyChartData(tempCompanyChartData);
-  };
-
-  const handlChangeValueChartColumnInsights = (e, index) => {
-    let tempInsightsChartData = [...insightsChartData];
-    tempInsightsChartData[index].selectedColumns = e;
-    setInsightsChartData(tempInsightsChartData);
-  };
-
-  const handlChangeTagTextChartHeadingInsighta = (e, index) => {};
-
-  const handlChangePercentageChartColumnInsights = (e, index) => {
-    let tempInsightsChartData = [...insightsChartData];
-    tempInsightsChartData[index].selectedColumns = e;
-    setInsightsChartData(tempInsightsChartData);
   };
 
   const handlChangeBarChartColumnInsights = (e, index) => {
@@ -301,97 +233,33 @@ export const ServiceReportSettings = () => {
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Input
-                  addonBefore="Heading"
+                <Select
+                  showSearch
+                  placeholder="Select Id For Column1"
                   style={{
                     width: "50%",
                   }}
-                  value={item.heading}
                   onChange={(e) => {
-                    handlChangeTextChartHeadingCompany(e, index);
+                    handlChangeColumn1ChartHeadingCompany(e, index);
                   }}
+                  options={columnOptions}
+                  filterOption={filterOption}
+                  value={item.column1}
                 />
               </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
-                  placeholder="Select Column Id For Main Text"
+                  placeholder="Select Id For Column2"
                   style={{
                     width: "50%",
                   }}
                   onChange={(e) => {
-                    handlChangeMainTextChartHeadingCompany(e, index);
+                    handlChangeColumn2ChartHeadingCompany(e, index);
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
-                />
-              </div>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  placeholder="Select Tag"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) => {
-                    handlChangeTagTextChartHeadingCompany(e, index);
-                  }}
-                  options={columnOptions}
-                  filterOption={filterOption}
-                />
-              </div>
-            </>
-          ),
-        },
-      ];
-    }
-
-    if (item.type === "Value Chart") {
-      return [
-        {
-          key: index,
-          label: item.type + " " + newIndex,
-          children: (
-            <>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  placeholder="Select Column"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) => {
-                    handlChangeValueChartColumnCompany(e, index);
-                  }}
-                  options={columnOptions}
-                  filterOption={filterOption}
-                />
-              </div>
-            </>
-          ),
-        },
-      ];
-    }
-
-    if (item.type === "Percentage Chart") {
-      return [
-        {
-          key: index,
-          label: item.type + " " + newIndex,
-          children: (
-            <>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  placeholder="Select Column"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) =>
-                    handlChangePercentageChartColumnCompany(e, index)
-                  }
-                  options={columnOptions}
-                  filterOption={filterOption}
+                  value={item.column2}
                 />
               </div>
             </>
@@ -418,6 +286,7 @@ export const ServiceReportSettings = () => {
                   onChange={(e) => handlChangeBarChartColumnCompany(e, index)}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.selectedColumns}
                 />
               </div>
             </>
@@ -444,6 +313,7 @@ export const ServiceReportSettings = () => {
                   onChange={(e) => handlChangePieChartColumnCompany(e, index)}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.selectedColumns}
                 />
               </div>
             </>
@@ -463,97 +333,33 @@ export const ServiceReportSettings = () => {
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Input
-                  addonBefore="Heading"
+                <Select
+                  showSearch
+                  placeholder="Select Id For Column1"
                   style={{
                     width: "50%",
                   }}
-                  value={item.heading}
                   onChange={(e) => {
-                    handlChangeTextChartHeadingInsights(e, index);
+                    handlChangeColumn1ChartHeadingInsights(e, index);
                   }}
+                  options={columnOptions}
+                  filterOption={filterOption}
+                  value={item.column1}
                 />
               </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
-                  placeholder="Select Column Id For Main Text"
+                  placeholder="Select Id For Column2"
                   style={{
                     width: "50%",
                   }}
                   onChange={(e) => {
-                    handlChangeMainTextChartHeadingInsights(e, index);
+                    handlChangeColumn2ChartHeadingInsights(e, index);
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
-                />
-              </div>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  placeholder="Select Tag"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) => {
-                    handlChangeTagTextChartHeadingInsighta(e, index);
-                  }}
-                  options={columnOptions}
-                  filterOption={filterOption}
-                />
-              </div>
-            </>
-          ),
-        },
-      ];
-    }
-
-    if (item.type === "Value Chart") {
-      return [
-        {
-          key: index,
-          label: item.type + " " + newIndex,
-          children: (
-            <>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  placeholder="Select Column"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) => {
-                    handlChangeValueChartColumnInsights(e, index);
-                  }}
-                  options={columnOptions}
-                  filterOption={filterOption}
-                />
-              </div>
-            </>
-          ),
-        },
-      ];
-    }
-
-    if (item.type === "Percentage Chart") {
-      return [
-        {
-          key: index,
-          label: item.type + " " + newIndex,
-          children: (
-            <>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  placeholder="Select Column"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) =>
-                    handlChangePercentageChartColumnInsights(e, index)
-                  }
-                  options={columnOptions}
-                  filterOption={filterOption}
+                  value={item.column2}
                 />
               </div>
             </>
@@ -580,6 +386,7 @@ export const ServiceReportSettings = () => {
                   onChange={(e) => handlChangeBarChartColumnInsights(e, index)}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.selectedColumns}
                 />
               </div>
             </>
@@ -606,6 +413,7 @@ export const ServiceReportSettings = () => {
                   onChange={(e) => handlChangePieChartColumnInsights(e, index)}
                   options={columnOptions}
                   filterOption={filterOption}
+                  value={item.selectedColumns}
                 />
               </div>
             </>
@@ -699,20 +507,51 @@ export const ServiceReportSettings = () => {
   ];
 
   const fetchData = async () => {
-    // try {
-    //   const url = `newonboardify/admin/get-board-columns/${location.state.selectedProfileData.governify_board_id}`;
-    //   const method = "GET";
-    //   const response = await fetcher(url, method);
-    //   if (response.status) {
-    //     const tempData = [];
-    //     response.response.forEach((item) => {
-    //       tempData.push({ label: item.title, value: item.id });
-    //     });
-    //     setColumnOptions(tempData);
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    try {
+      const response = await getAllColumnsOfBoard(location.state.boardId);
+      const response1 = await getProfileListing();
+
+      if (response.success) {
+        const tempData = [];
+        response.data.response.forEach((item) => {
+          tempData.push({ label: item.title, value: item.id });
+        });
+        setColumnOptions(tempData);
+      }
+      if (response1.success) {
+        response1.data.response.forEach((item) => {
+          if (item.id.toString() === location.state.profileId.toString()) {
+            const tempData = JSON.parse(item.governify_service_report);
+            setCompanyChartData(tempData.companyChartData);
+            setInsightsChartData(tempData.insightsChartData);
+          }
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleSubmit = async () => {
+    const governify_service_report = JSON.stringify({
+      companyChartData: companyChartData,
+      insightsChartData: insightsChartData
+    });
+    const payloadData = {
+      profile_id: location.state.profileId.toString(),
+      governify_service_report: governify_service_report,
+    };
+
+    try {
+      const response = await governifyServiceReportAdminSetting(payloadData);
+      if (response.success) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (err) {
+      console.log(err, "err");
+    }
   };
 
   useEffect(() => {
@@ -736,6 +575,17 @@ export const ServiceReportSettings = () => {
           activeKey={activeKey}
         />
       </div>
+      <ToastContainer position="bottom-right" />
+      <div style={{marginTop:"20px"}}>
+
+      <Button
+          style={{ background: data.button_bg, color: "white", border: "none" }}
+          onClick={handleSubmit}
+        >
+          Save
+        </Button>
+      </div>
+      
     </div>
   );
 };
