@@ -147,6 +147,14 @@ export const Register = () => {
     }));
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      if(isFormValid) {
+        handleSubmit(event);
+      }
+    }
+  };
+
   useEffect(() => {
     setTimeout(() => {
       setAnimation(false);
@@ -272,6 +280,7 @@ export const Register = () => {
               onSubmit={handleSubmit}
               className="form-auth"
               id="registration-custom-form"
+              onKeyDown={handleKeyDown}
             >
               <input
                 type="text"
