@@ -1,11 +1,9 @@
-
 import React, { useState, useEffect } from "react";
 import { ResizableBox } from "react-resizable";
 import Draggable from "react-draggable";
 import "react-resizable/css/styles.css";
 import { DragOutlined } from "@ant-design/icons";
 import {
-
   getProfileListing,
   saveAdminComplianceView,
 } from "../apiservice/ApiService";
@@ -14,7 +12,6 @@ import { BarChartHorizontal } from "../common/BarChartHorizontal";
 import { BarChartVertical } from "../common/BarChartVertical";
 import { Button } from "antd";
 import { toast, ToastContainer } from "react-toastify";
-
 const LOCAL_STORAGE_KEY = "draggableResizableStateCompliance"; // Key to save data in localStorage
 
 export const ComplianceReportAdminView = () => {
