@@ -1,9 +1,13 @@
-import { Button, Collapse, Dropdown, Input, Select } from "antd";
+import { Button, Collapse, Dropdown,  Select } from "antd";
 import { useEffect, useState } from "react";
 // import Hero from "../common/Hero";
 import { useLocation } from "react-router-dom";
 import { Hero } from "../components/Hero";
-import { getAllColumnsOfBoard, getProfileListing, governifyComplianceReportAdminSetting, governifyServiceReportAdminSetting } from "../apiservice/ApiService";
+import {
+  getAllColumnsOfBoard,
+  getProfileListing,
+  governifyServiceReportAdminSetting,
+} from "../apiservice/ApiService";
 import { toast, ToastContainer } from "react-toastify";
 // import { fetcher } from "../../utils/helper";
 
@@ -535,7 +539,7 @@ export const ServiceReportSettings = () => {
   const handleSubmit = async () => {
     const governify_service_report = JSON.stringify({
       companyChartData: companyChartData,
-      insightsChartData: insightsChartData
+      insightsChartData: insightsChartData,
     });
     const payloadData = {
       profile_id: location.state.profileId.toString(),
@@ -576,16 +580,17 @@ export const ServiceReportSettings = () => {
         />
       </div>
       <ToastContainer position="bottom-right" />
-      <div style={{marginTop:"20px"}}>
-
-      <Button
+      <div style={{ marginTop: "20px" }}>
+        <Button
           style={{ background: data.button_bg, color: "white", border: "none" }}
           onClick={handleSubmit}
         >
           Save
         </Button>
       </div>
-      
     </div>
   );
 };
+
+
+

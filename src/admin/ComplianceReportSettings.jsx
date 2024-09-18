@@ -1,6 +1,6 @@
-import { Button, Collapse, Dropdown, Input, Select, Switch } from "antd";
+import { Button, Collapse, Dropdown, Select } from "antd";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Hero } from "../components/Hero";
 import {
   getAllColumnsOfBoard,
@@ -11,12 +11,28 @@ import { toast, ToastContainer } from "react-toastify";
 
 export const ComplianceReportSettings = () => {
   const location = useLocation();
-  const { TextArea } = Input;
+  const navigate = useNavigate();
   const [recommendationText, setRecommendationText] = useState("");
-  const [companyChartData, setCompanyChartData] = useState([]);
-  const [saudizationChartData, setSaudizationChartData] = useState([]);
-  const [visaChartData, setVisaChartData] = useState([]);
-  const [employeesChartData, setEmployeesChartData] = useState([]);
+  const [companyChartData, setCompanyChartData] = useState({
+    id: 0,
+    height: 400,
+    boxes: [],
+  });
+  const [saudizationChartData, setSaudizationChartData] = useState({
+    id: 0,
+    height: 800,
+    boxes: [],
+  });
+  const [visaChartData, setVisaChartData] = useState({
+    id: 0,
+    height: 400,
+    boxes: [],
+  });
+  const [employeesChartData, setEmployeesChartData] = useState({
+    id: 0,
+    height: 400,
+    boxes: [],
+  });
   const [activeKey, setActiveKey] = useState([]);
   const [columnOptions, setColumnOptions] = useState([]);
 
@@ -33,55 +49,56 @@ export const ComplianceReportSettings = () => {
 
   const handleSelectChartTypeText = (type) => {
     if (type === "company") {
-      let tempCompanyData = [...companyChartData];
-      tempCompanyData.push({
+      let tempCompanyData = { ...companyChartData };
+      tempCompanyData.boxes.push({
         type: "Text Chart",
         column1: "",
         column2: "",
-        id: tempCompanyData.length + 1,
+        id: tempCompanyData.boxes.length + 1,
         position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        size: { width: 360, height: 100 },
         showDragHandle: false,
+        position: { x: 0, y: -40 },
       });
       setCompanyChartData(tempCompanyData);
     }
     if (type === "saudization") {
-      let tempSaudizationData = [...saudizationChartData];
-      tempSaudizationData.push({
+      let tempSaudizationData = { ...saudizationChartData };
+      tempSaudizationData.boxes.push({
         type: "Text Chart",
         column1: "",
         column2: "",
-        id: tempSaudizationData.length + 1,
+        id: tempSaudizationData.boxes.length + 1,
         position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        size: { width: 360, height: 100 },
         showDragHandle: false,
       });
       setSaudizationChartData(tempSaudizationData);
     }
 
     if (type === "visa") {
-      let tempVisaData = [...visaChartData];
-      tempVisaData.push({
+      let tempVisaData = { ...visaChartData };
+      tempVisaData.boxes.push({
         type: "Text Chart",
         column1: "",
         column2: "",
-        id: tempVisaData.length + 1,
+        id: tempVisaData.boxes.length + 1,
         position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        size: { width: 360, height: 100 },
         showDragHandle: false,
       });
       setVisaChartData(tempVisaData);
     }
 
     if (type === "employees") {
-      let tempEmployeeData = [...employeesChartData];
-      tempEmployeeData.push({
+      let tempEmployeeData = { ...employeesChartData };
+      tempEmployeeData.boxes.push({
         type: "Text Chart",
         column1: "",
         column2: "",
-        id: tempEmployeeData.length + 1,
+        id: tempEmployeeData.boxes.length + 1,
         position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        size: { width: 360, height: 100 },
         showDragHandle: false,
       });
       setEmployeesChartData(tempEmployeeData);
@@ -90,52 +107,51 @@ export const ComplianceReportSettings = () => {
 
   const handleSelectChartTypeValue = (type) => {
     if (type === "company") {
-      let tempCompanyData = [...companyChartData];
-      tempCompanyData.push({
+      let tempCompanyData = { ...companyChartData };
+      tempCompanyData.boxes.push({
         type: "Value Chart",
         column: "",
-        id: tempCompanyData.length + 1,
+        id: tempCompanyData.boxes.length + 1,
         position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        size: { width: 360, height: 100 },
         showDragHandle: false,
-        
       });
       setCompanyChartData(tempCompanyData);
     }
     if (type === "saudization") {
-      let tempSaudizationData = [...saudizationChartData];
-      tempSaudizationData.push({
+      let tempSaudizationData = { ...saudizationChartData };
+      tempSaudizationData.boxes.push({
         type: "Value Chart",
         column: "",
-        id: tempSaudizationData.length + 1,
+        id: tempSaudizationData.boxes.length + 1,
         position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        size: { width: 360, height: 100 },
         showDragHandle: false,
       });
       setSaudizationChartData(tempSaudizationData);
     }
 
     if (type === "visa") {
-      let tempVisaData = [...visaChartData];
-      tempVisaData.push({
+      let tempVisaData = { ...visaChartData };
+      tempVisaData.boxes.push({
         type: "Value Chart",
         column: "",
-        id: tempVisaData.length + 1,
+        id: tempVisaData.boxes.length + 1,
         position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        size: { width: 360, height: 100 },
         showDragHandle: false,
       });
       setVisaChartData(tempVisaData);
     }
 
     if (type === "employees") {
-      let tempEmployeeData = [...employeesChartData];
-      tempEmployeeData.push({
+      let tempEmployeeData = { ...employeesChartData };
+      tempEmployeeData.boxes.push({
         type: "Value Chart",
         column: "",
-        id: tempEmployeeData.length + 1,
+        id: tempEmployeeData.boxes.length + 1,
         position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        size: { width: 360, height: 100 },
         showDragHandle: false,
       });
       setEmployeesChartData(tempEmployeeData);
@@ -144,12 +160,12 @@ export const ComplianceReportSettings = () => {
 
   const handleSelectChartTypeBar = (type) => {
     if (type === "company") {
-      let tempCompanyData = [...companyChartData];
-      tempCompanyData.push({
+      let tempCompanyData = {...companyChartData};
+      tempCompanyData.boxes.push({
         type: "Bar Chart",
         horizontal: false,
         selectedColumns: [],
-        id: tempCompanyData.length + 1,
+        id: tempCompanyData.boxes.length + 1,
         position: { x: 0, y: 0 },
         size: { width: 200, height: 200 },
         showDragHandle: false,
@@ -157,12 +173,12 @@ export const ComplianceReportSettings = () => {
       setCompanyChartData(tempCompanyData);
     }
     if (type === "saudization") {
-      let tempSaudizationData = [...saudizationChartData];
-      tempSaudizationData.push({
+      let tempSaudizationData = {...saudizationChartData};
+      tempSaudizationData.boxes.push({
         type: "Bar Chart",
         horizontal: false,
         selectedColumns: [],
-        id: tempSaudizationData.length + 1,
+        id: tempSaudizationData.boxes.length + 1,
         position: { x: 0, y: 0 },
         size: { width: 200, height: 200 },
         showDragHandle: false,
@@ -171,12 +187,12 @@ export const ComplianceReportSettings = () => {
     }
 
     if (type === "visa") {
-      let tempVisaData = [...visaChartData];
-      tempVisaData.push({
+      let tempVisaData = {...visaChartData};
+      tempVisaData.boxes.push({
         type: "Bar Chart",
         horizontal: false,
         selectedColumns: [],
-        id: tempVisaData.length + 1,
+        id: tempVisaData.boxes.length + 1,
         position: { x: 0, y: 0 },
         size: { width: 200, height: 200 },
         showDragHandle: false,
@@ -185,12 +201,12 @@ export const ComplianceReportSettings = () => {
     }
 
     if (type === "employees") {
-      let tempEmployeeData = [...employeesChartData];
-      tempEmployeeData.push({
+      let tempEmployeeData = {...employeesChartData};
+      tempEmployeeData.boxes.push({
         type: "Bar Chart",
         horizontal: false,
         selectedColumns: [],
-        id: tempEmployeeData.length + 1,
+        id: tempEmployeeData.boxes.length + 1,
         position: { x: 0, y: 0 },
         size: { width: 200, height: 200 },
         showDragHandle: false,
@@ -201,23 +217,23 @@ export const ComplianceReportSettings = () => {
 
   const handleSelectChartTypePercentage = (type) => {
     if (type === "company") {
-      let tempCompanyData = [...companyChartData];
-      tempCompanyData.push({
+      let tempCompanyData = { ...companyChartData };
+      tempCompanyData.boxes.push({
         type: "Multi Value Chart",
         selectedColumns: [],
-        id: tempCompanyData.length + 1,
+        id: tempCompanyData.boxes.length + 1,
         position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        size: { width: 200, height: 800 },
         showDragHandle: false,
       });
       setCompanyChartData(tempCompanyData);
     }
     if (type === "saudization") {
-      let tempSaudizationData = [...saudizationChartData];
-      tempSaudizationData.push({
+      let tempSaudizationData = { ...saudizationChartData };
+      tempSaudizationData.boxes.push({
         type: "Multi Value Chart",
         selectedColumns: [],
-        id: tempSaudizationData.length + 1,
+        id: tempSaudizationData.boxes.length + 1,
         position: { x: 0, y: 0 },
         size: { width: 200, height: 200 },
         showDragHandle: false,
@@ -226,11 +242,11 @@ export const ComplianceReportSettings = () => {
     }
 
     if (type === "visa") {
-      let tempVisaData = [...visaChartData];
-      tempVisaData.push({
+      let tempVisaData = { ...visaChartData };
+      tempVisaData.boxes.push({
         type: "Multi Value Chart",
         selectedColumns: [],
-        id: tempVisaData.length + 1,
+        id: tempVisaData.boxes.length + 1,
         position: { x: 0, y: 0 },
         size: { width: 200, height: 200 },
         showDragHandle: false,
@@ -239,11 +255,11 @@ export const ComplianceReportSettings = () => {
     }
 
     if (type === "employees") {
-      let tempEmployeeData = [...employeesChartData];
-      tempEmployeeData.push({
+      let tempEmployeeData = { ...employeesChartData };
+      tempEmployeeData.boxes.push({
         type: "Multi Value Chart",
         selectedColumns: [],
-        id: tempEmployeeData.length + 1,
+        id: tempEmployeeData.boxes.length + 1,
         position: { x: 0, y: 0 },
         size: { width: 200, height: 200 },
         showDragHandle: false,
@@ -408,146 +424,146 @@ export const ComplianceReportSettings = () => {
   };
 
   const handlChangeColumn1ChartHeadingCompany = (e, index) => {
-    let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].column1 = e;
+    let tempCompanyChartData = {...companyChartData};
+    tempCompanyChartData.boxes[index].column1 = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
   const handlChangeColumn1ChartHeadingSaudization = (e, index) => {
-    let tempSaudizationChartData = [...saudizationChartData];
-    tempSaudizationChartData[index].column1 = e;
+    let tempSaudizationChartData = {...saudizationChartData};
+    tempSaudizationChartData.boxes[index].column1 = e;
     setSaudizationChartData(tempSaudizationChartData);
   };
 
   const handlChangeColumn1ChartHeadingEmployees = (e, index) => {
-    let tempEmployeeChartData = [...employeesChartData];
-    tempEmployeeChartData[index].column1 = e;
+    let tempEmployeeChartData = {...employeesChartData};
+    tempEmployeeChartData.boxes[index].column1 = e;
     setEmployeesChartData(tempEmployeeChartData);
   };
 
   const handlChangeColumn1ChartHeadingVisa = (e, index) => {
-    let tempVisaChartData = [...visaChartData];
-    tempVisaChartData[index].column1 = e;
+    let tempVisaChartData = {...visaChartData};
+    tempVisaChartData.boxes[index].column1 = e;
     setVisaChartData(tempVisaChartData);
   };
 
   const handlChangeColumn2ChartHeadingCompany = (e, index) => {
-    let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].column2 = e;
+    let tempCompanyChartData = {...companyChartData};
+    tempCompanyChartData.boxes[index].column2 = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
   const handlChangeColumn2ChartHeadingSaudization = (e, index) => {
-    let tempSaudizationChartData = [...saudizationChartData];
-    tempSaudizationChartData[index].column2 = e;
+    let tempSaudizationChartData = {...saudizationChartData};
+    tempSaudizationChartData.boxes[index].column2 = e;
     setSaudizationChartData(tempSaudizationChartData);
   };
 
   const handlChangeColumn2ChartHeadingEmployees = (e, index) => {
-    let tempEmployeesChartData = [...employeesChartData];
-    tempEmployeesChartData[index].column2 = e;
+    let tempEmployeesChartData = {...employeesChartData};
+    tempEmployeesChartData.boxes[index].column2 = e;
     setEmployeesChartData(tempEmployeesChartData);
   };
 
   const handlChangeColumn2ChartHeadingVisa = (e, index) => {
-    let tempVisaChartData = [...visaChartData];
-    tempVisaChartData[index].column2 = e;
+    let tempVisaChartData = {...visaChartData};
+    tempVisaChartData.boxes[index].column2 = e;
     setVisaChartData(tempVisaChartData);
   };
 
   const handlChangeValueChartColumnCompany = (e, index) => {
-    let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].column = e;
+    let tempCompanyChartData = {...companyChartData};
+    tempCompanyChartData.boxes[index].column = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
   const handlChangePercentageChartColumnCompany = (e, index) => {
-    let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].selectedColumns = e;
+    let tempCompanyChartData = {...companyChartData};
+    tempCompanyChartData.boxes[index].selectedColumns = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
   const handlChangeBarChartColumnCompany = (e, index) => {
-    let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].selectedColumns = e;
+    let tempCompanyChartData = {...companyChartData};
+    tempCompanyChartData.boxes[index].selectedColumns = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
   const handlChangeValueChartColumnSaudization = (e, index) => {
-    let tempSaudizationChartData = [...saudizationChartData];
-    tempSaudizationChartData[index].column = e;
+    let tempSaudizationChartData = {...saudizationChartData};
+    tempSaudizationChartData.boxes[index].column = e;
     setSaudizationChartData(tempSaudizationChartData);
   };
 
   const handlChangePercentageChartColumnSaudization = (e, index) => {
-    let tempSaudizationChartData = [...saudizationChartData];
-    tempSaudizationChartData[index].selectedColumns = e;
+    let tempSaudizationChartData = {...saudizationChartData};
+    tempSaudizationChartData.boxes[index].selectedColumns = e;
     setSaudizationChartData(tempSaudizationChartData);
   };
 
   const handlChangeBarChartColumnSaudization = (e, index) => {
-    let tempSaudizationChartData = [...saudizationChartData];
-    tempSaudizationChartData[index].selectedColumns = e;
+    let tempSaudizationChartData = {...saudizationChartData};
+    tempSaudizationChartData.boxes[index].selectedColumns = e;
     setSaudizationChartData(tempSaudizationChartData);
   };
 
   const handlChangeValueChartColumnEmployees = (e, index) => {
-    let tempEmployeesChartData = [...employeesChartData];
-    tempEmployeesChartData[index].column = e;
+    let tempEmployeesChartData = {...employeesChartData};
+    tempEmployeesChartData.boxes[index].column = e;
     setEmployeesChartData(tempEmployeesChartData);
   };
 
   const handlChangePercentageChartColumnEmployees = (e, index) => {
-    let tempEmployeesChartData = [...employeesChartData];
-    tempEmployeesChartData[index].selectedColumns = e;
+    let tempEmployeesChartData = {...employeesChartData};
+    tempEmployeesChartData.boxes[index].selectedColumns = e;
     setEmployeesChartData(tempEmployeesChartData);
   };
 
   const handlChangeBarChartColumnEmployees = (e, index) => {
-    let tempEmployeeChartData = [...employeesChartData];
-    tempEmployeeChartData[index].selectedColumns = e;
+    let tempEmployeeChartData = {...employeesChartData};
+    tempEmployeeChartData.boxes[index].selectedColumns = e;
     setEmployeesChartData(tempEmployeeChartData);
   };
 
   const handlChangeValueChartColumnVisa = (e, index) => {
-    let tempVisaChartData = [...visaChartData];
-    tempVisaChartData[index].column = e;
+    let tempVisaChartData = {...visaChartData};
+    tempVisaChartData.boxes[index].column = e;
     setVisaChartData(tempVisaChartData);
   };
 
   const handlChangePercentageChartColumnVisa = (e, index) => {
-    let tempVisaChartData = [...visaChartData];
-    tempVisaChartData[index].selectedColumns = e;
+    let tempVisaChartData = {...visaChartData};
+    tempVisaChartData.boxes[index].selectedColumns = e;
     setVisaChartData(tempVisaChartData);
   };
 
   const handlChangeBarChartColumnVisa = (e, index) => {
-    let tempVisaChartData = [...visaChartData];
-    tempVisaChartData[index].selectedColumns = e;
+    let tempVisaChartData = {...visaChartData};
+    tempVisaChartData.boxes[index].selectedColumns = e;
     setVisaChartData(tempVisaChartData);
   };
 
   const onChangeSwitchCompany = (e, index) => {
-    const tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].horizontal = e;
+    const tempCompanyChartData = {...companyChartData};
+    tempCompanyChartData.boxes[index].horizontal = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
   const onChangeSwitchVisa = (e, index) => {
-    const tempVisaChartData = [...visaChartData];
-    tempVisaChartData[index].horizontal = e;
+    const tempVisaChartData = {...visaChartData};
+    tempVisaChartData.boxes[index].horizontal = e;
     setVisaChartData(tempVisaChartData);
   };
 
   const onChangeSwitchEmployees = (e, index) => {
-    const tempEmployeesChartData = [...employeesChartData];
-    tempEmployeesChartData[index].horizontal = e;
+    const tempEmployeesChartData = {...employeesChartData};
+    tempEmployeesChartData.boxes[index].horizontal = e;
     setEmployeesChartData(tempEmployeesChartData);
   };
 
   const onChangeSwitchSaudization = (e, index) => {
-    const tempSaudizationChartData = [...saudizationChartData];
-    tempSaudizationChartData[index].horizontal = e;
+    const tempSaudizationChartData = {...saudizationChartData};
+    tempSaudizationChartData.boxes[index].horizontal = e;
     setSaudizationChartData(tempSaudizationChartData);
   };
 
@@ -560,23 +576,23 @@ export const ComplianceReportSettings = () => {
 
   const handleChangeDelete = (index, type) => {
     if (type === "company") {
-      const tempCompanyChartData = [...companyChartData];
-      tempCompanyChartData.splice(index, 1);
+      const tempCompanyChartData = {...companyChartData};
+      tempCompanyChartData.boxes.splice(index, 1);
       setCompanyChartData(tempCompanyChartData);
     }
     if (type === "employees") {
-      const tempEmployeesChartData = [...employeesChartData];
-      tempEmployeesChartData.splice(index, 1);
+      const tempEmployeesChartData = {...employeesChartData};
+      tempEmployeesChartData.boxes.splice(index, 1);
       setEmployeesChartData(tempEmployeesChartData);
     }
     if (type === "visa") {
-      const tempVisaChartData = [...visaChartData];
-      tempVisaChartData.splice(index, 1);
+      const tempVisaChartData = {...visaChartData};
+      tempVisaChartData.boxes.splice(index, 1);
       setVisaChartData(tempVisaChartData);
     }
     if (type === "saudization") {
-      const tempSaudizationChartData = [...saudizationChartData];
-      tempSaudizationChartData.splice(index, 1);
+      const tempSaudizationChartData = {...saudizationChartData};
+      tempSaudizationChartData.boxes.splice(index, 1);
       setSaudizationChartData(tempSaudizationChartData);
     }
   };
@@ -1406,7 +1422,7 @@ export const ComplianceReportSettings = () => {
       ),
       children: (
         <div style={{ marginTop: "10px" }}>
-          {companyChartData.map((item, index) => {
+          {companyChartData.boxes.map((item, index) => {
             return (
               <div key={index}>
                 <div style={{ marginTop: "10px" }}>
@@ -1449,7 +1465,7 @@ export const ComplianceReportSettings = () => {
       ),
       children: (
         <div style={{ marginTop: "10px" }}>
-          {saudizationChartData.map((item, index) => {
+          {saudizationChartData.boxes.map((item, index) => {
             return (
               <div>
                 <div style={{ marginTop: "10px" }}>
@@ -1491,7 +1507,7 @@ export const ComplianceReportSettings = () => {
       ),
       children: (
         <div style={{ marginTop: "10px" }}>
-          {visaChartData.map((item, index) => {
+          {visaChartData.boxes.map((item, index) => {
             return (
               <div>
                 <div style={{ marginTop: "10px" }}>
@@ -1531,7 +1547,7 @@ export const ComplianceReportSettings = () => {
       ),
       children: (
         <div style={{ marginTop: "10px" }}>
-          {employeesChartData.map((item, index) => {
+          {employeesChartData.boxes.map((item, index) => {
             return (
               <div>
                 <div style={{ marginTop: "10px" }}>
@@ -1594,11 +1610,15 @@ export const ComplianceReportSettings = () => {
         response1.data.response.forEach((item) => {
           if (item.id.toString() === location.state.profileId.toString()) {
             const tempData = JSON.parse(item.governify_compliance_report);
-            setCompanyChartData(tempData.companyChartData);
-            setVisaChartData(tempData.visaChartData);
-            setEmployeesChartData(tempData.employeesChartData);
-            setSaudizationChartData(tempData.saudizationChartData);
-            setRecommendationText(tempData.recommendation_text);
+            console.log(tempData , 'tempData')
+            if (tempData === null || tempData === "") {
+            } else {
+              setCompanyChartData(tempData.companyChartData);
+              setVisaChartData(tempData.visaChartData);
+              setEmployeesChartData(tempData.employeesChartData);
+              setSaudizationChartData(tempData.saudizationChartData);
+              setRecommendationText(tempData.recommendation_text);
+            }
           }
         });
       }
@@ -1607,12 +1627,42 @@ export const ComplianceReportSettings = () => {
     }
   };
 
+  const getChartDataFormat = (data) => {
+    let position = { x: 0, y: -40 };
+    let count = 0;
+    const tempData = {id:'' , height:400 , boxes:[]};
+
+    data.boxes.forEach((item) => {
+      // Create a new position object for each item to avoid reference issues
+      let newPosition = { x: position.x, y: position.y };
+
+      if (count < 3) {
+        newPosition.x = newPosition.x + 457 * count;
+      } else {
+        newPosition.x = 0;
+        newPosition.y = newPosition.y + 125;
+        position.y = position.y + 125;
+        count = 0; // Reset count for the next row
+      }
+
+      count = count + 1;
+
+      let obj = { ...item, position: newPosition };
+      tempData.boxes.push(obj);
+    });
+    tempData.height = position.y + 250;
+    tempData.id = data.id;
+
+    return tempData;
+  };
+
   const handleSubmit = async () => {
+    console.log(getChartDataFormat(companyChartData));
     const governify_compliance_report = JSON.stringify({
-      companyChartData: companyChartData,
-      saudizationChartData: saudizationChartData,
-      visaChartData: visaChartData,
-      employeesChartData: employeesChartData,
+      companyChartData: getChartDataFormat(companyChartData),
+      saudizationChartData: getChartDataFormat(saudizationChartData),
+      visaChartData: getChartDataFormat(visaChartData),
+      employeesChartData: getChartDataFormat(employeesChartData),
       recommendation_text: recommendationText,
     });
     const payloadData = {
@@ -1630,6 +1680,10 @@ export const ComplianceReportSettings = () => {
     } catch (err) {
       console.log(err, "err");
     }
+  };
+
+  const handleViewChart = () => {
+    navigate("/admin/complianceReportAdminView", { state: location.state });
   };
 
   useEffect(() => {
@@ -1652,12 +1706,26 @@ export const ComplianceReportSettings = () => {
         onChange={onChange}
         activeKey={activeKey}
       />
-      <div style={{ marginTop: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "20px",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "20px",
+        }}
+      >
         <Button
           style={{ background: data.button_bg, color: "white", border: "none" }}
           onClick={handleSubmit}
         >
           Save
+        </Button>
+        <Button
+          style={{ background: data.button_bg, color: "white", border: "none" }}
+          onClick={handleViewChart}
+        >
+          View
         </Button>
       </div>
       <ToastContainer position="bottom-right" />

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-// import { fetcher } from "../../utils/helper";
-import { Button, Collapse, Select } from "antd";
+import { Button, Collapse, Input, Select } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { Hero } from "../components/Hero";
@@ -18,7 +17,10 @@ export const ReportSettings = () => {
   const [allBoardId, setAllBoardId] = useState([]);
   const [loading, setLoading] = useState(false);
   const [columnOptions, setColumnOptions] = useState([]);
-  const [selectedFilterColumn, setSelectedFilterColumn] = useState("");
+  const [selectedFilterColumn, setSelectedFilterColumn] = useState({
+    key: "",
+    value: "",
+  });
   const [selectedBoard, setSelectedBoard] = useState("");
   const [selectedTableColumns, setSelectedTableColumns] = useState([]);
   const navigate = useNavigate();
@@ -51,17 +53,7 @@ export const ReportSettings = () => {
   };
 
   const handleSelectColumn = async (e) => {
-    setSelectedFilterColumn(e);
-    const payloadData = JSON.stringify({
-      profile_id: location.state.toString(),
-      governify_filter_key: e,
-    });
-    try {
-      const response = await governifyFilterKeyAssociation(payloadData);
-      if (response.success) {
-        toast.success(response.message);
-      }
-    } catch (err) {}
+    setSelectedFilterColumn({ ...selectedFilterColumn, key: e });
   };
 
   const navigateToReportSetting = (type) => {
@@ -86,7 +78,7 @@ export const ReportSettings = () => {
     }
 
     if (type === "service") {
-      navigate("/admin/serviceReportAdminView" ,  { state: dataToPass });
+      navigate("/admin/serviceReportAdminView", { state: dataToPass });
     }
   };
 
@@ -126,6 +118,23 @@ export const ReportSettings = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleChangeFilterValue = (e) => {
+    setSelectedFilterColumn({ ...selectedFilterColumn, value: e.target.value });
+  };
+
+  const handleSubmitFilterKey = async () => {
+    const payloadData = JSON.stringify({
+      profile_id: location.state.toString(),
+      governify_filter_key: selectedFilterColumn,
+    });
+    try {
+      const response = await governifyFilterKeyAssociation(payloadData);
+      if (response.success) {
+        toast.success(response.message);
+      }
+    } catch (err) {}
   };
 
   useEffect(() => {
@@ -178,14 +187,39 @@ export const ReportSettings = () => {
                     showSearch
                     allowClear
                     style={{
-                      width: "100%",
+                      width: "50%",
                     }}
                     placeholder="Please select"
                     onChange={handleSelectColumn}
                     options={columnOptions}
-                    value={selectedFilterColumn}
+                    value={selectedFilterColumn.key}
                     filterOption={filterOption}
                   />
+                  <div style={{ marginTop: "10px" }}>
+                    {selectedFilterColumn.key !== undefined &&
+                      selectedFilterColumn.key.length > 0 && (
+                        <Input
+                          addonBefore="Filter Value"
+                          style={{ width: "50%" }}
+                          value={selectedFilterColumn.value}
+                          onChange={handleChangeFilterValue}
+                        />
+                      )}
+                  </div>
+                  {selectedFilterColumn.key !== undefined &&
+                    selectedFilterColumn.key.length > 0 &&
+                    selectedFilterColumn.value.length > 0 && (
+                      <div
+                        style={{
+                          marginTop: "10px",
+                          width: "50%",
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Button onClick={handleSubmitFilterKey}> Save</Button>
+                      </div>
+                    )}
                 </div>
               ),
             },

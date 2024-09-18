@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Drawer, Dropdown, Flex, Typography } from "antd";
+import { Button, Drawer, Flex, Typography } from "antd";
 import {
   CloseOutlined,
   HomeOutlined,
@@ -30,10 +30,6 @@ export const Header = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const role = getRole();
 
-  // const navigateToSettings = () => {
-  //   navigate("settings");
-  // };
-
   const navigateToHome = () => {
     if (role === "customer") {
       navigate("/user");
@@ -60,42 +56,9 @@ export const Header = () => {
     }
   };
 
-  // const handleHoverSetting = (flag) => {
-  //   if (flag) {
-  //     setSettingButtonHovered(true);
-  //   } else {
-  //     setSettingButtonHovered(false);
-  //   }
-  // };
-
   const navigateToGeneralSettings = () => {
     navigate("generalSettings");
   };
-
-  const navigateToReportSettings = () => {
-    navigate("reportSettings");
-  };
-
-  const navigateToAdminHome = () => {
-    if (!window.location.href.endsWith("/admin")) {
-      navigate("/admin");
-    }
-  };
-
-  const items = [
-    {
-      key: "1",
-      label: <span onClick={navigateToGeneralSettings}>General Setting</span>,
-    },
-    {
-      key: "2",
-      label: <span onClick={navigateToReportSettings}>Report Setting</span>,
-    },
-    {
-      key: "3",
-      label: <span onClick={navigateToAdminHome}>Admin Home</span>,
-    },
-  ];
 
   return (
     <>
@@ -195,30 +158,23 @@ export const Header = () => {
                     <></>
                   )
                 ) : (
-                  <Dropdown
-                    menu={{
-                      items,
+                  <Button
+                    className="governify-secondary-btn fs_12 fw-700 border-radius-10"
+                    style={{
+                      display: "flex",
+                      gap: "5px",
+                      alignItems: "center",
+                      border: `1px solid ${data.button_bg}`,
+                      color: data.button_bg,
+                      background: "transparent",
                     }}
-                    placement="bottom"
-                    arrow
+                    onClick={navigateToGeneralSettings}
                   >
-                    <Button
-                      className="governify-secondary-btn fs_12 fw-700 border-radius-10"
-                      style={{
-                        display: "flex",
-                        gap: "5px",
-                        alignItems: "center",
-                        border: `1px solid ${data.button_bg}`,
-                        color: data.button_bg,
-                        background: "transparent",
-                      }}
-                    >
-                      <span className="font-family-montse fs-12 fw-700">
-                        Settings
-                      </span>
-                      <SettingOutlined className="fs_20 fw-700" />
-                    </Button>
-                  </Dropdown>
+                    <span className="font-family-montse fs-12 fw-700">
+                      Settings
+                    </span>
+                    <SettingOutlined className="fs_20 fw-700" />
+                  </Button>
                 )}
 
                 <Button
@@ -309,5 +265,3 @@ export const Header = () => {
     </>
   );
 };
-
-

@@ -108,18 +108,20 @@ export const ComplianceReportAdminView = () => {
     try {
       const response = await getProfileListing();
       if (response.success) {
+        
         response.data.response.forEach((item) => {
           if (item.id.toString() === location.state.profileId.toString()) {
             tempData = Object.entries(
               JSON.parse(item.governify_compliance_report)
             );
+            
           }
         });
       }
 
       for (let i = 0; i < tempData.length; i++) {
         if (tempData[i][0] !== "recommendation_text") {
-          tempContainerData.push({ id: i, height: 400, boxes: tempData[i][1] });
+          tempContainerData.push(tempData[i][1]);
         }
       }
 
@@ -481,6 +483,7 @@ export const ComplianceReportAdminView = () => {
                             fontSize: "14px",
                             fontWeight: "400",
                             color: "#6d7175",
+                            marginBottom: "6px",
                           }}
                         >
                           Company Name
@@ -491,6 +494,7 @@ export const ComplianceReportAdminView = () => {
                             fontSize: "24px",
                             fontWeight: "600",
                             color: "#202223",
+                            marginBottom: "6px",
                           }}
                         >
                           TASC Outsourcing
