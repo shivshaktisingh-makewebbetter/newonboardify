@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import { Loader } from "../common/Loader";
 import { registerApi } from "../apiservice/ApiService";
 import { useLocation } from "react-router-dom";
+import CountrySelect from "../common/CountrySelect";
 
 export const Register = () => {
   const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,6}$/;
@@ -19,6 +20,7 @@ export const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
     company_name: "",
+    country: null,
     phone: "",
     email: "",
     password: "",
@@ -87,12 +89,15 @@ export const Register = () => {
   }, [params]);
 
   useEffect(() => {
-    const { name, company_name, email, password } = formData;
+    const { name, company_name, country, email, password } = formData;
     setIsFormValid(
       name.trim() !== "" &&
         company_name.trim() !== "" &&
         email.trim() !== "" &&
         emailRegex.test(email) &&
+        country !== null &&
+        country !== "" &&
+        country !== undefined &&
         password.trim() !== "" &&
         recaptchaToken !== "" &&
         !recaptchaExpired
@@ -304,6 +309,7 @@ export const Register = () => {
                 className="input-customer-focus form-control"
                 disabled={params?.company_name}
               />
+              <CountrySelect formData={formData} setFormData={setFormData} />
               <input
                 type="text"
                 placeholder="+966 011 XXX XXXX"
