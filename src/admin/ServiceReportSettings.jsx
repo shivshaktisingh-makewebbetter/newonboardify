@@ -1,7 +1,15 @@
-import { Button, Collapse, Dropdown,  Select } from "antd";
+import {
+  Button,
+  Collapse,
+  ColorPicker,
+  Dropdown,
+  Input,
+  Modal,
+  Select,
+} from "antd";
 import { useEffect, useState } from "react";
 // import Hero from "../common/Hero";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Hero } from "../components/Hero";
 import {
   getAllColumnsOfBoard,
@@ -9,12 +17,30 @@ import {
   governifyServiceReportAdminSetting,
 } from "../apiservice/ApiService";
 import { toast, ToastContainer } from "react-toastify";
+import { EditOutlined } from "@ant-design/icons";
 // import { fetcher } from "../../utils/helper";
 
 export const ServiceReportSettings = () => {
   const location = useLocation();
-  const [companyChartData, setCompanyChartData] = useState([]);
-  const [insightsChartData, setInsightsChartData] = useState([]);
+  const navigate = useNavigate();
+  const [changeTitleModal, setChangeTitleModal] = useState({
+    flag: false,
+    type: "",
+    previousValue: "",
+    updatedValue: "",
+  });
+  const [companyChartData, setCompanyChartData] = useState({
+    id: 0,
+    title: "About Company",
+    height: 400,
+    boxes: [],
+  });
+  const [insightsChartData, setInsightsChartData] = useState({
+    id: 0,
+    title: "Insights",
+    height: 800,
+    boxes: [],
+  });
   const [activeKey, setActiveKey] = useState([]);
   const [columnOptions, setColumnOptions] = useState([]);
 
@@ -31,28 +57,28 @@ export const ServiceReportSettings = () => {
 
   const handleSelectChartTypeText = (type) => {
     if (type === "company") {
-      let tempCompanyData = [...companyChartData];
-      tempCompanyData.push({
+      let tempCompanyData = { ...companyChartData };
+      tempCompanyData.boxes.push({
         type: "Text Chart",
         column1: "",
         column2: "",
-        id: tempCompanyData.length + 1,
-        position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        id: tempCompanyData.boxes.length + 1,
+        size: { width: 360, height: 100 },
         showDragHandle: false,
+        position: { x: 0, y: -40 },
       });
       setCompanyChartData(tempCompanyData);
     }
     if (type === "insights") {
-      let tempInsightsData = [...insightsChartData];
-      tempInsightsData.push({
+      let tempInsightsData = { ...insightsChartData };
+      tempInsightsData.boxes.push({
         type: "Text Chart",
         column1: "",
         column2: "",
-        id: tempInsightsData.length + 1,
-        position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        id: tempInsightsData.boxes.length + 1,
+        size: { width: 360, height: 100 },
         showDragHandle: false,
+        position: { x: 0, y: -40 },
       });
       setInsightsChartData(tempInsightsData);
     }
@@ -60,27 +86,29 @@ export const ServiceReportSettings = () => {
 
   const handleSelectChartTypeBar = (type) => {
     if (type === "company") {
-      let tempCompanyData = [...companyChartData];
-      tempCompanyData.push({
+      let tempCompanyData = { ...companyChartData };
+      tempCompanyData.boxes.push({
         type: "Bar Chart",
         horizontal: false,
         selectedColumns: [],
-        id: tempCompanyData.length + 1,
-        position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        selectedColor: [],
+        id: tempCompanyData.boxes.length + 1,
+        position: { x: 0, y: -40 },
+        size: { width: 721, height: 422 },
         showDragHandle: false,
       });
       setCompanyChartData(tempCompanyData);
     }
     if (type === "insights") {
-      let tempInsightsData = [...insightsChartData];
-      tempInsightsData.push({
+      let tempInsightsData = { ...insightsChartData };
+      tempInsightsData.boxes.push({
         type: "Bar Chart",
         horizontal: false,
         selectedColumns: [],
-        id: tempInsightsData.length + 1,
-        position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        selectedColor: [],
+        id: tempInsightsData.boxes.length + 1,
+        position: { x: 0, y: -40 },
+        size: { width: 721, height: 422 },
         showDragHandle: false,
       });
       setInsightsChartData(tempInsightsData);
@@ -89,25 +117,29 @@ export const ServiceReportSettings = () => {
 
   const handleSelectChartTypePie = (type) => {
     if (type === "company") {
-      let tempCompanyData = [...companyChartData];
-      tempCompanyData.push({
+      let tempCompanyData = { ...companyChartData };
+      tempCompanyData.boxes.push({
         type: "Pie Chart",
+        horizontal: false,
         selectedColumns: [],
-        id: tempCompanyData.length + 1,
-        position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        selectedColor: [],
+        id: tempCompanyData.boxes.length + 1,
+        position: { x: 0, y: -40 },
+        size: { width: 721, height: 422 },
         showDragHandle: false,
       });
       setCompanyChartData(tempCompanyData);
     }
     if (type === "insights") {
-      let tempInsightsData = [...insightsChartData];
-      tempInsightsData.push({
+      let tempInsightsData = { ...insightsChartData };
+      tempInsightsData.boxes.push({
         type: "Pie Chart",
+        horizontal: false,
         selectedColumns: [],
-        id: tempInsightsData.length + 1,
-        position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        selectedColor: [],
+        id: tempInsightsData.boxes.length + 1,
+        position: { x: 0, y: -40 },
+        size: { width: 350, height: 380 },
         showDragHandle: false,
       });
       setInsightsChartData(tempInsightsData);
@@ -173,50 +205,126 @@ export const ServiceReportSettings = () => {
   };
 
   const handlChangeColumn1ChartHeadingCompany = (e, index) => {
-    let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].column1 = e;
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].column1 = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
   const handlChangeColumn1ChartHeadingInsights = (e, index) => {
-    let tempInsightsChartData = [...insightsChartData];
-    tempInsightsChartData[index].column2 = e;
+    let tempInsightsChartData = { ...insightsChartData };
+    tempInsightsChartData.boxes[index].column2 = e;
     setInsightsChartData(tempInsightsChartData);
   };
 
   const handlChangeColumn2ChartHeadingCompany = (e, index) => {
-    let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].column2 = e;
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].column2 = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
   const handlChangeColumn2ChartHeadingInsights = (e, index) => {
-    let tempInsightsChartData = [...insightsChartData];
-    tempInsightsChartData[index].column2 = e;
+    let tempInsightsChartData = { ...insightsChartData };
+    tempInsightsChartData.boxes[index].column2 = e;
     setInsightsChartData(tempInsightsChartData);
   };
 
   const handlChangeBarChartColumnCompany = (e, index) => {
-    let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].selectedColumns = e;
+    let tempCompanyChartData = { ...companyChartData };
+    let tempColor = tempCompanyChartData.boxes[index].selectedColor;
+    tempCompanyChartData.boxes[index].selectedColor = [];
+    tempCompanyChartData.boxes[index].selectedColumns = e;
+
+    e.forEach((subItem) => {
+      // Check if the item already exists in tempColor
+      const existingColor = tempColor.find((color) => color.key === subItem);
+
+      // If the object exists, push the existing object
+      if (existingColor) {
+        tempCompanyChartData.boxes[index].selectedColor.push(existingColor);
+      } else {
+        // If it doesn't exist, create a new object with an empty value
+        tempCompanyChartData.boxes[index].selectedColor.push({
+          key: subItem,
+          value: "",
+        });
+      }
+    });
+
     setCompanyChartData(tempCompanyChartData);
   };
 
   const handlChangePieChartColumnCompany = (e, index) => {
-    let tempCompanyChartData = [...companyChartData];
-    tempCompanyChartData[index].selectedColumns = e;
+    let tempCompanyChartData = { ...companyChartData };
+    let tempColor = tempCompanyChartData.boxes[index].selectedColor;
+    tempCompanyChartData.boxes[index].selectedColor = [];
+    tempCompanyChartData.boxes[index].selectedColumns = e;
+
+    e.forEach((subItem) => {
+      // Check if the item already exists in tempColor
+      const existingColor = tempColor.find((color) => color.key === subItem);
+
+      // If the object exists, push the existing object
+      if (existingColor) {
+        tempCompanyChartData.boxes[index].selectedColor.push(existingColor);
+      } else {
+        // If it doesn't exist, create a new object with an empty value
+        tempCompanyChartData.boxes[index].selectedColor.push({
+          key: subItem,
+          value: "",
+        });
+      }
+    });
+
     setCompanyChartData(tempCompanyChartData);
   };
 
   const handlChangeBarChartColumnInsights = (e, index) => {
-    let tempInsightsChartData = [...insightsChartData];
-    tempInsightsChartData[index].selectedColumns = e;
+    let tempInsightsChartData = { ...insightsChartData };
+    let tempColor = tempInsightsChartData.boxes[index].selectedColor;
+    tempInsightsChartData.boxes[index].selectedColumns = e;
+    tempInsightsChartData.boxes[index].selectedColor = [];
+
+    e.forEach((subItem) => {
+      // Check if the item already exists in tempColor
+      const existingColor = tempColor.find((color) => color.key === subItem);
+
+      // If the object exists, push the existing object
+      if (existingColor) {
+        tempInsightsChartData.boxes[index].selectedColor.push(existingColor);
+      } else {
+        // If it doesn't exist, create a new object with an empty value
+        tempInsightsChartData.boxes[index].selectedColor.push({
+          key: subItem,
+          value: "",
+        });
+      }
+    });
     setInsightsChartData(tempInsightsChartData);
   };
 
   const handlChangePieChartColumnInsights = (e, index) => {
-    let tempInsightsChartData = [...insightsChartData];
-    tempInsightsChartData[index].selectedColumns = e;
+    let tempInsightsChartData = { ...insightsChartData };
+    let tempColor = tempInsightsChartData.boxes[index].selectedColor;
+    tempInsightsChartData.boxes[index].selectedColumns = e;
+    tempInsightsChartData.boxes[index].selectedColor = [];
+
+    e.forEach((subItem) => {
+      // Check if the item already exists in tempColor
+      const existingColor = tempColor.find((color) => color.key === subItem);
+
+      console.log(existingColor, "existing");
+
+      // If the object exists, push the existing object
+      if (existingColor) {
+        tempInsightsChartData.boxes[index].selectedColor.push(existingColor);
+      } else {
+        // If it doesn't exist, create a new object with an empty value
+        tempInsightsChartData.boxes[index].selectedColor.push({
+          key: subItem,
+          value: "",
+        });
+      }
+    });
     setInsightsChartData(tempInsightsChartData);
   };
 
@@ -227,13 +335,78 @@ export const ServiceReportSettings = () => {
     );
   };
 
+  const handleChangeDelete = (index, type) => {
+    if (type === "company") {
+      const tempCompanyChartData = { ...companyChartData };
+      tempCompanyChartData.boxes.splice(index, 1);
+      setCompanyChartData(tempCompanyChartData);
+    }
+    if (type === "insights") {
+      const tempInsightsChartData = { ...insightsChartData };
+      tempInsightsChartData.boxes.splice(index, 1);
+      setInsightsChartData(tempInsightsChartData);
+    }
+  };
+
+  const handlChangeBarChartColorInsights = (value, index, childIndex) => {
+    let tempInsightsChartData = { ...insightsChartData };
+    tempInsightsChartData.boxes[index].selectedColor[childIndex].value =
+      value.toHexString();
+    setInsightsChartData(tempInsightsChartData);
+  };
+
+  const handlChangeBarChartColorCompany = (value, index, childIndex) => {
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].selectedColor[childIndex].value =
+      value.toHexString();
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const handlChangePieChartColorCompany = (value, index, childIndex) => {
+    console.log(value, index, companyChartData);
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].selectedColor[childIndex].value =
+      value.toHexString();
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const handlChangePieChartColorInsights = (value, index, childIndex) => {
+    let tempInsightsChartData = { ...insightsChartData };
+    tempInsightsChartData.boxes[index].selectedColor[childIndex].value =
+      value.toHexString();
+    setInsightsChartData(tempInsightsChartData);
+  };
+
+  const getAddOnBeforeForColor = (key) => {
+    let text = "";
+    columnOptions.forEach((item) => {
+      if (item.value === key) {
+        text = `Color For ${item.label}`;
+      }
+    });
+    return text;
+  };
+
   const getCollapseItemsTypeCompany = (item, index) => {
     let newIndex = index + 1;
     if (item.type === "Text Chart") {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "company")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
@@ -248,7 +421,7 @@ export const ServiceReportSettings = () => {
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
-                  value={item.column1}
+                  value={item.column1 || undefined}
                 />
               </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
@@ -263,7 +436,7 @@ export const ServiceReportSettings = () => {
                   }}
                   options={columnOptions}
                   filterOption={filterOption}
-                  value={item.column2}
+                  value={item.column2 || undefined}
                 />
               </div>
             </>
@@ -276,7 +449,20 @@ export const ServiceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "company")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
@@ -293,6 +479,40 @@ export const ServiceReportSettings = () => {
                   value={item.selectedColumns}
                 />
               </div>
+              <div>
+                {item.selectedColor.map((subItem, childIndex) => {
+                  return (
+                    <div
+                      style={{
+                        marginTop: "20px",
+                        textAlign: "left",
+                        width: "50%",
+                        display: "flex",
+                        gap: "20px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>
+                        {getAddOnBeforeForColor(
+                          item.selectedColumns[childIndex]
+                        )}
+                      </span>
+                      <ColorPicker
+                        value={subItem.value}
+                        size="large"
+                        showText
+                        onChange={(value) =>
+                          handlChangeBarChartColorCompany(
+                            value,
+                            index,
+                            childIndex
+                          )
+                        }
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </>
           ),
         },
@@ -303,14 +523,27 @@ export const ServiceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "company")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
                   mode="multiple"
-                  placeholder="Select Tag"
+                  placeholder="Select Columns"
                   style={{
                     width: "50%",
                   }}
@@ -319,6 +552,40 @@ export const ServiceReportSettings = () => {
                   filterOption={filterOption}
                   value={item.selectedColumns}
                 />
+              </div>
+              <div>
+                {item.selectedColor.map((subItem, childIndex) => {
+                  return (
+                    <div
+                      style={{
+                        marginTop: "20px",
+                        textAlign: "left",
+                        width: "50%",
+                        display: "flex",
+                        gap: "20px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>
+                        {getAddOnBeforeForColor(
+                          item.selectedColumns[childIndex]
+                        )}
+                      </span>
+                      <ColorPicker
+                        value={subItem.value}
+                        size="large"
+                        showText
+                        onChange={(value) =>
+                          handlChangePieChartColorCompany(
+                            value,
+                            index,
+                            childIndex
+                          )
+                        }
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </>
           ),
@@ -333,7 +600,20 @@ export const ServiceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "insights")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
@@ -376,7 +656,20 @@ export const ServiceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "insights")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
@@ -393,6 +686,41 @@ export const ServiceReportSettings = () => {
                   value={item.selectedColumns}
                 />
               </div>
+
+              <div>
+                {item.selectedColor.map((subItem, childIndex) => {
+                  return (
+                    <div
+                      style={{
+                        marginTop: "20px",
+                        textAlign: "left",
+                        width: "50%",
+                        display: "flex",
+                        gap: "20px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>
+                        {getAddOnBeforeForColor(
+                          item.selectedColumns[childIndex]
+                        )}
+                      </span>
+                      <ColorPicker
+                        value={subItem.value}
+                        size="large"
+                        showText
+                        onChange={(value) =>
+                          handlChangeBarChartColorInsights(
+                            value,
+                            index,
+                            childIndex
+                          )
+                        }
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </>
           ),
         },
@@ -403,7 +731,20 @@ export const ServiceReportSettings = () => {
       return [
         {
           key: index,
-          label: item.type + " " + newIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>{item.type + " " + newIndex}</span>{" "}
+              <Button onClick={() => handleChangeDelete(index, "insights")}>
+                Delete
+              </Button>
+            </div>
+          ),
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
@@ -420,11 +761,69 @@ export const ServiceReportSettings = () => {
                   value={item.selectedColumns}
                 />
               </div>
+              <div>
+                {item.selectedColor.map((subItem, childIndex) => {
+                  return (
+                    <div
+                      style={{
+                        marginTop: "20px",
+                        textAlign: "left",
+                        width: "50%",
+                        display: "flex",
+                        gap: "20px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>
+                        {getAddOnBeforeForColor(
+                          item.selectedColumns[childIndex]
+                        )}
+                      </span>
+                      <ColorPicker
+                        value={subItem.value}
+                        size="large"
+                        showText
+                        onChange={(value) =>
+                          handlChangePieChartColorInsights(
+                            value,
+                            index,
+                            childIndex
+                          )
+                        }
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </>
           ),
         },
       ];
     }
+  };
+
+  const handleChangeCompanyTitle = (e) => {
+    setChangeTitleModal({
+      flag: true,
+      type: "company",
+      previousValue: companyChartData.title,
+      updatedValue: "",
+    });
+  };
+
+  const handleChangeInsightsTitle = (e) => {
+    setChangeTitleModal({
+      flag: true,
+      type: "insights",
+      previousValue: companyChartData.title,
+      updatedValue: "",
+    });
+  };
+
+  const handleChangeTitle = (e) => {
+    let tempChangeTitleModal = { ...changeTitleModal };
+    tempChangeTitleModal.updatedValue = e.target.value;
+    setChangeTitleModal(tempChangeTitleModal);
   };
 
   const items = [
@@ -438,7 +837,16 @@ export const ServiceReportSettings = () => {
             alignItems: "center",
           }}
         >
-          <span>About Company</span>{" "}
+          <div>
+            <span>{companyChartData.title}</span>
+            <Button
+              style={{ marginLeft: "10px" }}
+              type="text"
+              icon={<EditOutlined />}
+              iconPosition="start"
+              onClick={handleChangeCompanyTitle}
+            ></Button>
+          </div>{" "}
           {activeKey.includes("1") ? (
             <Dropdown
               menu={{
@@ -456,7 +864,7 @@ export const ServiceReportSettings = () => {
       ),
       children: (
         <div style={{ marginTop: "10px" }}>
-          {companyChartData.map((item, index) => {
+          {companyChartData.boxes.map((item, index) => {
             return (
               <div key={index}>
                 <div style={{ marginTop: "10px" }}>
@@ -478,7 +886,16 @@ export const ServiceReportSettings = () => {
             alignItems: "center",
           }}
         >
-          <span>Insights</span>{" "}
+          <div>
+            <span>{insightsChartData.title}</span>
+            <Button
+              style={{ marginLeft: "10px" }}
+              type="text"
+              icon={<EditOutlined />}
+              iconPosition="start"
+              onClick={handleChangeInsightsTitle}
+            ></Button>
+          </div>{" "}
           {activeKey.includes("2") ? (
             <Dropdown
               menu={{
@@ -496,7 +913,7 @@ export const ServiceReportSettings = () => {
       ),
       children: (
         <div style={{ marginTop: "10px" }}>
-          {insightsChartData.map((item, index) => {
+          {insightsChartData.boxes.map((item, index) => {
             return (
               <div>
                 <div style={{ marginTop: "10px" }}>
@@ -526,8 +943,11 @@ export const ServiceReportSettings = () => {
         response1.data.response.forEach((item) => {
           if (item.id.toString() === location.state.profileId.toString()) {
             const tempData = JSON.parse(item.governify_service_report);
-            setCompanyChartData(tempData.companyChartData);
-            setInsightsChartData(tempData.insightsChartData);
+            if (tempData === null) {
+            } else {
+              setCompanyChartData(tempData.companyChartData);
+              setInsightsChartData(tempData.insightsChartData);
+            }
           }
         });
       }
@@ -536,10 +956,44 @@ export const ServiceReportSettings = () => {
     }
   };
 
+  const getChartDataFormat = (data, flag) => {
+    let position = { x: 0, y: -40 };
+    let count = 0;
+    const tempData = { id: data.id, height: 400, boxes: [] };
+
+    data.boxes.forEach((item) => {
+      // Create a new position object for each item to avoid reference issues
+      let newPosition = { x: position.x, y: position.y };
+
+      if (count < 3) {
+        newPosition.x = newPosition.x + 457 * count;
+      } else {
+        newPosition.x = 0;
+        newPosition.y = newPosition.y + 125;
+        position.y = position.y + 125;
+        count = 0; // Reset count for the next row
+      }
+
+      count = count + 1;
+
+      let obj = { ...item, position: newPosition };
+      tempData.boxes.push(obj);
+    });
+    tempData.height = position.y + 250;
+    tempData.id = data.id;
+    tempData.title = data.title;
+
+    if (flag === "insights") {
+      tempData.height = 800;
+    }
+
+    return tempData;
+  };
+
   const handleSubmit = async () => {
     const governify_service_report = JSON.stringify({
-      companyChartData: companyChartData,
-      insightsChartData: insightsChartData,
+      companyChartData: getChartDataFormat(companyChartData),
+      insightsChartData: getChartDataFormat(insightsChartData , 'insights'),
     });
     const payloadData = {
       profile_id: location.state.profileId.toString(),
@@ -549,6 +1003,7 @@ export const ServiceReportSettings = () => {
     try {
       const response = await governifyServiceReportAdminSetting(payloadData);
       if (response.success) {
+        sessionStorage.removeItem('draggableResizableStateService');
         toast.success(response.message);
       } else {
         toast.error(response.message);
@@ -556,6 +1011,30 @@ export const ServiceReportSettings = () => {
     } catch (err) {
       console.log(err, "err");
     }
+  };
+
+  const handleViewChart = () => {
+    navigate("/admin/serviceReportAdminView", { state: location.state });
+  };
+
+  const handleSaveTitle = () => {
+    if (changeTitleModal.type === "company") {
+      let tempCompanyChartData = { ...companyChartData };
+      tempCompanyChartData.title = changeTitleModal.updatedValue;
+      setCompanyChartData(tempCompanyChartData);
+    }
+    if (changeTitleModal.type === "insights") {
+      let tempInsightsChartData = { ...insightsChartData };
+      tempInsightsChartData.title = changeTitleModal.updatedValue;
+      setInsightsChartData(tempInsightsChartData);
+    }
+
+    setChangeTitleModal({
+      flag: false,
+      type: "",
+      previousValue: "",
+      updatedValue: "",
+    });
   };
 
   useEffect(() => {
@@ -580,17 +1059,74 @@ export const ServiceReportSettings = () => {
         />
       </div>
       <ToastContainer position="bottom-right" />
-      <div style={{ marginTop: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "20px",
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "20px",
+        }}
+      >
         <Button
           style={{ background: data.button_bg, color: "white", border: "none" }}
           onClick={handleSubmit}
         >
           Save
         </Button>
+        <Button
+          style={{ background: data.button_bg, color: "white", border: "none" }}
+          onClick={handleViewChart}
+        >
+          View
+        </Button>
       </div>
+
+      <Modal
+        open={changeTitleModal.flag}
+        title="Change Title"
+        centered
+        footer={(_, record) => (
+          <>
+            <Button
+              style={{
+                background: data.button_bg,
+                color: "#fff",
+                border: "none",
+              }}
+              onClick={handleSaveTitle}
+            >
+              Save
+            </Button>
+            <Button
+              style={{ border: "none" }}
+              onClick={() => {
+                setChangeTitleModal({
+                  flag: false,
+                  type: "",
+                  previousValue: "",
+                  updatedValue: "",
+                });
+              }}
+            >
+              Cancel
+            </Button>
+          </>
+        )}
+        onCancel={() => {
+          setChangeTitleModal({
+            flag: false,
+            type: "",
+            previousValue: "",
+            updatedValue: "",
+          });
+        }}
+      >
+        <Input
+          value={changeTitleModal.updatedValue}
+          onChange={handleChangeTitle}
+        />
+      </Modal>
     </div>
   );
 };
-
-
-

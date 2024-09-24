@@ -7,6 +7,7 @@ import {
   getAllBoards,
   getAllColumnsOfBoard,
   getProfileListing,
+  governifyAdminTableSettings,
   governifyBoardAssociation,
   governifyFilterKeyAssociation,
 } from "../apiservice/ApiService";
@@ -17,9 +18,11 @@ export const ReportSettings = () => {
   const [allBoardId, setAllBoardId] = useState([]);
   const [loading, setLoading] = useState(false);
   const [columnOptions, setColumnOptions] = useState([]);
+  const [dateOptions, setDateOptions] = useState([]);
   const [selectedFilterColumn, setSelectedFilterColumn] = useState({
     key: "",
     value: "",
+    date_key: "",
   });
   const [selectedBoard, setSelectedBoard] = useState("");
   const [selectedTableColumns, setSelectedTableColumns] = useState([]);
@@ -53,11 +56,23 @@ export const ReportSettings = () => {
   };
 
   const handleSelectColumn = async (e) => {
-    setSelectedFilterColumn({ ...selectedFilterColumn, key: e });
+    let tempObj = {...selectedFilterColumn};
+    tempObj.key = e;
+    tempObj.value ='';
+    setSelectedFilterColumn(tempObj);
+  };
+
+  const handleSelectTableColumn = async (e) => {
+    setSelectedTableColumns(e);
+  };
+
+
+  const handleSelectDateColumn = async (e) => {
+    setSelectedFilterColumn({ ...selectedFilterColumn, date_key: e });
   };
 
   const navigateToReportSetting = (type) => {
-    const dataToPass = { boardId: selectedBoard, profileId: location.state };
+    const dataToPass = { boardId: selectedBoard, profileId: location.state , filterKey: selectedFilterColumn };
     if (type === "compliance") {
       navigate("/admin/complianceReport", { state: dataToPass });
     }
@@ -93,12 +108,13 @@ export const ReportSettings = () => {
         response1.data.response.forEach((item) => {
           if (item.id === location.state) {
             setSelectedBoard(item.governify_board_id);
-            setSelectedFilterColumn(item.governify_filter_key);
+            if (item.governify_filter_key !== null) {
+              setSelectedFilterColumn(JSON.parse(item.governify_filter_key));
+            }
             setSelectedTableColumns(JSON.parse(item.governify_table_settings));
             selectedBoardId = item.governify_board_id;
           }
         });
-        // setDataSource(tempListing);
       }
       if (response.success) {
         response.data.response.boards.forEach((item) => {
@@ -109,10 +125,16 @@ export const ReportSettings = () => {
       const response3 = await getAllColumnsOfBoard(selectedBoardId);
       if (response3.success) {
         const tempData = [];
+        const tempDateData = [];
+
         response3.data.response.forEach((item) => {
           tempData.push({ label: item.title, value: item.id });
+          if (item.type === "date") {
+            tempDateData.push({ label: item.title, value: item.id });
+          }
         });
         setColumnOptions(tempData);
+        setDateOptions(tempDateData);
       }
     } catch (err) {
     } finally {
@@ -136,6 +158,20 @@ export const ReportSettings = () => {
       }
     } catch (err) {}
   };
+
+  const handleSaveTableData = async() =>{
+    const payloadData = JSON.stringify({
+      profile_id: location.state.toString(),
+      governify_table_settings: selectedTableColumns,
+    });
+    try {
+      const response = await governifyAdminTableSettings(payloadData);
+      if (response.success) {
+        toast.success(response.message);
+     
+      }
+    } catch (err) {}
+  }
 
   useEffect(() => {
     getListOfAllBoard();
@@ -183,25 +219,45 @@ export const ReportSettings = () => {
               label: "Assigned Filter",
               children: (
                 <div style={{ textAlign: "left" }}>
-                  <Select
-                    showSearch
-                    allowClear
-                    style={{
-                      width: "50%",
-                    }}
-                    placeholder="Please select"
-                    onChange={handleSelectColumn}
-                    options={columnOptions}
-                    value={selectedFilterColumn.key}
-                    filterOption={filterOption}
-                  />
+                  <div style={{ marginTop: "20px" }}>
+                    <Select
+                      showSearch
+                      allowClear
+                      style={{
+                        width: "50%",
+                      }}
+                      placeholder="Please select Date Column"
+                      onChange={handleSelectDateColumn}
+                      options={dateOptions}
+                      value={selectedFilterColumn.date_key}
+                      filterOption={filterOption}
+                    />
+                  </div>
+                  <div style={{ marginTop: "20px" }}>
+                    <Select
+                      showSearch
+                      allowClear
+                      style={{
+                        width: "50%",
+                      }}
+                      placeholder="Please select"
+                      onChange={handleSelectColumn}
+                      options={columnOptions}
+                      value={selectedFilterColumn.key}
+                      filterOption={filterOption}
+                    />
+                  </div>
                   <div style={{ marginTop: "10px" }}>
                     {selectedFilterColumn.key !== undefined &&
                       selectedFilterColumn.key.length > 0 && (
                         <Input
                           addonBefore="Filter Value"
                           style={{ width: "50%" }}
-                          value={selectedFilterColumn.value}
+                          value={
+                            selectedFilterColumn.value === undefined
+                              ? ""
+                              : selectedFilterColumn.value
+                          }
                           onChange={handleChangeFilterValue}
                         />
                       )}
@@ -243,11 +299,14 @@ export const ReportSettings = () => {
                       width: "100%",
                     }}
                     placeholder="Please select"
-                    onChange={handleSelectColumn}
+                    onChange={handleSelectTableColumn}
                     options={columnOptions}
                     value={selectedTableColumns}
                     filterOption={filterOption}
                   />
+                  <div style={{marginTop:"20px"}}>
+                    <Button onClick={handleSaveTableData}>Save</Button>
+                  </div>
                 </div>
               ),
             },

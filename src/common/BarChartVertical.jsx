@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { CustomTooltip } from "./CustomToolTip";
 
 // Register necessary Chart.js components
 ChartJS.register(
@@ -20,49 +21,68 @@ ChartJS.register(
   Legend
 );
 
-export const BarChartVertical = () => {
+export const BarChartVertical = ({
+  dataset,
+  stepsize,
+  max,
+  title,
+  description,
+}) => {
   const data = {
-    labels: ["January"],
-    datasets: [
-      {
-        label: "Saudi Employees",
-        data: [120],
-        backgroundColor: "rgba(75, 192, 192, 0.5)",
-        borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
-      },
-      {
-        label: "Non-Saudi Employees",
-        data: [555],
-        backgroundColor: "rgba(153, 102, 255, 0.5)",
-        borderColor: "rgba(153, 102, 255, 1)",
-        borderWidth: 1,
-      },
-    ],
+    labels: [""],
+    datasets: dataset,
   };
 
   const options = {
     responsive: true,
     plugins: {
+      beforeDraw: function (chart) {
+        const ctx = chart.ctx;
+        ctx.save();
+
+        chart.data.datasets.forEach((dataset, i) => {
+          const meta = chart.getDatasetMeta(i);
+          meta.data.forEach((bar, index) => {
+            ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+            ctx.shadowBlur = 10;
+            ctx.shadowOffsetX = 5;
+            ctx.shadowOffsetY = 5;
+
+            // Draw the shadowed bar
+            ctx.fillRect(
+              bar.x - bar.width / 2,
+              bar.y,
+              bar.width,
+              chart.chartArea.bottom - bar.y
+            );
+          });
+        });
+
+        ctx.restore();
+      },
       legend: {
-        // display:false ,
+        labels: {
+          font: {
+            size: "14px", // Change this value to adjust legend font size
+            weight: "400", // Change font weight if needed
+            color: "#6d7175",
+          },
+          padding: 20, // Add padding between legend items
+          boxWidth: 15, // Width of the square dot
+          boxHeight: 15,
+        },
         position: "bottom",
       },
       title: {
         display: true,
-        text: "Saudization Chart",
+        text: title ,
         font: {
           size: 24, // Set the font size for the title
           family: "Arial, sans-serif", // Font family for the title
           weight: "700", // Font weight for the title
         },
-        color: "#202223", // Color of the title text
-        padding: {
-          top: 10,
-          bottom: 30,
-        },
-        align: "start",
-      },
+        align:"start"
+      }
     },
     scales: {
       x: {
@@ -70,19 +90,20 @@ export const BarChartVertical = () => {
       },
       y: {
         beginAtZero: true,
-        max: 1000, // Set maximum value for y-axis
+        max: max, // Set maximum value for y-axis
         ticks: {
-          stepSize: 250, // Define the step size for y-axis
+          stepSize: stepsize, // Define the step size for y-axis
         },
+        grid :{
+          display: false
+        }
       },
     },
   };
 
   return (
-    <Bar
-      data={data}
-      options={options}
-    
-    />
+   
+      <Bar data={data} options={options} />
+
   );
 };

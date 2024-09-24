@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import { ResizableBox } from "react-resizable";
 import Draggable from "react-draggable";
@@ -15,7 +13,7 @@ import { BarChartVertical } from "../common/BarChartVertical";
 import { Button } from "antd";
 import { PieChart } from "../common/PieChart";
 import { toast, ToastContainer } from "react-toastify";
-const LOCAL_STORAGE_KEY = "draggableResizableStateService"; // Key to save data in localStorage
+const SESSION_STORAGE_KEY = "draggableResizableStateService"; // Key to save data in sessionStorage
 
 export const ServiceReportAdminView = () => {
   const location = useLocation();
@@ -42,9 +40,9 @@ export const ServiceReportAdminView = () => {
     },
   ]);
 
-  // Save the current state to localStorage
-  const saveStateToLocalStorage = (newContainers) => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newContainers));
+  // Save the current state to sessionStorage
+  const saveStateToSessionStorage = (newContainers) => {
+    sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(newContainers));
   };
 
   // Handle dragging stop for a specific box in a specific container
@@ -62,7 +60,7 @@ export const ServiceReportAdminView = () => {
         : container
     );
     setContainers(newContainers);
-    saveStateToLocalStorage(newContainers);
+    saveStateToSessionStorage(newContainers);
   };
 
   // Handle resizing for a specific box in a specific container
@@ -78,7 +76,7 @@ export const ServiceReportAdminView = () => {
         : container
     );
     setContainers(newContainers);
-    saveStateToLocalStorage(newContainers);
+    saveStateToSessionStorage(newContainers);
   };
 
   // Handle resizing of the container itself
@@ -87,7 +85,7 @@ export const ServiceReportAdminView = () => {
       i === containerIndex ? { ...container, height: size.height } : container
     );
     setContainers(newContainers);
-    saveStateToLocalStorage(newContainers);
+    saveStateToSessionStorage(newContainers);
   };
 
   // Toggle drag handle visibility on hover
@@ -121,13 +119,13 @@ export const ServiceReportAdminView = () => {
       }
 
       for (let i = 0; i < tempData.length; i++) {
-        tempContainerData.push({ id: i, height: 400, boxes: tempData[i][1] });
+        tempContainerData.push(tempData[i][1]);
       }
 
       setContainers(tempContainerData);
     } catch (err) {
     } finally {
-      const savedState = localStorage.getItem(LOCAL_STORAGE_KEY);
+      const savedState = sessionStorage.getItem(SESSION_STORAGE_KEY);
       if (savedState) {
         setContainers(JSON.parse(savedState));
       }
@@ -197,32 +195,17 @@ export const ServiceReportAdminView = () => {
               position: "relative",
             }}
           >
-            {containerIndex === 0 && (
-              <p
-                style={{
-                  fontSize: "20px",
-                  fontWeight: "600",
-                  color: "#818181",
-                  textAlign: "left",
-                  marginBottom: "10px",
-                }}
-              >
-                About Company
-              </p>
-            )}
-            {containerIndex === 1 && (
-              <p
-                style={{
-                  fontSize: "20px",
-                  fontWeight: "600",
-                  color: "#818181",
-                  textAlign: "left",
-                  marginBottom: "10px",
-                }}
-              >
-                Insights
-              </p>
-            )}
+            <p
+              style={{
+                fontSize: "20px",
+                fontWeight: "600",
+                color: "#818181",
+                textAlign: "left",
+                marginBottom: "10px",
+              }}
+            >
+              {container.title}
+            </p>
 
             {container.boxes.map((box, boxIndex) => (
               <Draggable

@@ -1,4 +1,12 @@
-import { Button, Collapse, Dropdown, Select } from "antd";
+import {
+  Button,
+  Collapse,
+  ColorPicker,
+  Dropdown,
+  Input,
+  Modal,
+  Select,
+} from "antd";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Hero } from "../components/Hero";
@@ -8,28 +16,42 @@ import {
   governifyComplianceReportAdminSetting,
 } from "../apiservice/ApiService";
 import { toast, ToastContainer } from "react-toastify";
+import { EditOutlined } from "@ant-design/icons";
 
 export const ComplianceReportSettings = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [recommendationText, setRecommendationText] = useState("");
+  const [changeTitleModal, setChangeTitleModal] = useState({
+    flag: false,
+    type: "",
+    previousValue: "",
+    updatedValue: "",
+  });
+  const [recommendationText, setRecommendationText] = useState({
+    title: "Recommendation",
+    column: "",
+  });
   const [companyChartData, setCompanyChartData] = useState({
     id: 0,
+    title: "Company",
     height: 400,
     boxes: [],
   });
   const [saudizationChartData, setSaudizationChartData] = useState({
-    id: 0,
+    id: 1,
+    title: "Saudization",
     height: 800,
     boxes: [],
   });
   const [visaChartData, setVisaChartData] = useState({
-    id: 0,
+    id: 2,
+    title: "Visa",
     height: 400,
     boxes: [],
   });
   const [employeesChartData, setEmployeesChartData] = useState({
-    id: 0,
+    id: 3,
+    title: "Employees",
     height: 400,
     boxes: [],
   });
@@ -54,11 +76,11 @@ export const ComplianceReportSettings = () => {
         type: "Text Chart",
         column1: "",
         column2: "",
+        color: "",
         id: tempCompanyData.boxes.length + 1,
-        position: { x: 0, y: 0 },
         size: { width: 360, height: 100 },
         showDragHandle: false,
-        position: { x: 0, y: -40 },
+        position: { x: 0, y: 20 },
       });
       setCompanyChartData(tempCompanyData);
     }
@@ -68,36 +90,37 @@ export const ComplianceReportSettings = () => {
         type: "Text Chart",
         column1: "",
         column2: "",
+        color: "",
         id: tempSaudizationData.boxes.length + 1,
-        position: { x: 0, y: 0 },
+        position: { x: 0, y: -40 },
         size: { width: 360, height: 100 },
         showDragHandle: false,
       });
       setSaudizationChartData(tempSaudizationData);
     }
-
     if (type === "visa") {
       let tempVisaData = { ...visaChartData };
       tempVisaData.boxes.push({
         type: "Text Chart",
         column1: "",
         column2: "",
+        color: "",
         id: tempVisaData.boxes.length + 1,
-        position: { x: 0, y: 0 },
+        position: { x: 0, y: -40 },
         size: { width: 360, height: 100 },
         showDragHandle: false,
       });
       setVisaChartData(tempVisaData);
     }
-
     if (type === "employees") {
       let tempEmployeeData = { ...employeesChartData };
       tempEmployeeData.boxes.push({
         type: "Text Chart",
         column1: "",
         column2: "",
+        color: "",
         id: tempEmployeeData.boxes.length + 1,
-        position: { x: 0, y: 0 },
+        position: { x: 0, y: -40 },
         size: { width: 360, height: 100 },
         showDragHandle: false,
       });
@@ -130,7 +153,6 @@ export const ComplianceReportSettings = () => {
       });
       setSaudizationChartData(tempSaudizationData);
     }
-
     if (type === "visa") {
       let tempVisaData = { ...visaChartData };
       tempVisaData.boxes.push({
@@ -143,7 +165,6 @@ export const ComplianceReportSettings = () => {
       });
       setVisaChartData(tempVisaData);
     }
-
     if (type === "employees") {
       let tempEmployeeData = { ...employeesChartData };
       tempEmployeeData.boxes.push({
@@ -160,55 +181,68 @@ export const ComplianceReportSettings = () => {
 
   const handleSelectChartTypeBar = (type) => {
     if (type === "company") {
-      let tempCompanyData = {...companyChartData};
+      let tempCompanyData = { ...companyChartData };
       tempCompanyData.boxes.push({
         type: "Bar Chart",
         horizontal: false,
         selectedColumns: [],
+        selectedColor: [],
+        heading: "",
+        description: "",
         id: tempCompanyData.boxes.length + 1,
-        position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        position: { x: 0, y: -40 },
+        size: { width: 721, height: 422 },
         showDragHandle: false,
       });
       setCompanyChartData(tempCompanyData);
     }
+
     if (type === "saudization") {
-      let tempSaudizationData = {...saudizationChartData};
+      let tempSaudizationData = { ...saudizationChartData };
       tempSaudizationData.boxes.push({
         type: "Bar Chart",
         horizontal: false,
         selectedColumns: [],
+        selectedColor: [],
+        heading: "",
+        description: "",
         id: tempSaudizationData.boxes.length + 1,
-        position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        position: { x: 0, y: -40 },
+        size: { width: 721, height: 422 },
         showDragHandle: false,
       });
       setSaudizationChartData(tempSaudizationData);
     }
 
     if (type === "visa") {
-      let tempVisaData = {...visaChartData};
+      let tempVisaData = { ...visaChartData };
       tempVisaData.boxes.push({
         type: "Bar Chart",
         horizontal: false,
         selectedColumns: [],
+        selectedColor: [],
+        heading: "",
+        description: "",
         id: tempVisaData.boxes.length + 1,
-        position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        position: { x: 0, y: -40 },
+        size: { width: 721, height: 422 },
         showDragHandle: false,
       });
       setVisaChartData(tempVisaData);
     }
 
     if (type === "employees") {
-      let tempEmployeeData = {...employeesChartData};
+      let tempEmployeeData = { ...employeesChartData };
       tempEmployeeData.boxes.push({
         type: "Bar Chart",
         horizontal: false,
         selectedColumns: [],
+        selectedColor: [],
+        heading: "",
+        description: "",
         id: tempEmployeeData.boxes.length + 1,
-        position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        position: { x: 0, y: -40 },
+        size: { width: 721, height: 422 },
         showDragHandle: false,
       });
       setEmployeesChartData(tempEmployeeData);
@@ -221,6 +255,8 @@ export const ComplianceReportSettings = () => {
       tempCompanyData.boxes.push({
         type: "Multi Value Chart",
         selectedColumns: [],
+        heading: "",
+        selectedColor: [],
         id: tempCompanyData.boxes.length + 1,
         position: { x: 0, y: 0 },
         size: { width: 200, height: 800 },
@@ -228,14 +264,17 @@ export const ComplianceReportSettings = () => {
       });
       setCompanyChartData(tempCompanyData);
     }
+
     if (type === "saudization") {
       let tempSaudizationData = { ...saudizationChartData };
       tempSaudizationData.boxes.push({
         type: "Multi Value Chart",
         selectedColumns: [],
+        heading: "",
+        selectedColor: [],
         id: tempSaudizationData.boxes.length + 1,
         position: { x: 0, y: 0 },
-        size: { width: 200, height: 200 },
+        size: { width: 353, height: 422 },
         showDragHandle: false,
       });
       setSaudizationChartData(tempSaudizationData);
@@ -246,6 +285,8 @@ export const ComplianceReportSettings = () => {
       tempVisaData.boxes.push({
         type: "Multi Value Chart",
         selectedColumns: [],
+        heading: "",
+        selectedColor: [],
         id: tempVisaData.boxes.length + 1,
         position: { x: 0, y: 0 },
         size: { width: 200, height: 200 },
@@ -259,6 +300,8 @@ export const ComplianceReportSettings = () => {
       tempEmployeeData.boxes.push({
         type: "Multi Value Chart",
         selectedColumns: [],
+        heading: "",
+        selectedColor: [],
         id: tempEmployeeData.boxes.length + 1,
         position: { x: 0, y: 0 },
         size: { width: 200, height: 200 },
@@ -420,149 +463,453 @@ export const ComplianceReportSettings = () => {
   };
 
   const onChangeRecommendtionText = (e) => {
-    setRecommendationText(e);
+    let tempRecommendationChartData = { ...recommendationText };
+    tempRecommendationChartData.column = e;
+    setRecommendationText(tempRecommendationChartData);
   };
 
   const handlChangeColumn1ChartHeadingCompany = (e, index) => {
-    let tempCompanyChartData = {...companyChartData};
+    let tempCompanyChartData = { ...companyChartData };
     tempCompanyChartData.boxes[index].column1 = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
   const handlChangeColumn1ChartHeadingSaudization = (e, index) => {
-    let tempSaudizationChartData = {...saudizationChartData};
+    let tempSaudizationChartData = { ...saudizationChartData };
     tempSaudizationChartData.boxes[index].column1 = e;
     setSaudizationChartData(tempSaudizationChartData);
   };
 
   const handlChangeColumn1ChartHeadingEmployees = (e, index) => {
-    let tempEmployeeChartData = {...employeesChartData};
+    let tempEmployeeChartData = { ...employeesChartData };
     tempEmployeeChartData.boxes[index].column1 = e;
     setEmployeesChartData(tempEmployeeChartData);
   };
 
   const handlChangeColumn1ChartHeadingVisa = (e, index) => {
-    let tempVisaChartData = {...visaChartData};
+    let tempVisaChartData = { ...visaChartData };
     tempVisaChartData.boxes[index].column1 = e;
     setVisaChartData(tempVisaChartData);
   };
 
   const handlChangeColumn2ChartHeadingCompany = (e, index) => {
-    let tempCompanyChartData = {...companyChartData};
+    let tempCompanyChartData = { ...companyChartData };
     tempCompanyChartData.boxes[index].column2 = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
   const handlChangeColumn2ChartHeadingSaudization = (e, index) => {
-    let tempSaudizationChartData = {...saudizationChartData};
+    let tempSaudizationChartData = { ...saudizationChartData };
     tempSaudizationChartData.boxes[index].column2 = e;
     setSaudizationChartData(tempSaudizationChartData);
   };
 
   const handlChangeColumn2ChartHeadingEmployees = (e, index) => {
-    let tempEmployeesChartData = {...employeesChartData};
+    let tempEmployeesChartData = { ...employeesChartData };
     tempEmployeesChartData.boxes[index].column2 = e;
     setEmployeesChartData(tempEmployeesChartData);
   };
 
   const handlChangeColumn2ChartHeadingVisa = (e, index) => {
-    let tempVisaChartData = {...visaChartData};
+    let tempVisaChartData = { ...visaChartData };
     tempVisaChartData.boxes[index].column2 = e;
     setVisaChartData(tempVisaChartData);
   };
 
   const handlChangeValueChartColumnCompany = (e, index) => {
-    let tempCompanyChartData = {...companyChartData};
+    let tempCompanyChartData = { ...companyChartData };
     tempCompanyChartData.boxes[index].column = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
   const handlChangePercentageChartColumnCompany = (e, index) => {
-    let tempCompanyChartData = {...companyChartData};
+    let tempCompanyChartData = { ...companyChartData };
+    let tempColor = tempCompanyChartData.boxes[index].selectedColor;
     tempCompanyChartData.boxes[index].selectedColumns = e;
+    tempCompanyChartData.boxes[index].selectedColor = [];
+
+    e.forEach((subItem) => {
+      // Check if the item already exists in tempColor
+      const existingColor = tempColor.find((color) => color.key === subItem);
+
+      // If the object exists, push the existing object
+      if (existingColor) {
+        tempCompanyChartData.boxes[index].selectedColor.push(existingColor);
+      } else {
+        // If it doesn't exist, create a new object with an empty value
+        tempCompanyChartData.boxes[index].selectedColor.push({
+          key: subItem,
+          value: "",
+        });
+      }
+    });
+
     setCompanyChartData(tempCompanyChartData);
   };
 
+  const handlChangePercentageChartHeadingCompany = (e, index) => {
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].heading = e.target.value;
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const handlChangePercentageChartHeadingSaudization = (e, index) => {
+    let tempSaudizationChartData = { ...saudizationChartData };
+    tempSaudizationChartData.boxes[index].heading = e.target.value;
+    setSaudizationChartData(tempSaudizationChartData);
+  };
+
+  const handlChangePercentageChartHeadingVisa = (e, index) => {
+    let tempVisaChartData = { ...visaChartData };
+    tempVisaChartData.boxes[index].heading = e.target.value;
+    setVisaChartData(tempVisaChartData);
+  };
+
+  const handlChangePercentageChartHeadingEmployees = (e, index) => {
+    let tempEmployeesChartData = { ...employeesChartData };
+    tempEmployeesChartData.boxes[index].heading = e.target.value;
+    setEmployeesChartData(tempEmployeesChartData);
+  };
+
   const handlChangeBarChartColumnCompany = (e, index) => {
-    let tempCompanyChartData = {...companyChartData};
+    let tempCompanyChartData = { ...companyChartData };
+    let tempColor = tempCompanyChartData.boxes[index].selectedColor;
     tempCompanyChartData.boxes[index].selectedColumns = e;
+    tempCompanyChartData.boxes[index].selectedColor = [];
+
+    e.forEach((subItem) => {
+      // Check if the item already exists in tempColor
+      const existingColor = tempColor.find((color) => color.key === subItem);
+
+      // If the object exists, push the existing object
+      if (existingColor) {
+        tempCompanyChartData.boxes[index].selectedColor.push(existingColor);
+      } else {
+        // If it doesn't exist, create a new object with an empty value
+        tempCompanyChartData.boxes[index].selectedColor.push({
+          key: subItem,
+          value: "",
+        });
+      }
+    });
     setCompanyChartData(tempCompanyChartData);
   };
 
   const handlChangeValueChartColumnSaudization = (e, index) => {
-    let tempSaudizationChartData = {...saudizationChartData};
+    let tempSaudizationChartData = { ...saudizationChartData };
     tempSaudizationChartData.boxes[index].column = e;
     setSaudizationChartData(tempSaudizationChartData);
   };
 
   const handlChangePercentageChartColumnSaudization = (e, index) => {
-    let tempSaudizationChartData = {...saudizationChartData};
+    let tempSaudizationChartData = { ...saudizationChartData };
+    let tempColor = tempSaudizationChartData.boxes[index].selectedColor;
     tempSaudizationChartData.boxes[index].selectedColumns = e;
+    tempSaudizationChartData.boxes[index].selectedColor = [];
+
+    e.forEach((subItem) => {
+      // Check if the item already exists in tempColor
+      const existingColor = tempColor.find((color) => color.key === subItem);
+
+      // If the object exists, push the existing object
+      if (existingColor) {
+        tempSaudizationChartData.boxes[index].selectedColor.push(existingColor);
+      } else {
+        // If it doesn't exist, create a new object with an empty value
+        tempSaudizationChartData.boxes[index].selectedColor.push({
+          key: subItem,
+          value: "",
+        });
+      }
+    });
     setSaudizationChartData(tempSaudizationChartData);
   };
 
   const handlChangeBarChartColumnSaudization = (e, index) => {
-    let tempSaudizationChartData = {...saudizationChartData};
+    let tempSaudizationChartData = { ...saudizationChartData };
+    let tempColor = tempSaudizationChartData.boxes[index].selectedColor;
+
     tempSaudizationChartData.boxes[index].selectedColumns = e;
+    tempSaudizationChartData.boxes[index].selectedColor = [];
+
+    e.forEach((subItem) => {
+      // Check if the item already exists in tempColor
+      const existingColor = tempColor.find((color) => color.key === subItem);
+
+      // If the object exists, push the existing object
+      if (existingColor) {
+        tempSaudizationChartData.boxes[index].selectedColor.push(existingColor);
+      } else {
+        // If it doesn't exist, create a new object with an empty value
+        tempSaudizationChartData.boxes[index].selectedColor.push({
+          key: subItem,
+          value: "",
+        });
+      }
+    });
+
     setSaudizationChartData(tempSaudizationChartData);
   };
 
+  const handlChangeBarChartColorCompany = (value, index, childIndex) => {
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].selectedColor[childIndex].value =
+      value.toHexString();
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const handlChangeTextChartColorCompany = (value, index) => {
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].color = value.toHexString();
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const handlChangeTextChartColorSaudization = (value, index) => {
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].color = value.toHexString();
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const handlChangeTextChartColorVisa = (value, index) => {
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].color = value.toHexString();
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const handlChangeTextChartColorEmployees = (value, index) => {
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].color = value.toHexString();
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const handlChangeBarChartColorSaudization = (value, index, childIndex) => {
+    let tempSaudizationChartData = { ...saudizationChartData };
+    tempSaudizationChartData.boxes[index].selectedColor[childIndex].value =
+      value.toHexString();
+    setSaudizationChartData(tempSaudizationChartData);
+  };
+
+  const handlChangeBarChartColorEmployees = (value, index, childIndex) => {
+    let tempEmployeesChartData = { ...employeesChartData };
+    tempEmployeesChartData.boxes[index].selectedColor[childIndex].value =
+      value.toHexString();
+    setEmployeesChartData(tempEmployeesChartData);
+  };
+
+  const handlChangeBarChartColorVisa = (value, index, childIndex) => {
+    let tempVisaChartData = { ...visaChartData };
+    tempVisaChartData.boxes[index].selectedColor[childIndex].value =
+      value.toHexString();
+    setVisaChartData(tempVisaChartData);
+  };
+
+  const handlChangeMultiChartColorCompany = (value, index, childIndex) => {
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].selectedColor[childIndex].value =
+      value.toHexString();
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const handlChangeMultiChartColorSaudization = (value, index, childIndex) => {
+    let tempSaudizationChartData = { ...saudizationChartData };
+    tempSaudizationChartData.boxes[index].selectedColor[childIndex].value =
+      value.toHexString();
+    setSaudizationChartData(tempSaudizationChartData);
+  };
+
+  const handlChangeMultiChartColorEmployees = (value, index, childIndex) => {
+    let tempEmployeesChartData = { ...employeesChartData };
+    tempEmployeesChartData.boxes[index].selectedColor[childIndex].value =
+      value.toHexString();
+    setEmployeesChartData(tempEmployeesChartData);
+  };
+
+  const handlChangeMultiChartColorVisa = (value, index, childIndex) => {
+    let tempVisaChartData = { ...visaChartData };
+    tempVisaChartData.boxes[index].selectedColor[childIndex].value =
+      value.toHexString();
+    setVisaChartData(tempVisaChartData);
+  };
+
   const handlChangeValueChartColumnEmployees = (e, index) => {
-    let tempEmployeesChartData = {...employeesChartData};
+    let tempEmployeesChartData = { ...employeesChartData };
     tempEmployeesChartData.boxes[index].column = e;
     setEmployeesChartData(tempEmployeesChartData);
   };
 
   const handlChangePercentageChartColumnEmployees = (e, index) => {
-    let tempEmployeesChartData = {...employeesChartData};
+    let tempEmployeesChartData = { ...employeesChartData };
+    let tempColor = tempEmployeesChartData.boxes[index].selectedColor;
     tempEmployeesChartData.boxes[index].selectedColumns = e;
+    tempEmployeesChartData.boxes[index].selectedColor = [];
+
+    e.forEach((subItem) => {
+      // Check if the item already exists in tempColor
+      const existingColor = tempColor.find((color) => color.key === subItem);
+
+      // If the object exists, push the existing object
+      if (existingColor) {
+        tempEmployeesChartData.boxes[index].selectedColor.push(existingColor);
+      } else {
+        // If it doesn't exist, create a new object with an empty value
+        tempEmployeesChartData.boxes[index].selectedColor.push({
+          key: subItem,
+          value: "",
+        });
+      }
+    });
     setEmployeesChartData(tempEmployeesChartData);
   };
 
   const handlChangeBarChartColumnEmployees = (e, index) => {
-    let tempEmployeeChartData = {...employeesChartData};
+    let tempEmployeeChartData = { ...employeesChartData };
+    let tempColor = tempEmployeeChartData.boxes[index].selectedColor;
     tempEmployeeChartData.boxes[index].selectedColumns = e;
+    tempEmployeeChartData.boxes[index].selectedColor = [];
+
+    e.forEach((subItem) => {
+      // Check if the item already exists in tempColor
+      const existingColor = tempColor.find((color) => color.key === subItem);
+
+      // If the object exists, push the existing object
+      if (existingColor) {
+        tempEmployeeChartData.boxes[index].selectedColor.push(existingColor);
+      } else {
+        // If it doesn't exist, create a new object with an empty value
+        tempEmployeeChartData.boxes[index].selectedColor.push({
+          key: subItem,
+          value: "",
+        });
+      }
+    });
+
     setEmployeesChartData(tempEmployeeChartData);
   };
 
   const handlChangeValueChartColumnVisa = (e, index) => {
-    let tempVisaChartData = {...visaChartData};
+    let tempVisaChartData = { ...visaChartData };
     tempVisaChartData.boxes[index].column = e;
     setVisaChartData(tempVisaChartData);
   };
 
   const handlChangePercentageChartColumnVisa = (e, index) => {
-    let tempVisaChartData = {...visaChartData};
+    let tempVisaChartData = { ...visaChartData };
+    let tempColor = tempVisaChartData.boxes[index].selectedColor;
     tempVisaChartData.boxes[index].selectedColumns = e;
+    tempVisaChartData.boxes[index].selectedColor = [];
+
+    e.forEach((subItem) => {
+      // Check if the item already exists in tempColor
+      const existingColor = tempColor.find((color) => color.key === subItem);
+
+      // If the object exists, push the existing object
+      if (existingColor) {
+        tempVisaChartData.boxes[index].selectedColor.push(existingColor);
+      } else {
+        // If it doesn't exist, create a new object with an empty value
+        tempVisaChartData.boxes[index].selectedColor.push({
+          key: subItem,
+          value: "",
+        });
+      }
+    });
+
     setVisaChartData(tempVisaChartData);
   };
 
   const handlChangeBarChartColumnVisa = (e, index) => {
-    let tempVisaChartData = {...visaChartData};
+    let tempVisaChartData = { ...visaChartData };
+    let tempColor = tempVisaChartData.boxes[index].selectedColor;
     tempVisaChartData.boxes[index].selectedColumns = e;
+    tempVisaChartData.boxes[index].selectedColor = [];
+
+    e.forEach((subItem) => {
+      // Check if the item already exists in tempColor
+      const existingColor = tempColor.find((color) => color.key === subItem);
+
+      // If the object exists, push the existing object
+      if (existingColor) {
+        tempVisaChartData.boxes[index].selectedColor.push(existingColor);
+      } else {
+        // If it doesn't exist, create a new object with an empty value
+        tempVisaChartData.boxes[index].selectedColor.push({
+          key: subItem,
+          value: "",
+        });
+      }
+    });
+
     setVisaChartData(tempVisaChartData);
   };
 
+  const handlChangeBarChartHeadingCompany = (e, index) => {
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].heading = e.target.value;
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const handlChangeBarChartDescriptionCompany = (e, index) => {
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].description = e.target.value;
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const handlChangeBarChartHeadingSaudization = (e, index) => {
+    let tempSaudizationChartData = { ...saudizationChartData };
+    tempSaudizationChartData.boxes[index].heading = e.target.value;
+    setSaudizationChartData(tempSaudizationChartData);
+  };
+
+  const handlChangeBarChartDescriptionSaudization = (e, index) => {
+    let tempSaudizationChartData = { ...saudizationChartData };
+    tempSaudizationChartData.boxes[index].description = e.target.value;
+    setSaudizationChartData(tempSaudizationChartData);
+  };
+
+  const handlChangeBarChartHeadingVisa = (e, index) => {
+    let tempVisaChartData = { ...visaChartData };
+    tempVisaChartData.boxes[index].heading = e.target.value;
+    setVisaChartData(tempVisaChartData);
+  };
+
+  const handlChangeBarChartDescriptionVisa = (e, index) => {
+    let tempVisaChartData = { ...visaChartData };
+    tempVisaChartData.boxes[index].description = e.target.value;
+    setVisaChartData(tempVisaChartData);
+  };
+
+  const handlChangeBarChartHeadingEmployees = (e, index) => {
+    let tempEmployeesChartData = { ...employeesChartData };
+    tempEmployeesChartData.boxes[index].heading = e.target.value;
+    setEmployeesChartData(tempEmployeesChartData);
+  };
+
+  const handlChangeBarChartDescriptionEmployees = (e, index) => {
+    let tempEmployeesChartData = { ...employeesChartData };
+    tempEmployeesChartData.boxes[index].description = e.target.value;
+    setEmployeesChartData(tempEmployeesChartData);
+  };
+
   const onChangeSwitchCompany = (e, index) => {
-    const tempCompanyChartData = {...companyChartData};
+    const tempCompanyChartData = { ...companyChartData };
     tempCompanyChartData.boxes[index].horizontal = e;
     setCompanyChartData(tempCompanyChartData);
   };
 
   const onChangeSwitchVisa = (e, index) => {
-    const tempVisaChartData = {...visaChartData};
+    const tempVisaChartData = { ...visaChartData };
     tempVisaChartData.boxes[index].horizontal = e;
     setVisaChartData(tempVisaChartData);
   };
 
   const onChangeSwitchEmployees = (e, index) => {
-    const tempEmployeesChartData = {...employeesChartData};
+    const tempEmployeesChartData = { ...employeesChartData };
     tempEmployeesChartData.boxes[index].horizontal = e;
     setEmployeesChartData(tempEmployeesChartData);
   };
 
   const onChangeSwitchSaudization = (e, index) => {
-    const tempSaudizationChartData = {...saudizationChartData};
+    const tempSaudizationChartData = { ...saudizationChartData };
     tempSaudizationChartData.boxes[index].horizontal = e;
     setSaudizationChartData(tempSaudizationChartData);
   };
@@ -576,25 +923,35 @@ export const ComplianceReportSettings = () => {
 
   const handleChangeDelete = (index, type) => {
     if (type === "company") {
-      const tempCompanyChartData = {...companyChartData};
+      const tempCompanyChartData = { ...companyChartData };
       tempCompanyChartData.boxes.splice(index, 1);
       setCompanyChartData(tempCompanyChartData);
     }
     if (type === "employees") {
-      const tempEmployeesChartData = {...employeesChartData};
+      const tempEmployeesChartData = { ...employeesChartData };
       tempEmployeesChartData.boxes.splice(index, 1);
       setEmployeesChartData(tempEmployeesChartData);
     }
     if (type === "visa") {
-      const tempVisaChartData = {...visaChartData};
+      const tempVisaChartData = { ...visaChartData };
       tempVisaChartData.boxes.splice(index, 1);
       setVisaChartData(tempVisaChartData);
     }
     if (type === "saudization") {
-      const tempSaudizationChartData = {...saudizationChartData};
+      const tempSaudizationChartData = { ...saudizationChartData };
       tempSaudizationChartData.boxes.splice(index, 1);
       setSaudizationChartData(tempSaudizationChartData);
     }
+  };
+
+  const getAddOnBeforeForColor = (key) => {
+    let text = "";
+    columnOptions.forEach((item) => {
+      if (item.value === key) {
+        text = `Color For ${item.label}`;
+      }
+    });
+    return text;
   };
 
   const getCollapseItemsTypeCompany = (item, index) => {
@@ -647,6 +1004,26 @@ export const ComplianceReportSettings = () => {
                   options={columnOptions}
                   filterOption={filterOption}
                   value={item.column2}
+                />
+              </div>
+              <div
+                style={{
+                  marginTop: "20px",
+                  textAlign: "left",
+                  width: "50%",
+                  display: "flex",
+                  gap: "20px",
+                  alignItems: "center",
+                }}
+              >
+                <span>Color For Column 2</span>
+                <ColorPicker
+                  value={item.color}
+                  size="large"
+                  showText
+                  onChange={(value) =>
+                    handlChangeTextChartColorCompany(value, index)
+                  }
                 />
               </div>
             </>
@@ -716,6 +1093,24 @@ export const ComplianceReportSettings = () => {
           ),
           children: (
             <>
+             <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Heading"}
+                    value={item.heading}
+                    onChange={(e) =>
+                      handlChangeBarChartHeadingCompany(e, index)
+                    }
+                  />
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Description"}
+                    value={item.description}
+                    onChange={(e) =>
+                      handlChangeBarChartDescriptionCompany(e, index)
+                    }
+                  />
+                </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <div>Bar Chart Type :</div>
                 <Select
@@ -744,6 +1139,40 @@ export const ComplianceReportSettings = () => {
                   value={item.selectedColumns}
                 />
               </div>
+              <div>
+                {item.selectedColor.map((subItem, index, childIndex) => {
+                  return (
+                    <div
+                      style={{
+                        marginTop: "20px",
+                        textAlign: "left",
+                        width: "50%",
+                        display: "flex",
+                        gap: "20px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>
+                        {getAddOnBeforeForColor(
+                          item.selectedColumns[childIndex]
+                        )}
+                      </span>
+                      <ColorPicker
+                        value={subItem.value}
+                        size="large"
+                        showText
+                        onChange={(value) =>
+                          handlChangeBarChartColorCompany(
+                            value,
+                            index,
+                            childIndex
+                          )
+                        }
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </>
           ),
         },
@@ -771,6 +1200,15 @@ export const ComplianceReportSettings = () => {
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <div style={{ marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Heading"}
+                    value={item.heading}
+                    onChange={(e) =>
+                      handlChangePercentageChartHeadingCompany(e, index)
+                    }
+                  />
+                </div>
                 <Select
                   showSearch
                   mode="multiple"
@@ -785,6 +1223,40 @@ export const ComplianceReportSettings = () => {
                   filterOption={filterOption}
                   value={item.selectedColumns}
                 />
+              </div>
+              <div>
+                {item.selectedColor.map((subItem, childIndex) => {
+                  return (
+                    <div
+                      style={{
+                        marginTop: "20px",
+                        textAlign: "left",
+                        width: "50%",
+                        display: "flex",
+                        gap: "20px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>
+                        {getAddOnBeforeForColor(
+                          item.selectedColumns[childIndex]
+                        )}
+                      </span>
+                      <ColorPicker
+                        value={subItem.value}
+                        size="large"
+                        showText
+                        onChange={(value) =>
+                          handlChangeMultiChartColorCompany(
+                            value,
+                            index,
+                            childIndex
+                          )
+                        }
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </>
           ),
@@ -843,6 +1315,26 @@ export const ComplianceReportSettings = () => {
                   options={columnOptions}
                   filterOption={filterOption}
                   value={item.column2}
+                />
+              </div>
+              <div
+                style={{
+                  marginTop: "20px",
+                  textAlign: "left",
+                  width: "50%",
+                  display: "flex",
+                  gap: "20px",
+                  alignItems: "center",
+                }}
+              >
+                <span>Color For Column 2</span>
+                <ColorPicker
+                  value={item.color}
+                  size="large"
+                  showText
+                  onChange={(value) =>
+                    handlChangeTextChartColorSaudization(value, index)
+                  }
                 />
               </div>
             </>
@@ -912,6 +1404,24 @@ export const ComplianceReportSettings = () => {
           ),
           children: (
             <>
+              <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Heading"}
+                  value={item.heading}
+                  onChange={(e) =>
+                    handlChangeBarChartHeadingSaudization(e, index)
+                  }
+                />
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Description"}
+                  value={item.description}
+                  onChange={(e) =>
+                    handlChangeBarChartDescriptionSaudization(e, index)
+                  }
+                />
+              </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <div>Bar Chart Type :</div>
                 <Select
@@ -943,15 +1453,40 @@ export const ComplianceReportSettings = () => {
                 />
               </div>
 
-              {/* <div>
-                {item.selectedColumns.map((item) =>{
+              <div>
+                {item.selectedColor.map((subItem, childIndex) => {
                   return (
-                  <div>
-                    
-                  </div>
-                  )
-                  })}
-              </div> */}
+                    <div
+                      style={{
+                        marginTop: "20px",
+                        textAlign: "left",
+                        width: "50%",
+                        display: "flex",
+                        gap: "20px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>
+                        {getAddOnBeforeForColor(
+                          item.selectedColumns[childIndex]
+                        )}
+                      </span>
+                      <ColorPicker
+                        value={subItem.value}
+                        size="large"
+                        showText
+                        onChange={(value) =>
+                          handlChangeBarChartColorSaudization(
+                            value,
+                            index,
+                            childIndex
+                          )
+                        }
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </>
           ),
         },
@@ -979,6 +1514,15 @@ export const ComplianceReportSettings = () => {
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <div style={{ marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Heading"}
+                    value={item.heading}
+                    onChange={(e) =>
+                      handlChangePercentageChartHeadingSaudization(e, index)
+                    }
+                  />
+                </div>
                 <Select
                   showSearch
                   mode="multiple"
@@ -993,6 +1537,40 @@ export const ComplianceReportSettings = () => {
                   filterOption={filterOption}
                   value={item.selectedColumns}
                 />
+              </div>
+              <div>
+                {item.selectedColor.map((subItem, childIndex) => {
+                  return (
+                    <div
+                      style={{
+                        marginTop: "20px",
+                        textAlign: "left",
+                        width: "50%",
+                        display: "flex",
+                        gap: "20px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>
+                        {getAddOnBeforeForColor(
+                          item.selectedColumns[childIndex]
+                        )}
+                      </span>
+                      <ColorPicker
+                        value={subItem.value}
+                        size="large"
+                        showText
+                        onChange={(value) =>
+                          handlChangeMultiChartColorSaudization(
+                            value,
+                            index,
+                            childIndex
+                          )
+                        }
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </>
           ),
@@ -1051,6 +1629,26 @@ export const ComplianceReportSettings = () => {
                   options={columnOptions}
                   filterOption={filterOption}
                   value={item.column2}
+                />
+              </div>
+              <div
+                style={{
+                  marginTop: "20px",
+                  textAlign: "left",
+                  width: "50%",
+                  display: "flex",
+                  gap: "20px",
+                  alignItems: "center",
+                }}
+              >
+                <span>Color For Column 2</span>
+                <ColorPicker
+                  value={item.color}
+                  size="large"
+                  showText
+                  onChange={(value) =>
+                    handlChangeTextChartColorEmployees(value, index)
+                  }
                 />
               </div>
             </>
@@ -1120,6 +1718,24 @@ export const ComplianceReportSettings = () => {
           ),
           children: (
             <>
+             <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Heading"}
+                    value={item.heading}
+                    onChange={(e) =>
+                      handlChangeBarChartHeadingEmployees(e, index)
+                    }
+                  />
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Description"}
+                    value={item.description}
+                    onChange={(e) =>
+                      handlChangeBarChartDescriptionEmployees(e, index)
+                    }
+                  />
+                </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <div>Bar Chart Type :</div>
                 <Select
@@ -1148,6 +1764,40 @@ export const ComplianceReportSettings = () => {
                   value={item.selectedColumns}
                 />
               </div>
+              <div>
+                {item.selectedColor.map((subItem, childIndex) => {
+                  return (
+                    <div
+                      style={{
+                        marginTop: "20px",
+                        textAlign: "left",
+                        width: "50%",
+                        display: "flex",
+                        gap: "20px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>
+                        {getAddOnBeforeForColor(
+                          item.selectedColumns[childIndex]
+                        )}
+                      </span>
+                      <ColorPicker
+                        value={subItem.value}
+                        size="large"
+                        showText
+                        onChange={(value) =>
+                          handlChangeBarChartColorEmployees(
+                            value,
+                            index,
+                            childIndex
+                          )
+                        }
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </>
           ),
         },
@@ -1175,6 +1825,15 @@ export const ComplianceReportSettings = () => {
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <div style={{ marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Heading"}
+                    value={item.heading}
+                    onChange={(e) =>
+                      handlChangePercentageChartHeadingEmployees(e, index)
+                    }
+                  />
+                </div>
                 <Select
                   showSearch
                   mode="multiple"
@@ -1189,6 +1848,40 @@ export const ComplianceReportSettings = () => {
                   filterOption={filterOption}
                   value={item.selectedColumns}
                 />
+              </div>
+              <div>
+                {item.selectedColor.map((subItem, childIndex) => {
+                  return (
+                    <div
+                      style={{
+                        marginTop: "20px",
+                        textAlign: "left",
+                        width: "50%",
+                        display: "flex",
+                        gap: "20px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>
+                        {getAddOnBeforeForColor(
+                          item.selectedColumns[childIndex]
+                        )}
+                      </span>
+                      <ColorPicker
+                        value={subItem.value}
+                        size="large"
+                        showText
+                        onChange={(value) =>
+                          handlChangeMultiChartColorEmployees(
+                            value,
+                            index,
+                            childIndex
+                          )
+                        }
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </>
           ),
@@ -1247,6 +1940,26 @@ export const ComplianceReportSettings = () => {
                   options={columnOptions}
                   filterOption={filterOption}
                   value={item.column2}
+                />
+              </div>
+              <div
+                style={{
+                  marginTop: "20px",
+                  textAlign: "left",
+                  width: "50%",
+                  display: "flex",
+                  gap: "20px",
+                  alignItems: "center",
+                }}
+              >
+                <span>Color For Column 2</span>
+                <ColorPicker
+                  value={item.color}
+                  size="large"
+                  showText
+                  onChange={(value) =>
+                    handlChangeTextChartColorVisa(value, index)
+                  }
                 />
               </div>
             </>
@@ -1316,6 +2029,24 @@ export const ComplianceReportSettings = () => {
           ),
           children: (
             <>
+             <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Heading"}
+                    value={item.heading}
+                    onChange={(e) =>
+                      handlChangeBarChartHeadingVisa(e, index)
+                    }
+                  />
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Description"}
+                    value={item.description}
+                    onChange={(e) =>
+                      handlChangeBarChartDescriptionVisa(e, index)
+                    }
+                  />
+                </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <div>Bar Chart Type :</div>
                 <Select
@@ -1344,6 +2075,36 @@ export const ComplianceReportSettings = () => {
                   value={item.selectedColumns}
                 />
               </div>
+              <div>
+                {item.selectedColor.map((subItem, childIndex) => {
+                  return (
+                    <div
+                      style={{
+                        marginTop: "20px",
+                        textAlign: "left",
+                        width: "50%",
+                        display: "flex",
+                        gap: "20px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>
+                        {getAddOnBeforeForColor(
+                          item.selectedColumns[childIndex]
+                        )}
+                      </span>
+                      <ColorPicker
+                        value={subItem.value}
+                        size="large"
+                        showText
+                        onChange={(value) =>
+                          handlChangeBarChartColorVisa(value, index, childIndex)
+                        }
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </>
           ),
         },
@@ -1371,6 +2132,15 @@ export const ComplianceReportSettings = () => {
           children: (
             <>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <div style={{ marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Heading"}
+                    value={item.heading}
+                    onChange={(e) =>
+                      handlChangePercentageChartHeadingVisa(e, index)
+                    }
+                  />
+                </div>
                 <Select
                   showSearch
                   mode="multiple"
@@ -1386,11 +2156,86 @@ export const ComplianceReportSettings = () => {
                   value={item.selectedColumns}
                 />
               </div>
+              <div>
+                {item.selectedColor.map((subItem, childIndex) => {
+                  return (
+                    <div
+                      style={{
+                        marginTop: "20px",
+                        textAlign: "left",
+                        width: "50%",
+                        display: "flex",
+                        gap: "20px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>
+                        {getAddOnBeforeForColor(
+                          item.selectedColumns[childIndex]
+                        )}
+                      </span>
+                      <ColorPicker
+                        value={subItem.value}
+                        size="large"
+                        showText
+                        onChange={(value) =>
+                          handlChangeMultiChartColorVisa(value, childIndex)
+                        }
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </>
           ),
         },
       ];
     }
+  };
+
+  const handleChangeCompanyTitle = (e) => {
+    setChangeTitleModal({
+      flag: true,
+      type: "company",
+      previousValue: companyChartData.title,
+      updatedValue: "",
+    });
+  };
+
+  const handleChangeSaudizationTitle = (e) => {
+    setChangeTitleModal({
+      flag: true,
+      type: "saudization",
+      previousValue: saudizationChartData.title,
+      updatedValue: "",
+    });
+  };
+
+  const handleChangeVisaTitle = (e) => {
+    setChangeTitleModal({
+      flag: true,
+      type: "visa",
+      previousValue: visaChartData.title,
+      updatedValue: "",
+    });
+  };
+
+  const handleChangeEmployeesTitle = (e) => {
+    setChangeTitleModal({
+      flag: true,
+      type: "employees",
+      previousValue: employeesChartData.title,
+      updatedValue: "",
+    });
+  };
+
+  const handleChangeRecommendationTitle = (e) => {
+    setChangeTitleModal({
+      flag: true,
+      type: "recommendation",
+      previousValue: recommendationText.title,
+      updatedValue: "",
+    });
   };
 
   const items = [
@@ -1404,7 +2249,16 @@ export const ComplianceReportSettings = () => {
             alignItems: "center",
           }}
         >
-          <span>About Company</span>{" "}
+          <div>
+            <span>{companyChartData.title}</span>
+            <Button
+              style={{ marginLeft: "10px" }}
+              type="text"
+              icon={<EditOutlined />}
+              iconPosition="start"
+              onClick={handleChangeCompanyTitle}
+            ></Button>
+          </div>{" "}
           {activeKey.includes("1") ? (
             <Dropdown
               menu={{
@@ -1447,7 +2301,16 @@ export const ComplianceReportSettings = () => {
             alignItems: "center",
           }}
         >
-          <span>Saudization</span>{" "}
+          <div>
+            <span>{saudizationChartData.title}</span>
+            <Button
+              style={{ marginLeft: "10px" }}
+              type="text"
+              icon={<EditOutlined />}
+              iconPosition="start"
+              onClick={handleChangeSaudizationTitle}
+            ></Button>
+          </div>{" "}
           {activeKey.includes("2") ? (
             <Dropdown
               menu={{
@@ -1489,7 +2352,16 @@ export const ComplianceReportSettings = () => {
             alignItems: "center",
           }}
         >
-          <span>Visa</span>{" "}
+          <div>
+            <span>{visaChartData.title}</span>
+            <Button
+              style={{ marginLeft: "10px" }}
+              type="text"
+              icon={<EditOutlined />}
+              iconPosition="start"
+              onClick={handleChangeVisaTitle}
+            ></Button>
+          </div>{" "}
           {activeKey.includes("3") ? (
             <Dropdown
               menu={{
@@ -1529,7 +2401,16 @@ export const ComplianceReportSettings = () => {
             alignItems: "center",
           }}
         >
-          <span>Employees</span>{" "}
+          <div>
+            <span>{employeesChartData.title}</span>
+            <Button
+              style={{ marginLeft: "10px" }}
+              type="text"
+              icon={<EditOutlined />}
+              iconPosition="start"
+              onClick={handleChangeEmployeesTitle}
+            ></Button>
+          </div>{" "}
           {activeKey.includes("4") ? (
             <Dropdown
               menu={{
@@ -1571,7 +2452,16 @@ export const ComplianceReportSettings = () => {
             alignItems: "center",
           }}
         >
-          <span>Recommendation</span>{" "}
+          <div>
+            <span>{recommendationText.title}</span>
+            <Button
+              style={{ marginLeft: "10px" }}
+              type="text"
+              icon={<EditOutlined />}
+              iconPosition="start"
+              onClick={handleChangeRecommendationTitle}
+            ></Button>
+          </div>{" "}
         </div>
       ),
       children: (
@@ -1586,7 +2476,7 @@ export const ComplianceReportSettings = () => {
               onChange={onChangeRecommendtionText}
               options={columnOptions}
               filterOption={filterOption}
-              value={recommendationText}
+              value={recommendationText.column}
             />
           </div>
         </div>
@@ -1610,7 +2500,6 @@ export const ComplianceReportSettings = () => {
         response1.data.response.forEach((item) => {
           if (item.id.toString() === location.state.profileId.toString()) {
             const tempData = JSON.parse(item.governify_compliance_report);
-            console.log(tempData , 'tempData')
             if (tempData === null || tempData === "") {
             } else {
               setCompanyChartData(tempData.companyChartData);
@@ -1627,17 +2516,17 @@ export const ComplianceReportSettings = () => {
     }
   };
 
-  const getChartDataFormat = (data) => {
-    let position = { x: 0, y: -40 };
+  const getChartDataFormat = (data, flag) => {
+    let position = { x: 0, y: 20 };
     let count = 0;
-    const tempData = {id:'' , height:400 , boxes:[]};
+    const tempData = { id: data.id, height: 400, boxes: [] };
 
     data.boxes.forEach((item) => {
       // Create a new position object for each item to avoid reference issues
       let newPosition = { x: position.x, y: position.y };
 
       if (count < 3) {
-        newPosition.x = newPosition.x + 457 * count;
+        newPosition.x = newPosition.x + 435 * count;
       } else {
         newPosition.x = 0;
         newPosition.y = newPosition.y + 125;
@@ -1652,15 +2541,22 @@ export const ComplianceReportSettings = () => {
     });
     tempData.height = position.y + 250;
     tempData.id = data.id;
+    tempData.title = data.title;
+
+    if (flag === "saudization") {
+      tempData.height = 800;
+    }
 
     return tempData;
   };
 
   const handleSubmit = async () => {
-    console.log(getChartDataFormat(companyChartData));
     const governify_compliance_report = JSON.stringify({
       companyChartData: getChartDataFormat(companyChartData),
-      saudizationChartData: getChartDataFormat(saudizationChartData),
+      saudizationChartData: getChartDataFormat(
+        saudizationChartData,
+        "saudization"
+      ),
       visaChartData: getChartDataFormat(visaChartData),
       employeesChartData: getChartDataFormat(employeesChartData),
       recommendation_text: recommendationText,
@@ -1673,6 +2569,7 @@ export const ComplianceReportSettings = () => {
     try {
       const response = await governifyComplianceReportAdminSetting(payloadData);
       if (response.success) {
+        sessionStorage.removeItem("draggableResizableStateCompliance");
         toast.success(response.message);
       } else {
         toast.error(response.message);
@@ -1684,6 +2581,48 @@ export const ComplianceReportSettings = () => {
 
   const handleViewChart = () => {
     navigate("/admin/complianceReportAdminView", { state: location.state });
+  };
+
+  const handleSaveTitle = () => {
+    if (changeTitleModal.type === "company") {
+      let tempCompanyChartData = { ...companyChartData };
+      tempCompanyChartData.title = changeTitleModal.updatedValue;
+      setCompanyChartData(tempCompanyChartData);
+    }
+    if (changeTitleModal.type === "employees") {
+      let tempEmployeesChartData = { ...employeesChartData };
+      tempEmployeesChartData.title = changeTitleModal.updatedValue;
+      setEmployeesChartData(tempEmployeesChartData);
+    }
+    if (changeTitleModal.type === "visa") {
+      let tempVisaChartData = { ...visaChartData };
+      tempVisaChartData.title = changeTitleModal.updatedValue;
+      setVisaChartData(tempVisaChartData);
+    }
+    if (changeTitleModal.type === "saudization") {
+      let tempSaudizationChartData = { ...saudizationChartData };
+      tempSaudizationChartData.title = changeTitleModal.updatedValue;
+      setSaudizationChartData(tempSaudizationChartData);
+    }
+
+    if (changeTitleModal.type === "recommendation") {
+      let tempRecommendationChartData = { ...recommendationText };
+      tempRecommendationChartData.title = changeTitleModal.updatedValue;
+      setRecommendationText(tempRecommendationChartData);
+    }
+
+    setChangeTitleModal({
+      flag: false,
+      type: "",
+      previousValue: "",
+      updatedValue: "",
+    });
+  };
+
+  const handleChangeTitle = (e) => {
+    let tempChangeTitleModal = { ...changeTitleModal };
+    tempChangeTitleModal.updatedValue = e.target.value;
+    setChangeTitleModal(tempChangeTitleModal);
   };
 
   useEffect(() => {
@@ -1729,6 +2668,52 @@ export const ComplianceReportSettings = () => {
         </Button>
       </div>
       <ToastContainer position="bottom-right" />
+
+      <Modal
+        open={changeTitleModal.flag}
+        title="Change Title"
+        centered
+        footer={(_, record) => (
+          <>
+            <Button
+              style={{
+                background: data.button_bg,
+                color: "#fff",
+                border: "none",
+              }}
+              onClick={handleSaveTitle}
+            >
+              Save
+            </Button>
+            <Button
+              style={{ border: "none" }}
+              onClick={() => {
+                setChangeTitleModal({
+                  flag: false,
+                  type: "",
+                  previousValue: "",
+                  updatedValue: "",
+                });
+              }}
+            >
+              Cancel
+            </Button>
+          </>
+        )}
+        onCancel={() => {
+          setChangeTitleModal({
+            flag: false,
+            type: "",
+            previousValue: "",
+            updatedValue: "",
+          });
+        }}
+      >
+        <Input
+          value={changeTitleModal.updatedValue}
+          onChange={handleChangeTitle}
+        />
+      </Modal>
     </div>
   );
 };
