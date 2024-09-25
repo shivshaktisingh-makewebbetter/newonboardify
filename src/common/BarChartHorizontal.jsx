@@ -63,22 +63,21 @@ export const BarChartHorizontal = ({
       },
       legend: {
         position: "top",
-        labels :{
+        labels: {
           boxWidth: 15, // Width of the square dot
           boxHeight: 15,
-        } ,
-        
+        },
       },
       title: {
-        display: true,
-        text: title ,
+        display: false,
+        text: title,
         font: {
           size: 24, // Set the font size for the title
           family: "Arial, sans-serif", // Font family for the title
           weight: "700", // Font weight for the title
         },
-        align:"start"
-      }
+        align: "start",
+      },
     },
     scales: {
       x: {
@@ -89,7 +88,7 @@ export const BarChartHorizontal = ({
         },
         grid: {
           drawBorder: false, // Hide border lines
-          display: false
+          display: false,
         },
       },
       y: {
@@ -102,8 +101,34 @@ export const BarChartHorizontal = ({
   };
 
   return (
-
+    <>
+      <div
+        style={{
+          width:"100%" ,
+          display: "flex",
+          justifyContent: "start",
+          alignItems: "center",
+          marginBottom: "20px",
+        }}
+      >
+        <span
+          style={{
+            fontSize: "24px",
+            fontWeight: "700",
+            lineHeight: "33.6px",
+            color: "#202223",
+            textAlign: "left",
+          }}
+        >
+          {title}
+        </span>
+        <span>
+          {description.length > 0 && (
+            <CustomTooltip description={description} />
+          )}
+        </span>
+      </div>
       <Bar data={data} options={options} />
- 
+    </>
   );
 };

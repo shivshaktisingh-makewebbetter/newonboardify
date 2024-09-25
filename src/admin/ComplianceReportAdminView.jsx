@@ -13,6 +13,7 @@ import { BarChartHorizontal } from "../common/BarChartHorizontal";
 import { BarChartVertical } from "../common/BarChartVertical";
 import { Button } from "antd";
 import { toast, ToastContainer } from "react-toastify";
+
 const SESSION_STORAGE_KEY = "draggableResizableStateCompliance"; // Key to save data in sessionStorage
 
 export const ComplianceReportAdminView = () => {
@@ -82,6 +83,7 @@ export const ComplianceReportAdminView = () => {
           }
         : container
     );
+
     setContainers(newContainers);
     saveStateToSessionStorage(newContainers);
   };
@@ -162,7 +164,6 @@ export const ComplianceReportAdminView = () => {
           tempContainerData.push(tempData[i][1]);
         }
       }
-
       setContainers(tempContainerData);
     } catch (err) {
     } finally {
@@ -371,10 +372,10 @@ export const ComplianceReportAdminView = () => {
       {containers.map((container, containerIndex) => (
         <ResizableBox
           key={container.id}
-          width={"100%"}
+          width={1252}
           height={Number(container.height)}
           minConstraints={[200, 150]}
-          //   maxConstraints={[Infinity, 800]}
+          maxConstraints={[Infinity, 2000]}
           resizeHandles={["s"]}
           onResizeStop={(e, data) =>
             handleContainerResize(e, data, containerIndex)
@@ -816,17 +817,17 @@ export const ComplianceReportAdminView = () => {
 
                   {containerIndex === 1 && box.type === "Bar Chart" ? (
                     <ResizableBox
-                      width={Number(box.size.width)}
-                      height={Number(box.size.height)}
+                      width={Number(box.size.width) || 500}
+                      height={Number(box.size.height) || 500}
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                        window.innerHeight - box.position.y,
+                        1000,
                       ]}
                       resizeHandles={["se"]}
-                      onResizeStop={(e, data) =>
-                        handleResize(e, data, containerIndex, boxIndex)
-                      }
+                      onResizeStop={(e, data) => {
+                        handleResize(e, data, containerIndex, boxIndex);
+                      }}
                       style={{
                         background: "white",
                         border: "1px solid #E3E3E3",
@@ -863,7 +864,7 @@ export const ComplianceReportAdminView = () => {
                         </div>
                       )}
                       {box.horizontal ? (
-                        <BarChartHorizontal
+                        <BarChartVertical
                           dataset={getDataSetForVerticalBarChart(box)}
                           stepsize={getStepSizeForVerticalBarChart(box)}
                           max={getMaxForVerticalBarChart(box)}
@@ -929,86 +930,93 @@ export const ComplianceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
-                    <div style={{display:"flex" , flexDirection:"column" , gap:"44px"}}>
-                    <div
-                        style={{
-                          borderBottom: "1px solid rgba(201, 204, 207, 0.7)",
-                        }}
-                      >
-                        <p
-                          style={{
-                            textAlign: "center",
-                            fontSize: "24px",
-                            fontWeight: "700",
-                            color: "#202223",
-                          }}
-                        >
-                          {box.heading}
-                        </p>
-                      </div>
                       <div
                         style={{
                           display: "flex",
-                          gap: "26px",
                           flexDirection: "column",
+                          gap: "44px",
                         }}
                       >
-                        {box.selectedColumns.map((column, index) => (
-                          <div key={index} style={{ marginBottom: "10px" }}>
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                gap: "24px",
-                              }}
-                            >
+                        <div
+                          style={{
+                            borderBottom: "1px solid rgba(201, 204, 207, 0.7)",
+                          }}
+                        >
+                          <p
+                            style={{
+                              textAlign: "center",
+                              fontSize: "24px",
+                              fontWeight: "700",
+                              color: "#202223",
+                            }}
+                          >
+                            {box.heading}
+                          </p>
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "26px",
+                            flexDirection: "column",
+                          }}
+                        >
+                          {box.selectedColumns.map((column, index) => (
+                            <div key={index} style={{ marginBottom: "10px" }}>
                               <div
                                 style={{
-                                  width: "16px",
-                                  height: "16px",
-                                  background: getBgSquareColor(
-                                    column,
-                                    box.selectedColor
-                                  ),
-                                  borderRadius: "4px",
-                                }}
-                              ></div>
-                              <div
-                                style={{
-                                  color: "#202223",
-                                  fontSize: "20px",
-                                  fontWeight: "600",
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  gap: "24px",
                                 }}
                               >
-                                {getColumnTitleForTextChart(column)}
+                                <div
+                                  style={{
+                                    width: "16px",
+                                    height: "16px",
+                                    background: getBgSquareColor(
+                                      column,
+                                      box.selectedColor
+                                    ),
+                                    borderRadius: "4px",
+                                  }}
+                                ></div>
+                                <div
+                                  style={{
+                                    color: "#202223",
+                                    fontSize: "20px",
+                                    fontWeight: "600",
+                                  }}
+                                >
+                                  {getColumnTitleForTextChart(column)}
+                                </div>
                               </div>
-                            </div>
-                            <p
-                              style={{
-                                fontSize: "45px",
-                                fontWeight: "700",
-                                color: "#202223",
-                              }}
-                            >
-                              {getColumnPercentage(
-                                column,
-                                box.selectedColumns
-                              )}
-                            </p>
-                            {box.selectedColumns.length - 1 > index && (
-                              <div
+                              <p
                                 style={{
-                                  marginTop: "15px",
-                                  marginBottom: "15px",
-                                  border: "1px solid rgba(201, 204, 207, 0.7)",
+                                  fontSize: "45px",
+                                  fontWeight: "700",
+                                  color: "#202223",
                                 }}
-                              ></div>
-                            )}
-                          </div>
-                        ))}
+                              >
+                                {getColumnPercentage(
+                                  column,
+                                  box.selectedColumns
+                                )}
+                              </p>
+                              {box.selectedColumns.length - 1 > index && (
+                                <div
+                                  style={{
+                                    marginTop: "15px",
+                                    marginBottom: "15px",
+                                    border:
+                                      "1px solid rgba(201, 204, 207, 0.7)",
+                                  }}
+                                ></div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
                     </ResizableBox>
                   ) : containerIndex === 1 && box.type === "Text Chart" ? (
                     <ResizableBox
@@ -1088,7 +1096,7 @@ export const ComplianceReportAdminView = () => {
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                        window.innerHeight - box.position.y,
+                        1000,
                       ]}
                       resizeHandles={["se"]}
                       onResizeStop={(e, data) =>
@@ -1523,11 +1531,8 @@ export const ComplianceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
-                      {box.horizontal ? (
-                        <BarChartHorizontal />
-                      ) : (
-                        <BarChartVertical />
-                      )}
+
+                      <BarChartVertical />
                     </ResizableBox>
                   ) : containerIndex === 3 &&
                     box.type === "Multi Value Chart" ? (
@@ -1640,10 +1645,7 @@ export const ComplianceReportAdminView = () => {
                                 color: "#202223",
                               }}
                             >
-                              {getColumnPercentage(
-                                column,
-                                box.selectedColumns
-                              )}
+                              {getColumnPercentage(column, box.selectedColumns)}
                             </p>
                             {box.selectedColumns.length - 1 > index && (
                               <div

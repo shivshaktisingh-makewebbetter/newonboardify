@@ -74,7 +74,7 @@ export const governifyComplianceReportAdminSetting = (data) =>
 export const governifyServiceReportAdminSetting = (data) =>
   Services.POST(`governify/admin/governifyServiceReport`, data);
 export const getComplianceReportDataAdmin = (boardId , dateColumn) =>
-  Services.GET(`governify/admin/getComplianceReport?board_id=${boardId}&date_column=${dateColumn}`);
+  Services.GET(`governify/admin/getComplianceReportForAdmin?board_id=${boardId}&date_column=${dateColumn}`);
 export const saveAdminComplianceView = (data) =>
   Services.POST(`governify/admin/governifyComplianceReportView`, data);
 export const saveAdminServiceView = (data) =>

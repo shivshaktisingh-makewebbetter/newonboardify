@@ -1,44 +1,94 @@
-// PieChart.js
-import React from 'react';
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import React from "react";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { CustomTooltip } from "./CustomToolTip";
 
 // Register necessary components
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export const PieChart = () => {
+export const PieChart = ({
+  title,
+  dataset,
+  bgSet,
+  pieChartLabel,
+  borderColorSetPie,
+  description,
+}) => {
   const data = {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+    labels: pieChartLabel,
     datasets: [
       {
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-          'rgba(255, 206, 86, 0.2)',
-          'rgba(75, 192, 192, 0.2)',
-          'rgba(153, 102, 255, 0.2)',
-          'rgba(255, 159, 64, 0.2)',
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-          'rgba(153, 102, 255, 1)',
-          'rgba(255, 159, 64, 1)',
-        ],
+        label: "",
+        data: dataset,
+        backgroundColor: bgSet,
+        borderColor: borderColorSetPie,
         borderWidth: 1,
+        hoverBackgroundColor: bgSet,
+        borderRadius: 4,
       },
     ],
   };
 
+
+
+
+  const options = {
+    plugins: {
+      legend: {
+        display: true, // Ensure the legend is displayed
+        position: "bottom",
+        labels: {
+          boxWidth: 10 ,
+          boxHeight: 10 ,
+          
+          // generateLabels: (chart) => {
+          //   const { data } = chart;
+          //   return data.labels.map((label, i) => ({
+          //     text: label,
+          //     fillStyle: data.datasets[0].backgroundColor[i],
+          //     strokeStyle: data.datasets[0].borderColor[i],
+          //     lineWidth: 1,
+            
+          //     index: i,
+          //     boxWidth: 0.5, // Size of the legend box
+          //     boxHeight: 5,
+          //     borderRadius: 5, // Adding border-radius for rounded edges
+             
+          //   }));
+          // },
+        },
+      },
+    },
+  };
+
   return (
     <div>
-      <h2>Pie Chart Example</h2>
-      <Pie data={data} />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "start",
+          alignItems: "center",
+          marginBottom:"20px"
+        }}
+      >
+        <span
+          style={{
+            fontSize: "24px",
+            fontWeight: "700",
+            lineHeight: "33.6px",
+            color: "#202223",
+            textAlign: "left",
+          }}
+        >
+          {title}
+        </span>
+        <span>
+          {description.length > 0 && (
+            <CustomTooltip description={description} />
+          )}
+        </span>
+      </div>
+      <Pie data={data} options={options} />
     </div>
   );
 };
-

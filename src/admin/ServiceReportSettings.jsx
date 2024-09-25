@@ -62,10 +62,11 @@ export const ServiceReportSettings = () => {
         type: "Text Chart",
         column1: "",
         column2: "",
+        color: "",
         id: tempCompanyData.boxes.length + 1,
         size: { width: 360, height: 100 },
         showDragHandle: false,
-        position: { x: 0, y: -40 },
+        position: { x: 0, y: 20 },
       });
       setCompanyChartData(tempCompanyData);
     }
@@ -75,10 +76,11 @@ export const ServiceReportSettings = () => {
         type: "Text Chart",
         column1: "",
         column2: "",
+        color: "",
         id: tempInsightsData.boxes.length + 1,
         size: { width: 360, height: 100 },
         showDragHandle: false,
-        position: { x: 0, y: -40 },
+        position: { x: 0, y: 20 },
       });
       setInsightsChartData(tempInsightsData);
     }
@@ -92,6 +94,8 @@ export const ServiceReportSettings = () => {
         horizontal: false,
         selectedColumns: [],
         selectedColor: [],
+        heading: "",
+        description: "",
         id: tempCompanyData.boxes.length + 1,
         position: { x: 0, y: -40 },
         size: { width: 721, height: 422 },
@@ -106,6 +110,8 @@ export const ServiceReportSettings = () => {
         horizontal: false,
         selectedColumns: [],
         selectedColor: [],
+        heading: "",
+        description: "",
         id: tempInsightsData.boxes.length + 1,
         position: { x: 0, y: -40 },
         size: { width: 721, height: 422 },
@@ -123,6 +129,8 @@ export const ServiceReportSettings = () => {
         horizontal: false,
         selectedColumns: [],
         selectedColor: [],
+        heading: "",
+        description: "",
         id: tempCompanyData.boxes.length + 1,
         position: { x: 0, y: -40 },
         size: { width: 721, height: 422 },
@@ -137,6 +145,8 @@ export const ServiceReportSettings = () => {
         horizontal: false,
         selectedColumns: [],
         selectedColor: [],
+        heading: "",
+        description: "",
         id: tempInsightsData.boxes.length + 1,
         position: { x: 0, y: -40 },
         size: { width: 350, height: 380 },
@@ -377,6 +387,66 @@ export const ServiceReportSettings = () => {
     setInsightsChartData(tempInsightsChartData);
   };
 
+  const handlChangeBarChartHeadingCompany = (e, index) => {
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].heading = e.target.value;
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const handlChangeBarChartDescriptionCompany = (e, index) => {
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].description = e.target.value;
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const handlChangePieChartHeadingCompany = (e, index) => {
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].heading = e.target.value;
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const handlChangePieChartDescriptionCompany = (e, index) => {
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].description = e.target.value;
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const handlChangeBarChartHeadingInsights = (e, index) => {
+    let tempInsightsChartData = { ...insightsChartData };
+    tempInsightsChartData.boxes[index].heading = e.target.value;
+    setInsightsChartData(tempInsightsChartData);
+  };
+
+  const handlChangeBarChartDescriptionInsights = (e, index) => {
+    let tempInsightsChartData = { ...insightsChartData };
+    tempInsightsChartData.boxes[index].description = e.target.value;
+    setInsightsChartData(tempInsightsChartData);
+  };
+
+  const handlChangePieChartHeadingInsights = (e, index) => {
+    let tempInsightsChartData = { ...insightsChartData };
+    tempInsightsChartData.boxes[index].heading = e.target.value;
+    setInsightsChartData(tempInsightsChartData);
+  };
+
+  const handlChangePieChartDescriptionInsights = (e, index) => {
+    let tempInsightsChartData = { ...insightsChartData };
+    tempInsightsChartData.boxes[index].description = e.target.value;
+    setInsightsChartData(tempInsightsChartData);
+  };
+
+  const handlChangeTextChartColorCompany = (value, index) => {
+    let tempCompanyChartData = { ...companyChartData };
+    tempCompanyChartData.boxes[index].color = value.toHexString();
+    setCompanyChartData(tempCompanyChartData);
+  };
+
+  const handlChangeTextChartColorInsights = (value, index) => {
+    let tempInsightsChartData = { ...insightsChartData };
+    tempInsightsChartData.boxes[index].color = value.toHexString();
+    setInsightsChartData(tempInsightsChartData);
+  };
+
   const getAddOnBeforeForColor = (key) => {
     let text = "";
     columnOptions.forEach((item) => {
@@ -439,6 +509,26 @@ export const ServiceReportSettings = () => {
                   value={item.column2 || undefined}
                 />
               </div>
+              <div
+                style={{
+                  marginTop: "20px",
+                  textAlign: "left",
+                  width: "50%",
+                  display: "flex",
+                  gap: "20px",
+                  alignItems: "center",
+                }}
+              >
+                <span>Color For Column 2</span>
+                <ColorPicker
+                  value={item.color}
+                  size="large"
+                  showText
+                  onChange={(value) =>
+                    handlChangeTextChartColorCompany(value, index)
+                  }
+                />
+              </div>
             </>
           ),
         },
@@ -465,6 +555,24 @@ export const ServiceReportSettings = () => {
           ),
           children: (
             <>
+            <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Heading"}
+                    value={item.heading}
+                    onChange={(e) =>
+                      handlChangeBarChartHeadingCompany(e, index)
+                    }
+                  />
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Description"}
+                    value={item.description}
+                    onChange={(e) =>
+                      handlChangeBarChartDescriptionCompany(e, index)
+                    }
+                  />
+                </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
@@ -539,6 +647,24 @@ export const ServiceReportSettings = () => {
           ),
           children: (
             <>
+            <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Heading"}
+                    value={item.heading}
+                    onChange={(e) =>
+                      handlChangePieChartHeadingCompany(e, index)
+                    }
+                  />
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Description"}
+                    value={item.description}
+                    onChange={(e) =>
+                      handlChangePieChartDescriptionCompany(e, index)
+                    }
+                  />
+                </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
@@ -646,6 +772,26 @@ export const ServiceReportSettings = () => {
                   value={item.column2}
                 />
               </div>
+              <div
+                style={{
+                  marginTop: "20px",
+                  textAlign: "left",
+                  width: "50%",
+                  display: "flex",
+                  gap: "20px",
+                  alignItems: "center",
+                }}
+              >
+                <span>Color For Column 2</span>
+                <ColorPicker
+                  value={item.color}
+                  size="large"
+                  showText
+                  onChange={(value) =>
+                    handlChangeTextChartColorInsights(value, index)
+                  }
+                />
+              </div>
             </>
           ),
         },
@@ -672,6 +818,24 @@ export const ServiceReportSettings = () => {
           ),
           children: (
             <>
+            <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Heading"}
+                    value={item.heading}
+                    onChange={(e) =>
+                      handlChangeBarChartHeadingInsights(e, index)
+                    }
+                  />
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Description"}
+                    value={item.description}
+                    onChange={(e) =>
+                      handlChangeBarChartDescriptionInsights(e, index)
+                    }
+                  />
+                </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
@@ -747,6 +911,24 @@ export const ServiceReportSettings = () => {
           ),
           children: (
             <>
+            <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Heading"}
+                    value={item.heading}
+                    onChange={(e) =>
+                      handlChangePieChartHeadingInsights(e, index)
+                    }
+                  />
+                </div>
+                <div style={{ marginBottom: "10px" }}>
+                  <Input
+                    addonBefore={"Description"}
+                    value={item.description}
+                    onChange={(e) =>
+                      handlChangePieChartDescriptionInsights(e, index)
+                    }
+                  />
+                </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
@@ -957,7 +1139,7 @@ export const ServiceReportSettings = () => {
   };
 
   const getChartDataFormat = (data, flag) => {
-    let position = { x: 0, y: -40 };
+    let position = { x: 0, y: 20 };
     let count = 0;
     const tempData = { id: data.id, height: 400, boxes: [] };
 
@@ -966,7 +1148,7 @@ export const ServiceReportSettings = () => {
       let newPosition = { x: position.x, y: position.y };
 
       if (count < 3) {
-        newPosition.x = newPosition.x + 457 * count;
+        newPosition.x = newPosition.x + 435 * count;
       } else {
         newPosition.x = 0;
         newPosition.y = newPosition.y + 125;
@@ -984,7 +1166,7 @@ export const ServiceReportSettings = () => {
     tempData.title = data.title;
 
     if (flag === "insights") {
-      tempData.height = 800;
+      tempData.height = 1700;
     }
 
     return tempData;

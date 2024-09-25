@@ -4,6 +4,7 @@ import Draggable from "react-draggable";
 import "react-resizable/css/styles.css";
 import { DragOutlined } from "@ant-design/icons";
 import {
+  getComplianceReportDataAdmin,
   getProfileListing,
   saveAdminServiceView,
 } from "../apiservice/ApiService";
@@ -17,6 +18,13 @@ const SESSION_STORAGE_KEY = "draggableResizableStateService"; // Key to save dat
 
 export const ServiceReportAdminView = () => {
   const location = useLocation();
+  const [currentData, setCurrentData] = useState([]);
+  const [previousData, setPreviousData] = useState([]);
+  const [allColumnTitle, setAllColumnTitle] = useState([]);
+  const [nameValue, setNameValue] = useState({
+    currentName: "",
+    previousName: "",
+  });
   const [containers, setContainers] = useState([
     {
       id: 1,
@@ -108,6 +116,38 @@ export const ServiceReportAdminView = () => {
     let tempContainerData = [];
     try {
       const response = await getProfileListing();
+      const response1 = await getComplianceReportDataAdmin(
+        location.state.boardId,
+        location.state.filterKey.date_key
+      );
+
+      if (response1.success) {
+        setAllColumnTitle(response1.data.response.data.boards[0].columns);
+        response1.data.response.data.boards[0].items_page.items.forEach(
+          (item) => {
+            if (
+              item.name.toLowerCase() ===
+              location.state.filterKey.value.toLowerCase()
+            ) {
+              setCurrentData(item.column_values);
+              setNameValue({ ...nameValue, currentName: item.name });
+            }
+          }
+        );
+        response1.data.response.data.boards[0].items_page.previous_month_items.forEach(
+          (item) => {
+            if (
+              item.name.toLowerCase() ===
+              location.state.filterKey.value.toLowerCase()
+            ) {
+              setPreviousData(item.column_values);
+              setNameValue({ ...nameValue, previousName: item.name });
+            }
+          }
+        );
+      } else {
+      }
+
       if (response.success) {
         response.data.response.forEach((item) => {
           if (item.id.toString() === location.state.profileId.toString()) {
@@ -119,7 +159,9 @@ export const ServiceReportAdminView = () => {
       }
 
       for (let i = 0; i < tempData.length; i++) {
-        tempContainerData.push(tempData[i][1]);
+        if (tempData[i][0] !== "recommendation_text") {
+          tempContainerData.push(tempData[i][1]);
+        }
       }
 
       setContainers(tempContainerData);
@@ -149,19 +191,235 @@ export const ServiceReportAdminView = () => {
     }
   };
 
+  const getColumnValueForTextChart = (id) => {
+    let tempValue = "";
+    if (id === "name") {
+      tempValue = nameValue.currentName;
+    } else {
+      currentData.forEach((item) => {
+        if (item.id === id) {
+          tempValue = item.text;
+        }
+      });
+    }
+
+    return tempValue;
+  };
+
+  const getColumnTitleForTextChart = (id) => {
+    let tempValue = "";
+    allColumnTitle.forEach((item) => {
+      if (item.id === id) {
+        tempValue = item.title;
+      }
+    });
+    return tempValue;
+  };
+
+  const getBgSquareColor = (id, data) => {
+    let tempColor = "#000000";
+    data.forEach((item) => {
+      if (item.key === id) {
+        tempColor = item.value;
+      }
+    });
+    return tempColor;
+  };
+
+  function hexToRgba(hex, opacity) {
+    // Remove the '#' if it's there
+    hex = hex.replace("#", "");
+
+    // Parse the hex color
+    const bigint = parseInt(hex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+
+    // Return the RGBA string with opacity
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  }
+
+  const getBgColorForBarChart = (subItem, item) => {
+    let hexColor = "#d20e0e";
+    subItem.selectedColor.forEach((detail) => {
+      if (detail.key === item) {
+        hexColor = detail.value;
+      }
+    });
+    hexColor = hexToRgba(hexColor, "1");
+    return hexColor;
+  };
+
+  const getBorderColorForBarChart = (subItem, item) => {
+    let hexColor = "#d20e0e";
+    subItem.selectedColor.forEach((detail) => {
+      if (detail.key === item) {
+        hexColor = detail.value;
+      }
+    });
+    hexColor = hexToRgba(hexColor, "1");
+    return hexColor;
+  };
+
+  const getPieChartDataSet = (subItem) => {
+    let tempData = [];
+    subItem.selectedColumns.forEach((item) => {
+      tempData.push(getColumnValueForTextChart(item));
+    });
+    return tempData;
+  };
+
+  const getPieChartBg = (subItem) => {
+    let tempData = [];
+
+    subItem.selectedColumns.forEach((item) => {
+      tempData.push(getBgColorForBarChart(subItem, item));
+    });
+    return tempData;
+  };
+
+  const getPieChartBorder = (subItem) => {
+    let tempData = [];
+
+    subItem.selectedColumns.forEach((item) => {
+      tempData.push("#fff");
+    });
+    return tempData;
+  };
+
+  const getPieChartLabel = (subItem) => {
+    let tempData = [];
+    subItem.selectedColumns.forEach((item) => {
+      tempData.push(getColumnTitleForTextChart(item));
+    });
+
+    return tempData;
+  };
+
+
+  function hexToRgba(hex, opacity) {
+    // Remove the '#' if it's there
+    hex = hex.replace("#", "");
+
+    // Parse the hex color
+    const bigint = parseInt(hex, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+
+    // Return the RGBA string with opacity
+    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+  }
+
+
+
+
+
+  const getDataSetForVerticalBarChart = (subItem) => {
+    let tempData = [];
+    subItem.selectedColumns.forEach((item) => {
+      tempData.push({
+        label: getColumnTitleForTextChart(item),
+        data: [getColumnValueForTextChart(item)],
+        backgroundColor: getBgColorForBarChart(subItem, item),
+        borderColor: getBorderColorForBarChart(subItem, item),
+        borderWidth: 1,
+      });
+    });
+
+    return tempData;
+  };
+
+  function calculateStepSize(data) {
+    // Convert string data to numbers
+    const numericData = data.map(Number);
+
+    // Find min and max values in the data
+    const minValue = Math.min(...numericData);
+    const maxValue = Math.max(...numericData);
+
+    // Calculate the range
+    const range = maxValue - minValue;
+
+    // Determine a reasonable number of steps (e.g., 5 or 10 steps)
+    const numberOfSteps = 2; // You can adjust this for more/less granularity
+
+    // Calculate the raw stepSize by dividing the range by number of steps
+    let stepSize = range / numberOfSteps;
+
+    // Round stepSize up to the nearest multiple of 50
+    stepSize = Math.ceil(stepSize / 50) * 50;
+
+    return stepSize;
+  }
+
+  function calculateChartMax(data) {
+    const numericData = data.map(Number);
+
+    // Find the maximum value in the data
+    const maxValue = Math.max(...numericData);
+
+    // Calculate the stepSize
+    const stepSize = calculateStepSize(data);
+
+    // Calculate the chart max value, which is one stepSize above the max value
+    const chartMax = Math.ceil(maxValue / stepSize) * stepSize + stepSize;
+
+    return chartMax;
+  }
+
+  const getStepSizeForVerticalBarChart = (subItem) => {
+    let tempData = [];
+    subItem.selectedColumns.forEach((item) => {
+      tempData.push(getColumnValueForTextChart(item));
+    });
+
+    let stepSize = calculateStepSize(tempData);
+
+    return stepSize;
+  };
+
+  const getMaxForVerticalBarChart = (subItem) => {
+    let tempData = [];
+
+    subItem.selectedColumns.forEach((item) => {
+      tempData.push(getColumnValueForTextChart(item));
+    });
+
+    let chartMax = calculateChartMax(tempData);
+
+    return chartMax;
+  };
+
+  const getColumnPercentage = (column, data) => {
+    let tempData = 0;
+    const valueOfSelected = getColumnValueForTextChart(column);
+
+    // Calculate total from the data
+    data.forEach((item) => {
+      tempData += Number(getColumnValueForTextChart(item));
+    });
+
+    // Calculate the percentage
+    const percentage = tempData > 0 ? (valueOfSelected / tempData) * 100 : 0; // Avoid division by zero
+
+    return parseFloat(percentage.toFixed(2)) + " %";
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
 
   return (
-    <div>
+    <div style={{ maxWidth: "1252px" }}>
       {containers.map((container, containerIndex) => (
         <ResizableBox
           key={container.id}
           width={"100%"}
           height={container.height}
-          minConstraints={[200, 200]}
-          //   maxConstraints={[Infinity, 800]}
+          minConstraints={[200, 150]}
+          maxConstraints={[Infinity, 2000]}
           resizeHandles={["s"]}
           onResizeStop={(e, data) =>
             handleContainerResize(e, data, containerIndex)
@@ -220,7 +478,7 @@ export const ServiceReportAdminView = () => {
                 }
               >
                 <div
-                  style={{ position: "absolute", marginTop: "40px" }}
+                  style={{ position: "absolute" }}
                   onMouseEnter={() =>
                     toggleDragHandleVisibility(containerIndex, boxIndex, true)
                   }
@@ -306,7 +564,7 @@ export const ServiceReportAdminView = () => {
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                        window.innerHeight - box.position.y,
+                        1000
                       ]}
                       resizeHandles={["se"]}
                       onResizeStop={(e, data) =>
@@ -358,7 +616,7 @@ export const ServiceReportAdminView = () => {
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                        window.innerHeight - box.position.y,
+                       1000
                       ]}
                       resizeHandles={["se"]}
                       onResizeStop={(e, data) =>
@@ -414,7 +672,7 @@ export const ServiceReportAdminView = () => {
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                        window.innerHeight - box.position.y,
+                        1000
                       ]}
                       resizeHandles={["se"]}
                       onResizeStop={(e, data) =>
@@ -433,6 +691,7 @@ export const ServiceReportAdminView = () => {
                         alignItems: "center",
                       }}
                     >
+                   
                       {box.showDragHandle && (
                         <div
                           className="drag-handle"
@@ -455,11 +714,13 @@ export const ServiceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
-                      {box.horizontal ? (
-                        <BarChartHorizontal />
-                      ) : (
-                        <BarChartVertical />
-                      )}
+                       <BarChartVertical
+                        dataset={getDataSetForVerticalBarChart(box)}
+                        stepsize={getStepSizeForVerticalBarChart(box)}
+                        max={getMaxForVerticalBarChart(box)}
+                        title={box.heading}
+                        description={box.description}
+                      />
                     </ResizableBox>
                   ) : containerIndex === 1 &&
                     box.type === "Multi Value Chart" ? (
@@ -469,7 +730,7 @@ export const ServiceReportAdminView = () => {
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                        window.innerHeight - box.position.y,
+                      1000
                       ]}
                       resizeHandles={["se"]}
                       onResizeStop={(e, data) =>
@@ -585,7 +846,7 @@ export const ServiceReportAdminView = () => {
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                        window.innerHeight - box.position.y,
+                        1000
                       ]}
                       resizeHandles={["se"]}
                       onResizeStop={(e, data) =>
@@ -656,7 +917,7 @@ export const ServiceReportAdminView = () => {
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                        window.innerHeight - box.position.y,
+                       1000
                       ]}
                       resizeHandles={["se"]}
                       onResizeStop={(e, data) =>
@@ -697,7 +958,15 @@ export const ServiceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
-                      <PieChart />
+
+                      <PieChart
+                        title={box.heading}
+                        dataset={getPieChartDataSet(box)}
+                        bgSet={getPieChartBg(box)}
+                        pieChartLabel={getPieChartLabel(box)}
+                        borderColorSetPie={getPieChartBorder(box)}
+                        description={box.description}
+                      />
                     </ResizableBox>
                   ) : (
                     <></>

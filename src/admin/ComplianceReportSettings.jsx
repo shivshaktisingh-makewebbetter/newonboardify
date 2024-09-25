@@ -14,6 +14,7 @@ import {
   getAllColumnsOfBoard,
   getProfileListing,
   governifyComplianceReportAdminSetting,
+  saveAdminComplianceView,
 } from "../apiservice/ApiService";
 import { toast, ToastContainer } from "react-toastify";
 import { EditOutlined } from "@ant-design/icons";
@@ -1093,24 +1094,22 @@ export const ComplianceReportSettings = () => {
           ),
           children: (
             <>
-             <div style={{ marginTop: "20px", marginBottom: "10px" }}>
-                  <Input
-                    addonBefore={"Heading"}
-                    value={item.heading}
-                    onChange={(e) =>
-                      handlChangeBarChartHeadingCompany(e, index)
-                    }
-                  />
-                </div>
-                <div style={{ marginBottom: "10px" }}>
-                  <Input
-                    addonBefore={"Description"}
-                    value={item.description}
-                    onChange={(e) =>
-                      handlChangeBarChartDescriptionCompany(e, index)
-                    }
-                  />
-                </div>
+              <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Heading"}
+                  value={item.heading}
+                  onChange={(e) => handlChangeBarChartHeadingCompany(e, index)}
+                />
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Description"}
+                  value={item.description}
+                  onChange={(e) =>
+                    handlChangeBarChartDescriptionCompany(e, index)
+                  }
+                />
+              </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <div>Bar Chart Type :</div>
                 <Select
@@ -1718,24 +1717,24 @@ export const ComplianceReportSettings = () => {
           ),
           children: (
             <>
-             <div style={{ marginTop: "20px", marginBottom: "10px" }}>
-                  <Input
-                    addonBefore={"Heading"}
-                    value={item.heading}
-                    onChange={(e) =>
-                      handlChangeBarChartHeadingEmployees(e, index)
-                    }
-                  />
-                </div>
-                <div style={{ marginBottom: "10px" }}>
-                  <Input
-                    addonBefore={"Description"}
-                    value={item.description}
-                    onChange={(e) =>
-                      handlChangeBarChartDescriptionEmployees(e, index)
-                    }
-                  />
-                </div>
+              <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Heading"}
+                  value={item.heading}
+                  onChange={(e) =>
+                    handlChangeBarChartHeadingEmployees(e, index)
+                  }
+                />
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Description"}
+                  value={item.description}
+                  onChange={(e) =>
+                    handlChangeBarChartDescriptionEmployees(e, index)
+                  }
+                />
+              </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <div>Bar Chart Type :</div>
                 <Select
@@ -2029,24 +2028,20 @@ export const ComplianceReportSettings = () => {
           ),
           children: (
             <>
-             <div style={{ marginTop: "20px", marginBottom: "10px" }}>
-                  <Input
-                    addonBefore={"Heading"}
-                    value={item.heading}
-                    onChange={(e) =>
-                      handlChangeBarChartHeadingVisa(e, index)
-                    }
-                  />
-                </div>
-                <div style={{ marginBottom: "10px" }}>
-                  <Input
-                    addonBefore={"Description"}
-                    value={item.description}
-                    onChange={(e) =>
-                      handlChangeBarChartDescriptionVisa(e, index)
-                    }
-                  />
-                </div>
+              <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Heading"}
+                  value={item.heading}
+                  onChange={(e) => handlChangeBarChartHeadingVisa(e, index)}
+                />
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Description"}
+                  value={item.description}
+                  onChange={(e) => handlChangeBarChartDescriptionVisa(e, index)}
+                />
+              </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <div>Bar Chart Type :</div>
                 <Select
@@ -2516,12 +2511,12 @@ export const ComplianceReportSettings = () => {
     }
   };
 
-  const getChartDataFormat = (data, flag) => {
+  const getChartDataFormat = (data) => {
     let position = { x: 0, y: 20 };
     let count = 0;
     const tempData = { id: data.id, height: 400, boxes: [] };
 
-    data.boxes.forEach((item) => {
+    data.boxes.forEach((item, index) => {
       // Create a new position object for each item to avoid reference issues
       let newPosition = { x: position.x, y: position.y };
 
@@ -2536,16 +2531,51 @@ export const ComplianceReportSettings = () => {
 
       count = count + 1;
 
-      let obj = { ...item, position: newPosition };
+      let obj = { ...item, id: index, position: newPosition };
       tempData.boxes.push(obj);
     });
     tempData.height = position.y + 250;
     tempData.id = data.id;
     tempData.title = data.title;
 
-    if (flag === "saudization") {
-      tempData.height = 800;
-    }
+    return tempData;
+  };
+
+  const getChartDataFormatForSaudization = (data) => {
+    let position = { x: 0, y: 20 };
+  
+    const tempData = { id: data.id, height: 700, boxes: [] };
+
+    data.boxes.forEach((item, index) => {
+      let newPosition = { x: position.x, y: position.y };
+     if(item.type === "Value Chart"){
+      newPosition.x = 0;
+      newPosition.y = newPosition.y + 100;
+      position.y = position.y + 100;
+
+     }
+     if(item.type === 'Multi Value Chart'){
+      newPosition.x = 0;
+      newPosition.y = newPosition.y + 422;
+      position.y = position.y + 422;
+
+     }
+
+     if(item.type === "Bar Chart"){
+      newPosition.x = 0;
+      newPosition.y = newPosition.y + 422;
+      position.y = position.y + 422;
+     }
+
+     position.y = position.y  + 20;
+
+      let obj = { ...item, id: index, position: newPosition };
+      tempData.boxes.push(obj);
+    });
+    tempData.height = position.y + 250;
+    tempData.id = data.id;
+    tempData.title = data.title;
+    
 
     return tempData;
   };
@@ -2553,10 +2583,8 @@ export const ComplianceReportSettings = () => {
   const handleSubmit = async () => {
     const governify_compliance_report = JSON.stringify({
       companyChartData: getChartDataFormat(companyChartData),
-      saudizationChartData: getChartDataFormat(
-        saudizationChartData,
-        "saudization"
-      ),
+      saudizationChartData:
+        getChartDataFormatForSaudization(saudizationChartData),
       visaChartData: getChartDataFormat(visaChartData),
       employeesChartData: getChartDataFormat(employeesChartData),
       recommendation_text: recommendationText,
@@ -2566,8 +2594,14 @@ export const ComplianceReportSettings = () => {
       governify_compliance_report: governify_compliance_report,
     };
 
+    const payloadDataNew = {
+      governify_compliance_report_view: [],
+      profile_id: location.state.profileId.toString(),
+    };
+
     try {
       const response = await governifyComplianceReportAdminSetting(payloadData);
+      const response1 = await saveAdminComplianceView(payloadData);
       if (response.success) {
         sessionStorage.removeItem("draggableResizableStateCompliance");
         toast.success(response.message);
