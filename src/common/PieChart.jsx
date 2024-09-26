@@ -29,34 +29,46 @@ export const PieChart = ({
     ],
   };
 
-
-
-
   const options = {
     plugins: {
       legend: {
-        display: true, // Ensure the legend is displayed
+        display: true,
         position: "bottom",
         labels: {
-          boxWidth: 10 ,
-          boxHeight: 10 ,
-          
-          // generateLabels: (chart) => {
-          //   const { data } = chart;
-          //   return data.labels.map((label, i) => ({
-          //     text: label,
-          //     fillStyle: data.datasets[0].backgroundColor[i],
-          //     strokeStyle: data.datasets[0].borderColor[i],
-          //     lineWidth: 1,
-            
-          //     index: i,
-          //     boxWidth: 0.5, // Size of the legend box
-          //     boxHeight: 5,
-          //     borderRadius: 5, // Adding border-radius for rounded edges
-             
-          //   }));
-          // },
+          boxWidth: 10,
+          boxHeight: 10,
         },
+      },
+      tooltip: {
+        xAlign: "center", // Horizontally center the tooltip
+        yAlign: "bottom", // Vertically align the tooltip to the top
+        displayColors: false,
+        backgroundColor: "#ffffff",
+        titleFont: {
+          size: 12,
+          weight: "400",
+        },
+        titleColor: "#6d7175",
+        bodyFont: {
+          size: 16,
+          weight: "700",
+          color: "#202223",
+        },
+        bodyColor: "#000000",
+        padding: {
+          top: 10, // Add padding to ensure proper alignment
+          bottom: 10,
+          left: 15,
+          right: 15,
+        },
+        callbacks: {
+          label: function (tooltipItem) {
+            const value = tooltipItem.raw || 0;
+            return value;
+          },
+        },
+        bodyAlign: "center", // Align body content horizontally to the center
+        titleAlign: "center", // Align title content horizontally to the center
       },
     },
   };
@@ -68,9 +80,9 @@ export const PieChart = ({
           display: "flex",
           justifyContent: "start",
           alignItems: "center",
-          position: "absolute" ,
-          top:"20px" ,
-          left:"20px"
+          position: "absolute",
+          top: "20px",
+          left: "20px",
         }}
       >
         <span

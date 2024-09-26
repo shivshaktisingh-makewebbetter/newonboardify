@@ -104,7 +104,7 @@ export const BarChartHorizontal = ({
     <>
       <div
         style={{
-          width:"100%" ,
+          width:"80%" ,
           display: "flex",
           justifyContent: "start",
           alignItems: "center",

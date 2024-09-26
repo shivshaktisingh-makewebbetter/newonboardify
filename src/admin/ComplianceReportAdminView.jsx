@@ -914,6 +914,7 @@ export const ComplianceReportAdminView = () => {
                         flexDirection: "column",
                         justifyContent: "center",
                         alignItems: "center",
+                        gap: "44px",
                       }}
                     >
                       {box.showDragHandle && (
@@ -938,95 +939,82 @@ export const ComplianceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
+
+                      <div
+                        style={{
+                          borderBottom: "1px solid rgba(201, 204, 207, 0.7)",
+                        }}
+                      >
+                        <p
+                          style={{
+                            textAlign: "center",
+                            fontSize: "24px",
+                            fontWeight: "700",
+                            color: "#202223",
+                          }}
+                        >
+                          {box.heading}
+                        </p>
+                      </div>
+
                       <div
                         style={{
                           display: "flex",
+                          gap: "26px",
                           flexDirection: "column",
-                          gap: "44px",
                         }}
                       >
-                        <div
-                          style={{
-                            borderBottom: "1px solid rgba(201, 204, 207, 0.7)",
-                            position:"absolute" ,
-                            top:"20px" ,
-                            // left:"20px"
-                          }}
-                        >
-                          <p
-                            style={{
-                              textAlign: "center",
-                              fontSize: "24px",
-                              fontWeight: "700",
-                              color: "#202223",
-                            }}
-                          >
-                            {box.heading}
-                          </p>
-                        </div>
-                        <div
-                          style={{
-                            display: "flex",
-                            gap: "26px",
-                            flexDirection: "column",
-                          }}
-                        >
-                          {box.selectedColumns.map((column, index) => (
-                            <div key={index} style={{ marginBottom: "10px" }}>
+                        {box.selectedColumns.map((column, index) => (
+                          <div key={index} style={{ marginBottom: "10px" }}>
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                gap: "24px",
+                              }}
+                            >
                               <div
                                 style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  gap: "24px",
+                                  width: "16px",
+                                  height: "16px",
+                                  background: getBgSquareColor(
+                                    column,
+                                    box.selectedColor
+                                  ),
+                                  borderRadius: "4px",
                                 }}
-                              >
-                                <div
-                                  style={{
-                                    width: "16px",
-                                    height: "16px",
-                                    background: getBgSquareColor(
-                                      column,
-                                      box.selectedColor
-                                    ),
-                                    borderRadius: "4px",
-                                  }}
-                                ></div>
-                                <div
-                                  style={{
-                                    color: "#202223",
-                                    fontSize: "20px",
-                                    fontWeight: "600",
-                                  }}
-                                >
-                                  {getColumnTitleForTextChart(column)}
-                                </div>
-                              </div>
-                              <p
+                              ></div>
+                              <div
                                 style={{
-                                  fontSize: "45px",
-                                  fontWeight: "700",
                                   color: "#202223",
+                                  fontSize: "20px",
+                                  fontWeight: "600",
                                 }}
                               >
-                                {getColumnPercentage(
-                                  column,
-                                  box.selectedColumns
-                                )}
-                              </p>
-                              {box.selectedColumns.length - 1 > index && (
-                                <div
-                                  style={{
-                                    marginTop: "15px",
-                                    marginBottom: "15px",
-                                    border:
-                                      "1px solid rgba(201, 204, 207, 0.7)",
-                                  }}
-                                ></div>
-                              )}
+                                {getColumnTitleForTextChart(column)}
+                              </div>
                             </div>
-                          ))}
-                        </div>
+                            <p
+                              style={{
+                                fontSize: "45px",
+                                fontWeight: "700",
+                                color: "#202223",
+                              }}
+                            >
+                              {getColumnPercentage(column, box.selectedColumns)}
+                            </p>
+                            {box.selectedColumns.length - 1 > index && (
+                              <div
+                                style={{
+                                  marginTop: "15px",
+                                  marginBottom: "15px",
+                                  borderBottom: "1px solid rgba(201, 204, 207, 0.7)",
+                                }}
+                              ></div>
+                            )}
+                          </div>
+                        ))}
                       </div>
                     </ResizableBox>
                   ) : containerIndex === 1 && box.type === "Text Chart" ? (

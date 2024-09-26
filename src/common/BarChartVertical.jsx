@@ -63,12 +63,12 @@ export const BarChartVertical = ({
       legend: {
         labels: {
           font: {
-            size: "14px", // Change this value to adjust legend font size
-            weight: "400", // Change font weight if needed
+            size: "14px",
+            weight: "400",
             color: "#6d7175",
           },
-          padding: 20, // Add padding between legend items
-          boxWidth: 15, // Width of the square dot
+          padding: 20,
+          boxWidth: 15,
           boxHeight: 15,
         },
         position: "bottom",
@@ -77,24 +77,56 @@ export const BarChartVertical = ({
         display: false,
         text: title,
         font: {
-          size: 24, // Set the font size for the title
-          family: "Arial, sans-serif", // Font family for the title
-          weight: "700", // Font weight for the title
+          size: 24,
+          family: "Arial, sans-serif",
+          weight: "700",
         },
         align: "start",
+      },
+      tooltip: {
+        yAlign: 'top',      // Vertically align the tooltip to the top
+        xAlign: 'center',  // Horizontally center the tooltip
+
+        displayColors: false,
+        backgroundColor: "#ffffff",
+        titleFont: {
+          size: 12,
+          weight: "400",
+        },
+        titleColor: "#6d7175",
+        bodyFont: {
+          size: 16,
+          weight: "700",
+          color: "#202223",
+        },
+        bodyColor: "#000000",
+        padding: {
+          top: 10,
+          bottom: 10,
+          left: 15,
+          right: 15,
+        },
+        callbacks: {
+          label: function (tooltipItem) {
+            const value = tooltipItem.raw || 0;
+            return value;
+          },
+        },
+        bodyAlign: 'center', // Align tooltip body content horizontally to the center
+        titleAlign: 'center', // Align tooltip title content horizontally to the center
       },
     },
     scales: {
       x: {
         display: false,
-        categoryPercentage: 1, // Adjusts space between categories (bars)
+        categoryPercentage: 1,
         barPercentage: 20,
       },
       y: {
         beginAtZero: true,
-        max: max, // Set maximum value for y-axis
+        max: max,
         ticks: {
-          stepSize: stepsize, // Define the step size for y-axis
+          stepSize: stepsize,
         },
         grid: {
           display: false,
@@ -107,13 +139,13 @@ export const BarChartVertical = ({
     <>
       <div
         style={{
-          width: "100%",
+          width: "80%",
           display: "flex",
           justifyContent: "start",
           alignItems: "center",
-          position: "absolute" ,
-          top:"20px" ,
-          left:"20px"
+          position: "absolute",
+          top: "20px",
+          left: "20px",
         }}
       >
         <span
@@ -128,9 +160,7 @@ export const BarChartVertical = ({
           {title}
         </span>
         <span>
-          {description.length > 0 && (
-            <CustomTooltip description={description} />
-          )}
+          {description.length > 0 && <CustomTooltip description={description} />}
         </span>
       </div>
       <Bar data={data} options={options} />
