@@ -2601,7 +2601,7 @@ export const ComplianceReportSettings = () => {
 
     try {
       const response = await governifyComplianceReportAdminSetting(payloadData);
-      const response1 = await saveAdminComplianceView(payloadData);
+      const response1 = await saveAdminComplianceView(payloadDataNew);
       if (response.success) {
         sessionStorage.removeItem("draggableResizableStateCompliance");
         toast.success(response.message);

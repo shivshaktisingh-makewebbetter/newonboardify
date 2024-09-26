@@ -8,8 +8,10 @@ import {
   getAllColumnsOfBoard,
   getProfileListing,
   governifyAdminTableSettings,
-  governifyBoardAssociation,
-  governifyFilterKeyAssociation,
+  governifyComplianceBoardAssociation,
+  governifyFilterKeyAssociationCompliance,
+  governifyFilterKeyAssociationService,
+  governifyServiceBoardAssociation,
 } from "../apiservice/ApiService";
 import { Loader } from "../common/Loader";
 
@@ -17,36 +19,29 @@ export const ReportSettings = () => {
   const location = useLocation();
   const [allBoardId, setAllBoardId] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [columnOptions, setColumnOptions] = useState([]);
-  const [dateOptions, setDateOptions] = useState([]);
-  const [selectedFilterColumn, setSelectedFilterColumn] = useState({
-    key: "",
-    value: "",
-    date_key: "",
-  });
-  const [selectedBoard, setSelectedBoard] = useState("");
-  const [selectedTableColumns, setSelectedTableColumns] = useState([]);
-  const navigate = useNavigate();
-
-  const handleChangeBoardId = async (e) => {
-    let data = JSON.stringify({
-      profile_id: location.state.toString(),
-      governify_board_id: e,
+  const [columnOptionsCompliance, setColumnOptionsCompliance] = useState([]);
+  const [columnOptionsService, setColumnOptionsService] = useState([]);
+  const [dateOptionsCompliance, setDateOptionsCompliance] = useState([]);
+  const [dateOptionsService, setDateOptionsService] = useState([]);
+  const [selectedFilterColumnService, setSelectedFilterColumnService] =
+    useState({
+      key: undefined,
+      value: "",
+      date_key: undefined,
     });
-    try {
-      const response = await governifyBoardAssociation(data);
-      if (response.success) {
-        setSelectedBoard(e);
-        toast.success(response.message);
-      } else {
-        toast.error(response.message);
-      }
-    } catch (err) {
-      toast.error(err);
-    } finally {
-      //   getListOfAllProfilesAndBoardListing();
-    }
-  };
+  const [selectedFilterColumnCompliance, setSelectedFilterColumnCompliance] =
+    useState({
+      key: undefined,
+      value: "",
+      date_key: undefined,
+    });
+  const [selectedBoardIdService, setSelectedBoardIdService] =
+    useState(undefined);
+  const [selectedTableColumnsCompliance, setSelectedTableColumnsCompliance] =
+    useState([]);
+  const [selectedBoardIdCompliance, setSelectedBoardIdCompliance] =
+    useState(undefined);
+  const navigate = useNavigate();
 
   const filterOption = (input, option) => {
     return (
@@ -55,24 +50,16 @@ export const ReportSettings = () => {
     );
   };
 
-  const handleSelectColumn = async (e) => {
-    let tempObj = {...selectedFilterColumn};
-    tempObj.key = e;
-    tempObj.value ='';
-    setSelectedFilterColumn(tempObj);
-  };
-
-  const handleSelectTableColumn = async (e) => {
-    setSelectedTableColumns(e);
-  };
-
-
-  const handleSelectDateColumn = async (e) => {
-    setSelectedFilterColumn({ ...selectedFilterColumn, date_key: e });
-  };
-
   const navigateToReportSetting = (type) => {
-    const dataToPass = { boardId: selectedBoard, profileId: location.state , filterKey: selectedFilterColumn };
+    const dataToPass = {
+      boardId:
+        type === "service" ? selectedBoardIdService : selectedBoardIdCompliance,
+      profileId: location.state,
+      filterKey:
+        type === "service"
+          ? selectedFilterColumnService
+          : selectedFilterColumnCompliance,
+    };
     if (type === "compliance") {
       navigate("/admin/complianceReport", { state: dataToPass });
     }
@@ -84,10 +71,15 @@ export const ReportSettings = () => {
 
   const navigateToReportView = (type) => {
     const dataToPass = {
-      boardId: selectedBoard,
+      boardId:
+        type === "service" ? selectedBoardIdService : selectedBoardIdCompliance,
       profileId: location.state,
-      filterKey: selectedFilterColumn,
+      filterKey:
+        type === "service"
+          ? selectedFilterColumnService
+          : selectedFilterColumnCompliance,
     };
+
     if (type === "compliance") {
       navigate("/admin/complianceReportAdminView", { state: dataToPass });
     }
@@ -98,7 +90,9 @@ export const ReportSettings = () => {
   };
 
   const getListOfAllBoard = async () => {
-    let selectedBoardId = "";
+    let selectedBoardIdCompliance = "";
+    let selectedBoardIdService = "";
+
     let tempBoardIds = [];
     setLoading(true);
     try {
@@ -107,12 +101,30 @@ export const ReportSettings = () => {
       if (response1.success) {
         response1.data.response.forEach((item) => {
           if (item.id === location.state) {
-            setSelectedBoard(item.governify_board_id);
-            if (item.governify_filter_key !== null) {
-              setSelectedFilterColumn(JSON.parse(item.governify_filter_key));
+            if (item.governify_service_board_id !== null) {
+              selectedBoardIdService = item.governify_service_board_id;
+              setSelectedBoardIdService(item.governify_service_board_id);
             }
-            setSelectedTableColumns(JSON.parse(item.governify_table_settings));
-            selectedBoardId = item.governify_board_id;
+            if (item.governify_compliance_board_id !== null) {
+              selectedBoardIdCompliance = item.governify_service_board_id;
+              setSelectedBoardIdCompliance(item.governify_compliance_board_id);
+            }
+
+            if (item.governify_compliance_filter_key !== null) {
+              setSelectedFilterColumnCompliance(
+                JSON.parse(item.governify_compliance_filter_key)
+              );
+            }
+
+            if (item.governify_service_filter_key !== null) {
+              setSelectedFilterColumnService(
+                JSON.parse(item.governify_service_filter_key)
+              );
+            }
+
+            setSelectedTableColumnsCompliance(
+              JSON.parse(item.governify_table_settings)
+            );
           }
         });
       }
@@ -120,21 +132,40 @@ export const ReportSettings = () => {
         response.data.response.boards.forEach((item) => {
           tempBoardIds.push({ label: item.name, value: item.id });
         });
+
         setAllBoardId(tempBoardIds);
       }
-      const response3 = await getAllColumnsOfBoard(selectedBoardId);
-      if (response3.success) {
-        const tempData = [];
-        const tempDateData = [];
+      if (selectedBoardIdCompliance.length > 0) {
+        const response3 = await getAllColumnsOfBoard(selectedBoardIdCompliance);
+        if (response3.success) {
+          const tempData = [];
+          const tempDateData = [];
 
-        response3.data.response.forEach((item) => {
-          tempData.push({ label: item.title, value: item.id });
-          if (item.type === "date") {
-            tempDateData.push({ label: item.title, value: item.id });
-          }
-        });
-        setColumnOptions(tempData);
-        setDateOptions(tempDateData);
+          response3.data.response.forEach((item) => {
+            tempData.push({ label: item.title, value: item.id });
+            if (item.type === "date") {
+              tempDateData.push({ label: item.title, value: item.id });
+            }
+          });
+          setColumnOptionsCompliance(tempData);
+          setDateOptionsCompliance(tempDateData);
+        }
+      }
+      if (selectedBoardIdService.length > 0) {
+        const response4 = await getAllColumnsOfBoard(selectedBoardIdService);
+        if (response4.success) {
+          const tempData = [];
+          const tempDateData = [];
+
+          response4.data.response.forEach((item) => {
+            tempData.push({ label: item.title, value: item.id });
+            if (item.type === "date") {
+              tempDateData.push({ label: item.title, value: item.id });
+            }
+          });
+          setColumnOptionsService(tempData);
+          setDateOptionsService(tempDateData);
+        }
       }
     } catch (err) {
     } finally {
@@ -142,36 +173,189 @@ export const ReportSettings = () => {
     }
   };
 
-  const handleChangeFilterValue = (e) => {
-    setSelectedFilterColumn({ ...selectedFilterColumn, value: e.target.value });
+  const handleChangeBoardIdCompliance = async (e) => {
+    setLoading(true);
+    try {
+      const response = await getAllColumnsOfBoard(e);
+      if (response.success) {
+        const tempData = [];
+        const tempDateData = [];
+
+        response.data.response.forEach((item) => {
+          tempData.push({ label: item.title, value: item.id });
+          if (item.type === "date") {
+            tempDateData.push({ label: item.title, value: item.id });
+          }
+        });
+        setColumnOptionsCompliance(tempData);
+        setDateOptionsCompliance(tempDateData);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setSelectedBoardIdCompliance(e);
+      setSelectedFilterColumnCompliance({key:'' , value:'' , date_key:''});
+      setSelectedTableColumnsCompliance([]);
+      setLoading(false);
+    }
   };
 
-  const handleSubmitFilterKey = async () => {
-    const payloadData = JSON.stringify({
-      profile_id: location.state.toString(),
-      governify_filter_key: selectedFilterColumn,
+  const handleSelectDateColumnCompliance = (e) => {
+    setSelectedFilterColumnCompliance({
+      ...selectedFilterColumnCompliance,
+      date_key: e,
     });
-    try {
-      const response = await governifyFilterKeyAssociation(payloadData);
-      if (response.success) {
-        toast.success(response.message);
-      }
-    } catch (err) {}
   };
 
-  const handleSaveTableData = async() =>{
-    const payloadData = JSON.stringify({
-      profile_id: location.state.toString(),
-      governify_table_settings: selectedTableColumns,
+  const handleSelectTableColumnCompliance = (e) => {
+    setSelectedTableColumnsCompliance(e);
+  };
+
+  const handleChangeFilterValueCompliance = (e) => {
+    setSelectedFilterColumnCompliance({
+      ...selectedFilterColumnCompliance,
+      value: e.target.value,
     });
+  };
+
+  const handleSelectColumnCompliance = (e) => {
+    let tempObj = { ...selectedFilterColumnCompliance };
+    tempObj.key = e;
+    tempObj.value = "";
+    setSelectedFilterColumnCompliance(tempObj);
+  };
+
+  const delayFun = async () =>{
+    return new Promise((resolve)=>{
+        setTimeout(()=>{
+          resolve();
+        } , 2000)
+    })
+  } 
+
+  const handleSaveCompliance = async () => {
+    setLoading(true);
+    const payload = {
+      profile_id: location.state.toString(),
+      governify_compliance_board_id: selectedBoardIdCompliance,
+    };
+    const payload1 = JSON.stringify({
+      profile_id: location.state.toString(),
+      governify_table_settings: selectedTableColumnsCompliance,
+    });
+    const payload2 = JSON.stringify({
+      profile_id: location.state.toString(),
+      governify_compliance_filter_key: selectedFilterColumnCompliance,
+    });
+
     try {
-      const response = await governifyAdminTableSettings(payloadData);
-      if (response.success) {
-        toast.success(response.message);
-     
+      const response = await governifyComplianceBoardAssociation(payload);
+      await delayFun();
+      const response1 = await governifyAdminTableSettings(payload1);
+      await delayFun();
+      const response2 = await governifyFilterKeyAssociationCompliance(payload2);
+      if (response.success && response1.success && response2.success) {
+        toast.success("Governify Compliance Settings Updated!");
       }
-    } catch (err) {}
-  }
+      if (!response.success) {
+        toast.error(response.message);
+      }
+
+      if (!response1.success) {
+        toast.error(response1.message);
+      }
+
+      if (!response2.success) {
+        toast.error(response2.message);
+      }
+    } catch (err) {
+      console.log(err, "err");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChangeBoardIdService = async (e) => {
+    setLoading(true);
+
+    try {
+      const response = await getAllColumnsOfBoard(e);
+      if (response.success) {
+        const tempData = [];
+        const tempDateData = [];
+
+        response.data.response.forEach((item) => {
+          tempData.push({ label: item.title, value: item.id });
+          if (item.type === "date") {
+            tempDateData.push({ label: item.title, value: item.id });
+          }
+        });
+        setColumnOptionsService(tempData);
+        setDateOptionsService(tempDateData);
+      }
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setSelectedBoardIdService(e);
+      setSelectedFilterColumnService({key:'' , value:'' , date_key:''});
+      setLoading(false);
+    }
+   
+  };
+
+  const handleSelectDateColumnService = (e) => {
+    setSelectedFilterColumnService({
+      ...selectedFilterColumnService,
+      date_key: e,
+    });
+  };
+
+  const handleChangeFilterValueService = (e) => {
+    setSelectedFilterColumnService({
+      ...selectedFilterColumnService,
+      value: e.target.value,
+    });
+  };
+
+  const handleSelectColumnService = (e) => {
+    let tempObj = { ...selectedFilterColumnService };
+    tempObj.key = e;
+    tempObj.value = "";
+    setSelectedFilterColumnService(tempObj);
+  };
+
+  const handleSaveService = async () => {
+    setLoading(true);
+    const payload = {
+      profile_id: location.state.toString(),
+      governify_service_board_id: selectedBoardIdService,
+    };
+
+    const payload1 = JSON.stringify({
+      profile_id: location.state.toString(),
+      governify_service_filter_key: selectedFilterColumnService,
+    });
+
+    try {
+      const response = await governifyServiceBoardAssociation(payload);
+      await delayFun();
+      const response1 = await governifyFilterKeyAssociationService(payload1);
+      if (response.success && response1.success) {
+        toast.success("Governify Service Settings Updated!");
+      }
+      if (!response.success) {
+        toast.error(response.message);
+      }
+
+      if (!response1.success) {
+        toast.error(response1.message);
+      }
+    } catch (err) {
+      console.log(err, "err");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     getListOfAllBoard();
@@ -187,158 +371,225 @@ export const ReportSettings = () => {
           forHome={false}
         />
       </div>
+
       <div style={{ marginTop: "20px" }}>
         <Collapse
+          defaultActiveKey={["1", "2"]}
           size="small"
           items={[
             {
               key: "1",
-              label: "Assigned Board",
+              label: "Compliance Setting",
               children: (
-                <div style={{ textAlign: "left" }}>
-                  <Select
-                    showSearch
-                    style={{ width: "50%" }}
-                    value={selectedBoard}
-                    onChange={handleChangeBoardId}
-                    options={allBoardId}
-                    filterOption={filterOption}
-                  />
-                </div>
-              ),
-            },
-          ]}
-        />
-      </div>
-      <div style={{ marginTop: "20px" }}>
-        <Collapse
-          size="small"
-          items={[
-            {
-              key: "1",
-              label: "Assigned Filter",
-              children: (
-                <div style={{ textAlign: "left" }}>
-                  <div style={{ marginTop: "20px" }}>
-                    <Select
-                      showSearch
-                      allowClear
-                      style={{
-                        width: "50%",
-                      }}
-                      placeholder="Please select Date Column"
-                      onChange={handleSelectDateColumn}
-                      options={dateOptions}
-                      value={selectedFilterColumn.date_key}
-                      filterOption={filterOption}
-                    />
-                  </div>
-                  <div style={{ marginTop: "20px" }}>
-                    <Select
-                      showSearch
-                      allowClear
-                      style={{
-                        width: "50%",
-                      }}
-                      placeholder="Please select"
-                      onChange={handleSelectColumn}
-                      options={columnOptions}
-                      value={selectedFilterColumn.key}
-                      filterOption={filterOption}
-                    />
-                  </div>
-                  <div style={{ marginTop: "10px" }}>
-                    {selectedFilterColumn.key !== undefined &&
-                      selectedFilterColumn.key.length > 0 && (
-                        <Input
-                          addonBefore="Filter Value"
-                          style={{ width: "50%" }}
-                          value={
-                            selectedFilterColumn.value === undefined
-                              ? ""
-                              : selectedFilterColumn.value
-                          }
-                          onChange={handleChangeFilterValue}
-                        />
-                      )}
-                  </div>
-                  {selectedFilterColumn.key !== undefined &&
-                    selectedFilterColumn.key.length > 0 &&
-                    selectedFilterColumn.value.length > 0 && (
-                      <div
+                <>
+                  <div style={{ textAlign: "left" }}>
+                    <div style={{ marginTop: "20px" }}>
+                      <span style={{ marginRight: "20px" }}>
+                        Assign Board :{" "}
+                      </span>
+                      <Select
+                        showSearch
+                        allowClear
+                        placeholder="Please Assign Board For Compliance"
+                        style={{ width: "50%" }}
+                        value={selectedBoardIdCompliance || undefined}
+                        onChange={handleChangeBoardIdCompliance}
+                        options={allBoardId}
+                        filterOption={filterOption}
+                      />
+                    </div>
+                    <div style={{ marginTop: "20px" }}>
+                      <span style={{ marginRight: "20px" }}>
+                        Select Date Column :{" "}
+                      </span>
+                      <Select
+                        showSearch
+                        allowClear
                         style={{
-                          marginTop: "10px",
                           width: "50%",
-                          display: "flex",
-                          justifyContent: "center",
                         }}
+                        placeholder="Please select Date Column"
+                        onChange={handleSelectDateColumnCompliance}
+                        options={dateOptionsCompliance}
+                        value={
+                          selectedFilterColumnCompliance.date_key || undefined
+                        }
+                        filterOption={filterOption}
+                      />
+                    </div>
+                    <div style={{ marginTop: "20px" }}>
+                      <span style={{ marginRight: "20px" }}>
+                        Select Table Column :
+                      </span>
+                      <Select
+                        mode="multiple"
+                        showSearch
+                        allowClear
+                        style={{
+                          width: "50%",
+                        }}
+                        placeholder="Please select Table Columns"
+                        onChange={handleSelectTableColumnCompliance}
+                        options={columnOptionsCompliance}
+                        value={selectedTableColumnsCompliance || undefined}
+                        filterOption={filterOption}
+                      />
+                    </div>
+                    <div style={{ marginTop: "20px" }}>
+                      <span style={{ marginRight: "20px" }}>
+                        Select Filter Column :{" "}
+                      </span>
+                      <Select
+                        showSearch
+                        allowClear
+                        style={{
+                          width: "50%",
+                        }}
+                        placeholder="Please select"
+                        onChange={handleSelectColumnCompliance}
+                        options={columnOptionsCompliance}
+                        value={selectedFilterColumnCompliance.key || undefined}
+                        filterOption={filterOption}
+                      />
+                    </div>
+                    <div style={{ marginTop: "20px" }}>
+                      {selectedFilterColumnCompliance.key !== undefined &&
+                        selectedFilterColumnCompliance.key.length > 0 && (
+                          <Input
+                            addonBefore="Filter Value"
+                            style={{ width: "50%" }}
+                            value={
+                              selectedFilterColumnCompliance.value === undefined
+                                ? ""
+                                : selectedFilterColumnCompliance.value
+                            }
+                            onChange={handleChangeFilterValueCompliance}
+                          />
+                        )}
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "10px",
+                        marginTop: "20px",
+                      }}
+                    >
+                      <Button onClick={handleSaveCompliance}>Save</Button>
+
+                      <Button
+                        onClick={() => navigateToReportSetting("compliance")}
                       >
-                        <Button onClick={handleSubmitFilterKey}> Save</Button>
-                      </div>
-                    )}
-                </div>
-              ),
-            },
-          ]}
-        />
-      </div>
-      <div style={{ marginTop: "20px" }}>
-        <Collapse
-          size="small"
-          items={[
-            {
-              key: "1",
-              label: "Compliance Table Setting",
-              children: (
-                <div style={{ textAlign: "left" }}>
-                  <Select
-                    mode="multiple"
-                    showSearch
-                    allowClear
-                    style={{
-                      width: "100%",
-                    }}
-                    placeholder="Please select"
-                    onChange={handleSelectTableColumn}
-                    options={columnOptions}
-                    value={selectedTableColumns}
-                    filterOption={filterOption}
-                  />
-                  <div style={{marginTop:"20px"}}>
-                    <Button onClick={handleSaveTableData}>Save</Button>
+                        Edit Report
+                      </Button>
+                      <Button
+                        onClick={() => navigateToReportView("compliance")}
+                      >
+                        View Report
+                      </Button>
+                    </div>
                   </div>
-                </div>
+                </>
+              ),
+            },
+            {
+              key: "2",
+              label: "Service Setting",
+              children: (
+                <>
+                  <div style={{ textAlign: "left" }}>
+                    <div style={{ marginTop: "20px" }}>
+                      <span style={{ marginRight: "20px" }}>
+                        Assign Board :{" "}
+                      </span>
+                      <Select
+                        showSearch
+                        allowClear
+                        placeholder="Please Assign Board For Service"
+                        style={{ width: "50%" }}
+                        value={selectedBoardIdService || undefined}
+                        onChange={handleChangeBoardIdService}
+                        options={allBoardId}
+                        filterOption={filterOption}
+                      />
+                    </div>
+                    <div style={{ marginTop: "20px" }}>
+                      <span style={{ marginRight: "20px" }}>
+                        Select Date Column :{" "}
+                      </span>
+                      <Select
+                        showSearch
+                        allowClear
+                        style={{
+                          width: "50%",
+                        }}
+                        placeholder="Please select Date Column"
+                        onChange={handleSelectDateColumnService}
+                        options={dateOptionsService}
+                        value={
+                          selectedFilterColumnService.date_key || undefined
+                        }
+                        filterOption={filterOption}
+                      />
+                    </div>
+
+                    <div style={{ marginTop: "20px" }}>
+                      <span style={{ marginRight: "20px" }}>
+                        Select Filter Column :{" "}
+                      </span>
+                      <Select
+                        showSearch
+                        allowClear
+                        style={{
+                          width: "50%",
+                        }}
+                        placeholder="Please select"
+                        onChange={handleSelectColumnService}
+                        options={columnOptionsService}
+                        value={selectedFilterColumnService.key || undefined}
+                        filterOption={filterOption}
+                      />
+                    </div>
+                    <div style={{ marginTop: "20px" }}>
+                      {selectedFilterColumnService.key !== undefined &&
+                        selectedFilterColumnService.key.length > 0 && (
+                          <Input
+                            addonBefore="Filter Value"
+                            style={{ width: "50%" }}
+                            value={
+                              selectedFilterColumnService.value === undefined
+                                ? ""
+                                : selectedFilterColumnService.value
+                            }
+                            onChange={handleChangeFilterValueService}
+                          />
+                        )}
+                    </div>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "10px",
+                        marginTop: "20px",
+                      }}
+                    >
+                      <Button onClick={handleSaveService}>Save</Button>
+
+                      <Button
+                        onClick={() => navigateToReportSetting("service")}
+                      >
+                        Edit Report
+                      </Button>
+                      <Button onClick={() => navigateToReportView("service")}>
+                        View Report
+                      </Button>
+                    </div>
+                  </div>
+                </>
               ),
             },
           ]}
         />
-      </div>
-      <div style={{ marginTop: "40px" }}>
-        {[
-          { label: "Compliance Report Setting", type: "compliance" },
-          { label: "Service Report Setting", type: "service" },
-        ].map((item, index) => (
-          <div
-            key={index}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: "20px",
-              marginBottom: "20px", // Added margin between sections
-            }}
-          >
-            <span>{item.label}</span>
-            <div style={{ display: "flex", gap: "10px" }}>
-              <Button onClick={() => navigateToReportSetting(item.type)}>
-                Edit
-              </Button>
-              <Button onClick={() => navigateToReportView(item.type)}>
-                View
-              </Button>
-            </div>
-          </div>
-        ))}
       </div>
 
       <ToastContainer position="bottom-right" />

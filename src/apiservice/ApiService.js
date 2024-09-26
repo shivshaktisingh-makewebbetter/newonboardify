@@ -65,16 +65,22 @@ export const exportUserData = () =>
   Services.GET(`/newonboardify/admin/exportUsersData`);
 export const governifyAdminTableSettings = (data) =>
   Services.POST(`governify/admin/tableSettings`, data);
-export const governifyBoardAssociation = (data) =>
-  Services.POST(`governify/admin/profileBoardAssociation`, data);
-export const governifyFilterKeyAssociation = (data) =>
-  Services.POST(`governify/admin/governifyAddFilterKey`, data);
+export const governifyComplianceBoardAssociation = (data) =>
+  Services.POST(`governify/admin/governifyComplianceBoardAssociation`, data);
+export const governifyServiceBoardAssociation = (data) =>
+  Services.POST(`governify/admin/governifyServiceBoardAssociation`, data);
+export const governifyFilterKeyAssociationCompliance = (data) =>
+  Services.POST(`governify/admin/governifyComplianceFilterKey`, data);
+export const governifyFilterKeyAssociationService = (data) =>
+  Services.POST(`governify/admin/governifyServiceFilterKey`, data);
 export const governifyComplianceReportAdminSetting = (data) =>
   Services.POST(`governify/admin/governifyComplianceReport`, data);
 export const governifyServiceReportAdminSetting = (data) =>
   Services.POST(`governify/admin/governifyServiceReport`, data);
-export const getComplianceReportDataAdmin = (boardId , dateColumn) =>
-  Services.GET(`governify/admin/getComplianceReportForAdmin?board_id=${boardId}&date_column=${dateColumn}`);
+export const getComplianceReportDataAdmin = (boardId, dateColumn) =>
+  Services.GET(
+    `governify/admin/getComplianceReportForAdmin?board_id=${boardId}&date_column=${dateColumn}`
+  );
 export const saveAdminComplianceView = (data) =>
   Services.POST(`governify/admin/governifyComplianceReportView`, data);
 export const saveAdminServiceView = (data) =>

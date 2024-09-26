@@ -864,7 +864,7 @@ export const ComplianceReportAdminView = () => {
                         </div>
                       )}
                       {box.horizontal ? (
-                        <BarChartVertical
+                        <BarChartHorizontal
                           dataset={getDataSetForVerticalBarChart(box)}
                           stepsize={getStepSizeForVerticalBarChart(box)}
                           max={getMaxForVerticalBarChart(box)}
