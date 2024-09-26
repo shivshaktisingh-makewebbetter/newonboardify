@@ -272,10 +272,10 @@ export const ComplianceReportAdminView = () => {
         borderColor: getBorderColorForBarChart(subItem, item),
         borderWidth: 1,
         borderRadius: {
-          topLeft: 5,   // Set the top-left corner radius
-          topRight: 5,  // Set the top-right corner radius
+          topLeft: 5, // Set the top-left corner radius
+          topRight: 5, // Set the top-right corner radius
           bottomLeft: 0, // No radius for the bottom-left corner
-          bottomRight: 0 // No radius for the bottom-right corner
+          bottomRight: 0, // No radius for the bottom-right corner
         },
         borderSkipped: false,
       });
@@ -870,6 +870,7 @@ export const ComplianceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
+
                       {box.horizontal ? (
                         <BarChartHorizontal
                           dataset={getDataSetForVerticalBarChart(box)}
@@ -947,6 +948,9 @@ export const ComplianceReportAdminView = () => {
                         <div
                           style={{
                             borderBottom: "1px solid rgba(201, 204, 207, 0.7)",
+                            position:"absolute" ,
+                            top:"20px" ,
+                            // left:"20px"
                           }}
                         >
                           <p

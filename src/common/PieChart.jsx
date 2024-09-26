@@ -68,7 +68,9 @@ export const PieChart = ({
           display: "flex",
           justifyContent: "start",
           alignItems: "center",
-          marginBottom:"20px"
+          position: "absolute" ,
+          top:"20px" ,
+          left:"20px"
         }}
       >
         <span
