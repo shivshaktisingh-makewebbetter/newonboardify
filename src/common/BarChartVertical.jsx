@@ -87,6 +87,8 @@ export const BarChartVertical = ({
     scales: {
       x: {
         display: false,
+        categoryPercentage: 1, // Adjusts space between categories (bars)
+        barPercentage: 20,
       },
       y: {
         beginAtZero: true,

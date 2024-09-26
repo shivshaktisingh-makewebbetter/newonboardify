@@ -297,7 +297,6 @@ export const ServiceReportAdminView = () => {
     return tempData;
   };
 
-
   function hexToRgba(hex, opacity) {
     // Remove the '#' if it's there
     hex = hex.replace("#", "");
@@ -312,10 +311,6 @@ export const ServiceReportAdminView = () => {
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
   }
 
-
-
-
-
   const getDataSetForVerticalBarChart = (subItem) => {
     let tempData = [];
     subItem.selectedColumns.forEach((item) => {
@@ -325,6 +320,16 @@ export const ServiceReportAdminView = () => {
         backgroundColor: getBgColorForBarChart(subItem, item),
         borderColor: getBorderColorForBarChart(subItem, item),
         borderWidth: 1,
+        borderRadius: {
+          topLeft: 5,   // Set the top-left corner radius
+          topRight: 5,  // Set the top-right corner radius
+          bottomLeft: 0, // No radius for the bottom-left corner
+          bottomRight: 0 // No radius for the bottom-right corner
+        },
+        borderSkipped: false,
+        borderWidth: 1,
+        hoverBackgroundColor: getBgColorForBarChart(subItem, item), // Prevent hover color changes
+        hoverBorderColor: getBorderColorForBarChart(subItem, item),
       });
     });
 
@@ -564,7 +569,7 @@ export const ServiceReportAdminView = () => {
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                        1000
+                        1000,
                       ]}
                       resizeHandles={["se"]}
                       onResizeStop={(e, data) =>
@@ -616,7 +621,7 @@ export const ServiceReportAdminView = () => {
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                       1000
+                        1000,
                       ]}
                       resizeHandles={["se"]}
                       onResizeStop={(e, data) =>
@@ -672,7 +677,7 @@ export const ServiceReportAdminView = () => {
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                        1000
+                        1000,
                       ]}
                       resizeHandles={["se"]}
                       onResizeStop={(e, data) =>
@@ -691,7 +696,6 @@ export const ServiceReportAdminView = () => {
                         alignItems: "center",
                       }}
                     >
-                   
                       {box.showDragHandle && (
                         <div
                           className="drag-handle"
@@ -714,7 +718,7 @@ export const ServiceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
-                       <BarChartVertical
+                      <BarChartVertical
                         dataset={getDataSetForVerticalBarChart(box)}
                         stepsize={getStepSizeForVerticalBarChart(box)}
                         max={getMaxForVerticalBarChart(box)}
@@ -730,7 +734,7 @@ export const ServiceReportAdminView = () => {
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                      1000
+                        1000,
                       ]}
                       resizeHandles={["se"]}
                       onResizeStop={(e, data) =>
@@ -846,7 +850,7 @@ export const ServiceReportAdminView = () => {
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                        1000
+                        1000,
                       ]}
                       resizeHandles={["se"]}
                       onResizeStop={(e, data) =>
@@ -917,7 +921,7 @@ export const ServiceReportAdminView = () => {
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                       1000
+                        1000,
                       ]}
                       resizeHandles={["se"]}
                       onResizeStop={(e, data) =>

@@ -271,6 +271,13 @@ export const ComplianceReportAdminView = () => {
         backgroundColor: getBgColorForBarChart(subItem, item),
         borderColor: getBorderColorForBarChart(subItem, item),
         borderWidth: 1,
+        borderRadius: {
+          topLeft: 5,   // Set the top-left corner radius
+          topRight: 5,  // Set the top-right corner radius
+          bottomLeft: 0, // No radius for the bottom-left corner
+          bottomRight: 0 // No radius for the bottom-right corner
+        },
+        borderSkipped: false,
       });
     });
 
