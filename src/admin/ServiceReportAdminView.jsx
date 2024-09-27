@@ -4,7 +4,6 @@ import Draggable from "react-draggable";
 import "react-resizable/css/styles.css";
 import { DragOutlined } from "@ant-design/icons";
 import {
-  getComplianceReportDataAdmin,
   getProfileListing,
   getServiceReportDataAdmin,
   saveAdminServiceView,
@@ -239,15 +238,7 @@ export const ServiceReportAdminView = () => {
     return tempValue;
   };
 
-  const getBgSquareColor = (id, data) => {
-    let tempColor = "#000000";
-    data.forEach((item) => {
-      if (item.key === id) {
-        tempColor = item.value;
-      }
-    });
-    return tempColor;
-  };
+
 
   const getBgColorForBarChart = (subItem, item) => {
     let hexColor = "#d20e0e";
@@ -547,27 +538,57 @@ export const ServiceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
-                      <div style={{ width: "100%" }}>
-                        <p
-                          style={{
-                            textAlign: "left",
-                            fontSize: "14px",
-                            fontWeight: "400",
-                            color: "#6d7175",
-                          }}
-                        >
-                          Company Name
-                        </p>
-                        <p
-                          style={{
-                            textAlign: "left",
-                            fontSize: "24px",
-                            fontWeight: "600",
-                            color: "#202223",
-                          }}
-                        >
-                          TASC Outsourcing
-                        </p>
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div>
+                          <p
+                            style={{
+                              width: "100%",
+                              textAlign: "left",
+                              fontSize: "14px",
+                              fontWeight: "400",
+                              color: "#6d7175",
+                              marginBottom: "6px",
+                            }}
+                          >
+                            {getColumnTitleForTextChart(box.column1)}
+                          </p>
+                          <p
+                            style={{
+                              width: "100%",
+                              textAlign: "left",
+                              fontSize: "24px",
+                              fontWeight: "600",
+                              color: "#202223",
+                              marginBottom: "6px",
+                            }}
+                          >
+                            {getColumnValueForTextChart(box.column1)}
+                          </p>
+                        </div>
+                        <div>
+                          <p
+                            style={{
+                              width: "100%",
+                              textAlign: "right",
+                              fontSize: "16px",
+                              fontWeight: "600",
+                              marginBottom: "6px",
+                              borderRadius: "100px",
+                              background: hexToRgba(box.color, "0.2"),
+                              padding: "6px 12px",
+                              color: box.color,
+                            }}
+                          >
+                            {getColumnValueForTextChart(box.column2)}
+                          </p>
+                        </div>
                       </div>
                     </ResizableBox>
                   ) : containerIndex === 0 && box.type === "Pie Chart" ? (
@@ -812,27 +833,57 @@ export const ServiceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
-                      <div style={{ width: "100%" }}>
-                        <p
-                          style={{
-                            textAlign: "left",
-                            fontSize: "14px",
-                            fontWeight: "400",
-                            color: "#6d7175",
-                          }}
-                        >
-                          Company Name
-                        </p>
-                        <p
-                          style={{
-                            textAlign: "left",
-                            fontSize: "24px",
-                            fontWeight: "600",
-                            color: "#202223",
-                          }}
-                        >
-                          TASC Outsourcing
-                        </p>
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div>
+                          <p
+                            style={{
+                              width: "100%",
+                              textAlign: "left",
+                              fontSize: "14px",
+                              fontWeight: "400",
+                              color: "#6d7175",
+                              marginBottom: "6px",
+                            }}
+                          >
+                            {getColumnTitleForTextChart(box.column1)}
+                          </p>
+                          <p
+                            style={{
+                              width: "100%",
+                              textAlign: "left",
+                              fontSize: "24px",
+                              fontWeight: "600",
+                              color: "#202223",
+                              marginBottom: "6px",
+                            }}
+                          >
+                            {getColumnValueForTextChart(box.column1)}
+                          </p>
+                        </div>
+                        <div>
+                          <p
+                            style={{
+                              width: "100%",
+                              textAlign: "right",
+                              fontSize: "16px",
+                              fontWeight: "600",
+                              marginBottom: "6px",
+                              borderRadius: "100px",
+                              background: hexToRgba(box.color, "0.2"),
+                              padding: "6px 12px",
+                              color: box.color,
+                            }}
+                          >
+                            {getColumnValueForTextChart(box.column2)}
+                          </p>
+                        </div>
                       </div>
                     </ResizableBox>
                   ) : containerIndex === 1 && box.type === "Pie Chart" ? (
