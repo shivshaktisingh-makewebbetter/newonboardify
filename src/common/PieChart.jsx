@@ -153,8 +153,8 @@ export const PieChart = ({
                 <div
                   style={{
                     background: bgSet[index],
-                    width: "10px",
-                    height: "10px",
+                    width: "15px",
+                    height: "15px",
                     borderRadius: "3px",
                   }}
                 ></div>
