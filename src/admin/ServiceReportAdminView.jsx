@@ -609,9 +609,15 @@ export const ServiceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
-                      <div style={{ paddingTop: "40px", textAlign: "center" }}>
-                        <span>Box {boxIndex + 1}</span>
-                      </div>
+
+                      <PieChart
+                        title={box.heading}
+                        dataset={getPieChartDataSet(box)}
+                        bgSet={getPieChartBg(box)}
+                        pieChartLabel={getPieChartLabel(box)}
+                        borderColorSetPie={getPieChartBorder(box)}
+                        description={box.description}
+                      />
                     </ResizableBox>
                   ) : containerIndex === 0 && box.type === "Bar Chart" ? (
                     <ResizableBox
@@ -661,9 +667,23 @@ export const ServiceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
-                      <div style={{ paddingTop: "40px", textAlign: "center" }}>
-                        <span>Box {boxIndex + 1}</span>
-                      </div>
+                      {box.horizontal ? (
+                        <BarChartHorizontal
+                          dataset={getDataSetForVerticalBarChart(box)}
+                          stepsize={getStepSizeForVerticalBarChart(box)}
+                          max={getMaxForVerticalBarChart(box)}
+                          title={box.heading}
+                          description={box.description}
+                        />
+                      ) : (
+                        <BarChartVertical
+                          dataset={getDataSetForVerticalBarChart(box)}
+                          stepsize={getStepSizeForVerticalBarChart(box)}
+                          max={getMaxForVerticalBarChart(box)}
+                          title={box.heading}
+                          description={box.description}
+                        />
+                      )}
                     </ResizableBox>
                   ) : (
                     <></>
@@ -717,130 +737,23 @@ export const ServiceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
-                      <BarChartVertical
-                        dataset={getDataSetForVerticalBarChart(box)}
-                        stepsize={getStepSizeForVerticalBarChart(box)}
-                        max={getMaxForVerticalBarChart(box)}
-                        title={box.heading}
-                        description={box.description}
-                      />
-                    </ResizableBox>
-                  ) : containerIndex === 1 &&
-                    box.type === "Multi Value Chart" ? (
-                    <ResizableBox
-                      width={box.size.width}
-                      height={box.size.height}
-                      minConstraints={[100, 100]}
-                      maxConstraints={[
-                        window.innerWidth - box.position.x,
-                        1000,
-                      ]}
-                      resizeHandles={["se"]}
-                      onResizeStop={(e, data) =>
-                        handleResize(e, data, containerIndex, boxIndex)
-                      }
-                      style={{
-                        background: "white",
-                        border: "1px solid #E3E3E3",
-                        borderRadius: "8px",
-                        padding: "10px",
-                        position: "relative",
-                        marginBottom: "10px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "flex-end",
-                        alignItems: "center",
-                      }}
-                    >
-                      {box.showDragHandle && (
-                        <div
-                          className="drag-handle"
-                          style={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            width: "30px",
-                            height: "30px",
-                            backgroundColor: "#ccc",
-                            cursor: "move",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            borderBottom: "1px solid black",
-                            borderRight: "1px solid black",
-                            zIndex: 1,
-                          }}
-                        >
-                          <DragOutlined />
-                        </div>
+                      {box.horizontal ? (
+                        <BarChartHorizontal
+                          dataset={getDataSetForVerticalBarChart(box)}
+                          stepsize={getStepSizeForVerticalBarChart(box)}
+                          max={getMaxForVerticalBarChart(box)}
+                          title={box.heading}
+                          description={box.description}
+                        />
+                      ) : (
+                        <BarChartVertical
+                          dataset={getDataSetForVerticalBarChart(box)}
+                          stepsize={getStepSizeForVerticalBarChart(box)}
+                          max={getMaxForVerticalBarChart(box)}
+                          title={box.heading}
+                          description={box.description}
+                        />
                       )}
-                      <div style={{ textAlign: "center" }}>
-                        <p
-                          style={{
-                            textAlign: "center",
-                            fontSize: "24px",
-                            fontWeight: "700",
-                            color: "#202223",
-                          }}
-                        >
-                          Saudization Percentage
-                        </p>
-                        <div
-                          style={{
-                            marginTop: "15px",
-                            border: "1px solid #c9cccf",
-                          }}
-                        ></div>
-                        <div style={{ marginTop: "26px" }}>
-                          {box.selectedColumns.map((column, index) => (
-                            <div key={index} style={{ marginBottom: "10px" }}>
-                              <div
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "space-around",
-                                  alignItems: "center",
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    width: "16px",
-                                    height: "16px",
-                                    background: "#AC71F0",
-                                    borderRadius: "4px",
-                                  }}
-                                ></div>
-                                <div
-                                  style={{
-                                    color: "#202223",
-                                    fontSize: "20px",
-                                    fontWeight: "600",
-                                  }}
-                                >
-                                  Saudi Employees
-                                </div>
-                              </div>
-                              <p
-                                style={{
-                                  fontSize: "45px",
-                                  fontWeight: "700",
-                                  color: "#202223",
-                                }}
-                              >
-                                75%
-                              </p>
-                              {box.selectedColumns.length - 1 > index && (
-                                <div
-                                  style={{
-                                    marginTop: "15px",
-                                    marginBottom: "15px",
-                                    border: "1px solid #c9cccf",
-                                  }}
-                                ></div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
                     </ResizableBox>
                   ) : containerIndex === 1 && box.type === "Text Chart" ? (
                     <ResizableBox
@@ -849,7 +762,7 @@ export const ServiceReportAdminView = () => {
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                        1000,
+                        window.innerHeight - box.position.y,
                       ]}
                       resizeHandles={["se"]}
                       onResizeStop={(e, data) =>
@@ -890,7 +803,7 @@ export const ServiceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
-                      <div style={{ paddingTop: "40px", textAlign: "center" }}>
+                      <div style={{ width: "100%" }}>
                         <p
                           style={{
                             textAlign: "left",
