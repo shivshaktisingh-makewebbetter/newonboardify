@@ -33,7 +33,7 @@ export const PieChart = ({
   const options = {
     plugins: {
       legend: {
-        display: true,
+        display: false,
         position: "bottom",
         labels: {
           boxWidth: 10,
@@ -127,8 +127,51 @@ export const PieChart = ({
           )}
         </span>
       </div>
-      <div style={{}}>
+      <div>
         <Pie data={data} options={options} />
+        <div
+          style={{
+            display: "flex",
+            marginTop: "20px",
+            justifyContent: "center",
+          }}
+        >
+          {pieChartLabel.map((item, index) => {
+            const truncatedLabel =
+              item.length > 12 ? `${item.substring(0, 13)}...` : item;
+            return (
+              <div
+                key={index}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  justifyContent: "center",
+                  width: "100%",
+                }}
+              >
+                <div
+                  style={{
+                    background: bgSet[index],
+                    width: "10px",
+                    height: "10px",
+                    borderRadius: "3px",
+                  }}
+                ></div>
+                <div
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: "400",
+                    color: "#6d7175",
+                  }}
+                  title={item}
+                >
+                  {truncatedLabel}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import { DragOutlined } from "@ant-design/icons";
 import {
   getComplianceReportDataAdmin,
   getProfileListing,
+  getServiceReportDataAdmin,
   saveAdminServiceView,
 } from "../apiservice/ApiService";
 import { useLocation } from "react-router-dom";
@@ -116,7 +117,7 @@ export const ServiceReportAdminView = () => {
     let tempContainerData = [];
     try {
       const response = await getProfileListing();
-      const response1 = await getComplianceReportDataAdmin(
+      const response1 = await getServiceReportDataAdmin(
         location.state.boardId,
         location.state.filterKey.date_key
       );
@@ -206,6 +207,28 @@ export const ServiceReportAdminView = () => {
     return tempValue;
   };
 
+  const getDataSetForHorizontalBarChart = (subItem) => {
+    let tempData = [];
+    subItem.selectedColumns.forEach((item) => {
+      tempData.push({
+        label: getColumnTitleForTextChart(item),
+        data: [getColumnValueForTextChart(item)],
+        backgroundColor: getBgColorForBarChart(subItem, item),
+        borderColor: getBorderColorForBarChart(subItem, item),
+        borderWidth: 1,
+        borderRadius: {
+          topLeft: 0, // Set the top-left corner radius
+          topRight: 5, // Set the top-right corner radius
+          bottomLeft: 0, // No radius for the bottom-left corner
+          bottomRight: 5, // No radius for the bottom-right corner
+        },
+        borderSkipped: false,
+      });
+    });
+
+    return tempData;
+  };
+
   const getColumnTitleForTextChart = (id) => {
     let tempValue = "";
     allColumnTitle.forEach((item) => {
@@ -225,20 +248,6 @@ export const ServiceReportAdminView = () => {
     });
     return tempColor;
   };
-
-  function hexToRgba(hex, opacity) {
-    // Remove the '#' if it's there
-    hex = hex.replace("#", "");
-
-    // Parse the hex color
-    const bigint = parseInt(hex, 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-
-    // Return the RGBA string with opacity
-    return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-  }
 
   const getBgColorForBarChart = (subItem, item) => {
     let hexColor = "#d20e0e";
@@ -321,10 +330,10 @@ export const ServiceReportAdminView = () => {
         borderColor: getBorderColorForBarChart(subItem, item),
         borderWidth: 1,
         borderRadius: {
-          topLeft: 0, // Set the top-left corner radius
+          topLeft: 5, // Set the top-left corner radius
           topRight: 5, // Set the top-right corner radius
           bottomLeft: 0, // No radius for the bottom-left corner
-          bottomRight: 5, // No radius for the bottom-right corner
+          bottomRight: 0, // No radius for the bottom-right corner
         },
         borderSkipped: false,
         hoverBackgroundColor: getBgColorForBarChart(subItem, item), // Prevent hover color changes
@@ -739,7 +748,7 @@ export const ServiceReportAdminView = () => {
                       )}
                       {box.horizontal ? (
                         <BarChartHorizontal
-                          dataset={getDataSetForVerticalBarChart(box)}
+                          dataset={getDataSetForHorizontalBarChart(box)}
                           stepsize={getStepSizeForVerticalBarChart(box)}
                           max={getMaxForVerticalBarChart(box)}
                           title={box.heading}
