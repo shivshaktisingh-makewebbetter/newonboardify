@@ -1,10 +1,11 @@
 import React from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels"; // Import the data labels plugin
 import { CustomTooltip } from "./CustomToolTip";
 
 // Register necessary components
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 export const PieChart = ({
   title,
@@ -37,11 +38,17 @@ export const PieChart = ({
         labels: {
           boxWidth: 10,
           boxHeight: 10,
+          padding: 20,
+          font: {
+            size: "14px",
+            weight: "400",
+            color: "#6d7175",
+          },
         },
       },
       tooltip: {
-        xAlign: "center", // Horizontally center the tooltip
-        yAlign: "bottom", // Vertically align the tooltip to the top
+        xAlign: "center",
+        yAlign: "bottom",
         displayColors: false,
         backgroundColor: "#ffffff",
         titleFont: {
@@ -56,7 +63,7 @@ export const PieChart = ({
         },
         bodyColor: "#000000",
         padding: {
-          top: 10, // Add padding to ensure proper alignment
+          top: 10,
           bottom: 10,
           left: 15,
           right: 15,
@@ -67,8 +74,26 @@ export const PieChart = ({
             return value;
           },
         },
-        bodyAlign: "center", // Align body content horizontally to the center
-        titleAlign: "center", // Align title content horizontally to the center
+        bodyAlign: "center",
+        titleAlign: "center",
+      },
+      datalabels: {
+        color: "white", // Set the text color here
+        formatter: (value, context) => {
+          return value + "%"; // Show the label name
+        },
+        labels: {
+          title: {
+            font: {
+              weight: "bold",
+            },
+          },
+          value: {
+            color: "white",
+          },
+        },
+        anchor: "center",
+        align: "end",
       },
     },
   };
@@ -102,7 +127,9 @@ export const PieChart = ({
           )}
         </span>
       </div>
-      <Pie data={data} options={options} />
+      <div style={{}}>
+        <Pie data={data} options={options} />
+      </div>
     </div>
   );
 };

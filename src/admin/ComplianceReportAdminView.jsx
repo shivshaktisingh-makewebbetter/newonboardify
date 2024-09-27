@@ -284,6 +284,28 @@ export const ComplianceReportAdminView = () => {
     return tempData;
   };
 
+  const getDataSetForHorizontalBarChart = (subItem) => {
+    let tempData = [];
+    subItem.selectedColumns.forEach((item) => {
+      tempData.push({
+        label: getColumnTitleForTextChart(item),
+        data: [getColumnValueForTextChart(item)],
+        backgroundColor: getBgColorForBarChart(subItem, item),
+        borderColor: getBorderColorForBarChart(subItem, item),
+        borderWidth: 1,
+        borderRadius: {
+          topLeft: 0, // Set the top-left corner radius
+          topRight: 5, // Set the top-right corner radius
+          bottomLeft: 0, // No radius for the bottom-left corner
+          bottomRight: 5, // No radius for the bottom-right corner
+        },
+        borderSkipped: false,
+      });
+    });
+
+    return tempData;
+  };
+
   function calculateStepSize(data) {
     // Convert string data to numbers
     const numericData = data.map(Number);
@@ -507,7 +529,8 @@ export const ComplianceReportAdminView = () => {
                             marginBottom: "6px",
                           }}
                         >
-                          Company Name
+                          {getColumnTitleForTextChart(box.column)}
+                          {/* Visa */}
                         </p>
                         <p
                           style={{
@@ -515,10 +538,10 @@ export const ComplianceReportAdminView = () => {
                             fontSize: "24px",
                             fontWeight: "600",
                             color: "#202223",
-                            marginBottom: "6px",
                           }}
                         >
-                          TASC Outsourcing
+                          {getColumnValueForTextChart(box.column)}
+                          {/* 23 */}
                         </p>
                       </div>
                     </ResizableBox>
@@ -639,71 +662,19 @@ export const ComplianceReportAdminView = () => {
                         </div>
                       </div>
                     </ResizableBox>
-                  ) : containerIndex === 0 && box.type === "Pie Chart" ? (
-                    <ResizableBox
-                      width={Number(box.size.width)}
-                      height={Number(box.size.height)}
-                      minConstraints={[100, 100]}
-                      maxConstraints={[
-                        window.innerWidth - box.position.x,
-                        window.innerHeight - box.position.y,
-                      ]}
-                      resizeHandles={["se"]}
-                      onResizeStop={(e, data) =>
-                        handleResize(e, data, containerIndex, boxIndex)
-                      }
-                      style={{
-                        background: "white",
-                        border: "1px solid #E3E3E3",
-                        borderRadius: "8px",
-                        padding: "10px",
-                        position: "relative",
-                        marginBottom: "10px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      {box.showDragHandle && (
-                        <div
-                          className="drag-handle"
-                          style={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            width: "30px",
-                            height: "30px",
-                            backgroundColor: "#ccc",
-                            cursor: "move",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            borderBottom: "1px solid black",
-                            borderRight: "1px solid black",
-                            zIndex: 1,
-                          }}
-                        >
-                          <DragOutlined />
-                        </div>
-                      )}
-                      <div style={{ paddingTop: "40px", textAlign: "center" }}>
-                        <span>Box {boxIndex + 1}</span>
-                      </div>
-                    </ResizableBox>
                   ) : containerIndex === 0 && box.type === "Bar Chart" ? (
                     <ResizableBox
-                      width={Number(box.size.width)}
-                      height={Number(box.size.height)}
+                      width={Number(box.size.width) || 500}
+                      height={Number(box.size.height) || 500}
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                        window.innerHeight - box.position.y,
+                        1000,
                       ]}
                       resizeHandles={["se"]}
-                      onResizeStop={(e, data) =>
-                        handleResize(e, data, containerIndex, boxIndex)
-                      }
+                      onResizeStop={(e, data) => {
+                        handleResize(e, data, containerIndex, boxIndex);
+                      }}
                       style={{
                         background: "white",
                         border: "1px solid #E3E3E3",
@@ -713,7 +684,7 @@ export const ComplianceReportAdminView = () => {
                         marginBottom: "10px",
                         display: "flex",
                         flexDirection: "column",
-                        justifyContent: "center",
+                        justifyContent: "flex-end",
                         alignItems: "center",
                       }}
                     >
@@ -739,10 +710,23 @@ export const ComplianceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
+
                       {box.horizontal ? (
-                        <BarChartHorizontal />
+                        <BarChartHorizontal
+                          dataset={getDataSetForHorizontalBarChart(box)}
+                          stepsize={getStepSizeForVerticalBarChart(box)}
+                          max={getMaxForVerticalBarChart(box)}
+                          title={box.heading}
+                          description={box.description}
+                        />
                       ) : (
-                        <BarChartVertical />
+                        <BarChartVertical
+                          dataset={getDataSetForVerticalBarChart(box)}
+                          stepsize={getStepSizeForVerticalBarChart(box)}
+                          max={getMaxForVerticalBarChart(box)}
+                          title={box.heading}
+                          description={box.description}
+                        />
                       )}
                     </ResizableBox>
                   ) : containerIndex === 0 && box.type === "Text Chart" ? (
@@ -844,7 +828,7 @@ export const ComplianceReportAdminView = () => {
                         marginBottom: "10px",
                         display: "flex",
                         flexDirection: "column",
-                        justifyContent: "center",
+                        justifyContent: "flex-end",
                         alignItems: "center",
                       }}
                     >
@@ -873,7 +857,7 @@ export const ComplianceReportAdminView = () => {
 
                       {box.horizontal ? (
                         <BarChartHorizontal
-                          dataset={getDataSetForVerticalBarChart(box)}
+                          dataset={getDataSetForHorizontalBarChart(box)}
                           stepsize={getStepSizeForVerticalBarChart(box)}
                           max={getMaxForVerticalBarChart(box)}
                           title={box.heading}
@@ -951,6 +935,10 @@ export const ComplianceReportAdminView = () => {
                             fontSize: "24px",
                             fontWeight: "700",
                             color: "#202223",
+                            position: "absolute",
+                            top: "20px",
+                            left: "20px",
+                            width: "90%",
                           }}
                         >
                           {box.heading}
@@ -1009,7 +997,8 @@ export const ComplianceReportAdminView = () => {
                                 style={{
                                   marginTop: "15px",
                                   marginBottom: "15px",
-                                  borderBottom: "1px solid rgba(201, 204, 207, 0.7)",
+                                  borderBottom:
+                                    "1px solid rgba(201, 204, 207, 0.7)",
                                 }}
                               ></div>
                             )}
@@ -1065,16 +1054,17 @@ export const ComplianceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
-                      <div style={{ paddingTop: "40px", textAlign: "center" }}>
+                      <div style={{ width: "100%" }}>
                         <p
                           style={{
                             textAlign: "left",
                             fontSize: "14px",
                             fontWeight: "400",
                             color: "#6d7175",
+                            marginBottom: "6px",
                           }}
                         >
-                          Company Name
+                          {getColumnTitleForTextChart(box.column1)}
                         </p>
                         <p
                           style={{
@@ -1082,9 +1072,10 @@ export const ComplianceReportAdminView = () => {
                             fontSize: "24px",
                             fontWeight: "600",
                             color: "#202223",
+                            marginBottom: "6px",
                           }}
                         >
-                          TASC Outsourcing
+                          {getColumnValueForTextChart(box.column2)}
                         </p>
                       </div>
                     </ResizableBox>
@@ -1095,7 +1086,7 @@ export const ComplianceReportAdminView = () => {
                       minConstraints={[100, 100]}
                       maxConstraints={[
                         window.innerWidth - box.position.x,
-                        1000,
+                        window.innerHeight - box.position.y,
                       ]}
                       resizeHandles={["se"]}
                       onResizeStop={(e, data) =>
@@ -1143,10 +1134,11 @@ export const ComplianceReportAdminView = () => {
                             fontSize: "14px",
                             fontWeight: "400",
                             color: "#6d7175",
-                            marginBottom: "8px",
+                            marginBottom: "6px",
                           }}
                         >
-                          Visa Balance
+                          {getColumnTitleForTextChart(box.column)}
+                          {/* Visa */}
                         </p>
                         <p
                           style={{
@@ -1156,7 +1148,8 @@ export const ComplianceReportAdminView = () => {
                             color: "#202223",
                           }}
                         >
-                          205
+                          {getColumnValueForTextChart(box.column)}
+                          {/* 23 */}
                         </p>
                       </div>
                     </ResizableBox>
@@ -1186,7 +1179,7 @@ export const ComplianceReportAdminView = () => {
                         marginBottom: "10px",
                         display: "flex",
                         flexDirection: "column",
-                        justifyContent: "center",
+                        justifyContent: "flex-end",
                         alignItems: "center",
                       }}
                     >
@@ -1383,16 +1376,17 @@ export const ComplianceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
-                      <div style={{ paddingTop: "40px", textAlign: "center" }}>
+                      <div style={{ width: "100%" }}>
                         <p
                           style={{
                             textAlign: "left",
                             fontSize: "14px",
                             fontWeight: "400",
                             color: "#6d7175",
+                            marginBottom: "6px",
                           }}
                         >
-                          Company Name
+                          {getColumnTitleForTextChart(box.column1)}
                         </p>
                         <p
                           style={{
@@ -1400,9 +1394,10 @@ export const ComplianceReportAdminView = () => {
                             fontSize: "24px",
                             fontWeight: "600",
                             color: "#202223",
+                            marginBottom: "6px",
                           }}
                         >
-                          TASC Outsourcing
+                          {getColumnValueForTextChart(box.column2)}
                         </p>
                       </div>
                     </ResizableBox>
@@ -1504,7 +1499,7 @@ export const ComplianceReportAdminView = () => {
                         marginBottom: "10px",
                         display: "flex",
                         flexDirection: "column",
-                        justifyContent: "center",
+                        justifyContent: "flex-end",
                         alignItems: "center",
                       }}
                     >
@@ -1707,16 +1702,17 @@ export const ComplianceReportAdminView = () => {
                           <DragOutlined />
                         </div>
                       )}
-                      <div style={{ width: "100%", paddingTop: "40px" }}>
+                      <div style={{ width: "100%" }}>
                         <p
                           style={{
                             textAlign: "left",
                             fontSize: "14px",
                             fontWeight: "400",
                             color: "#6d7175",
+                            marginBottom: "6px",
                           }}
                         >
-                          Company Name
+                          {getColumnTitleForTextChart(box.column1)}
                         </p>
                         <p
                           style={{
@@ -1724,9 +1720,10 @@ export const ComplianceReportAdminView = () => {
                             fontSize: "24px",
                             fontWeight: "600",
                             color: "#202223",
+                            marginBottom: "6px",
                           }}
                         >
-                          TASC Outsourcing
+                          {getColumnValueForTextChart(box.column2)}
                         </p>
                       </div>
                     </ResizableBox>

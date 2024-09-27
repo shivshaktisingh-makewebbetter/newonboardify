@@ -1,25 +1,9 @@
-import React from "react";
 import { Bar } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import { Chart, registerables } from "chart.js"; // Import Chart and registerables
 import { CustomTooltip } from "./CustomToolTip";
 
-// Register necessary Chart.js components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+// Register all components (including scales)
+Chart.register(...registerables);
 
 export const BarChartVertical = ({
   dataset,
@@ -43,12 +27,13 @@ export const BarChartVertical = ({
         chart.data.datasets.forEach((dataset, i) => {
           const meta = chart.getDatasetMeta(i);
           meta.data.forEach((bar, index) => {
-            ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
-            ctx.shadowBlur = 10;
-            ctx.shadowOffsetX = 5;
-            ctx.shadowOffsetY = 5;
+            ctx.shadowColor = "rgba(0, 0, 0, 0.5)"; // Shadow color
+            ctx.shadowBlur = 10; // Blur effect
+            ctx.shadowOffsetX = 5; // Horizontal offset
+            ctx.shadowOffsetY = 5; // Vertical offset
 
             // Draw the shadowed bar
+            ctx.fillStyle = dataset.backgroundColor; // Use the dataset color
             ctx.fillRect(
               bar.x - bar.width / 2,
               bar.y,
@@ -68,8 +53,8 @@ export const BarChartVertical = ({
             color: "#6d7175",
           },
           padding: 20,
-          boxWidth: 15,
-          boxHeight: 15,
+          boxWidth: 10,
+          boxHeight: 10,
         },
         position: "bottom",
       },
@@ -84,9 +69,8 @@ export const BarChartVertical = ({
         align: "start",
       },
       tooltip: {
-        yAlign: 'top',      // Vertically align the tooltip to the top
-        xAlign: 'center',  // Horizontally center the tooltip
-
+        yAlign: "bottom",
+        xAlign: "center",
         displayColors: false,
         backgroundColor: "#ffffff",
         titleFont: {
@@ -96,24 +80,39 @@ export const BarChartVertical = ({
         titleColor: "#6d7175",
         bodyFont: {
           size: 16,
-          weight: "700",
+          weight: "400",
           color: "#202223",
         },
         bodyColor: "#000000",
         padding: {
-          top: 10,
-          bottom: 10,
-          left: 15,
-          right: 15,
+          top: 12,
+          bottom: 12,
+          left: 20,
+          right: 20,
         },
+        cornerRadius: 8,
+        boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.05)",
         callbacks: {
           label: function (tooltipItem) {
+            const label = tooltipItem.dataset.label || "";
             const value = tooltipItem.raw || 0;
-            return value;
+            return [`${label}`, `${value}`];
           },
         },
-        bodyAlign: 'center', // Align tooltip body content horizontally to the center
-        titleAlign: 'center', // Align tooltip title content horizontally to the center
+        bodyAlign: "center",
+        titleAlign: "center",
+        borderColor: "#ccc",
+        borderWidth: 0.3,
+      },
+      datalabels: {
+        anchor: "end",
+        align: "end",
+        formatter: (value) => value,
+        color: "#202223",
+        font: {
+          weight: "bold",
+          size: 14,
+        },
       },
     },
     scales: {
@@ -129,7 +128,7 @@ export const BarChartVertical = ({
           stepSize: stepsize,
         },
         grid: {
-          display: false,
+          color: "rgba(200, 200, 200, 0.2)",
         },
       },
     },

@@ -321,13 +321,12 @@ export const ServiceReportAdminView = () => {
         borderColor: getBorderColorForBarChart(subItem, item),
         borderWidth: 1,
         borderRadius: {
-          topLeft: 5,   // Set the top-left corner radius
-          topRight: 5,  // Set the top-right corner radius
+          topLeft: 0, // Set the top-left corner radius
+          topRight: 5, // Set the top-right corner radius
           bottomLeft: 0, // No radius for the bottom-left corner
-          bottomRight: 0 // No radius for the bottom-right corner
+          bottomRight: 5, // No radius for the bottom-right corner
         },
         borderSkipped: false,
-        borderWidth: 1,
         hoverBackgroundColor: getBgColorForBarChart(subItem, item), // Prevent hover color changes
         hoverBorderColor: getBorderColorForBarChart(subItem, item),
       });
@@ -513,7 +512,7 @@ export const ServiceReportAdminView = () => {
                         marginBottom: "10px",
                         display: "flex",
                         flexDirection: "column",
-                        justifyContent: "center",
+                        justifyContent: "flex-end",
                         alignItems: "center",
                       }}
                     >
@@ -584,7 +583,7 @@ export const ServiceReportAdminView = () => {
                         marginBottom: "10px",
                         display: "flex",
                         flexDirection: "column",
-                        justifyContent: "center",
+                        justifyContent: "flex-end",
                         alignItems: "center",
                       }}
                     >
@@ -636,7 +635,7 @@ export const ServiceReportAdminView = () => {
                         marginBottom: "10px",
                         display: "flex",
                         flexDirection: "column",
-                        justifyContent: "center",
+                        justifyContent: "flex-end",
                         alignItems: "center",
                       }}
                     >
@@ -692,7 +691,7 @@ export const ServiceReportAdminView = () => {
                         marginBottom: "10px",
                         display: "flex",
                         flexDirection: "column",
-                        justifyContent: "center",
+                        justifyContent: "flex-end",
                         alignItems: "center",
                       }}
                     >
@@ -749,7 +748,7 @@ export const ServiceReportAdminView = () => {
                         marginBottom: "10px",
                         display: "flex",
                         flexDirection: "column",
-                        justifyContent: "center",
+                        justifyContent: "flex-end",
                         alignItems: "center",
                       }}
                     >
@@ -865,7 +864,7 @@ export const ServiceReportAdminView = () => {
                         marginBottom: "10px",
                         display: "flex",
                         flexDirection: "column",
-                        justifyContent: "center",
+                        justifyContent: "flex-end",
                         alignItems: "center",
                       }}
                     >
@@ -936,7 +935,7 @@ export const ServiceReportAdminView = () => {
                         marginBottom: "10px",
                         display: "flex",
                         flexDirection: "column",
-                        justifyContent: "center",
+                        justifyContent: "flex-end",
                         alignItems: "center",
                       }}
                     >
