@@ -17,7 +17,7 @@ import {
   governifyServiceReportAdminSetting,
 } from "../apiservice/ApiService";
 import { toast, ToastContainer } from "react-toastify";
-import { EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 // import { fetcher } from "../../utils/helper";
 
 export const ServiceReportSettings = () => {
@@ -29,18 +29,36 @@ export const ServiceReportSettings = () => {
     previousValue: "",
     updatedValue: "",
   });
-  const [companyChartData, setCompanyChartData] = useState({
-    id: 0,
-    title: "About Company",
-    height: 400,
-    boxes: [],
+
+  const [changeSubTitleModal, setChangeSubTitleModal] = useState({
+    flag: false,
+    type: "",
+    previousValue: "",
+    updatedValue: "",
+    id: "",
+    parent: "",
   });
-  const [insightsChartData, setInsightsChartData] = useState({
-    id: 0,
-    title: "Insights",
-    height: 800,
-    boxes: [],
+
+  const [createSectionModal, setCreateSectionModal] = useState({
+    flag: false,
+    title: "",
   });
+
+  const [sectionData, setSectionData] = useState([
+    {
+      id: 0,
+      title: "About Company",
+      height: 400,
+      boxes: [],
+    },
+    {
+      id: 1,
+      title: "Insights",
+      height: 800,
+      boxes: [],
+    },
+  ]);
+
   const [activeKey, setActiveKey] = useState([]);
   const [columnOptions, setColumnOptions] = useState([]);
 
@@ -55,287 +73,75 @@ export const ServiceReportSettings = () => {
     head_title_color: "#497ed8",
   };
 
-  const handleSelectChartTypeText = (type) => {
-    if (type === "company") {
-      let tempCompanyData = { ...companyChartData };
-      tempCompanyData.boxes.push({
-        type: "Text Chart",
-        column1: "",
-        column2: "",
-        color: "",
-        id: tempCompanyData.boxes.length + 1,
-        size: { width: 360, height: 100 },
-        showDragHandle: false,
-        position: { x: 0, y: 20 },
-      });
-      setCompanyChartData(tempCompanyData);
-    }
-    if (type === "insights") {
-      let tempInsightsData = { ...insightsChartData };
-      tempInsightsData.boxes.push({
-        type: "Text Chart",
-        column1: "",
-        column2: "",
-        color: "",
-        id: tempInsightsData.boxes.length + 1,
-        size: { width: 360, height: 100 },
-        showDragHandle: false,
-        position: { x: 0, y: 20 },
-      });
-      setInsightsChartData(tempInsightsData);
-    }
+  const handleSelectChartTypeText = (title) => {
+    let tempData = [...sectionData];
+    tempData.forEach((item) => {
+      if (item.title === title) {
+        item.boxes.push({
+          type: "Text Chart",
+          title: "Text Chart",
+          column1: "",
+          column2: "",
+          color: "",
+          id: item.boxes.length + 1,
+          size: { width: 360, height: 100 },
+          showDragHandle: false,
+          position: { x: 0, y: 20 },
+        });
+      }
+    });
+
+    setSectionData(tempData);
   };
 
-  const handleSelectChartTypeBar = (type) => {
-    if (type === "company") {
-      let tempCompanyData = { ...companyChartData };
-      tempCompanyData.boxes.push({
-        type: "Bar Chart",
-        horizontal: false,
-        selectedColumns: [],
-        selectedColor: [],
-        heading: "",
-        description: "",
-        id: tempCompanyData.boxes.length + 1,
-        position: { x: 0, y: -40 },
-        size: { width: 721, height: 422 },
-        showDragHandle: false,
-      });
-      setCompanyChartData(tempCompanyData);
-    }
-    if (type === "insights") {
-      let tempInsightsData = { ...insightsChartData };
-      tempInsightsData.boxes.push({
-        type: "Bar Chart",
-        horizontal: false,
-        selectedColumns: [],
-        selectedColor: [],
-        heading: "",
-        description: "",
-        id: tempInsightsData.boxes.length + 1,
-        position: { x: 0, y: -40 },
-        size: { width: 721, height: 422 },
-        showDragHandle: false,
-      });
-      setInsightsChartData(tempInsightsData);
-    }
+  const handleSelectChartTypeBar = (title) => {
+    let tempData = [...sectionData];
+    tempData.forEach((item) => {
+      if (item.title === title) {
+        item.boxes.push({
+          type: "Bar Chart",
+          title: "Bar Chart",
+          horizontal: false,
+          selectedColumns: [],
+          selectedColor: [],
+          heading: "",
+          description: "",
+          id: item.boxes.length + 1,
+          position: { x: 0, y: 20 },
+          size: { width: 721, height: 422 },
+          showDragHandle: false,
+        });
+      }
+    });
+
+    setSectionData(tempData);
   };
 
-  const handleSelectChartTypePie = (type) => {
-    if (type === "company") {
-      let tempCompanyData = { ...companyChartData };
-      tempCompanyData.boxes.push({
-        type: "Pie Chart",
-        horizontal: false,
-        selectedColumns: [],
-        selectedColor: [],
-        heading: "",
-        description: "",
-        id: tempCompanyData.boxes.length + 1,
-        position: { x: 0, y: -40 },
-        size: { width: 721, height: 422 },
-        showDragHandle: false,
-      });
-      setCompanyChartData(tempCompanyData);
-    }
-    if (type === "insights") {
-      let tempInsightsData = { ...insightsChartData };
-      tempInsightsData.boxes.push({
-        type: "Pie Chart",
-        horizontal: false,
-        selectedColumns: [],
-        selectedColor: [],
-        heading: "",
-        description: "",
-        id: tempInsightsData.boxes.length + 1,
-        position: { x: 0, y: -40 },
-        size: { width: 350, height: 380 },
-        showDragHandle: false,
-      });
-      setInsightsChartData(tempInsightsData);
-    }
+  const handleSelectChartTypePie = (title) => {
+    let tempData = [...sectionData];
+    tempData.forEach((item) => {
+      if (item.title === title) {
+        item.boxes.push({
+          type: "Pie Chart",
+          title: "Pie Chart",
+          horizontal: false,
+          selectedColumns: [],
+          selectedColor: [],
+          heading: "",
+          description: "",
+          id: item.boxes.length + 1,
+          position: { x: 0, y: 20 },
+          size: { width: 721, height: 422 },
+          showDragHandle: false,
+        });
+      }
+    });
+
+    setSectionData(tempData);
   };
-
-  const typesOfChartCompany = [
-    {
-      key: "1",
-      label: (
-        <span onClick={() => handleSelectChartTypeText("company")}>
-          Text Chart
-        </span>
-      ),
-    },
-    {
-      key: "2",
-      label: (
-        <span onClick={() => handleSelectChartTypePie("company")}>
-          Pie Chart
-        </span>
-      ),
-    },
-    {
-      key: "3",
-      label: (
-        <span onClick={() => handleSelectChartTypeBar("company")}>
-          Bar Chart
-        </span>
-      ),
-    },
-  ];
-
-  const typesOfChartInsights = [
-    {
-      key: "1",
-      label: (
-        <span onClick={() => handleSelectChartTypeText("insights")}>
-          Text Chart
-        </span>
-      ),
-    },
-    {
-      key: "2",
-      label: (
-        <span onClick={() => handleSelectChartTypePie("insights")}>
-          Pie Chart
-        </span>
-      ),
-    },
-    {
-      key: "3",
-      label: (
-        <span onClick={() => handleSelectChartTypeBar("insights")}>
-          Bar Chart
-        </span>
-      ),
-    },
-  ];
 
   const onChange = (key) => {
     setActiveKey(key);
-  };
-
-  const handlChangeColumn1ChartHeadingCompany = (e, index) => {
-    let tempCompanyChartData = { ...companyChartData };
-    tempCompanyChartData.boxes[index].column1 = e;
-    setCompanyChartData(tempCompanyChartData);
-  };
-
-  const handlChangeColumn1ChartHeadingInsights = (e, index) => {
-    let tempInsightsChartData = { ...insightsChartData };
-    tempInsightsChartData.boxes[index].column2 = e;
-    setInsightsChartData(tempInsightsChartData);
-  };
-
-  const handlChangeColumn2ChartHeadingCompany = (e, index) => {
-    let tempCompanyChartData = { ...companyChartData };
-    tempCompanyChartData.boxes[index].column2 = e;
-    setCompanyChartData(tempCompanyChartData);
-  };
-
-  const handlChangeColumn2ChartHeadingInsights = (e, index) => {
-    let tempInsightsChartData = { ...insightsChartData };
-    tempInsightsChartData.boxes[index].column2 = e;
-    setInsightsChartData(tempInsightsChartData);
-  };
-
-  const handlChangeBarChartColumnCompany = (e, index) => {
-    let tempCompanyChartData = { ...companyChartData };
-    let tempColor = tempCompanyChartData.boxes[index].selectedColor;
-    tempCompanyChartData.boxes[index].selectedColor = [];
-    tempCompanyChartData.boxes[index].selectedColumns = e;
-
-    e.forEach((subItem) => {
-      // Check if the item already exists in tempColor
-      const existingColor = tempColor.find((color) => color.key === subItem);
-
-      // If the object exists, push the existing object
-      if (existingColor) {
-        tempCompanyChartData.boxes[index].selectedColor.push(existingColor);
-      } else {
-        // If it doesn't exist, create a new object with an empty value
-        tempCompanyChartData.boxes[index].selectedColor.push({
-          key: subItem,
-          value: "",
-        });
-      }
-    });
-
-    setCompanyChartData(tempCompanyChartData);
-  };
-
-  const handlChangePieChartColumnCompany = (e, index) => {
-    let tempCompanyChartData = { ...companyChartData };
-    let tempColor = tempCompanyChartData.boxes[index].selectedColor;
-    tempCompanyChartData.boxes[index].selectedColor = [];
-    tempCompanyChartData.boxes[index].selectedColumns = e;
-
-    e.forEach((subItem) => {
-      // Check if the item already exists in tempColor
-      const existingColor = tempColor.find((color) => color.key === subItem);
-
-      // If the object exists, push the existing object
-      if (existingColor) {
-        tempCompanyChartData.boxes[index].selectedColor.push(existingColor);
-      } else {
-        // If it doesn't exist, create a new object with an empty value
-        tempCompanyChartData.boxes[index].selectedColor.push({
-          key: subItem,
-          value: "",
-        });
-      }
-    });
-
-    setCompanyChartData(tempCompanyChartData);
-  };
-
-  const handlChangeBarChartColumnInsights = (e, index) => {
-    let tempInsightsChartData = { ...insightsChartData };
-    let tempColor = tempInsightsChartData.boxes[index].selectedColor;
-    tempInsightsChartData.boxes[index].selectedColumns = e;
-    tempInsightsChartData.boxes[index].selectedColor = [];
-
-    e.forEach((subItem) => {
-      // Check if the item already exists in tempColor
-      const existingColor = tempColor.find((color) => color.key === subItem);
-
-      // If the object exists, push the existing object
-      if (existingColor) {
-        tempInsightsChartData.boxes[index].selectedColor.push(existingColor);
-      } else {
-        // If it doesn't exist, create a new object with an empty value
-        tempInsightsChartData.boxes[index].selectedColor.push({
-          key: subItem,
-          value: "",
-        });
-      }
-    });
-    setInsightsChartData(tempInsightsChartData);
-  };
-
-  const handlChangePieChartColumnInsights = (e, index) => {
-    let tempInsightsChartData = { ...insightsChartData };
-    let tempColor = tempInsightsChartData.boxes[index].selectedColor;
-    tempInsightsChartData.boxes[index].selectedColumns = e;
-    tempInsightsChartData.boxes[index].selectedColor = [];
-
-    e.forEach((subItem) => {
-      // Check if the item already exists in tempColor
-      const existingColor = tempColor.find((color) => color.key === subItem);
-
-      console.log(existingColor, "existing");
-
-      // If the object exists, push the existing object
-      if (existingColor) {
-        tempInsightsChartData.boxes[index].selectedColor.push(existingColor);
-      } else {
-        // If it doesn't exist, create a new object with an empty value
-        tempInsightsChartData.boxes[index].selectedColor.push({
-          key: subItem,
-          value: "",
-        });
-      }
-    });
-    setInsightsChartData(tempInsightsChartData);
   };
 
   const filterOption = (input, option) => {
@@ -345,106 +151,29 @@ export const ServiceReportSettings = () => {
     );
   };
 
-  const handleChangeDelete = (index, type) => {
-    if (type === "company") {
-      const tempCompanyChartData = { ...companyChartData };
-      tempCompanyChartData.boxes.splice(index, 1);
-      setCompanyChartData(tempCompanyChartData);
-    }
-    if (type === "insights") {
-      const tempInsightsChartData = { ...insightsChartData };
-      tempInsightsChartData.boxes.splice(index, 1);
-      setInsightsChartData(tempInsightsChartData);
-    }
-  };
+  const handlChangeChartColor = (value, item, subItem, key) => {
+    let tempColorData = [...subItem.selectedColor];
+    tempColorData.forEach((detail) => {
+      if (detail.key === key) {
+        detail.value = value.toHexString();
+      }
+    });
 
-  const handlChangeBarChartColorInsights = (value, index, childIndex) => {
-    let tempInsightsChartData = { ...insightsChartData };
-    tempInsightsChartData.boxes[index].selectedColor[childIndex].value =
-      value.toHexString();
-    setInsightsChartData(tempInsightsChartData);
-  };
+    let tempBoxesData = [...item.boxes];
+    tempBoxesData.forEach((detail) => {
+      if (detail.id === subItem.id) {
+        detail.selectedColor = tempColorData;
+      }
+    });
 
-  const handlChangeBarChartColorCompany = (value, index, childIndex) => {
-    let tempCompanyChartData = { ...companyChartData };
-    tempCompanyChartData.boxes[index].selectedColor[childIndex].value =
-      value.toHexString();
-    setCompanyChartData(tempCompanyChartData);
-  };
+    let tempData = [...sectionData];
+    tempData.forEach((detail) => {
+      if (detail.title === item.title) {
+        detail.boxes = tempBoxesData;
+      }
+    });
 
-  const handlChangePieChartColorCompany = (value, index, childIndex) => {
-    console.log(value, index, companyChartData);
-    let tempCompanyChartData = { ...companyChartData };
-    tempCompanyChartData.boxes[index].selectedColor[childIndex].value =
-      value.toHexString();
-    setCompanyChartData(tempCompanyChartData);
-  };
-
-  const handlChangePieChartColorInsights = (value, index, childIndex) => {
-    let tempInsightsChartData = { ...insightsChartData };
-    tempInsightsChartData.boxes[index].selectedColor[childIndex].value =
-      value.toHexString();
-    setInsightsChartData(tempInsightsChartData);
-  };
-
-  const handlChangeBarChartHeadingCompany = (e, index) => {
-    let tempCompanyChartData = { ...companyChartData };
-    tempCompanyChartData.boxes[index].heading = e.target.value;
-    setCompanyChartData(tempCompanyChartData);
-  };
-
-  const handlChangeBarChartDescriptionCompany = (e, index) => {
-    let tempCompanyChartData = { ...companyChartData };
-    tempCompanyChartData.boxes[index].description = e.target.value;
-    setCompanyChartData(tempCompanyChartData);
-  };
-
-  const handlChangePieChartHeadingCompany = (e, index) => {
-    let tempCompanyChartData = { ...companyChartData };
-    tempCompanyChartData.boxes[index].heading = e.target.value;
-    setCompanyChartData(tempCompanyChartData);
-  };
-
-  const handlChangePieChartDescriptionCompany = (e, index) => {
-    let tempCompanyChartData = { ...companyChartData };
-    tempCompanyChartData.boxes[index].description = e.target.value;
-    setCompanyChartData(tempCompanyChartData);
-  };
-
-  const handlChangeBarChartHeadingInsights = (e, index) => {
-    let tempInsightsChartData = { ...insightsChartData };
-    tempInsightsChartData.boxes[index].heading = e.target.value;
-    setInsightsChartData(tempInsightsChartData);
-  };
-
-  const handlChangeBarChartDescriptionInsights = (e, index) => {
-    let tempInsightsChartData = { ...insightsChartData };
-    tempInsightsChartData.boxes[index].description = e.target.value;
-    setInsightsChartData(tempInsightsChartData);
-  };
-
-  const handlChangePieChartHeadingInsights = (e, index) => {
-    let tempInsightsChartData = { ...insightsChartData };
-    tempInsightsChartData.boxes[index].heading = e.target.value;
-    setInsightsChartData(tempInsightsChartData);
-  };
-
-  const handlChangePieChartDescriptionInsights = (e, index) => {
-    let tempInsightsChartData = { ...insightsChartData };
-    tempInsightsChartData.boxes[index].description = e.target.value;
-    setInsightsChartData(tempInsightsChartData);
-  };
-
-  const handlChangeTextChartColorCompany = (value, index) => {
-    let tempCompanyChartData = { ...companyChartData };
-    tempCompanyChartData.boxes[index].color = value.toHexString();
-    setCompanyChartData(tempCompanyChartData);
-  };
-
-  const handlChangeTextChartColorInsights = (value, index) => {
-    let tempInsightsChartData = { ...insightsChartData };
-    tempInsightsChartData.boxes[index].color = value.toHexString();
-    setInsightsChartData(tempInsightsChartData);
+    setSectionData(tempData);
   };
 
   const getAddOnBeforeForColor = (key) => {
@@ -457,657 +186,17 @@ export const ServiceReportSettings = () => {
     return text;
   };
 
-  const getCollapseItemsTypeCompany = (item, index) => {
-    let newIndex = index + 1;
-    if (item.type === "Text Chart") {
-      return [
-        {
-          key: index,
-          label: (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <span>{item.type + " " + newIndex}</span>{" "}
-              <Button onClick={() => handleChangeDelete(index, "company")}>
-                Delete
-              </Button>
-            </div>
-          ),
-          children: (
-            <>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  placeholder="Select Id For Column1"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) => {
-                    handlChangeColumn1ChartHeadingCompany(e, index);
-                  }}
-                  options={columnOptions}
-                  filterOption={filterOption}
-                  value={item.column1 || undefined}
-                />
-              </div>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  placeholder="Select Id For Column2"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) => {
-                    handlChangeColumn2ChartHeadingCompany(e, index);
-                  }}
-                  options={columnOptions}
-                  filterOption={filterOption}
-                  value={item.column2 || undefined}
-                />
-              </div>
-              <div
-                style={{
-                  marginTop: "20px",
-                  textAlign: "left",
-                  width: "50%",
-                  display: "flex",
-                  gap: "20px",
-                  alignItems: "center",
-                }}
-              >
-                <span>Color For Column 2</span>
-                <ColorPicker
-                  value={item.color}
-                  size="large"
-                  showText
-                  onChange={(value) =>
-                    handlChangeTextChartColorCompany(value, index)
-                  }
-                />
-              </div>
-            </>
-          ),
-        },
-      ];
-    }
-
-    if (item.type === "Bar Chart") {
-      return [
-        {
-          key: index,
-          label: (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <span>{item.type + " " + newIndex}</span>{" "}
-              <Button onClick={() => handleChangeDelete(index, "company")}>
-                Delete
-              </Button>
-            </div>
-          ),
-          children: (
-            <>
-            <div style={{ marginTop: "20px", marginBottom: "10px" }}>
-                  <Input
-                    addonBefore={"Heading"}
-                    value={item.heading}
-                    onChange={(e) =>
-                      handlChangeBarChartHeadingCompany(e, index)
-                    }
-                  />
-                </div>
-                <div style={{ marginBottom: "10px" }}>
-                  <Input
-                    addonBefore={"Description"}
-                    value={item.description}
-                    onChange={(e) =>
-                      handlChangeBarChartDescriptionCompany(e, index)
-                    }
-                  />
-                </div>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  mode="multiple"
-                  placeholder="Select Tag"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) => handlChangeBarChartColumnCompany(e, index)}
-                  options={columnOptions}
-                  filterOption={filterOption}
-                  value={item.selectedColumns}
-                />
-              </div>
-              <div>
-                {item.selectedColor.map((subItem, childIndex) => {
-                  return (
-                    <div
-                      style={{
-                        marginTop: "20px",
-                        textAlign: "left",
-                        width: "50%",
-                        display: "flex",
-                        gap: "20px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span>
-                        {getAddOnBeforeForColor(
-                          item.selectedColumns[childIndex]
-                        )}
-                      </span>
-                      <ColorPicker
-                        value={subItem.value}
-                        size="large"
-                        showText
-                        onChange={(value) =>
-                          handlChangeBarChartColorCompany(
-                            value,
-                            index,
-                            childIndex
-                          )
-                        }
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </>
-          ),
-        },
-      ];
-    }
-
-    if (item.type === "Pie Chart") {
-      return [
-        {
-          key: index,
-          label: (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <span>{item.type + " " + newIndex}</span>{" "}
-              <Button onClick={() => handleChangeDelete(index, "company")}>
-                Delete
-              </Button>
-            </div>
-          ),
-          children: (
-            <>
-            <div style={{ marginTop: "20px", marginBottom: "10px" }}>
-                  <Input
-                    addonBefore={"Heading"}
-                    value={item.heading}
-                    onChange={(e) =>
-                      handlChangePieChartHeadingCompany(e, index)
-                    }
-                  />
-                </div>
-                <div style={{ marginBottom: "10px" }}>
-                  <Input
-                    addonBefore={"Description"}
-                    value={item.description}
-                    onChange={(e) =>
-                      handlChangePieChartDescriptionCompany(e, index)
-                    }
-                  />
-                </div>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  mode="multiple"
-                  placeholder="Select Columns"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) => handlChangePieChartColumnCompany(e, index)}
-                  options={columnOptions}
-                  filterOption={filterOption}
-                  value={item.selectedColumns}
-                />
-              </div>
-              <div>
-                {item.selectedColor.map((subItem, childIndex) => {
-                  return (
-                    <div
-                      style={{
-                        marginTop: "20px",
-                        textAlign: "left",
-                        width: "50%",
-                        display: "flex",
-                        gap: "20px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span>
-                        {getAddOnBeforeForColor(
-                          item.selectedColumns[childIndex]
-                        )}
-                      </span>
-                      <ColorPicker
-                        value={subItem.value}
-                        size="large"
-                        showText
-                        onChange={(value) =>
-                          handlChangePieChartColorCompany(
-                            value,
-                            index,
-                            childIndex
-                          )
-                        }
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </>
-          ),
-        },
-      ];
-    }
-  };
-
-  const getCollapseItemsTypeInsights = (item, index) => {
-    let newIndex = index + 1;
-    if (item.type === "Text Chart") {
-      return [
-        {
-          key: index,
-          label: (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <span>{item.type + " " + newIndex}</span>{" "}
-              <Button onClick={() => handleChangeDelete(index, "insights")}>
-                Delete
-              </Button>
-            </div>
-          ),
-          children: (
-            <>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  placeholder="Select Id For Column1"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) => {
-                    handlChangeColumn1ChartHeadingInsights(e, index);
-                  }}
-                  options={columnOptions}
-                  filterOption={filterOption}
-                  value={item.column1}
-                />
-              </div>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  placeholder="Select Id For Column2"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) => {
-                    handlChangeColumn2ChartHeadingInsights(e, index);
-                  }}
-                  options={columnOptions}
-                  filterOption={filterOption}
-                  value={item.column2}
-                />
-              </div>
-              <div
-                style={{
-                  marginTop: "20px",
-                  textAlign: "left",
-                  width: "50%",
-                  display: "flex",
-                  gap: "20px",
-                  alignItems: "center",
-                }}
-              >
-                <span>Color For Column 2</span>
-                <ColorPicker
-                  value={item.color}
-                  size="large"
-                  showText
-                  onChange={(value) =>
-                    handlChangeTextChartColorInsights(value, index)
-                  }
-                />
-              </div>
-            </>
-          ),
-        },
-      ];
-    }
-
-    if (item.type === "Bar Chart") {
-      return [
-        {
-          key: index,
-          label: (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <span>{item.type + " " + newIndex}</span>{" "}
-              <Button onClick={() => handleChangeDelete(index, "insights")}>
-                Delete
-              </Button>
-            </div>
-          ),
-          children: (
-            <>
-            <div style={{ marginTop: "20px", marginBottom: "10px" }}>
-                  <Input
-                    addonBefore={"Heading"}
-                    value={item.heading}
-                    onChange={(e) =>
-                      handlChangeBarChartHeadingInsights(e, index)
-                    }
-                  />
-                </div>
-                <div style={{ marginBottom: "10px" }}>
-                  <Input
-                    addonBefore={"Description"}
-                    value={item.description}
-                    onChange={(e) =>
-                      handlChangeBarChartDescriptionInsights(e, index)
-                    }
-                  />
-                </div>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  mode="multiple"
-                  placeholder="Select Column"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) => handlChangeBarChartColumnInsights(e, index)}
-                  options={columnOptions}
-                  filterOption={filterOption}
-                  value={item.selectedColumns}
-                />
-              </div>
-
-              <div>
-                {item.selectedColor.map((subItem, childIndex) => {
-                  return (
-                    <div
-                      style={{
-                        marginTop: "20px",
-                        textAlign: "left",
-                        width: "50%",
-                        display: "flex",
-                        gap: "20px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span>
-                        {getAddOnBeforeForColor(
-                          item.selectedColumns[childIndex]
-                        )}
-                      </span>
-                      <ColorPicker
-                        value={subItem.value}
-                        size="large"
-                        showText
-                        onChange={(value) =>
-                          handlChangeBarChartColorInsights(
-                            value,
-                            index,
-                            childIndex
-                          )
-                        }
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </>
-          ),
-        },
-      ];
-    }
-
-    if (item.type === "Pie Chart") {
-      return [
-        {
-          key: index,
-          label: (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <span>{item.type + " " + newIndex}</span>{" "}
-              <Button onClick={() => handleChangeDelete(index, "insights")}>
-                Delete
-              </Button>
-            </div>
-          ),
-          children: (
-            <>
-            <div style={{ marginTop: "20px", marginBottom: "10px" }}>
-                  <Input
-                    addonBefore={"Heading"}
-                    value={item.heading}
-                    onChange={(e) =>
-                      handlChangePieChartHeadingInsights(e, index)
-                    }
-                  />
-                </div>
-                <div style={{ marginBottom: "10px" }}>
-                  <Input
-                    addonBefore={"Description"}
-                    value={item.description}
-                    onChange={(e) =>
-                      handlChangePieChartDescriptionInsights(e, index)
-                    }
-                  />
-                </div>
-              <div style={{ marginTop: "20px", textAlign: "left" }}>
-                <Select
-                  showSearch
-                  mode="multiple"
-                  placeholder="Select Column"
-                  style={{
-                    width: "50%",
-                  }}
-                  onChange={(e) => handlChangePieChartColumnInsights(e, index)}
-                  options={columnOptions}
-                  filterOption={filterOption}
-                  value={item.selectedColumns}
-                />
-              </div>
-              <div>
-                {item.selectedColor.map((subItem, childIndex) => {
-                  return (
-                    <div
-                      style={{
-                        marginTop: "20px",
-                        textAlign: "left",
-                        width: "50%",
-                        display: "flex",
-                        gap: "20px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span>
-                        {getAddOnBeforeForColor(
-                          item.selectedColumns[childIndex]
-                        )}
-                      </span>
-                      <ColorPicker
-                        value={subItem.value}
-                        size="large"
-                        showText
-                        onChange={(value) =>
-                          handlChangePieChartColorInsights(
-                            value,
-                            index,
-                            childIndex
-                          )
-                        }
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </>
-          ),
-        },
-      ];
-    }
-  };
-
-  const handleChangeCompanyTitle = (e) => {
-    setChangeTitleModal({
-      flag: true,
-      type: "company",
-      previousValue: companyChartData.title,
-      updatedValue: "",
-    });
-  };
-
-  const handleChangeInsightsTitle = (e) => {
-    setChangeTitleModal({
-      flag: true,
-      type: "insights",
-      previousValue: companyChartData.title,
-      updatedValue: "",
-    });
-  };
-
   const handleChangeTitle = (e) => {
     let tempChangeTitleModal = { ...changeTitleModal };
     tempChangeTitleModal.updatedValue = e.target.value;
     setChangeTitleModal(tempChangeTitleModal);
   };
 
-  const items = [
-    {
-      key: "1",
-      label: (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <div>
-            <span>{companyChartData.title}</span>
-            <Button
-              style={{ marginLeft: "10px" }}
-              type="text"
-              icon={<EditOutlined />}
-              iconPosition="start"
-              onClick={handleChangeCompanyTitle}
-            ></Button>
-          </div>{" "}
-          {activeKey.includes("1") ? (
-            <Dropdown
-              menu={{
-                items: typesOfChartCompany,
-              }}
-              placement="bottom"
-              arrow
-            >
-              <Button>Add New Chart</Button>
-            </Dropdown>
-          ) : (
-            <></>
-          )}
-        </div>
-      ),
-      children: (
-        <div style={{ marginTop: "10px" }}>
-          {companyChartData.boxes.map((item, index) => {
-            return (
-              <div key={index}>
-                <div style={{ marginTop: "10px" }}>
-                  <Collapse items={getCollapseItemsTypeCompany(item, index)} />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ),
-    },
-    {
-      key: "2",
-      label: (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <div>
-            <span>{insightsChartData.title}</span>
-            <Button
-              style={{ marginLeft: "10px" }}
-              type="text"
-              icon={<EditOutlined />}
-              iconPosition="start"
-              onClick={handleChangeInsightsTitle}
-            ></Button>
-          </div>{" "}
-          {activeKey.includes("2") ? (
-            <Dropdown
-              menu={{
-                items: typesOfChartInsights,
-              }}
-              placement="bottom"
-              arrow
-            >
-              <Button>Add New Chart</Button>
-            </Dropdown>
-          ) : (
-            <></>
-          )}
-        </div>
-      ),
-      children: (
-        <div style={{ marginTop: "10px" }}>
-          {insightsChartData.boxes.map((item, index) => {
-            return (
-              <div>
-                <div style={{ marginTop: "10px" }}>
-                  <Collapse items={getCollapseItemsTypeInsights(item, index)} />
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      ),
-    },
-  ];
+  const handleChangeSubTitle = (e) => {
+    let tempChangeTitleModal = { ...changeSubTitleModal };
+    tempChangeTitleModal.updatedValue = e.target.value;
+    setChangeSubTitleModal(tempChangeTitleModal);
+  };
 
   const fetchData = async () => {
     try {
@@ -1127,8 +216,7 @@ export const ServiceReportSettings = () => {
             const tempData = JSON.parse(item.governify_service_report);
             if (tempData === null) {
             } else {
-              setCompanyChartData(tempData.companyChartData);
-              setInsightsChartData(tempData.insightsChartData);
+              //  setSectionData(tempData);
             }
           }
         });
@@ -1138,54 +226,44 @@ export const ServiceReportSettings = () => {
     }
   };
 
-  const getChartDataFormat = (data, flag) => {
+  const getChartDataFormat = (data) => {
     let position = { x: 0, y: 20 };
-    let count = 0;
-    const tempData = { id: data.id, height: 400, boxes: [] };
 
-    data.boxes.forEach((item) => {
-      // Create a new position object for each item to avoid reference issues
-      let newPosition = { x: position.x, y: position.y };
-
-      if (count < 3) {
-        newPosition.x = newPosition.x + 435 * count;
-      } else {
-        newPosition.x = 0;
-        newPosition.y = newPosition.y + 125;
-        position.y = position.y + 125;
-        count = 0; // Reset count for the next row
-      }
-
-      count = count + 1;
-
-      let obj = { ...item, position: newPosition };
-      tempData.boxes.push(obj);
+    let tempData = [...data];
+    tempData.forEach((item) => {
+      item.boxes.forEach((subItem) => {
+        if (subItem.type === "Pie Chart") {
+          subItem.size = { width: 365, height: 417 };
+          position.x = position.x + 385;
+          position.y = position.y + 437;
+        }
+        if (subItem.type === "Bar Chart") {
+          subItem.size = { width: 751, height: 480 };
+          position.x = position.x + 771;
+          position.y = position.y + 500;
+        }
+        if (subItem.type === "Text Chart") {
+          subItem.size = { width: 360, height: 100 };
+          position.x = position.x + 380;
+          position.y = position.y + 120;
+        }
+      });
     });
-    tempData.height = position.y + 250;
-    tempData.id = data.id;
-    tempData.title = data.title;
-
-    if (flag === "insights") {
-      tempData.height = 1700;
-    }
 
     return tempData;
   };
 
   const handleSubmit = async () => {
-    const governify_service_report = JSON.stringify({
-      companyChartData: getChartDataFormat(companyChartData),
-      insightsChartData: getChartDataFormat(insightsChartData , 'insights'),
-    });
     const payloadData = {
       profile_id: location.state.profileId.toString(),
-      governify_service_report: governify_service_report,
+      governify_service_report: JSON.stringify(getChartDataFormat(sectionData)),
     };
+
 
     try {
       const response = await governifyServiceReportAdminSetting(payloadData);
       if (response.success) {
-        sessionStorage.removeItem('draggableResizableStateService');
+        sessionStorage.removeItem("draggableResizableStateService");
         toast.success(response.message);
       } else {
         toast.error(response.message);
@@ -1200,16 +278,17 @@ export const ServiceReportSettings = () => {
   };
 
   const handleSaveTitle = () => {
-    if (changeTitleModal.type === "company") {
-      let tempCompanyChartData = { ...companyChartData };
-      tempCompanyChartData.title = changeTitleModal.updatedValue;
-      setCompanyChartData(tempCompanyChartData);
+    if (changeTitleModal.updatedValue.length === 0) {
+      toast.error("Please Enter the Title!");
+      return;
     }
-    if (changeTitleModal.type === "insights") {
-      let tempInsightsChartData = { ...insightsChartData };
-      tempInsightsChartData.title = changeTitleModal.updatedValue;
-      setInsightsChartData(tempInsightsChartData);
-    }
+    let tempData = [...sectionData];
+    tempData.forEach((item) => {
+      if (item.title === changeTitleModal.previousValue) {
+        item.title = changeTitleModal.updatedValue;
+      }
+    });
+    setSectionData(tempData);
 
     setChangeTitleModal({
       flag: false,
@@ -1217,6 +296,602 @@ export const ServiceReportSettings = () => {
       previousValue: "",
       updatedValue: "",
     });
+  };
+
+  const handleSaveSubTitle = () => {
+    if (changeSubTitleModal.updatedValue.length === 0) {
+      toast.error("Please Enter the Title!");
+      return;
+    }
+    let tempData = [...sectionData];
+    tempData.forEach((item) => {
+      if (item.title === changeSubTitleModal.parent) {
+        item.boxes.forEach((subItem) => {
+          if (subItem.title === changeSubTitleModal.previousValue) {
+            subItem.title = changeSubTitleModal.updatedValue;
+          }
+        });
+      }
+    });
+    setSectionData(tempData);
+
+    setChangeSubTitleModal({
+      flag: false,
+      type: "",
+      previousValue: "",
+      updatedValue: "",
+      id: "",
+      parent: "",
+    });
+  };
+
+  const handleCreateSection = () => {
+    setCreateSectionModal({ flag: true, title: "" });
+  };
+
+  const handleChangeSectionTitle = (item) => {
+    setChangeTitleModal({
+      flag: true,
+      type: item.title,
+      previousValue: item.title,
+      updatedValue: "",
+    });
+  };
+
+  const handleChangeSubSectionTitle = (item, subItem) => {
+    setChangeSubTitleModal({
+      flag: true,
+      type: subItem.title,
+      previousValue: subItem.title,
+      updatedValue: "",
+      id: subItem.id,
+      parent: item.title,
+    });
+  };
+
+  const handleChangeDeleteChart = (item, subItem) => {
+    const tempItem = { ...item };
+    const filterData = tempItem.boxes.filter(
+      (detail) => detail.id !== subItem.id
+    );
+    let tempData = [...sectionData];
+    tempData.forEach((detail) => {
+      if (detail.title === item.title) {
+        detail.boxes = filterData;
+      }
+    });
+
+    setSectionData(tempData);
+  };
+
+  const handlChangeColumn1ChartHeading = (e, subItem, item) => {
+    const tempBoxes = [...item.boxes];
+    tempBoxes.forEach((detail) => {
+      if (detail.id === subItem.id) {
+        detail.column1 = e;
+      }
+    });
+    let tempData = [...sectionData];
+    tempData.forEach((detail) => {
+      if (detail.title === item.title) {
+        detail.boxes = tempBoxes;
+      }
+    });
+    setSectionData(tempData);
+  };
+
+  const handlChangeTextChartColor = (value, item, subItem) => {
+    const tempBoxes = [...item.boxes];
+    tempBoxes.forEach((detail) => {
+      if (detail.id === subItem.id) {
+        detail.color = value.toHexString();
+      }
+    });
+    let tempData = [...sectionData];
+    tempData.forEach((detail) => {
+      if (detail.title === item.title) {
+        detail.boxes = tempBoxes;
+      }
+    });
+    setSectionData(tempData);
+  };
+
+  const handlChangeColumn2ChartHeading = (e, subItem, item) => {
+    const tempBoxes = [...item.boxes];
+    tempBoxes.forEach((detail) => {
+      if (detail.id === subItem.id) {
+        detail.column2 = e;
+      }
+    });
+    let tempData = [...sectionData];
+    tempData.forEach((detail) => {
+      if (detail.title === item.title) {
+        detail.boxes = tempBoxes;
+      }
+    });
+    setSectionData(tempData);
+  };
+
+  const handlChangeChartHeading = (e, item, subItem) => {
+    const tempBoxes = [...item.boxes];
+    tempBoxes.forEach((detail) => {
+      if (detail.id === subItem.id) {
+        detail.heading = e.target.value;
+      }
+    });
+    let tempData = [...sectionData];
+    tempData.forEach((detail) => {
+      if (detail.title === item.title) {
+        detail.boxes = tempBoxes;
+      }
+    });
+    setSectionData(tempData);
+  };
+
+  const handlChangeChartDescription = (e, item, subItem) => {
+    const tempBoxes = [...item.boxes];
+    tempBoxes.forEach((detail) => {
+      if (detail.id === subItem.id) {
+        detail.description = e.target.value;
+      }
+    });
+    let tempData = [...sectionData];
+    tempData.forEach((detail) => {
+      if (detail.title === item.title) {
+        detail.boxes = tempBoxes;
+      }
+    });
+    setSectionData(tempData);
+  };
+
+  const handlChangeChartColumn = (e, item, subItem) => {
+    const tempBoxes = [...item.boxes];
+    let tempColor = subItem.selectedColor;
+    let tempNewColor = [];
+
+    let tempData = [...sectionData];
+    e.forEach((detail) => {
+      // Check if the item already exists in tempColor
+      const existingColor = tempColor.find((color) => color.key === detail);
+
+      // If the object exists, push the existing object
+      if (existingColor) {
+        tempNewColor.push(existingColor);
+      } else {
+        // If it doesn't exist, create a new object with an empty value
+        tempNewColor.push({
+          key: detail,
+          value: "",
+        });
+      }
+    });
+
+    tempBoxes.forEach((detail) => {
+      if (detail.id === subItem.id) {
+        detail.selectedColumns = e;
+        detail.selectedColor = tempNewColor;
+      }
+    });
+
+    tempData.forEach((detail) => {
+      if (detail.title === item.title) {
+        detail.boxes = tempBoxes;
+      }
+    });
+
+    setSectionData(tempData);
+  };
+
+  const getCollapseSubItems = (item, subItem, index, subIndex) => {
+    if (subItem.type === "Text Chart") {
+      return [
+        {
+          key: subIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <span>{subItem.title}</span>{" "}
+                <Button
+                  style={{ marginLeft: "10px" }}
+                  type="text"
+                  icon={<EditOutlined />}
+                  iconPosition="start"
+                  onClick={() => handleChangeSubSectionTitle(item, subItem)}
+                ></Button>
+              </div>
+              <Button onClick={() => handleChangeDeleteChart(item, subItem)}>
+                Delete
+              </Button>
+            </div>
+          ),
+          children: (
+            <>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <Select
+                  showSearch
+                  placeholder="Select Id For Column1"
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) => {
+                    handlChangeColumn1ChartHeading(e, subItem, item);
+                  }}
+                  options={columnOptions}
+                  filterOption={filterOption}
+                  value={subItem.column1 || undefined}
+                />
+              </div>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <Select
+                  showSearch
+                  placeholder="Select Id For Column2"
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) => {
+                    handlChangeColumn2ChartHeading(e, subItem, item);
+                  }}
+                  options={columnOptions}
+                  filterOption={filterOption}
+                  value={subItem.column2 || undefined}
+                />
+              </div>
+              <div
+                style={{
+                  marginTop: "20px",
+                  textAlign: "left",
+                  width: "50%",
+                  display: "flex",
+                  gap: "20px",
+                  alignItems: "center",
+                }}
+              >
+                <span>Color For Column 2</span>
+                <ColorPicker
+                  value={subItem.color}
+                  size="large"
+                  showText
+                  onChange={(value) =>
+                    handlChangeTextChartColor(value, item, subItem)
+                  }
+                />
+              </div>
+            </>
+          ),
+        },
+      ];
+    }
+
+    if (subItem.type === "Bar Chart") {
+      return [
+        {
+          key: subIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <span>{subItem.title}</span>{" "}
+                <Button
+                  style={{ marginLeft: "10px" }}
+                  type="text"
+                  icon={<EditOutlined />}
+                  iconPosition="start"
+                  onClick={() => handleChangeSubSectionTitle(item, subItem)}
+                ></Button>
+              </div>
+              <Button onClick={() => handleChangeDeleteChart(item, subItem)}>
+                Delete
+              </Button>
+            </div>
+          ),
+          children: (
+            <>
+              <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Heading"}
+                  value={item.heading}
+                  onChange={(e) => handlChangeChartHeading(e, item, subItem)}
+                />
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Description"}
+                  value={item.description}
+                  onChange={(e) =>
+                    handlChangeChartDescription(e, item, subItem)
+                  }
+                />
+              </div>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <Select
+                  showSearch
+                  mode="multiple"
+                  placeholder="Select Tag"
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) => handlChangeChartColumn(e, item, subItem)}
+                  options={columnOptions}
+                  filterOption={filterOption}
+                  value={item.selectedColumns}
+                />
+              </div>
+              <div>
+                {subItem.selectedColor.map((color, colorIndex) => {
+                  return (
+                    <div
+                      style={{
+                        marginTop: "20px",
+                        textAlign: "left",
+                        width: "50%",
+                        display: "flex",
+                        gap: "20px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>
+                        {getAddOnBeforeForColor(
+                          subItem.selectedColumns[colorIndex]
+                        )}
+                      </span>
+                      <ColorPicker
+                        value={color.value}
+                        size="large"
+                        showText
+                        onChange={(value) =>
+                          handlChangeChartColor(
+                            value,
+                            item,
+                            subItem,
+                            subItem.selectedColumns[colorIndex]
+                          )
+                        }
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          ),
+        },
+      ];
+    }
+
+    if (subItem.type === "Pie Chart") {
+      return [
+        {
+          key: subIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <span>{subItem.title}</span>{" "}
+                <Button
+                  style={{ marginLeft: "10px" }}
+                  type="text"
+                  icon={<EditOutlined />}
+                  iconPosition="start"
+                  onClick={() => handleChangeSubSectionTitle(item, subItem)}
+                ></Button>
+              </div>
+              <Button onClick={() => handleChangeDeleteChart(item, subItem)}>
+                Delete
+              </Button>
+            </div>
+          ),
+          children: (
+            <>
+              <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Heading"}
+                  value={subItem.heading}
+                  onChange={(e) => handlChangeChartHeading(e, item, subItem)}
+                />
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Description"}
+                  value={subItem.description}
+                  onChange={(e) =>
+                    handlChangeChartDescription(e, item, subItem)
+                  }
+                />
+              </div>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <Select
+                  showSearch
+                  mode="multiple"
+                  placeholder="Select Columns"
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) => handlChangeChartColumn(e, item, subItem)}
+                  options={columnOptions}
+                  filterOption={filterOption}
+                  value={subItem.selectedColumns}
+                />
+              </div>
+              <div>
+                {subItem.selectedColor.length > 0 &&
+                  subItem.selectedColor.map((color, colorIndex) => {
+                    return (
+                      <div
+                        style={{
+                          marginTop: "20px",
+                          textAlign: "left",
+                          width: "50%",
+                          display: "flex",
+                          gap: "20px",
+                          alignItems: "center",
+                        }}
+                      >
+                        <span>
+                          {getAddOnBeforeForColor(
+                            subItem.selectedColumns[colorIndex]
+                          )}
+                        </span>
+                        <ColorPicker
+                          value={color.value}
+                          size="large"
+                          showText
+                          onChange={(value) =>
+                            handlChangeChartColor(
+                              value,
+                              item,
+                              subItem,
+                              subItem.selectedColumns[colorIndex]
+                            )
+                          }
+                        />
+                      </div>
+                    );
+                  })}
+              </div>
+            </>
+          ),
+        },
+      ];
+    }
+  };
+
+  const handleDeleteSection = (item) => {
+    const filterData = sectionData.filter(
+      (subItem) => subItem.title !== item.title
+    );
+    setSectionData(filterData);
+  };
+
+  const getChartItem = (item) => {
+    return [
+      {
+        key: "1",
+        label: (
+          <span onClick={() => handleSelectChartTypeText(item.title)}>
+            Text Chart
+          </span>
+        ),
+      },
+      {
+        key: "2",
+        label: (
+          <span onClick={() => handleSelectChartTypePie(item.title)}>
+            Pie Chart
+          </span>
+        ),
+      },
+      {
+        key: "3",
+        label: (
+          <span onClick={() => handleSelectChartTypeBar(item.title)}>
+            Bar Chart
+          </span>
+        ),
+      },
+    ];
+  };
+
+  const getCollapseItems = (item, index) => {
+    return [
+      {
+        key: index + 1,
+        label: (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div>
+              <span>{item.title}</span>
+              <Button
+                style={{ marginLeft: "10px" }}
+                type="text"
+                icon={<EditOutlined />}
+                iconPosition="start"
+                onClick={() => handleChangeSectionTitle(item)}
+              ></Button>
+              <Button
+                style={{ marginLeft: "10px" }}
+                type="text"
+                icon={<DeleteOutlined />}
+                iconPosition="start"
+                onClick={() => handleDeleteSection(item)}
+              ></Button>
+            </div>
+            <div>
+              <Dropdown
+                menu={{
+                  items: getChartItem(item),
+                }}
+                placement="bottom"
+                arrow
+              >
+                <Button>Add New Chart</Button>
+              </Dropdown>
+            </div>
+          </div>
+        ),
+        children: (
+          <div style={{ marginTop: "10px" }}>
+            {item.boxes.map((subItem, subIndex) => {
+              return (
+                <div key={subIndex}>
+                  <div style={{ marginTop: "10px" }}>
+                    <Collapse
+                      items={getCollapseSubItems(
+                        item,
+                        subItem,
+                        index,
+                        subIndex
+                      )}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ),
+      },
+    ];
+  };
+
+  const handleChangeNewCreateSectionTitle = (e) => {
+    let tempData = { ...createSectionModal };
+    tempData.title = e.target.value;
+    setCreateSectionModal(tempData);
+  };
+
+  const handleSaveNewSection = () => {
+    if (createSectionModal.title.length === 0) {
+      toast.error("Please Enter The Title Name!");
+      return;
+    }
+    let tempData = [...sectionData];
+    tempData.push({
+      id: 0,
+      title: createSectionModal.title,
+      height: 400,
+      boxes: [],
+    });
+    setSectionData(tempData);
+    setCreateSectionModal({ flag: false, title: "" });
   };
 
   useEffect(() => {
@@ -1232,13 +907,26 @@ export const ServiceReportSettings = () => {
           forHome={false}
         />
       </div>
+      <div style={{ width: "100%", textAlign: "right" }}>
+        <Button onClick={handleCreateSection}>Create Section</Button>
+      </div>
       <div style={{ marginTop: "20px" }}>
-        <Collapse
+        {sectionData.map((item, index) => {
+          return (
+            <div style={{ marginTop: "20px" }}>
+              <Collapse
+                collapsible="icon"
+                items={getCollapseItems(item, index)}
+              />
+            </div>
+          );
+        })}
+        {/* <Collapse
           collapsible="icon"
-          items={items}
+          items={getCollapseItems()}
           onChange={onChange}
           activeKey={activeKey}
-        />
+        /> */}
       </div>
       <ToastContainer position="bottom-right" />
       <div
@@ -1307,6 +995,91 @@ export const ServiceReportSettings = () => {
         <Input
           value={changeTitleModal.updatedValue}
           onChange={handleChangeTitle}
+        />
+      </Modal>
+      <Modal
+        open={changeSubTitleModal.flag}
+        title="Change Sub Title"
+        centered
+        footer={(_, record) => (
+          <>
+            <Button
+              style={{
+                background: data.button_bg,
+                color: "#fff",
+                border: "none",
+              }}
+              onClick={handleSaveSubTitle}
+            >
+              Save
+            </Button>
+            <Button
+              style={{ border: "none" }}
+              onClick={() => {
+                setChangeSubTitleModal({
+                  flag: false,
+                  type: "",
+                  previousValue: "",
+                  updatedValue: "",
+                  id: "",
+                  parent: "",
+                });
+              }}
+            >
+              Cancel
+            </Button>
+          </>
+        )}
+        onCancel={() => {
+          setChangeSubTitleModal({
+            flag: false,
+            type: "",
+            previousValue: "",
+            updatedValue: "",
+            id: "",
+            parent: "",
+          });
+        }}
+      >
+        <Input
+          value={changeSubTitleModal.updatedValue}
+          onChange={handleChangeSubTitle}
+        />
+      </Modal>
+      <Modal
+        open={createSectionModal.flag}
+        title="Create Section"
+        centered
+        footer={(_, record) => (
+          <>
+            <Button
+              style={{
+                background: data.button_bg,
+                color: "#fff",
+                border: "none",
+              }}
+              onClick={handleSaveNewSection}
+            >
+              Save
+            </Button>
+            <Button
+              style={{ border: "none" }}
+              onClick={() => {
+                setCreateSectionModal({ flag: false, title: "" });
+              }}
+            >
+              Cancel
+            </Button>
+          </>
+        )}
+        onCancel={() => {
+          setCreateSectionModal({ flag: false, title: "" });
+        }}
+      >
+        <Input
+          addonBefore={"Enter Title"}
+          value={createSectionModal.title}
+          onChange={handleChangeNewCreateSectionTitle}
         />
       </Modal>
     </div>

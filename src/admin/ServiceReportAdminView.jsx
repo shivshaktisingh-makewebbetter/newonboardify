@@ -384,26 +384,12 @@ export const ServiceReportAdminView = () => {
     return chartMax;
   };
 
-  const getColumnPercentage = (column, data) => {
-    let tempData = 0;
-    const valueOfSelected = getColumnValueForTextChart(column);
 
-    // Calculate total from the data
-    data.forEach((item) => {
-      tempData += Number(getColumnValueForTextChart(item));
-    });
-
-    // Calculate the percentage
-    const percentage = tempData > 0 ? (valueOfSelected / tempData) * 100 : 0; // Avoid division by zero
-
-    return parseFloat(percentage.toFixed(2)) + " %";
-  };
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  console.log(containers, "containers");
 
   return (
     <div style={{ maxWidth: "1252px" }}>
