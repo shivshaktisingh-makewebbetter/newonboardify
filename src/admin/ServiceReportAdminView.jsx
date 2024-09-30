@@ -407,542 +407,390 @@ export const ServiceReportAdminView = () => {
 
   return (
     <div style={{ maxWidth: "1252px" }}>
-      {containers.map((container, containerIndex) => (
-        <ResizableBox
-          key={container.id}
-          width={"100%"}
-          height={container.height}
-          minConstraints={[200, 150]}
-          maxConstraints={[Infinity, 2000]}
-          resizeHandles={["s"]}
-          onResizeStop={(e, data) =>
-            handleContainerResize(e, data, containerIndex)
-          }
-          handle={
-            <div
-              style={{
-                width: "100%",
-                height: "10px",
-                backgroundColor: "#ccc",
-                cursor: "s-resize",
-                position: "absolute",
-                bottom: 0,
-                left: 0,
-              }}
-            ></div>
-          }
-          style={{
-            marginBottom: "20px",
-            border: "1px solid #ddd",
-            padding: "10px",
-            overflow: "auto",
-            backgroundColor: "#f9f9f9",
-            position: "relative",
-          }}
-        >
-          <div
+      {containers.map((container, containerIndex) => {
+        return (
+          <ResizableBox
+            key={container.id}
+            width={"100%"}
+            height={container.height}
+            minConstraints={[200, 150]}
+            maxConstraints={[Infinity, 2000]}
+            resizeHandles={["s"]}
+            onResizeStop={(e, data) =>
+              handleContainerResize(e, data, containerIndex)
+            }
+            handle={
+              <div
+                style={{
+                  width: "100%",
+                  height: "10px",
+                  backgroundColor: "#ccc",
+                  cursor: "s-resize",
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                }}
+              ></div>
+            }
             style={{
-              width: "100%",
-              height: "100%",
+              marginBottom: "20px",
+              border: "1px solid #ddd",
+              padding: "10px",
+              overflow: "auto",
+              backgroundColor: "#f9f9f9",
               position: "relative",
             }}
           >
-            <p
+            <div
               style={{
-                fontSize: "20px",
-                fontWeight: "600",
-                color: "#818181",
-                textAlign: "left",
-                marginBottom: "10px",
+                width: "100%",
+                height: "100%",
+                position: "relative",
               }}
             >
-              {container.title}
-            </p>
-
-            {container.boxes.map((box, boxIndex) => (
-              <Draggable
-                bounds="parent"
-                key={box.id}
-                handle=".drag-handle"
-                position={box.position}
-                grid={[25, 25]}
-                scale={1}
-                onStop={(e, data) =>
-                  handleDragStop(e, data, containerIndex, boxIndex)
-                }
+              <p
+                style={{
+                  fontSize: "20px",
+                  fontWeight: "600",
+                  color: "#818181",
+                  textAlign: "left",
+                  marginBottom: "10px",
+                }}
               >
-                <div
-                  style={{ position: "absolute" }}
-                  onMouseEnter={() =>
-                    toggleDragHandleVisibility(containerIndex, boxIndex, true)
-                  }
-                  onMouseLeave={() =>
-                    toggleDragHandleVisibility(containerIndex, boxIndex, false)
-                  }
-                >
-                  {containerIndex === 0 && box.type === "Text Chart" ? (
-                    <ResizableBox
-                      width={box.size.width}
-                      height={box.size.height}
-                      minConstraints={[100, 100]}
-                      maxConstraints={[
-                        window.innerWidth - box.position.x,
-                        window.innerHeight - box.position.y,
-                      ]}
-                      resizeHandles={["se"]}
-                      onResizeStop={(e, data) =>
-                        handleResize(e, data, containerIndex, boxIndex)
+                {container.title}
+              </p>
+
+              {container.boxes.map((subItem, boxIndex) => {
+                if (subItem.type === "Text Chart") {
+                  return (
+                    <Draggable
+                      bounds="parent"
+                      key={subItem.id}
+                      handle=".drag-handle"
+                      position={subItem.position}
+                      grid={[25, 25]}
+                      scale={1}
+                      onStop={(e, data) =>
+                        handleDragStop(e, data, containerIndex, boxIndex)
                       }
-                      style={{
-                        background: "white",
-                        border: "1px solid #E3E3E3",
-                        borderRadius: "8px",
-                        padding: "10px",
-                        position: "relative",
-                        marginBottom: "10px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "flex-end",
-                        alignItems: "center",
-                      }}
                     >
-                      {box.showDragHandle && (
-                        <div
-                          className="drag-handle"
-                          style={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            width: "30px",
-                            height: "30px",
-                            backgroundColor: "#ccc",
-                            cursor: "move",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            borderBottom: "1px solid black",
-                            borderRight: "1px solid black",
-                            zIndex: 1,
-                          }}
-                        >
-                          <DragOutlined />
-                        </div>
-                      )}
                       <div
-                        style={{
-                          display: "flex",
-                          width: "100%",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                        }}
+                        style={{ position: "absolute" }}
+                        onMouseEnter={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            true
+                          )
+                        }
+                        onMouseLeave={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            false
+                          )
+                        }
                       >
-                        <div>
-                          <p
+                        <ResizableBox
+                          width={subItem.size.width}
+                          height={subItem.size.height}
+                          minConstraints={[100, 100]}
+                          maxConstraints={[
+                            window.innerWidth - subItem.position.x,
+                            window.innerHeight - subItem.position.y,
+                          ]}
+                          resizeHandles={["se"]}
+                          onResizeStop={(e, data) =>
+                            handleResize(e, data, containerIndex, boxIndex)
+                          }
+                          style={{
+                            background: "white",
+                            border: "1px solid #E3E3E3",
+                            borderRadius: "8px",
+                            padding: "10px",
+                            position: "relative",
+                            marginBottom: "10px",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "flex-end",
+                            alignItems: "center",
+                          }}
+                        >
+                          {subItem.showDragHandle && (
+                            <div
+                              className="drag-handle"
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                width: "30px",
+                                height: "30px",
+                                backgroundColor: "#ccc",
+                                cursor: "move",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                borderBottom: "1px solid black",
+                                borderRight: "1px solid black",
+                                zIndex: 1,
+                              }}
+                            >
+                              <DragOutlined />
+                            </div>
+                          )}
+                          <div
                             style={{
+                              display: "flex",
                               width: "100%",
-                              textAlign: "left",
-                              fontSize: "14px",
-                              fontWeight: "400",
-                              color: "#6d7175",
-                              marginBottom: "6px",
+                              alignItems: "center",
+                              justifyContent: "space-between",
                             }}
                           >
-                            {getColumnTitleForTextChart(box.column1)}
-                          </p>
-                          <p
-                            style={{
-                              width: "100%",
-                              textAlign: "left",
-                              fontSize: "24px",
-                              fontWeight: "600",
-                              color: "#202223",
-                              marginBottom: "6px",
-                            }}
-                          >
-                            {getColumnValueForTextChart(box.column1)}
-                          </p>
-                        </div>
-                        <div>
-                          <p
-                            style={{
-                              width: "100%",
-                              textAlign: "right",
-                              fontSize: "16px",
-                              fontWeight: "600",
-                              marginBottom: "6px",
-                              borderRadius: "100px",
-                              background: hexToRgba(box.color, "0.2"),
-                              padding: "6px 12px",
-                              color: box.color,
-                            }}
-                          >
-                            {getColumnValueForTextChart(box.column2)}
-                          </p>
-                        </div>
+                            <div>
+                              <p
+                                style={{
+                                  width: "100%",
+                                  textAlign: "left",
+                                  fontSize: "14px",
+                                  fontWeight: "400",
+                                  color: "#6d7175",
+                                  marginBottom: "6px",
+                                }}
+                              >
+                                {getColumnTitleForTextChart(subItem.column1)}
+                              </p>
+                              <p
+                                style={{
+                                  width: "100%",
+                                  textAlign: "left",
+                                  fontSize: "24px",
+                                  fontWeight: "600",
+                                  color: "#202223",
+                                  marginBottom: "6px",
+                                }}
+                              >
+                                {getColumnValueForTextChart(subItem.column1)}
+                              </p>
+                            </div>
+                            <div>
+                              <p
+                                style={{
+                                  width: "100%",
+                                  textAlign: "right",
+                                  fontSize: "16px",
+                                  fontWeight: "600",
+                                  marginBottom: "6px",
+                                  borderRadius: "100px",
+                                  background: hexToRgba(subItem.color, "0.2"),
+                                  padding: "6px 12px",
+                                  color: subItem.color,
+                                }}
+                              >
+                                {getColumnValueForTextChart(subItem.column2)}
+                              </p>
+                            </div>
+                          </div>
+                        </ResizableBox>
                       </div>
-                    </ResizableBox>
-                  ) : containerIndex === 0 && box.type === "Pie Chart" ? (
-                    <ResizableBox
-                      width={box.size.width}
-                      height={box.size.height}
-                      minConstraints={[100, 100]}
-                      maxConstraints={[
-                        window.innerWidth - box.position.x,
-                        1000,
-                      ]}
-                      resizeHandles={["se"]}
-                      onResizeStop={(e, data) =>
-                        handleResize(e, data, containerIndex, boxIndex)
+                    </Draggable>
+                  );
+                }
+                if (subItem.type === "Bar Chart") {
+                  return (
+                    <Draggable
+                      bounds="parent"
+                      key={subItem.id}
+                      handle=".drag-handle"
+                      position={subItem.position}
+                      grid={[25, 25]}
+                      scale={1}
+                      onStop={(e, data) =>
+                        handleDragStop(e, data, containerIndex, boxIndex)
                       }
-                      style={{
-                        background: "white",
-                        border: "1px solid #E3E3E3",
-                        borderRadius: "8px",
-                        padding: "10px",
-                        position: "relative",
-                        marginBottom: "10px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "flex-end",
-                        alignItems: "center",
-                      }}
                     >
-                      {box.showDragHandle && (
-                        <div
-                          className="drag-handle"
-                          style={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            width: "30px",
-                            height: "30px",
-                            backgroundColor: "#ccc",
-                            cursor: "move",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            borderBottom: "1px solid black",
-                            borderRight: "1px solid black",
-                            zIndex: 1,
-                          }}
-                        >
-                          <DragOutlined />
-                        </div>
-                      )}
-
-                      <PieChart
-                        title={box.heading}
-                        dataset={getPieChartDataSet(box)}
-                        bgSet={getPieChartBg(box)}
-                        pieChartLabel={getPieChartLabel(box)}
-                        borderColorSetPie={getPieChartBorder(box)}
-                        description={box.description}
-                      />
-                    </ResizableBox>
-                  ) : containerIndex === 0 && box.type === "Bar Chart" ? (
-                    <ResizableBox
-                      width={box.size.width}
-                      height={box.size.height}
-                      minConstraints={[100, 100]}
-                      maxConstraints={[
-                        window.innerWidth - box.position.x,
-                        1000,
-                      ]}
-                      resizeHandles={["se"]}
-                      onResizeStop={(e, data) =>
-                        handleResize(e, data, containerIndex, boxIndex)
-                      }
-                      style={{
-                        background: "white",
-                        border: "1px solid #E3E3E3",
-                        borderRadius: "8px",
-                        padding: "10px",
-                        position: "relative",
-                        marginBottom: "10px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "flex-end",
-                        alignItems: "center",
-                      }}
-                    >
-                      {box.showDragHandle && (
-                        <div
-                          className="drag-handle"
-                          style={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            width: "30px",
-                            height: "30px",
-                            backgroundColor: "#ccc",
-                            cursor: "move",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            borderBottom: "1px solid black",
-                            borderRight: "1px solid black",
-                            zIndex: 1,
-                          }}
-                        >
-                          <DragOutlined />
-                        </div>
-                      )}
-                      {box.horizontal ? (
-                        <BarChartHorizontal
-                          dataset={getDataSetForVerticalBarChart(box)}
-                          stepsize={getStepSizeForVerticalBarChart(box)}
-                          max={getMaxForVerticalBarChart(box)}
-                          title={box.heading}
-                          description={box.description}
-                        />
-                      ) : (
-                        <BarChartVertical
-                          dataset={getDataSetForVerticalBarChart(box)}
-                          stepsize={getStepSizeForVerticalBarChart(box)}
-                          max={getMaxForVerticalBarChart(box)}
-                          title={box.heading}
-                          description={box.description}
-                        />
-                      )}
-                    </ResizableBox>
-                  ) : (
-                    <></>
-                  )}
-
-                  {containerIndex === 1 && box.type === "Bar Chart" ? (
-                    <ResizableBox
-                      width={box.size.width}
-                      height={box.size.height}
-                      minConstraints={[100, 100]}
-                      maxConstraints={[
-                        window.innerWidth - box.position.x,
-                        1000,
-                      ]}
-                      resizeHandles={["se"]}
-                      onResizeStop={(e, data) =>
-                        handleResize(e, data, containerIndex, boxIndex)
-                      }
-                      style={{
-                        background: "white",
-                        border: "1px solid #E3E3E3",
-                        borderRadius: "8px",
-                        padding: "10px",
-                        position: "relative",
-                        marginBottom: "10px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "flex-end",
-                        alignItems: "center",
-                      }}
-                    >
-                      {box.showDragHandle && (
-                        <div
-                          className="drag-handle"
-                          style={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            width: "30px",
-                            height: "30px",
-                            backgroundColor: "#ccc",
-                            cursor: "move",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            borderBottom: "1px solid black",
-                            borderRight: "1px solid black",
-                            zIndex: 1,
-                          }}
-                        >
-                          <DragOutlined />
-                        </div>
-                      )}
-                      {box.horizontal ? (
-                        <BarChartHorizontal
-                          dataset={getDataSetForHorizontalBarChart(box)}
-                          stepsize={getStepSizeForVerticalBarChart(box)}
-                          max={getMaxForVerticalBarChart(box)}
-                          title={box.heading}
-                          description={box.description}
-                        />
-                      ) : (
-                        <BarChartVertical
-                          dataset={getDataSetForVerticalBarChart(box)}
-                          stepsize={getStepSizeForVerticalBarChart(box)}
-                          max={getMaxForVerticalBarChart(box)}
-                          title={box.heading}
-                          description={box.description}
-                        />
-                      )}
-                    </ResizableBox>
-                  ) : containerIndex === 1 && box.type === "Text Chart" ? (
-                    <ResizableBox
-                      width={box.size.width}
-                      height={box.size.height}
-                      minConstraints={[100, 100]}
-                      maxConstraints={[
-                        window.innerWidth - box.position.x,
-                        window.innerHeight - box.position.y,
-                      ]}
-                      resizeHandles={["se"]}
-                      onResizeStop={(e, data) =>
-                        handleResize(e, data, containerIndex, boxIndex)
-                      }
-                      style={{
-                        background: "white",
-                        border: "1px solid #E3E3E3",
-                        borderRadius: "8px",
-                        padding: "10px",
-                        position: "relative",
-                        marginBottom: "10px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "flex-end",
-                        alignItems: "center",
-                      }}
-                    >
-                      {box.showDragHandle && (
-                        <div
-                          className="drag-handle"
-                          style={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            width: "30px",
-                            height: "30px",
-                            backgroundColor: "#ccc",
-                            cursor: "move",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            borderBottom: "1px solid black",
-                            borderRight: "1px solid black",
-                            zIndex: 1,
-                          }}
-                        >
-                          <DragOutlined />
-                        </div>
-                      )}
                       <div
-                        style={{
-                          display: "flex",
-                          width: "100%",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                        }}
+                        style={{ position: "absolute" }}
+                        onMouseEnter={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            true
+                          )
+                        }
+                        onMouseLeave={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            false
+                          )
+                        }
                       >
-                        <div>
-                          <p
-                            style={{
-                              width: "100%",
-                              textAlign: "left",
-                              fontSize: "14px",
-                              fontWeight: "400",
-                              color: "#6d7175",
-                              marginBottom: "6px",
-                            }}
-                          >
-                            {getColumnTitleForTextChart(box.column1)}
-                          </p>
-                          <p
-                            style={{
-                              width: "100%",
-                              textAlign: "left",
-                              fontSize: "24px",
-                              fontWeight: "600",
-                              color: "#202223",
-                              marginBottom: "6px",
-                            }}
-                          >
-                            {getColumnValueForTextChart(box.column1)}
-                          </p>
-                        </div>
-                        <div>
-                          <p
-                            style={{
-                              width: "100%",
-                              textAlign: "right",
-                              fontSize: "16px",
-                              fontWeight: "600",
-                              marginBottom: "6px",
-                              borderRadius: "100px",
-                              background: hexToRgba(box.color, "0.2"),
-                              padding: "6px 12px",
-                              color: box.color,
-                            }}
-                          >
-                            {getColumnValueForTextChart(box.column2)}
-                          </p>
-                        </div>
-                      </div>
-                    </ResizableBox>
-                  ) : containerIndex === 1 && box.type === "Pie Chart" ? (
-                    <ResizableBox
-                      width={box.size.width}
-                      height={box.size.height}
-                      minConstraints={[100, 100]}
-                      maxConstraints={[
-                        window.innerWidth - box.position.x,
-                        1000,
-                      ]}
-                      resizeHandles={["se"]}
-                      onResizeStop={(e, data) =>
-                        handleResize(e, data, containerIndex, boxIndex)
-                      }
-                      style={{
-                        background: "white",
-                        border: "1px solid #E3E3E3",
-                        borderRadius: "8px",
-                        padding: "10px",
-                        position: "relative",
-                        marginBottom: "10px",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "flex-end",
-                        alignItems: "center",
-                      }}
-                    >
-                      {box.showDragHandle && (
-                        <div
-                          className="drag-handle"
+                        <ResizableBox
+                          width={Number(subItem.size.width) || 500}
+                          height={Number(subItem.size.height) || 500}
+                          minConstraints={[100, 100]}
+                          maxConstraints={[
+                            window.innerWidth - subItem.position.x,
+                            1000,
+                          ]}
+                          resizeHandles={["se"]}
+                          onResizeStop={(e, data) => {
+                            handleResize(e, data, containerIndex, boxIndex);
+                          }}
                           style={{
-                            position: "absolute",
-                            top: 0,
-                            left: 0,
-                            width: "30px",
-                            height: "30px",
-                            backgroundColor: "#ccc",
-                            cursor: "move",
+                            background: "white",
+                            border: "1px solid #E3E3E3",
+                            borderRadius: "8px",
+                            padding: "10px",
+                            position: "relative",
+                            marginBottom: "10px",
                             display: "flex",
-                            justifyContent: "center",
+                            flexDirection: "column",
+                            justifyContent: "flex-end",
                             alignItems: "center",
-                            borderBottom: "1px solid black",
-                            borderRight: "1px solid black",
-                            zIndex: 1,
                           }}
                         >
-                          <DragOutlined />
-                        </div>
-                      )}
+                          {subItem.showDragHandle && (
+                            <div
+                              className="drag-handle"
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                width: "30px",
+                                height: "30px",
+                                backgroundColor: "#ccc",
+                                cursor: "move",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                borderBottom: "1px solid black",
+                                borderRight: "1px solid black",
+                                zIndex: 1,
+                              }}
+                            >
+                              <DragOutlined />
+                            </div>
+                          )}
 
-                      <PieChart
-                        title={box.heading}
-                        dataset={getPieChartDataSet(box)}
-                        bgSet={getPieChartBg(box)}
-                        pieChartLabel={getPieChartLabel(box)}
-                        borderColorSetPie={getPieChartBorder(box)}
-                        description={box.description}
-                      />
-                    </ResizableBox>
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              </Draggable>
-            ))}
-          </div>
-        </ResizableBox>
-      ))}
+                          {subItem.horizontal ? (
+                            <BarChartHorizontal
+                              dataset={getDataSetForHorizontalBarChart(subItem)}
+                              stepsize={getStepSizeForVerticalBarChart(subItem)}
+                              max={getMaxForVerticalBarChart(subItem)}
+                              title={subItem.heading}
+                              description={subItem.description}
+                            />
+                          ) : (
+                            <BarChartVertical
+                              dataset={getDataSetForVerticalBarChart(subItem)}
+                              stepsize={getStepSizeForVerticalBarChart(subItem)}
+                              max={getMaxForVerticalBarChart(subItem)}
+                              title={subItem.heading}
+                              description={subItem.description}
+                            />
+                          )}
+                        </ResizableBox>
+                      </div>
+                    </Draggable>
+                  );
+                }
+                if (subItem.type === "Pie Chart") {
+                  return (
+                    <Draggable
+                      bounds="parent"
+                      key={subItem.id}
+                      handle=".drag-handle"
+                      position={subItem.position}
+                      grid={[25, 25]}
+                      scale={1}
+                      onStop={(e, data) =>
+                        handleDragStop(e, data, containerIndex, boxIndex)
+                      }
+                    >
+                      <div
+                        style={{ position: "absolute" }}
+                        onMouseEnter={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            true
+                          )
+                        }
+                        onMouseLeave={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            false
+                          )
+                        }
+                      >
+                        <ResizableBox
+                          width={subItem.size.width}
+                          height={subItem.size.height}
+                          minConstraints={[100, 100]}
+                          maxConstraints={[
+                            window.innerWidth - subItem.position.x,
+                            1000,
+                          ]}
+                          resizeHandles={["se"]}
+                          onResizeStop={(e, data) =>
+                            handleResize(e, data, containerIndex, boxIndex)
+                          }
+                          style={{
+                            background: "white",
+                            border: "1px solid #E3E3E3",
+                            borderRadius: "8px",
+                            padding: "10px",
+                            position: "relative",
+                            marginBottom: "10px",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "flex-end",
+                            alignItems: "center",
+                          }}
+                        >
+                          {subItem.showDragHandle && (
+                            <div
+                              className="drag-handle"
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                width: "30px",
+                                height: "30px",
+                                backgroundColor: "#ccc",
+                                cursor: "move",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                borderBottom: "1px solid black",
+                                borderRight: "1px solid black",
+                                zIndex: 1,
+                              }}
+                            >
+                              <DragOutlined />
+                            </div>
+                          )}
+
+                          <PieChart
+                            title={subItem.heading}
+                            dataset={getPieChartDataSet(subItem)}
+                            bgSet={getPieChartBg(subItem)}
+                            pieChartLabel={getPieChartLabel(subItem)}
+                            borderColorSetPie={getPieChartBorder(subItem)}
+                            description={subItem.description}
+                          />
+                        </ResizableBox>
+                      </div>
+                    </Draggable>
+                  );
+                }
+              })}
+            </div>
+          </ResizableBox>
+        );
+      })}
 
       <div>
         <Button onClick={handleSubmit}>Save</Button>
