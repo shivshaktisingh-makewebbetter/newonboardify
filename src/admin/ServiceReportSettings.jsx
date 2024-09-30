@@ -18,6 +18,7 @@ import {
 } from "../apiservice/ApiService";
 import { toast, ToastContainer } from "react-toastify";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 // import { fetcher } from "../../utils/helper";
 
 export const ServiceReportSettings = () => {
@@ -71,6 +72,19 @@ export const ServiceReportSettings = () => {
       "Hire an attitude, not just experience and qualification. Greg Savage.",
     header_bg: "#f7f7f7",
     head_title_color: "#497ed8",
+  };
+
+  const onDragEnd = (result) => {
+    const { source, destination } = result;
+
+    // If dropped outside the list
+    if (!destination) return;
+
+    const newData = [...sectionData];
+    const [removed] = newData.splice(source.index, 1);
+    newData.splice(destination.index, 0, removed); // Insert dragged item to new position
+
+    setSectionData(newData); // Update state with the new order
   };
 
   const handleSelectChartTypeText = (title) => {
@@ -216,7 +230,7 @@ export const ServiceReportSettings = () => {
             const tempData = JSON.parse(item.governify_service_report);
             if (tempData === null) {
             } else {
-              //  setSectionData(tempData);
+               setSectionData(tempData);
             }
           }
         });
@@ -910,24 +924,42 @@ export const ServiceReportSettings = () => {
       <div style={{ width: "100%", textAlign: "right" }}>
         <Button onClick={handleCreateSection}>Create Section</Button>
       </div>
-      <div style={{ marginTop: "20px" }}>
-        {sectionData.map((item, index) => {
-          return (
-            <div style={{ marginTop: "20px" }}>
-              <Collapse
-                collapsible="icon"
-                items={getCollapseItems(item, index)}
-              />
-            </div>
-          );
-        })}
-        {/* <Collapse
-          collapsible="icon"
-          items={getCollapseItems()}
-          onChange={onChange}
-          activeKey={activeKey}
-        /> */}
-      </div>
+      <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="droppable-section">
+        {(provided) => (
+          <div
+            {...provided.droppableProps}
+            ref={provided.innerRef}
+            style={{ marginTop: "20px" }}
+          >
+            {sectionData.map((item, index) => (
+              <Draggable key={index} draggableId={`${index}`} index={index}>
+                {(provided) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    style={{
+                      ...provided.draggableProps.style,
+                      marginTop: "20px",
+                      border: "1px solid #ddd",
+                      padding: "10px",
+                      backgroundColor: "white",
+                    }}
+                  >
+                    <Collapse
+                      collapsible="icon"
+                      items={getCollapseItems(item, index)}
+                    />
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
       <ToastContainer position="bottom-right" />
       <div
         style={{

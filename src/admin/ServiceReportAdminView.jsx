@@ -141,9 +141,7 @@ export const ServiceReportAdminView = () => {
       if (response.success) {
         response.data.response.forEach((item) => {
           if (item.id.toString() === location.state.profileId.toString()) {
-            tempData = Object.entries(
-              JSON.parse(item.governify_service_report)
-            );
+            tempData = JSON.parse(item.governify_service_report);
             setContainers(tempData);
           }
         });
