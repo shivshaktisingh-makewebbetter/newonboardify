@@ -603,12 +603,12 @@ export const ComplianceReportAdminView = () => {
                             color: "#202223",
                           }}
                         >
-                          Saudization Percentage
+                          {box.heading}
                         </p>
                         <div
                           style={{
                             marginTop: "15px",
-                            border: "1px solid #c9cccf",
+                            borderBottom: "1px solid red",
                           }}
                         ></div>
                         <div style={{ marginTop: "26px" }}>
@@ -943,8 +943,6 @@ export const ComplianceReportAdminView = () => {
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
-                            borderBottom: "1px solid black",
-                            borderRight: "1px solid black",
                             zIndex: 1,
                           }}
                         >
@@ -954,6 +952,7 @@ export const ComplianceReportAdminView = () => {
 
                       <div
                         style={{
+                          width:"70%" ,
                           borderBottom: "1px solid rgba(201, 204, 207, 0.7)",
                         }}
                       >
@@ -967,6 +966,7 @@ export const ComplianceReportAdminView = () => {
                             top: "20px",
                             left: "20px",
                             width: "90%",
+                           
                           }}
                         >
                           {box.heading}
@@ -977,6 +977,7 @@ export const ComplianceReportAdminView = () => {
                           display: "flex",
                           gap: "26px",
                           flexDirection: "column",
+                          width:"70%"
                         }}
                       >
                         {box.selectedColumns.map((column, index) => (
@@ -1024,7 +1025,7 @@ export const ComplianceReportAdminView = () => {
                                 style={{
                                   marginTop: "15px",
                                   marginBottom: "15px",
-                                  border: "1px solid rgba(201, 204, 207, 0.7)",
+                                  borderBottom: "1px solid rgba(201, 204, 207, 0.7)",
                                 }}
                               ></div>
                             )}

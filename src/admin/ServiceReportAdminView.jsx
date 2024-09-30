@@ -114,6 +114,7 @@ export const ServiceReportAdminView = () => {
   const fetchData = async () => {
     let tempData = [];
     let tempContainerData = [];
+
     try {
       const response = await getProfileListing();
       const response1 = await getServiceReportDataAdmin(
@@ -131,17 +132,6 @@ export const ServiceReportAdminView = () => {
             ) {
               setCurrentData(item.column_values);
               setNameValue({ ...nameValue, currentName: item.name });
-            }
-          }
-        );
-        response1.data.response.data.boards[0].items_page.previous_month_items.forEach(
-          (item) => {
-            if (
-              item.name.toLowerCase() ===
-              location.state.filterKey.value.toLowerCase()
-            ) {
-              setPreviousData(item.column_values);
-              setNameValue({ ...nameValue, previousName: item.name });
             }
           }
         );
@@ -237,8 +227,6 @@ export const ServiceReportAdminView = () => {
     });
     return tempValue;
   };
-
-
 
   const getBgColorForBarChart = (subItem, item) => {
     let hexColor = "#d20e0e";
@@ -414,6 +402,8 @@ export const ServiceReportAdminView = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  console.log(containers, "containers");
 
   return (
     <div style={{ maxWidth: "1252px" }}>
