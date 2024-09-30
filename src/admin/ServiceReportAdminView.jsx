@@ -144,17 +144,10 @@ export const ServiceReportAdminView = () => {
             tempData = Object.entries(
               JSON.parse(item.governify_service_report)
             );
+            setContainers(tempData);
           }
         });
       }
-
-      for (let i = 0; i < tempData.length; i++) {
-        if (tempData[i][0] !== "recommendation_text") {
-          tempContainerData.push(tempData[i][1]);
-        }
-      }
-
-      setContainers(tempContainerData);
     } catch (err) {
     } finally {
       const savedState = sessionStorage.getItem(SESSION_STORAGE_KEY);
@@ -384,12 +377,9 @@ export const ServiceReportAdminView = () => {
     return chartMax;
   };
 
-
-
   useEffect(() => {
     fetchData();
   }, []);
-
 
   return (
     <div style={{ maxWidth: "1252px" }}>
@@ -400,7 +390,7 @@ export const ServiceReportAdminView = () => {
             width={"100%"}
             height={container.height}
             minConstraints={[200, 150]}
-            maxConstraints={[Infinity, 2000]}
+            maxConstraints={[Infinity, Infinity]}
             resizeHandles={["s"]}
             onResizeStop={(e, data) =>
               handleContainerResize(e, data, containerIndex)
