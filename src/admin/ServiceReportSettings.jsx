@@ -246,25 +246,41 @@ export const ServiceReportSettings = () => {
     }
   };
 
+  
+
   const getChartDataFormat = (data) => {
-    let position = { x: 0, y: 20 };
+    // Initial position
 
     let tempData = [...data];
     tempData.forEach((item) => {
+      let position = { x: 0, y: 20 };
       item.boxes.forEach((subItem) => {
-        if (subItem.type === "Pie Chart") {
-          subItem.size = { width: 365, height: 417 };
-          position.x = position.x + 385;
-          position.y = position.y + 437;
-        }
-        if (subItem.type === "Bar Chart") {
-          subItem.size = { width: 751, height: 480 };
-          position.x = position.x + 771;
-          position.y = position.y + 500;
-        }
-        if (subItem.type === "Text Chart") {
+        // Create a copy of the current position before modifying it
+        let currentPos = { ...position };
+
+        if (subItem.type === "Value Chart") {
           subItem.size = { width: 360, height: 100 };
-          position.x = position.x + 380;
+          subItem.position = currentPos;
+
+          // Update the position for the next item
+        } else if (subItem.type === "Pie Chart") {
+          subItem.size = { width: 365, height: 417 };
+          subItem.position = currentPos;
+
+          position.y = position.y + 437;
+        } else if (subItem.type === "Bar Chart") {
+          subItem.size = { width: 751, height: 480 };
+          subItem.position = currentPos;
+
+          // Update the position for the next item
+
+          position.y = position.y + 500;
+        } else if (subItem.type === "Text Chart") {
+          subItem.size = { width: 360, height: 100 };
+          subItem.position = currentPos;
+
+          // Update the position for the next item
+
           position.y = position.y + 120;
         }
       });

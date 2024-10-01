@@ -28,10 +28,6 @@
 //     previousValue: "",
 //     updatedValue: "",
 //   });
-//   const [recommendationText, setRecommendationText] = useState({
-//     title: "Recommendation",
-//     column: "",
-//   });
 
 //   const [activeKey, setActiveKey] = useState([]);
 //   const [columnOptions, setColumnOptions] = useState([]);
@@ -2738,20 +2734,17 @@ import {
   Select,
 } from "antd";
 import { useEffect, useState } from "react";
-// import Hero from "../common/Hero";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Hero } from "../components/Hero";
 import {
   getAllColumnsOfBoard,
   getProfileListing,
   governifyComplianceReportAdminSetting,
-  governifyServiceReportAdminSetting,
   saveAdminComplianceView,
 } from "../apiservice/ApiService";
 import { toast, ToastContainer } from "react-toastify";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-// import { fetcher } from "../../utils/helper";
 
 export const ComplianceReportSettings = () => {
   const location = useLocation();
@@ -2772,34 +2765,48 @@ export const ComplianceReportSettings = () => {
     parent: "",
   });
 
+  const [changeRecommendationTitleModal, setChangeRecommendationTitleModal] =
+    useState({
+      flag: false,
+      type: "Recommendation",
+      previousValue: "",
+      updatedValue: "",
+    });
+
   const [createSectionModal, setCreateSectionModal] = useState({
     flag: false,
     title: "",
+  });
+
+  const [recommendationText, setRecommendationText] = useState({
+    type: "Recommendation",
+    title: "Recommendation",
+    column: "",
   });
 
   const [sectionData, setSectionData] = useState([
     {
       id: 0,
       title: "About Company",
-      height: 400,
+      height: 500,
       boxes: [],
     },
     {
       id: 1,
       title: "Saudization",
-      height: 800,
+      height: 1800,
       boxes: [],
     },
     {
       id: 2,
       title: "Visa",
-      height: 400,
+      height: 500,
       boxes: [],
     },
     {
       id: 4,
       title: "Employees",
-      height: 400,
+      height: 500,
       boxes: [],
     },
   ]);
@@ -2994,6 +3001,12 @@ export const ComplianceReportSettings = () => {
     setChangeSubTitleModal(tempChangeTitleModal);
   };
 
+  const handleChangeRecommendationSubTitle = (e) => {
+    let tempChangeTitleModal = { ...changeRecommendationTitleModal };
+    tempChangeTitleModal.updatedValue = e.target.value;
+    setChangeRecommendationTitleModal(tempChangeTitleModal);
+  };
+
   const fetchData = async () => {
     try {
       const response = await getAllColumnsOfBoard(location.state.boardId);
@@ -3024,44 +3037,44 @@ export const ComplianceReportSettings = () => {
   };
 
   const getChartDataFormat = (data) => {
-    let position = { x: 0, y: 20 }; // Initial position
-  
+    // Initial position
+
     let tempData = [...data];
     tempData.forEach((item) => {
+      let position = { x: 0, y: 20 };
       item.boxes.forEach((subItem) => {
         // Create a copy of the current position before modifying it
         let currentPos = { ...position };
-  
+
         if (subItem.type === "Value Chart") {
           subItem.size = { width: 360, height: 100 };
           subItem.position = currentPos;
-  
+
           // Update the position for the next item
-   
+
           position.y = position.y + 120;
-        } 
-        else if (subItem.type === "Bar Chart") {
+        } else if (subItem.type === "Bar Chart") {
           subItem.size = { width: 751, height: 480 };
           subItem.position = currentPos;
-  
+
           // Update the position for the next item
 
           position.y = position.y + 500;
-        } 
-        else if (subItem.type === "Text Chart") {
+        } else if (subItem.type === "Text Chart") {
           subItem.size = { width: 360, height: 100 };
           subItem.position = currentPos;
-  
+
           // Update the position for the next item
-   
+
           position.y = position.y + 120;
         }
       });
     });
-  
+
+    tempData.push(recommendationText);
+
     return tempData;
   };
-  
 
   const handleSubmit = async () => {
     const payloadData = {
@@ -3116,6 +3129,23 @@ export const ComplianceReportSettings = () => {
     });
   };
 
+  const handleSaveRecommendationTitle = () => {
+    if (changeRecommendationTitleModal.updatedValue.length === 0) {
+      toast.error("Please Enter the Title!");
+      return;
+    }
+    let tempData = { ...recommendationText };
+    tempData.title = changeRecommendationTitleModal.updatedValue;
+    setRecommendationText(tempData);
+
+    setChangeRecommendationTitleModal({
+      flag: false,
+      type: "Recommendation",
+      previousValue: "",
+      updatedValue: "",
+    });
+  };
+
   const handleSaveSubTitle = () => {
     if (changeSubTitleModal.updatedValue.length === 0) {
       toast.error("Please Enter the Title!");
@@ -3165,6 +3195,21 @@ export const ComplianceReportSettings = () => {
       id: subItem.id,
       parent: item.title,
     });
+  };
+
+  const handleChangeRecommendationTitle = () => {
+    setChangeRecommendationTitleModal({
+      flag: true,
+      type: "Recommendation",
+      previousValue: recommendationText.title,
+      updatedValue: "",
+    });
+  };
+
+  const handlChangeRecommendationColumn = (e) => {
+    const tempData = { ...recommendationText };
+    tempData.column = e;
+    setRecommendationText(tempData);
   };
 
   const handleChangeDeleteChart = (item, subItem) => {
@@ -3771,6 +3816,49 @@ export const ComplianceReportSettings = () => {
     ];
   };
 
+  const getRecommendationItem = () => {
+    return [
+      {
+        key: 1,
+        label: (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <div>
+              <span>{recommendationText.title}</span>
+              <Button
+                style={{ marginLeft: "10px" }}
+                type="text"
+                icon={<EditOutlined />}
+                iconPosition="start"
+                onClick={handleChangeRecommendationTitle}
+              ></Button>
+            </div>
+          </div>
+        ),
+        children: (
+          <div style={{ marginTop: "20px", textAlign: "left" }}>
+            <Select
+              showSearch
+              placeholder="Select Recommendation Column"
+              style={{
+                width: "50%",
+              }}
+              onChange={handlChangeRecommendationColumn}
+              options={columnOptions}
+              filterOption={filterOption}
+              value={recommendationText.column}
+            />
+          </div>
+        ),
+      },
+    ];
+  };
+
   const handleChangeNewCreateSectionTitle = (e) => {
     let tempData = { ...createSectionModal };
     tempData.title = e.target.value;
@@ -3845,6 +3933,9 @@ export const ComplianceReportSettings = () => {
           )}
         </Droppable>
       </DragDropContext>
+      <div style={{ marginTop: "10px" }}>
+        <Collapse collapsible="icon" items={getRecommendationItem()} />
+      </div>
       <ToastContainer position="bottom-right" />
       <div
         style={{
@@ -3997,6 +4088,51 @@ export const ComplianceReportSettings = () => {
           addonBefore={"Enter Title"}
           value={createSectionModal.title}
           onChange={handleChangeNewCreateSectionTitle}
+        />
+      </Modal>
+      <Modal
+        open={changeRecommendationTitleModal.flag}
+        title="Change Recommendation Title"
+        centered
+        footer={(_, record) => (
+          <>
+            <Button
+              style={{
+                background: data.button_bg,
+                color: "#fff",
+                border: "none",
+              }}
+              onClick={handleSaveRecommendationTitle}
+            >
+              Save
+            </Button>
+            <Button
+              style={{ border: "none" }}
+              onClick={() => {
+                setChangeRecommendationTitleModal({
+                  flag: false,
+                  type: "Recommendation",
+                  previousValue: "",
+                  updatedValue: "",
+                });
+              }}
+            >
+              Cancel
+            </Button>
+          </>
+        )}
+        onCancel={() => {
+          setChangeRecommendationTitleModal({
+            flag: false,
+            type: "Recommendation",
+            previousValue: "",
+            updatedValue: "",
+          });
+        }}
+      >
+        <Input
+          value={changeRecommendationTitleModal.updatedValue}
+          onChange={handleChangeRecommendationSubTitle}
         />
       </Modal>
     </div>

@@ -122,6 +122,8 @@ export const ServiceReportAdminView = () => {
         location.state.filterKey.date_key
       );
 
+      console.log(response1);
+
       if (response1.success) {
         setAllColumnTitle(response1.data.response.data.boards[0].columns);
         response1.data.response.data.boards[0].items_page.items.forEach(
@@ -380,12 +382,12 @@ export const ServiceReportAdminView = () => {
   }, []);
 
   return (
-    <div style={{ maxWidth: "1252px" }}>
+    <div style={{ maxWidth: "1200px" }}>
       {containers.map((container, containerIndex) => {
         return (
           <ResizableBox
             key={container.id}
-            width={"100%"}
+            width={1200}
             height={container.height}
             minConstraints={[200, 150]}
             maxConstraints={[Infinity, Infinity]}

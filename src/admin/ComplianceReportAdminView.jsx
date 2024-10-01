@@ -4,9 +4,7 @@ import Draggable from "react-draggable";
 import "react-resizable/css/styles.css";
 import {
   DragOutlined,
-  FallOutlined,
-  InfoCircleOutlined,
-  RiseOutlined,
+
 } from "@ant-design/icons";
 import {
   getComplianceReportDataAdmin,
@@ -155,21 +153,22 @@ export const ComplianceReportAdminView = () => {
       } else {
       }
 
+
       if (response.success) {
         response.data.response.forEach((item) => {
           if (item.id.toString() === location.state.profileId.toString()) {
-            tempData = Object.entries(
-              JSON.parse(item.governify_compliance_report)
-            );
+            tempData = JSON.parse(item.governify_compliance_report);
           }
         });
       }
 
-      for (let i = 0; i < tempData.length; i++) {
-        if (tempData[i][0] !== "recommendation_text") {
-          tempContainerData.push(tempData[i][1]);
+      tempData.forEach((item) => {
+        if (item.hasOwnProperty("type") && item.type === "Recommendation") {
+        } else {
+          tempContainerData.push(item);
         }
-      }
+      });
+
       setContainers(tempContainerData);
     } catch (err) {
     } finally {
@@ -413,12 +412,12 @@ export const ComplianceReportAdminView = () => {
   }, []);
 
   return (
-    <div style={{ maxWidth: "1252px" }}>
+    <div style={{ maxWidth: "1200px" }}>
       {containers.map((container, containerIndex) => {
         return (
           <ResizableBox
             key={container.id}
-            width={1252}
+            width={1200}
             height={Number(container.height)}
             minConstraints={[200, 150]}
             maxConstraints={[Infinity, 2000]}
@@ -507,8 +506,7 @@ export const ComplianceReportAdminView = () => {
                           height={Number(subItem.size.height)}
                           minConstraints={[100, 100]}
                           maxConstraints={[
-                            window.innerWidth - subItem.position.x,
-                            window.innerHeight - subItem.position.y,
+                            500 , 500
                           ]}
                           resizeHandles={["se"]}
                           onResizeStop={(e, data) =>
