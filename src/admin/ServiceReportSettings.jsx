@@ -15,6 +15,7 @@ import {
   getAllColumnsOfBoard,
   getProfileListing,
   governifyServiceReportAdminSetting,
+  saveAdminServiceView,
 } from "../apiservice/ApiService";
 import { toast, ToastContainer } from "react-toastify";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
@@ -59,6 +60,11 @@ export const ServiceReportSettings = () => {
       boxes: [],
     },
   ]);
+
+  const barTypeChartOptions = [
+    { label: "Horizontal chart", value: true },
+    { label: "Vertical Chart", value: false },
+  ];
 
   const [activeKey, setActiveKey] = useState([]);
   const [columnOptions, setColumnOptions] = useState([]);
@@ -230,7 +236,7 @@ export const ServiceReportSettings = () => {
             const tempData = JSON.parse(item.governify_service_report);
             if (tempData === null) {
             } else {
-               setSectionData(tempData);
+              setSectionData(tempData);
             }
           }
         });
@@ -273,9 +279,14 @@ export const ServiceReportSettings = () => {
       governify_service_report: JSON.stringify(getChartDataFormat(sectionData)),
     };
 
+    const payloadDataNew = {
+      governify_service_report_view: [],
+      profile_id: location.state.profileId.toString(),
+    };
 
     try {
       const response = await governifyServiceReportAdminSetting(payloadData);
+      const response1 = await saveAdminServiceView(payloadDataNew);
       if (response.success) {
         sessionStorage.removeItem("draggableResizableStateService");
         toast.success(response.message);
@@ -458,6 +469,22 @@ export const ServiceReportSettings = () => {
     setSectionData(tempData);
   };
 
+  const onChangeSwitchBarType = (e, item, subItem) => {
+    const tempBoxes = [...item.boxes];
+    tempBoxes.forEach((detail) => {
+      if (detail.id === subItem.id) {
+        detail.horizontal = e;
+      }
+    });
+    let tempData = [...sectionData];
+    tempData.forEach((detail) => {
+      if (detail.title === item.title) {
+        detail.boxes = tempBoxes;
+      }
+    });
+    setSectionData(tempData);
+  };
+
   const handlChangeChartColumn = (e, item, subItem) => {
     const tempBoxes = [...item.boxes];
     let tempColor = subItem.selectedColor;
@@ -628,10 +655,24 @@ export const ServiceReportSettings = () => {
                 />
               </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <div>Bar Chart Type :</div>
+                <Select
+                  showSearch
+                  placeholder="Select Bar Chart Type"
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) => onChangeSwitchBarType(e, item, subItem)}
+                  options={barTypeChartOptions}
+                  filterOption={filterOption}
+                  value={item.horizontal}
+                />
+              </div>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
                 <Select
                   showSearch
                   mode="multiple"
-                  placeholder="Select Tag"
+                  placeholder="Select Column"
                   style={{
                     width: "50%",
                   }}
@@ -925,41 +966,41 @@ export const ServiceReportSettings = () => {
         <Button onClick={handleCreateSection}>Create Section</Button>
       </div>
       <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="droppable-section">
-        {(provided) => (
-          <div
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            style={{ marginTop: "20px" }}
-          >
-            {sectionData.map((item, index) => (
-              <Draggable key={index} draggableId={`${index}`} index={index}>
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    style={{
-                      ...provided.draggableProps.style,
-                      marginTop: "20px",
-                      border: "1px solid #ddd",
-                      padding: "10px",
-                      backgroundColor: "white",
-                    }}
-                  >
-                    <Collapse
-                      collapsible="icon"
-                      items={getCollapseItems(item, index)}
-                    />
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+        <Droppable droppableId="droppable-section">
+          {(provided) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              style={{ marginTop: "20px" }}
+            >
+              {sectionData.map((item, index) => (
+                <Draggable key={index} draggableId={`${index}`} index={index}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={{
+                        ...provided.draggableProps.style,
+                        marginTop: "20px",
+                        border: "1px solid #ddd",
+                        padding: "10px",
+                        backgroundColor: "white",
+                      }}
+                    >
+                      <Collapse
+                        collapsible="icon"
+                        items={getCollapseItems(item, index)}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
       <ToastContainer position="bottom-right" />
       <div
         style={{
