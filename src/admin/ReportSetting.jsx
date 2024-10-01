@@ -97,6 +97,7 @@ export const ReportSettings = () => {
     setLoading(true);
     try {
       const response = await getAllBoards();
+  
       const response1 = await getProfileListing();
       if (response1.success) {
         response1.data.response.forEach((item) => {
@@ -106,7 +107,7 @@ export const ReportSettings = () => {
               setSelectedBoardIdService(item.governify_service_board_id);
             }
             if (item.governify_compliance_board_id !== null) {
-              selectedBoardIdCompliance = item.governify_service_board_id;
+              selectedBoardIdCompliance = item.governify_compliance_board_id;
               setSelectedBoardIdCompliance(item.governify_compliance_board_id);
             }
 
@@ -453,7 +454,7 @@ export const ReportSettings = () => {
                       />
                     </div>
                     <div style={{ marginTop: "20px" }}>
-                      {selectedFilterColumnCompliance.key !== undefined &&
+                      {selectedFilterColumnCompliance.key !== undefined && selectedFilterColumnCompliance.key != null &&
                         selectedFilterColumnCompliance.key.length > 0 && (
                           <Input
                             addonBefore="Filter Value"
