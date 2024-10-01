@@ -102,6 +102,7 @@ export const ReportSettings = () => {
       if (response1.success) {
         response1.data.response.forEach((item) => {
           if (item.id === location.state) {
+           
             if (item.governify_service_board_id !== null) {
               selectedBoardIdService = item.governify_service_board_id;
               setSelectedBoardIdService(item.governify_service_board_id);
