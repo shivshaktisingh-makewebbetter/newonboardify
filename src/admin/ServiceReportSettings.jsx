@@ -18,7 +18,7 @@ import {
   saveAdminServiceView,
 } from "../apiservice/ApiService";
 import { toast, ToastContainer } from "react-toastify";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, LeftOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 // import { fetcher } from "../../utils/helper";
 
@@ -289,6 +289,14 @@ export const ServiceReportSettings = () => {
     return tempData;
   };
 
+  const delayFun = async () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 2000);
+    });
+  };
+
   const handleSubmit = async () => {
     const payloadData = {
       profile_id: location.state.profileId.toString(),
@@ -296,12 +304,13 @@ export const ServiceReportSettings = () => {
     };
 
     const payloadDataNew = {
-      governify_service_report_view: [],
+      governify_service_report_view: "",
       profile_id: location.state.profileId.toString(),
     };
 
     try {
       const response = await governifyServiceReportAdminSetting(payloadData);
+      await delayFun();
       const response1 = await saveAdminServiceView(payloadDataNew);
       if (response.success) {
         sessionStorage.removeItem("draggableResizableStateService");
@@ -965,6 +974,10 @@ export const ServiceReportSettings = () => {
     setCreateSectionModal({ flag: false, title: "" });
   };
 
+  const handleBackNavigation = () => {
+    navigate(-1);
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -978,9 +991,19 @@ export const ServiceReportSettings = () => {
           forHome={false}
         />
       </div>
-      <div style={{ width: "100%", textAlign: "right" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent:"space-between" ,
+          paddingBottom: "10px",
+          width:"100%"
+        }}
+      >
+        <Button icon={<LeftOutlined />} onClick={handleBackNavigation}></Button>
         <Button onClick={handleCreateSection}>Create Section</Button>
       </div>
+     
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable-section">
           {(provided) => (

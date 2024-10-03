@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { ResizableBox } from "react-resizable";
 import Draggable from "react-draggable";
 import "react-resizable/css/styles.css";
-import { DragOutlined } from "@ant-design/icons";
+import { DragOutlined, LeftOutlined } from "@ant-design/icons";
 import {
   getProfileListing,
   getServiceReportDataAdmin,
   saveAdminServiceView,
 } from "../apiservice/ApiService";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { BarChartHorizontal } from "../common/BarChartHorizontal";
 import { BarChartVertical } from "../common/BarChartVertical";
 import { Button } from "antd";
@@ -17,6 +17,7 @@ import { toast, ToastContainer } from "react-toastify";
 const SESSION_STORAGE_KEY = "draggableResizableStateService"; // Key to save data in sessionStorage
 
 export const ServiceReportAdminView = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const [currentData, setCurrentData] = useState([]);
   const [previousData, setPreviousData] = useState([]);
@@ -122,7 +123,6 @@ export const ServiceReportAdminView = () => {
         location.state.filterKey.date_key
       );
 
-      console.log(response1);
 
       if (response1.success) {
         setAllColumnTitle(response1.data.response.data.boards[0].columns);
@@ -377,12 +377,29 @@ export const ServiceReportAdminView = () => {
     return chartMax;
   };
 
+  const handleBackNavigation = () => {
+    navigate(-1);
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
 
   return (
     <div style={{ maxWidth: "1200px" }}>
+        <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent:"start" ,
+          paddingBottom: "10px",
+          width:"100%"
+        }}
+      >
+        <Button icon={<LeftOutlined
+         />} onClick={handleBackNavigation}></Button>
+  
+      </div>
       {containers.map((container, containerIndex) => {
         return (
           <ResizableBox

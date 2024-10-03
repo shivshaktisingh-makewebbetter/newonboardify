@@ -19,7 +19,7 @@ import {
   saveAdminComplianceView,
 } from "../apiservice/ApiService";
 import { toast, ToastContainer } from "react-toastify";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, LeftOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export const ComplianceReportSettings = () => {
@@ -363,12 +363,13 @@ export const ComplianceReportSettings = () => {
     };
 
     const payloadDataNew = {
-      governify_compliance_report_view: [],
+      governify_compliance_report_view: "",
       profile_id: location.state.profileId.toString(),
     };
 
     try {
       const response = await governifyComplianceReportAdminSetting(payloadData);
+      await delayFun();
       const response1 = await saveAdminComplianceView(payloadDataNew);
 
       if (response.success) {
@@ -1159,6 +1160,17 @@ export const ComplianceReportSettings = () => {
     setCreateSectionModal({ flag: false, title: "" });
   };
 
+  const handleBackNavigation = () => {
+    navigate(-1);
+  };
+  const delayFun = async () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 2000);
+    });
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -1172,9 +1184,20 @@ export const ComplianceReportSettings = () => {
           forHome={false}
         />
       </div>
-      <div style={{ width: "100%", textAlign: "right" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent:"space-between" ,
+          paddingBottom: "10px",
+          width:"100%"
+        }}
+      >
+        <Button icon={<LeftOutlined
+         />} onClick={handleBackNavigation}></Button>
         <Button onClick={handleCreateSection}>Create Section</Button>
       </div>
+     
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable-section">
           {(provided) => (

@@ -14,6 +14,7 @@ import {
   governifyServiceBoardAssociation,
 } from "../apiservice/ApiService";
 import { Loader } from "../common/Loader";
+import { LeftOutlined } from "@ant-design/icons";
 
 export const ReportSettings = () => {
   const location = useLocation();
@@ -23,6 +24,10 @@ export const ReportSettings = () => {
   const [columnOptionsService, setColumnOptionsService] = useState([]);
   const [dateOptionsCompliance, setDateOptionsCompliance] = useState([]);
   const [dateOptionsService, setDateOptionsService] = useState([]);
+  const [complianceChartSettingCompleted, SetComplianceChartSettingCompleted] =
+    useState(false);
+  const [serviceChartSettingCompleted, SetServiceChartSettingCompleted] =
+    useState(false);
   const [selectedFilterColumnService, setSelectedFilterColumnService] =
     useState({
       key: undefined,
@@ -97,12 +102,25 @@ export const ReportSettings = () => {
     setLoading(true);
     try {
       const response = await getAllBoards();
-  
+
       const response1 = await getProfileListing();
       if (response1.success) {
         response1.data.response.forEach((item) => {
           if (item.id === location.state) {
-           
+            if (
+              item.governify_compliance_report_view === undefined ||
+              item.governify_compliance_report_view === null ||
+              item.governify_compliance_report_view === ""
+            ) {
+              SetComplianceChartSettingCompleted(true);
+            }
+            if (
+              item.governify_service_report_view === undefined ||
+              item.governify_service_report_view === null ||
+              item.governify_service_report_view === ""
+            ) {
+              SetServiceChartSettingCompleted(true);
+            }
             if (item.governify_service_board_id !== null) {
               selectedBoardIdService = item.governify_service_board_id;
               setSelectedBoardIdService(item.governify_service_board_id);
@@ -196,7 +214,7 @@ export const ReportSettings = () => {
       console.log(err);
     } finally {
       setSelectedBoardIdCompliance(e);
-      setSelectedFilterColumnCompliance({key:'' , value:'' , date_key:''});
+      setSelectedFilterColumnCompliance({ key: "", value: "", date_key: "" });
       setSelectedTableColumnsCompliance([]);
       setLoading(false);
     }
@@ -227,13 +245,13 @@ export const ReportSettings = () => {
     setSelectedFilterColumnCompliance(tempObj);
   };
 
-  const delayFun = async () =>{
-    return new Promise((resolve)=>{
-        setTimeout(()=>{
-          resolve();
-        } , 2000)
-    })
-  } 
+  const delayFun = async () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 2000);
+    });
+  };
 
   const handleSaveCompliance = async () => {
     setLoading(true);
@@ -270,6 +288,10 @@ export const ReportSettings = () => {
       if (!response2.success) {
         toast.error(response2.message);
       }
+
+      if (complianceChartSettingCompleted) {
+        toast.error("Please Set the Compliance Chart Setting.");
+      }
     } catch (err) {
       console.log(err, "err");
     } finally {
@@ -299,10 +321,9 @@ export const ReportSettings = () => {
       console.log(err);
     } finally {
       setSelectedBoardIdService(e);
-      setSelectedFilterColumnService({key:'' , value:'' , date_key:''});
+      setSelectedFilterColumnService({ key: "", value: "", date_key: "" });
       setLoading(false);
     }
-   
   };
 
   const handleSelectDateColumnService = (e) => {
@@ -352,11 +373,19 @@ export const ReportSettings = () => {
       if (!response1.success) {
         toast.error(response1.message);
       }
+
+      if (serviceChartSettingCompleted) {
+        toast.error("Please Set the Service Chart Setting.");
+      }
     } catch (err) {
       console.log(err, "err");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleBackNavigation = () => {
+    navigate(-1);
   };
 
   useEffect(() => {
@@ -372,6 +401,15 @@ export const ReportSettings = () => {
           subheading="Stay informed and in control of the reports of your requests"
           forHome={false}
         />
+      </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          paddingBottom: "10px",
+        }}
+      >
+        <Button icon={<LeftOutlined />} onClick={handleBackNavigation}></Button>
       </div>
 
       <div style={{ marginTop: "20px" }}>
@@ -455,7 +493,8 @@ export const ReportSettings = () => {
                       />
                     </div>
                     <div style={{ marginTop: "20px" }}>
-                      {selectedFilterColumnCompliance.key !== undefined && selectedFilterColumnCompliance.key != null &&
+                      {selectedFilterColumnCompliance.key !== undefined &&
+                        selectedFilterColumnCompliance.key != null &&
                         selectedFilterColumnCompliance.key.length > 0 && (
                           <Input
                             addonBefore="Filter Value"
