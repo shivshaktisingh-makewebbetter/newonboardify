@@ -20,7 +20,6 @@ export const ServiceReportAdminView = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentData, setCurrentData] = useState([]);
-  const [previousData, setPreviousData] = useState([]);
   const [allColumnTitle, setAllColumnTitle] = useState([]);
   const [nameValue, setNameValue] = useState({
     currentName: "",

@@ -2,11 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ResizableBox } from "react-resizable";
 import Draggable from "react-draggable";
 import "react-resizable/css/styles.css";
-import {
-  DragOutlined,
-  LeftOutlined,
-
-} from "@ant-design/icons";
+import { DragOutlined, LeftOutlined } from "@ant-design/icons";
 import {
   getComplianceReportDataAdmin,
   getProfileListing,
@@ -132,12 +128,24 @@ export const ComplianceReportAdminView = () => {
         setAllColumnTitle(response1.data.response.data.boards[0].columns);
         response1.data.response.data.boards[0].items_page.items.forEach(
           (item) => {
-            if (
-              item.name.toLowerCase() ===
-              location.state.filterKey.value.toLowerCase()
-            ) {
-              setCurrentData(item.column_values);
-              setNameValue({ ...nameValue, currentName: item.name });
+            if (location.state.filterKey.key === "name") {
+              if (
+                item.name.toLowerCase() ===
+                location.state.filterKey.value.toLowerCase()
+              ) {
+                setCurrentData(item.column_values);
+                setNameValue({ ...nameValue, currentName: item.name });
+              }
+            } else {
+              item.column_values.forEach((subItem) => {
+                if (
+                  subItem.id === location.state.filterKey.key &&
+                  subItem.text === location.state.filterKey.value
+                ) {
+                  setCurrentData(item.column_values);
+                  setNameValue({ ...nameValue, currentName: item.name });
+                }
+              });
             }
           }
         );
@@ -154,7 +162,6 @@ export const ComplianceReportAdminView = () => {
         );
       } else {
       }
-
 
       if (response.success) {
         response.data.response.forEach((item) => {
@@ -423,14 +430,12 @@ export const ComplianceReportAdminView = () => {
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent:"start" ,
+          justifyContent: "start",
           paddingBottom: "10px",
-          width:"100%"
+          width: "100%",
         }}
       >
-        <Button icon={<LeftOutlined
-         />} onClick={handleBackNavigation}></Button>
-  
+        <Button icon={<LeftOutlined />} onClick={handleBackNavigation}></Button>
       </div>
       {containers.map((container, containerIndex) => {
         return (
@@ -524,9 +529,7 @@ export const ComplianceReportAdminView = () => {
                           width={Number(subItem.size.width)}
                           height={Number(subItem.size.height)}
                           minConstraints={[100, 100]}
-                          maxConstraints={[
-                            500 , 500
-                          ]}
+                          maxConstraints={[500, 500]}
                           resizeHandles={["se"]}
                           onResizeStop={(e, data) =>
                             handleResize(e, data, containerIndex, boxIndex)
