@@ -20,11 +20,14 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import { DeleteOutlined, EditOutlined, LeftOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Loader } from "../common/Loader";
+
 // import { fetcher } from "../../utils/helper";
 
 export const ServiceReportSettings = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [changeTitleModal, setChangeTitleModal] = useState({
     flag: false,
     type: "",
@@ -46,20 +49,7 @@ export const ServiceReportSettings = () => {
     title: "",
   });
 
-  const [sectionData, setSectionData] = useState([
-    {
-      id: 0,
-      title: "About Company",
-      height: 400,
-      boxes: [],
-    },
-    {
-      id: 1,
-      title: "Insights",
-      height: 800,
-      boxes: [],
-    },
-  ]);
+  const [sectionData, setSectionData] = useState([]);
 
   const barTypeChartOptions = [
     { label: "Horizontal chart", value: true },
@@ -219,6 +209,7 @@ export const ServiceReportSettings = () => {
   };
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await getAllColumnsOfBoard(location.state.boardId);
       const response1 = await getProfileListing();
@@ -235,6 +226,20 @@ export const ServiceReportSettings = () => {
           if (item.id.toString() === location.state.profileId.toString()) {
             const tempData = JSON.parse(item.governify_service_report);
             if (tempData === null) {
+              setSectionData([
+                {
+                  id: 0,
+                  title: "About Company",
+                  height: 400,
+                  boxes: [],
+                },
+                {
+                  id: 1,
+                  title: "Insights",
+                  height: 800,
+                  boxes: [],
+                },
+              ]);
             } else {
               setSectionData(tempData);
             }
@@ -243,10 +248,10 @@ export const ServiceReportSettings = () => {
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
-
-  
 
   const getChartDataFormat = (data) => {
     // Initial position
@@ -284,6 +289,7 @@ export const ServiceReportSettings = () => {
           position.y = position.y + 120;
         }
       });
+      item.height = position.y + 40;
     });
 
     return tempData;
@@ -307,7 +313,7 @@ export const ServiceReportSettings = () => {
       governify_service_report_view: "",
       profile_id: location.state.profileId.toString(),
     };
-
+    setLoading(true);
     try {
       const response = await governifyServiceReportAdminSetting(payloadData);
       await delayFun();
@@ -320,6 +326,8 @@ export const ServiceReportSettings = () => {
       }
     } catch (err) {
       console.log(err, "err");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -984,6 +992,7 @@ export const ServiceReportSettings = () => {
 
   return (
     <div>
+      {loading && <Loader />}
       <div style={{ marginTop: "48px", marginBottom: "16px" }}>
         <Hero
           heading={"Service Report Setting"}
@@ -995,15 +1004,15 @@ export const ServiceReportSettings = () => {
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent:"space-between" ,
+          justifyContent: "space-between",
           paddingBottom: "10px",
-          width:"100%"
+          width: "100%",
         }}
       >
         <Button icon={<LeftOutlined />} onClick={handleBackNavigation}></Button>
         <Button onClick={handleCreateSection}>Create Section</Button>
       </div>
-     
+
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable-section">
           {(provided) => (

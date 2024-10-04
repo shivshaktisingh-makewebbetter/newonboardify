@@ -1,5 +1,3 @@
-
-
 import {
   Button,
   Collapse,
@@ -21,10 +19,12 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import { DeleteOutlined, EditOutlined, LeftOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Loader } from "../common/Loader";
 
 export const ComplianceReportSettings = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [changeTitleModal, setChangeTitleModal] = useState({
     flag: false,
     type: "",
@@ -54,38 +54,9 @@ export const ComplianceReportSettings = () => {
     title: "",
   });
 
-  const [recommendationText, setRecommendationText] = useState({
-    type: "Recommendation",
-    title: "Recommendation",
-    column: "",
-  });
+  const [recommendationText, setRecommendationText] = useState({});
 
-  const [sectionData, setSectionData] = useState([
-    {
-      id: 0,
-      title: "About Company",
-      height: 500,
-      boxes: [],
-    },
-    {
-      id: 1,
-      title: "Saudization",
-      height: 1800,
-      boxes: [],
-    },
-    {
-      id: 2,
-      title: "Visa",
-      height: 500,
-      boxes: [],
-    },
-    {
-      id: 4,
-      title: "Employees",
-      height: 500,
-      boxes: [],
-    },
-  ]);
+  const [sectionData, setSectionData] = useState([]);
 
   const barTypeChartOptions = [
     { label: "Horizontal chart", value: true },
@@ -284,6 +255,7 @@ export const ComplianceReportSettings = () => {
   };
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await getAllColumnsOfBoard(location.state.boardId);
       const response1 = await getProfileListing();
@@ -300,9 +272,44 @@ export const ComplianceReportSettings = () => {
           if (item.id.toString() === location.state.profileId.toString()) {
             const tempData = JSON.parse(item.governify_compliance_report);
             if (tempData === null) {
+              setRecommendationText({
+                type: "Recommendation",
+                title: "Recommendation",
+                column: "",
+              });
+              setSectionData([
+                {
+                  id: 0,
+                  title: "About Company",
+                  height: 500,
+                  boxes: [],
+                },
+                {
+                  id: 1,
+                  title: "Saudization",
+                  height: 1800,
+                  boxes: [],
+                },
+                {
+                  id: 2,
+                  title: "Visa",
+                  height: 500,
+                  boxes: [],
+                },
+                {
+                  id: 4,
+                  title: "Employees",
+                  height: 500,
+                  boxes: [],
+                },
+              ]);
             } else {
-              const filteredArray = tempData.filter(item => item.type === 'Recommendation');
-              const newFilteredArray = tempData.filter(item => item.type !== 'Recommendation');
+              const filteredArray = tempData.filter(
+                (item) => item.type === "Recommendation"
+              );
+              const newFilteredArray = tempData.filter(
+                (item) => item.type !== "Recommendation"
+              );
               setSectionData(newFilteredArray);
               setRecommendationText(filteredArray[0]);
             }
@@ -311,6 +318,8 @@ export const ComplianceReportSettings = () => {
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -345,8 +354,16 @@ export const ComplianceReportSettings = () => {
           // Update the position for the next item
 
           position.y = position.y + 120;
+        } else if (subItem.type === "Multi Value Chart") {
+          subItem.size = { width: 366, height: 478 };
+          subItem.position = currentPos;
+
+          // Update the position for the next item
+
+          position.y = position.y + 498;
         }
       });
+      item.height = position.y + 40;
     });
 
     tempData.push(recommendationText);
@@ -366,7 +383,7 @@ export const ComplianceReportSettings = () => {
       governify_compliance_report_view: "",
       profile_id: location.state.profileId.toString(),
     };
-
+    setLoading(true);
     try {
       const response = await governifyComplianceReportAdminSetting(payloadData);
       await delayFun();
@@ -380,6 +397,8 @@ export const ComplianceReportSettings = () => {
       }
     } catch (err) {
       console.log(err, "err");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -1177,6 +1196,7 @@ export const ComplianceReportSettings = () => {
 
   return (
     <div>
+      {loading && <Loader />}
       <div style={{ marginTop: "48px", marginBottom: "16px" }}>
         <Hero
           heading={"Service Report Setting"}
@@ -1188,16 +1208,15 @@ export const ComplianceReportSettings = () => {
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent:"space-between" ,
+          justifyContent: "space-between",
           paddingBottom: "10px",
-          width:"100%"
+          width: "100%",
         }}
       >
-        <Button icon={<LeftOutlined
-         />} onClick={handleBackNavigation}></Button>
+        <Button icon={<LeftOutlined />} onClick={handleBackNavigation}></Button>
         <Button onClick={handleCreateSection}>Create Section</Button>
       </div>
-     
+
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable-section">
           {(provided) => (
