@@ -254,6 +254,23 @@ export const ReportSettings = () => {
   };
 
   const handleSaveCompliance = async () => {
+  
+    if (
+      selectedFilterColumnCompliance.key === null || 
+      selectedFilterColumnCompliance.key === undefined || 
+      selectedFilterColumnCompliance.key.trim() === '' || // Checks for empty strings
+      selectedFilterColumnCompliance.value === null || 
+      selectedFilterColumnCompliance.value === undefined || 
+      selectedFilterColumnCompliance.value.trim() === '' || // Checks for empty strings
+      selectedFilterColumnCompliance.date_key === null || 
+      selectedFilterColumnCompliance.date_key === undefined || 
+      selectedFilterColumnCompliance.date_key.trim() === '' // Checks for empty strings
+    ) {
+      toast.error('Please fill all the fields');
+      return;
+    }
+    
+
     setLoading(true);
     const payload = {
       profile_id: location.state.toString(),
@@ -348,6 +365,23 @@ export const ReportSettings = () => {
   };
 
   const handleSaveService = async () => {
+
+    
+    if (
+      selectedFilterColumnService.key === null || 
+      selectedFilterColumnService.key === undefined || 
+      selectedFilterColumnService.key.trim() === '' || // Checks for empty strings
+      selectedFilterColumnService.value === null || 
+      selectedFilterColumnService.value === undefined || 
+      selectedFilterColumnService.value.trim() === '' || // Checks for empty strings
+      selectedFilterColumnService.date_key === null || 
+      selectedFilterColumnService.date_key === undefined || 
+      selectedFilterColumnService.date_key.trim() === '' // Checks for empty strings
+    ) {
+      toast.error('Please fill all the fields');
+      return;
+    }
+   
     setLoading(true);
     const payload = {
       profile_id: location.state.toString(),

@@ -407,8 +407,20 @@ export const ComplianceReportAdminView = () => {
   };
 
   const getPreviousMonthChange = (id) => {
+    if (id === undefined) {
+      return "1 %";
+    }
+    if (previousData.length === 0 || currentData.length === 0) {
+      return "";
+    }
+
+
     const currentResult = currentData.find((item) => item.id === id);
     const previousResult = previousData.find((item) => item.id === id);
+
+    if (currentResult === undefined || previousResult === undefined) {
+      return "";
+    }
     const percentageChange =
       ((Number(currentResult.text) - Number(previousResult.text)) /
         Number(previousResult.text)) *
