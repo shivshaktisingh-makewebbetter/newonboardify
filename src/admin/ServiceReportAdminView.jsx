@@ -127,6 +127,30 @@ export const ServiceReportAdminView = () => {
         setAllColumnTitle(response1.data.response.data.boards[0].columns);
         response1.data.response.data.boards[0].items_page.items.forEach(
           (item) => {
+            if (location.state.filterKey.key === "name") {
+              if (
+                item.name.toLowerCase() ===
+                location.state.filterKey.value.toLowerCase()
+              ) {
+                setCurrentData(item.column_values);
+                setNameValue({ ...nameValue, currentName: item.name });
+              }
+            } else {
+              item.column_values.forEach((subItem) => {
+                if (
+                  subItem.id === location.state.filterKey.key &&
+                  subItem.text === location.state.filterKey.value
+                ) {
+                  setCurrentData(item.column_values);
+                  setNameValue({ ...nameValue, currentName: item.name });
+                }
+              });
+            }
+          }
+        );
+
+        response1.data.response.data.boards[0].items_page.items.forEach(
+          (item) => {
             if (
               item.name.toLowerCase() ===
               location.state.filterKey.value.toLowerCase()
@@ -137,6 +161,7 @@ export const ServiceReportAdminView = () => {
           }
         );
       } else {
+        
       }
 
       if (response.success) {
