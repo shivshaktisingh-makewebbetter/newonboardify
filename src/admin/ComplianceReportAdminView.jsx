@@ -13,7 +13,7 @@ import { BarChartHorizontal } from "../common/BarChartHorizontal";
 import { BarChartVertical } from "../common/BarChartVertical";
 import { Button } from "antd";
 import { toast, ToastContainer } from "react-toastify";
-import { Tooltip } from "chart.js";
+
 
 const SESSION_STORAGE_KEY = "draggableResizableStateCompliance"; // Key to save data in sessionStorage
 
