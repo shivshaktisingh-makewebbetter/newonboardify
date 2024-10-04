@@ -593,6 +593,7 @@ export const ReportSettings = () => {
                     </div>
                     <div style={{ marginTop: "20px" }}>
                       {selectedFilterColumnService.key !== undefined &&
+                        selectedFilterColumnService.key !== null &&
                         selectedFilterColumnService.key.length > 0 && (
                           <Input
                             addonBefore="Filter Value"
