@@ -304,6 +304,7 @@ export const ServiceReportSettings = () => {
   };
 
   const handleSubmit = async () => {
+
     const payloadData = {
       profile_id: location.state.profileId.toString(),
       governify_service_report: JSON.stringify(getChartDataFormat(sectionData)),
