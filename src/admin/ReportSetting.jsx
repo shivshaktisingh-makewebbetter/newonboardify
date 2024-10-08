@@ -409,22 +409,42 @@ export const ReportSettings = () => {
     setLoading(true);
     const payload = {
       profile_id: location.state.toString(),
-      governify_compliance_board_id: selectedBoardIdCompliance === undefined ? null : selectedBoardIdCompliance,
+      governify_compliance_board_id:
+        selectedBoardIdCompliance === undefined
+          ? null
+          : selectedBoardIdCompliance,
     };
     const payload1 = JSON.stringify({
       profile_id: location.state.toString(),
-      governify_table_settings: selectedTableColumnsCompliance.length === 0 ? null : selectedTableColumnsCompliance,
+      governify_table_settings:
+        selectedTableColumnsCompliance.length === 0
+          ? null
+          : selectedTableColumnsCompliance,
     });
     const payload2 = JSON.stringify({
       profile_id: location.state.toString(),
-      governify_compliance_filter_key: selectedFilterColumnCompliance,
+      governify_compliance_filter_key: {
+        key:
+          selectedFilterColumnCompliance.key === undefined
+            ? null
+            : selectedFilterColumnCompliance.key,
+        value:
+          selectedFilterColumnCompliance.value === undefined
+            ? null
+            : selectedFilterColumnCompliance.value,
+        date_key:
+          selectedFilterColumnCompliance.date_key === undefined
+            ? null
+            : selectedFilterColumnCompliance.date_key,
+      },
     });
 
     const payload3 = {
       profile_id: location.state.toString(),
-      governify_compliance_report: sectionDataCompliance.length > 0 ?JSON.stringify(
-        getChartDataFormat(sectionDataCompliance)) : null
-      ,
+      governify_compliance_report:
+        sectionDataCompliance.length > 0
+          ? JSON.stringify(getChartDataFormat(sectionDataCompliance))
+          : null,
     };
     const payload4 = {
       governify_compliance_report_view: null,
@@ -469,7 +489,7 @@ export const ReportSettings = () => {
       console.log(err, "err");
     } finally {
       setLoading(false);
-      sessionStorage.removeItem('draggableResizableStateCompliance');
+      sessionStorage.removeItem("draggableResizableStateCompliance");
     }
   };
 
@@ -605,7 +625,21 @@ export const ReportSettings = () => {
 
     const payload1 = JSON.stringify({
       profile_id: location.state.toString(),
-      governify_service_filter_key: selectedFilterColumnService,
+      governify_service_filter_key: {
+        key:
+          selectedFilterColumnService.key === undefined
+            ? null
+            : selectedFilterColumnService.key,
+        value:
+          selectedFilterColumnService.value === undefined
+            ? null
+            : selectedFilterColumnService.value,
+        date_key:
+          selectedFilterColumnService.date_key === undefined
+            ? null
+            : selectedFilterColumnService.date_key,
+      },
+      vice,
     });
 
     const payload3 = {
@@ -652,8 +686,7 @@ export const ReportSettings = () => {
       console.log(err, "err");
     } finally {
       setLoading(false);
-      sessionStorage.removeItem('draggableResizableStateService');
-
+      sessionStorage.removeItem("draggableResizableStateService");
     }
   };
 
