@@ -14,7 +14,7 @@ import { BarChartVertical } from "../common/BarChartVertical";
 import { Button } from "antd";
 import { toast, ToastContainer } from "react-toastify";
 import { PieChart } from "../common/PieChart";
-
+import { CustomTooltip } from "../common/CustomToolTip";
 
 const SESSION_STORAGE_KEY = "draggableResizableStateCompliance"; // Key to save data in sessionStorage
 
@@ -415,7 +415,6 @@ export const ComplianceReportAdminView = () => {
       return "";
     }
 
-
     const currentResult = currentData.find((item) => item.id === id);
     const previousResult = previousData.find((item) => item.id === id);
 
@@ -428,7 +427,6 @@ export const ComplianceReportAdminView = () => {
       100;
     return percentageChange.toFixed(1);
   };
-
 
   const getPieChartDataSet = (subItem) => {
     let tempData = [];
@@ -955,6 +953,7 @@ export const ComplianceReportAdminView = () => {
                               width: "70%",
                               borderBottom:
                                 "1px solid rgba(201, 204, 207, 0.7)",
+                              
                             }}
                           >
                             <p
@@ -970,7 +969,13 @@ export const ComplianceReportAdminView = () => {
                               }}
                             >
                               {subItem.heading}
+                              <span>
+                              {subItem.description.length > 0 && (
+                                <CustomTooltip description={subItem.description} />
+                              )}
+                            </span>
                             </p>
+                           
                           </div>
                           <div
                             style={{
@@ -1218,13 +1223,14 @@ export const ComplianceReportAdminView = () => {
                               <DragOutlined />
                             </div>
                           )}
-                         <div>{getColumnValueForTextChart(subItem.column)}</div>
+                          <div>
+                            {getColumnValueForTextChart(subItem.column)}
+                          </div>
                         </ResizableBox>
                       </div>
                     </Draggable>
                   );
                 }
-
               })}
             </div>
           </ResizableBox>
