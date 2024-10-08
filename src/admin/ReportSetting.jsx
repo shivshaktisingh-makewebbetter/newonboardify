@@ -639,7 +639,7 @@ export const ReportSettings = () => {
             ? null
             : selectedFilterColumnService.date_key,
       },
-      vice,
+    
     });
 
     const payload3 = {
