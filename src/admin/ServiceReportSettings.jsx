@@ -660,14 +660,14 @@ export const ServiceReportSettings = ({
               <div style={{ marginTop: "20px", marginBottom: "10px" }}>
                 <Input
                   addonBefore={"Heading"}
-                  value={item.heading}
+                  value={subItem.heading}
                   onChange={(e) => handlChangeChartHeading(e, item, subItem)}
                 />
               </div>
               <div style={{ marginBottom: "10px" }}>
                 <Input
                   addonBefore={"Description"}
-                  value={item.description}
+                  value={subItem.description}
                   onChange={(e) =>
                     handlChangeChartDescription(e, item, subItem)
                   }
@@ -684,7 +684,7 @@ export const ServiceReportSettings = ({
                   onChange={(e) => onChangeSwitchBarType(e, item, subItem)}
                   options={barTypeChartOptions}
                   filterOption={filterOption}
-                  value={item.horizontal}
+                  value={subItem.horizontal}
                 />
               </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
@@ -698,7 +698,7 @@ export const ServiceReportSettings = ({
                   onChange={(e) => handlChangeChartColumn(e, item, subItem)}
                   options={columnOptions}
                   filterOption={filterOption}
-                  value={item.selectedColumns}
+                  value={subItem.selectedColumns}
                 />
               </div>
               <div>
