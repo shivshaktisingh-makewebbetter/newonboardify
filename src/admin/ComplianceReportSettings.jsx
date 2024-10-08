@@ -7,24 +7,28 @@ import {
   Modal,
   Select,
 } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Hero } from "../components/Hero";
+
 import {
-  getAllColumnsOfBoard,
-  getProfileListing,
+
   governifyComplianceReportAdminSetting,
   saveAdminComplianceView,
 } from "../apiservice/ApiService";
-import { toast, ToastContainer } from "react-toastify";
-import { DeleteOutlined, EditOutlined, LeftOutlined } from "@ant-design/icons";
+import { toast, } from "react-toastify";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { Loader } from "../common/Loader";
 
-export const ComplianceReportSettings = () => {
+
+export const ComplianceReportSettings = ({
+  sectionData,
+  setSectionData,
+  columnOptions,
+  selectedBoardIdCompliance
+}) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+
   const [changeTitleModal, setChangeTitleModal] = useState({
     flag: false,
     type: "",
@@ -56,15 +60,13 @@ export const ComplianceReportSettings = () => {
 
   const [recommendationText, setRecommendationText] = useState({});
 
-  const [sectionData, setSectionData] = useState([]);
-
   const barTypeChartOptions = [
     { label: "Horizontal chart", value: true },
     { label: "Vertical Chart", value: false },
   ];
 
-  const [activeKey, setActiveKey] = useState([]);
-  const [columnOptions, setColumnOptions] = useState([]);
+
+  // const [columnOptions, setColumnOptions] = useState([]);
 
   const data = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -178,6 +180,7 @@ export const ComplianceReportSettings = () => {
           title: "Multi Value Chart",
           selectedColumns: [],
           heading: "",
+          description:"" ,
           selectedColor: [],
           id: item.boxes.length + 1,
           position: { x: 0, y: 20 },
@@ -190,8 +193,48 @@ export const ComplianceReportSettings = () => {
     setSectionData(tempData);
   };
 
-  const onChange = (key) => {
-    setActiveKey(key);
+  const handleSelectChartTypePie = (title) => {
+    let tempData = [...sectionData];
+    tempData.forEach((item) => {
+      if (item.title === title) {
+        item.boxes.push({
+          type: "Pie Chart",
+          title: "Pie Chart",
+          horizontal: false,
+          selectedColumns: [],
+          selectedColor: [],
+          heading: "",
+          description: "",
+          id: item.boxes.length + 1,
+          position: { x: 0, y: 20 },
+          size: { width: 721, height: 422 },
+          showDragHandle: false,
+        });
+      }
+    });
+
+    setSectionData(tempData);
+  };
+
+  const handleSelectChartTypeRecommendation = (title) => {
+    let tempData = [...sectionData];
+    tempData.forEach((item) => {
+      if (item.title === title) {
+        item.boxes.push({
+          type: "Recommendation Chart",
+          title: "Recommendation Chart",
+          column: "",
+          heading: "",
+          description: "",
+          id: item.boxes.length + 1,
+          position: { x: 0, y: 20 },
+          size: { width: 800, height: 300 },
+          showDragHandle: false,
+        });
+      }
+    });
+
+    setSectionData(tempData);
   };
 
   const filterOption = (input, option) => {
@@ -254,74 +297,71 @@ export const ComplianceReportSettings = () => {
     setChangeRecommendationTitleModal(tempChangeTitleModal);
   };
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const response = await getAllColumnsOfBoard(location.state.boardId);
-      const response1 = await getProfileListing();
+  // const fetchData = async () => {
+  //   try {
+  //     const response = await getAllColumnsOfBoard(location.state.boardId);
+  //     const response1 = await getProfileListing();
 
-      if (response.success) {
-        const tempData = [];
-        response.data.response.forEach((item) => {
-          tempData.push({ label: item.title, value: item.id });
-        });
-        setColumnOptions(tempData);
-      }
-      if (response1.success) {
-        response1.data.response.forEach((item) => {
-          if (item.id.toString() === location.state.profileId.toString()) {
-            const tempData = JSON.parse(item.governify_compliance_report);
-            if (tempData === null) {
-              setRecommendationText({
-                type: "Recommendation",
-                title: "Recommendation",
-                column: "",
-              });
-              setSectionData([
-                {
-                  id: 0,
-                  title: "About Company",
-                  height: 500,
-                  boxes: [],
-                },
-                {
-                  id: 1,
-                  title: "Saudization",
-                  height: 1800,
-                  boxes: [],
-                },
-                {
-                  id: 2,
-                  title: "Visa",
-                  height: 500,
-                  boxes: [],
-                },
-                {
-                  id: 4,
-                  title: "Employees",
-                  height: 500,
-                  boxes: [],
-                },
-              ]);
-            } else {
-              const filteredArray = tempData.filter(
-                (item) => item.type === "Recommendation"
-              );
-              const newFilteredArray = tempData.filter(
-                (item) => item.type !== "Recommendation"
-              );
-              setSectionData(newFilteredArray);
-              setRecommendationText(filteredArray[0]);
-            }
-          }
-        });
-      }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     if (response.success) {
+  //       const tempData = [];
+  //       response.data.response.forEach((item) => {
+  //         tempData.push({ label: item.title, value: item.id });
+  //       });
+  //       setColumnOptions(tempData);
+  //     }
+  //     if (response1.success) {
+  //       response1.data.response.forEach((item) => {
+  //         if (item.id.toString() === location.state.profileId.toString()) {
+  //           const tempData = JSON.parse(item.governify_compliance_report);
+  //           if (tempData === null) {
+  //             setRecommendationText({
+  //               type: "Recommendation",
+  //               title: "Recommendation",
+  //               column: "",
+  //             });
+  //             setSectionData([
+  //               {
+  //                 id: 0,
+  //                 title: "About Company",
+  //                 height: 500,
+  //                 boxes: [],
+  //               },
+  //               {
+  //                 id: 1,
+  //                 title: "Saudization",
+  //                 height: 1800,
+  //                 boxes: [],
+  //               },
+  //               {
+  //                 id: 2,
+  //                 title: "Visa",
+  //                 height: 500,
+  //                 boxes: [],
+  //               },
+  //               {
+  //                 id: 4,
+  //                 title: "Employees",
+  //                 height: 500,
+  //                 boxes: [],
+  //               },
+  //             ]);
+  //           } else {
+  //             const filteredArray = tempData.filter(
+  //               (item) => item.type === "Recommendation"
+  //             );
+  //             const newFilteredArray = tempData.filter(
+  //               (item) => item.type !== "Recommendation"
+  //             );
+  //             setSectionData(newFilteredArray);
+  //             setRecommendationText(filteredArray[0]);
+  //           }
+  //         }
+  //       });
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   const getChartDataFormat = (data) => {
     // Initial position
@@ -383,7 +423,7 @@ export const ComplianceReportSettings = () => {
       governify_compliance_report_view: "",
       profile_id: location.state.profileId.toString(),
     };
-    setLoading(true);
+
     try {
       const response = await governifyComplianceReportAdminSetting(payloadData);
       await delayFun();
@@ -398,7 +438,6 @@ export const ComplianceReportSettings = () => {
     } catch (err) {
       console.log(err, "err");
     } finally {
-      setLoading(false);
     }
   };
 
@@ -493,21 +532,6 @@ export const ComplianceReportSettings = () => {
       id: subItem.id,
       parent: item.title,
     });
-  };
-
-  const handleChangeRecommendationTitle = () => {
-    setChangeRecommendationTitleModal({
-      flag: true,
-      type: "Recommendation",
-      previousValue: recommendationText.title,
-      updatedValue: "",
-    });
-  };
-
-  const handlChangeRecommendationColumn = (e) => {
-    const tempData = { ...recommendationText };
-    tempData.column = e;
-    setRecommendationText(tempData);
   };
 
   const handleChangeDeleteChart = (item, subItem) => {
@@ -660,6 +684,8 @@ export const ComplianceReportSettings = () => {
   };
 
   const getCollapseSubItems = (item, subItem, index, subIndex) => {
+
+
     if (subItem.type === "Text Chart") {
       return [
         {
@@ -777,14 +803,14 @@ export const ComplianceReportSettings = () => {
               <div style={{ marginTop: "20px", marginBottom: "10px" }}>
                 <Input
                   addonBefore={"Heading"}
-                  value={item.heading}
+                  value={subItem.heading}
                   onChange={(e) => handlChangeChartHeading(e, item, subItem)}
                 />
               </div>
               <div style={{ marginBottom: "10px" }}>
                 <Input
                   addonBefore={"Description"}
-                  value={item.description}
+                  value={subItem.description}
                   onChange={(e) =>
                     handlChangeChartDescription(e, item, subItem)
                   }
@@ -801,7 +827,7 @@ export const ComplianceReportSettings = () => {
                   onChange={(e) => onChangeSwitchBarType(e, item, subItem)}
                   options={barTypeChartOptions}
                   filterOption={filterOption}
-                  value={item.horizontal}
+                  value={subItem.horizontal}
                 />
               </div>
               <div style={{ marginTop: "20px", textAlign: "left" }}>
@@ -815,7 +841,7 @@ export const ComplianceReportSettings = () => {
                   onChange={(e) => handlChangeChartColumn(e, item, subItem)}
                   options={columnOptions}
                   filterOption={filterOption}
-                  value={item.selectedColumns}
+                  value={subItem.selectedColumns}
                 />
               </div>
               <div>
@@ -898,7 +924,7 @@ export const ComplianceReportSettings = () => {
                   onChange={(e) => handlChangeValueColumn(e, item, subItem)}
                   options={columnOptions}
                   filterOption={filterOption}
-                  value={item.column}
+                  value={subItem.column}
                 />
               </div>
             </>
@@ -939,8 +965,17 @@ export const ComplianceReportSettings = () => {
               <div style={{ marginBottom: "10px" }}>
                 <Input
                   addonBefore={"Heading"}
-                  value={item.heading}
+                  value={subItem.heading}
                   onChange={(e) => handlChangeChartHeading(e, item, subItem)}
+                />
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Description"}
+                  value={subItem.description}
+                  onChange={(e) =>
+                    handlChangeChartDescription(e, item, subItem)
+                  }
                 />
               </div>
 
@@ -955,7 +990,7 @@ export const ComplianceReportSettings = () => {
                   onChange={(e) => handlChangeChartColumn(e, item, subItem)}
                   options={columnOptions}
                   filterOption={filterOption}
-                  value={item.selectedColumns}
+                  value={subItem.selectedColumns}
                 />
               </div>
 
@@ -999,6 +1034,173 @@ export const ComplianceReportSettings = () => {
         },
       ];
     }
+
+    if (subItem.type === "Pie Chart") {
+      return [
+        {
+          key: subIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <span>{subItem.title}</span>{" "}
+                <Button
+                  style={{ marginLeft: "10px" }}
+                  type="text"
+                  icon={<EditOutlined />}
+                  iconPosition="start"
+                  onClick={() => handleChangeSubSectionTitle(item, subItem)}
+                ></Button>
+              </div>
+              <Button onClick={() => handleChangeDeleteChart(item, subItem)}>
+                Delete
+              </Button>
+            </div>
+          ),
+          children: (
+            <>
+              <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Heading"}
+                  value={subItem.heading}
+                  onChange={(e) => handlChangeChartHeading(e, item, subItem)}
+                />
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Description"}
+                  value={subItem.description}
+                  onChange={(e) =>
+                    handlChangeChartDescription(e, item, subItem)
+                  }
+                />
+              </div>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <Select
+                  showSearch
+                  mode="multiple"
+                  placeholder="Select Columns"
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) => handlChangeChartColumn(e, item, subItem)}
+                  options={columnOptions}
+                  filterOption={filterOption}
+                  value={subItem.selectedColumns}
+                />
+              </div>
+              <div>
+                {subItem.selectedColor.length > 0 &&
+                  subItem.selectedColor.map((color, colorIndex) => {
+                    return (
+                      <div
+                        style={{
+                          marginTop: "20px",
+                          textAlign: "left",
+                          width: "50%",
+                          display: "flex",
+                          gap: "20px",
+                          alignItems: "center",
+                        }}
+                      >
+                        <span>
+                          {getAddOnBeforeForColor(
+                            subItem.selectedColumns[colorIndex]
+                          )}
+                        </span>
+                        <ColorPicker
+                          value={color.value}
+                          size="large"
+                          showText
+                          onChange={(value) =>
+                            handlChangeChartColor(
+                              value,
+                              item,
+                              subItem,
+                              subItem.selectedColumns[colorIndex]
+                            )
+                          }
+                        />
+                      </div>
+                    );
+                  })}
+              </div>
+            </>
+          ),
+        },
+      ];
+    }
+
+    if (subItem.type === "Recommendation Chart") {
+      return [
+        {
+          key: subIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <span>{subItem.title}</span>{" "}
+                <Button
+                  style={{ marginLeft: "10px" }}
+                  type="text"
+                  icon={<EditOutlined />}
+                  iconPosition="start"
+                  onClick={() => handleChangeSubSectionTitle(item, subItem)}
+                ></Button>
+              </div>
+              <Button onClick={() => handleChangeDeleteChart(item, subItem)}>
+                Delete
+              </Button>
+            </div>
+          ),
+          children: (
+            <>
+              <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Heading"}
+                  value={subItem.heading}
+                  onChange={(e) => handlChangeChartHeading(e, item, subItem)}
+                />
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Description"}
+                  value={subItem.description}
+                  onChange={(e) =>
+                    handlChangeChartDescription(e, item, subItem)
+                  }
+                />
+              </div>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <Select
+                  showSearch
+                  placeholder="Select Column"
+                  allowClear
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) => handlChangeValueColumn(e, item, subItem)}
+                  options={columnOptions}
+                  filterOption={filterOption}
+                  value={item.column}
+                />
+              </div>
+            </>
+          ),
+        },
+      ];
+    }
+
   };
 
   const handleDeleteSection = (item) => {
@@ -1042,6 +1244,24 @@ export const ComplianceReportSettings = () => {
         label: (
           <span onClick={() => handleSelectChartTypePercentage(item.title)}>
             Multi Value Chart
+          </span>
+        ),
+      },
+
+      {
+        key: "5",
+        label: (
+          <span onClick={() => handleSelectChartTypeRecommendation(item.title)}>
+            Recommendation Chart
+          </span>
+        ),
+      },
+
+      {
+        key: "6",
+        label: (
+          <span onClick={() => handleSelectChartTypePie(item.title)}>
+            Pie Chart
           </span>
         ),
       },
@@ -1114,49 +1334,6 @@ export const ComplianceReportSettings = () => {
     ];
   };
 
-  const getRecommendationItem = () => {
-    return [
-      {
-        key: 1,
-        label: (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div>
-              <span>{recommendationText.title}</span>
-              <Button
-                style={{ marginLeft: "10px" }}
-                type="text"
-                icon={<EditOutlined />}
-                iconPosition="start"
-                onClick={handleChangeRecommendationTitle}
-              ></Button>
-            </div>
-          </div>
-        ),
-        children: (
-          <div style={{ marginTop: "20px", textAlign: "left" }}>
-            <Select
-              showSearch
-              placeholder="Select Recommendation Column"
-              style={{
-                width: "50%",
-              }}
-              onChange={handlChangeRecommendationColumn}
-              options={columnOptions}
-              filterOption={filterOption}
-              value={recommendationText.column}
-            />
-          </div>
-        ),
-      },
-    ];
-  };
-
   const handleChangeNewCreateSectionTitle = (e) => {
     let tempData = { ...createSectionModal };
     tempData.title = e.target.value;
@@ -1179,9 +1356,7 @@ export const ComplianceReportSettings = () => {
     setCreateSectionModal({ flag: false, title: "" });
   };
 
-  const handleBackNavigation = () => {
-    navigate(-1);
-  };
+
   const delayFun = async () => {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -1190,31 +1365,18 @@ export const ComplianceReportSettings = () => {
     });
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   return (
     <div>
-      {loading && <Loader />}
-      <div style={{ marginTop: "48px", marginBottom: "16px" }}>
-        <Hero
-          heading={"Service Report Setting"}
-          subheading="Stay informed and in control of the service reports of your requests"
-          forHome={false}
-        />
-      </div>
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "end",
           paddingBottom: "10px",
           width: "100%",
         }}
       >
-        <Button icon={<LeftOutlined />} onClick={handleBackNavigation}></Button>
-        <Button onClick={handleCreateSection}>Create Section</Button>
+        <Button onClick={handleCreateSection} disabled={selectedBoardIdCompliance === undefined}>Create Section</Button>
       </div>
 
       <DragDropContext onDragEnd={onDragEnd}>
@@ -1223,7 +1385,7 @@ export const ComplianceReportSettings = () => {
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
-              style={{ marginTop: "20px" }}
+              style={{ marginTop: "10px" }}
             >
               {sectionData.map((item, index) => (
                 <Draggable key={index} draggableId={`${index}`} index={index}>
@@ -1234,8 +1396,7 @@ export const ComplianceReportSettings = () => {
                       {...provided.dragHandleProps}
                       style={{
                         ...provided.draggableProps.style,
-                        marginTop: "20px",
-                        border: "1px solid #ddd",
+                        marginTop: "10px",
                         padding: "10px",
                         backgroundColor: "white",
                       }}
@@ -1253,32 +1414,6 @@ export const ComplianceReportSettings = () => {
           )}
         </Droppable>
       </DragDropContext>
-      <div style={{ marginTop: "10px" }}>
-        <Collapse collapsible="icon" items={getRecommendationItem()} />
-      </div>
-      <ToastContainer position="bottom-right" />
-      <div
-        style={{
-          display: "flex",
-          gap: "20px",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: "20px",
-        }}
-      >
-        <Button
-          style={{ background: data.button_bg, color: "white", border: "none" }}
-          onClick={handleSubmit}
-        >
-          Save
-        </Button>
-        <Button
-          style={{ background: data.button_bg, color: "white", border: "none" }}
-          onClick={handleViewChart}
-        >
-          View
-        </Button>
-      </div>
 
       <Modal
         open={changeTitleModal.flag}

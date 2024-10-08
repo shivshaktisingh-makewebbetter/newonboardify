@@ -24,7 +24,11 @@ import { Loader } from "../common/Loader";
 
 // import { fetcher } from "../../utils/helper";
 
-export const ServiceReportSettings = () => {
+export const ServiceReportSettings = ({
+  sectionData,
+  setSectionData,
+  columnOptions,
+}) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -49,15 +53,10 @@ export const ServiceReportSettings = () => {
     title: "",
   });
 
-  const [sectionData, setSectionData] = useState([]);
-
   const barTypeChartOptions = [
     { label: "Horizontal chart", value: true },
     { label: "Vertical Chart", value: false },
   ];
-
-  const [activeKey, setActiveKey] = useState([]);
-  const [columnOptions, setColumnOptions] = useState([]);
 
   const data = JSON.parse(sessionStorage.getItem("settings")) || {
     image: "https://onboardify.tasc360.com/uploads/y22.png",
@@ -150,10 +149,6 @@ export const ServiceReportSettings = () => {
     setSectionData(tempData);
   };
 
-  const onChange = (key) => {
-    setActiveKey(key);
-  };
-
   const filterOption = (input, option) => {
     return (
       option.label.toLowerCase().includes(input.toLowerCase()) ||
@@ -208,50 +203,50 @@ export const ServiceReportSettings = () => {
     setChangeSubTitleModal(tempChangeTitleModal);
   };
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      const response = await getAllColumnsOfBoard(location.state.boardId);
-      const response1 = await getProfileListing();
+  // const fetchData = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await getAllColumnsOfBoard(location.state.boardId);
+  //     const response1 = await getProfileListing();
 
-      if (response.success) {
-        const tempData = [];
-        response.data.response.forEach((item) => {
-          tempData.push({ label: item.title, value: item.id });
-        });
-        setColumnOptions(tempData);
-      }
-      if (response1.success) {
-        response1.data.response.forEach((item) => {
-          if (item.id.toString() === location.state.profileId.toString()) {
-            const tempData = JSON.parse(item.governify_service_report);
-            if (tempData === null) {
-              setSectionData([
-                {
-                  id: 0,
-                  title: "About Company",
-                  height: 400,
-                  boxes: [],
-                },
-                {
-                  id: 1,
-                  title: "Insights",
-                  height: 800,
-                  boxes: [],
-                },
-              ]);
-            } else {
-              setSectionData(tempData);
-            }
-          }
-        });
-      }
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     if (response.success) {
+  //       const tempData = [];
+  //       response.data.response.forEach((item) => {
+  //         tempData.push({ label: item.title, value: item.id });
+  //       });
+  //       setColumnOptions(tempData);
+  //     }
+  //     if (response1.success) {
+  //       response1.data.response.forEach((item) => {
+  //         if (item.id.toString() === location.state.profileId.toString()) {
+  //           const tempData = JSON.parse(item.governify_service_report);
+  //           if (tempData === null) {
+  //             setSectionData([
+  //               {
+  //                 id: 0,
+  //                 title: "About Company",
+  //                 height: 400,
+  //                 boxes: [],
+  //               },
+  //               {
+  //                 id: 1,
+  //                 title: "Insights",
+  //                 height: 800,
+  //                 boxes: [],
+  //               },
+  //             ]);
+  //           } else {
+  //             setSectionData(tempData);
+  //           }
+  //         }
+  //       });
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const getChartDataFormat = (data) => {
     // Initial position
@@ -266,26 +261,17 @@ export const ServiceReportSettings = () => {
         if (subItem.type === "Value Chart") {
           subItem.size = { width: 360, height: 100 };
           subItem.position = currentPos;
-
-          // Update the position for the next item
         } else if (subItem.type === "Pie Chart") {
           subItem.size = { width: 365, height: 417 };
           subItem.position = currentPos;
-
           position.y = position.y + 437;
         } else if (subItem.type === "Bar Chart") {
           subItem.size = { width: 751, height: 480 };
           subItem.position = currentPos;
-
-          // Update the position for the next item
-
           position.y = position.y + 500;
         } else if (subItem.type === "Text Chart") {
           subItem.size = { width: 360, height: 100 };
           subItem.position = currentPos;
-
-          // Update the position for the next item
-
           position.y = position.y + 120;
         }
       });
@@ -304,7 +290,6 @@ export const ServiceReportSettings = () => {
   };
 
   const handleSubmit = async () => {
-
     const payloadData = {
       profile_id: location.state.profileId.toString(),
       governify_service_report: JSON.stringify(getChartDataFormat(sectionData)),
@@ -983,34 +968,17 @@ export const ServiceReportSettings = () => {
     setCreateSectionModal({ flag: false, title: "" });
   };
 
-  const handleBackNavigation = () => {
-    navigate(-1);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   return (
     <div>
-      {loading && <Loader />}
-      <div style={{ marginTop: "48px", marginBottom: "16px" }}>
-        <Hero
-          heading={"Service Report Setting"}
-          subheading="Stay informed and in control of the service reports of your requests"
-          forHome={false}
-        />
-      </div>
       <div
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "end",
           paddingBottom: "10px",
           width: "100%",
         }}
       >
-        <Button icon={<LeftOutlined />} onClick={handleBackNavigation}></Button>
         <Button onClick={handleCreateSection}>Create Section</Button>
       </div>
 
@@ -1020,7 +988,7 @@ export const ServiceReportSettings = () => {
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
-              style={{ marginTop: "20px" }}
+              style={{ marginTop: "10px" }}
             >
               {sectionData.map((item, index) => (
                 <Draggable key={index} draggableId={`${index}`} index={index}>
@@ -1031,8 +999,7 @@ export const ServiceReportSettings = () => {
                       {...provided.dragHandleProps}
                       style={{
                         ...provided.draggableProps.style,
-                        marginTop: "20px",
-                        border: "1px solid #ddd",
+                        marginTop: "10px",
                         padding: "10px",
                         backgroundColor: "white",
                       }}
@@ -1050,29 +1017,6 @@ export const ServiceReportSettings = () => {
           )}
         </Droppable>
       </DragDropContext>
-      <ToastContainer position="bottom-right" />
-      <div
-        style={{
-          display: "flex",
-          gap: "20px",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: "20px",
-        }}
-      >
-        <Button
-          style={{ background: data.button_bg, color: "white", border: "none" }}
-          onClick={handleSubmit}
-        >
-          Save
-        </Button>
-        <Button
-          style={{ background: data.button_bg, color: "white", border: "none" }}
-          onClick={handleViewChart}
-        >
-          View
-        </Button>
-      </div>
 
       <Modal
         open={changeTitleModal.flag}

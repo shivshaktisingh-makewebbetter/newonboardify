@@ -19,33 +19,34 @@ export const BarChartHorizontal = ({
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     indexAxis: "y", // Set indexAxis to 'y' for horizontal bars
     plugins: {
-      beforeDraw: function (chart) {
-        const ctx = chart.ctx;
-        ctx.save();
+      // beforeDraw: function (chart) {
+      //   const ctx = chart.ctx;
+      //   ctx.save();
 
-        chart.data.datasets.forEach((dataset, i) => {
-          const meta = chart.getDatasetMeta(i);
-          meta.data.forEach((bar, index) => {
-            ctx.shadowColor = "rgba(0, 0, 0, 0.5)"; // Shadow color
-            ctx.shadowBlur = 10; // Blur effect
-            ctx.shadowOffsetX = 5; // Horizontal offset
-            ctx.shadowOffsetY = 5; // Vertical offset
+      //   chart.data.datasets.forEach((dataset, i) => {
+      //     const meta = chart.getDatasetMeta(i);
+      //     meta.data.forEach((bar, index) => {
+      //       ctx.shadowColor = "rgba(0, 0, 0, 0.5)"; // Shadow color
+      //       ctx.shadowBlur = 10; // Blur effect
+      //       ctx.shadowOffsetX = 5; // Horizontal offset
+      //       ctx.shadowOffsetY = 5; // Vertical offset
 
-            // Draw the shadowed bar
-            ctx.fillStyle = dataset.backgroundColor; // Use the dataset color
-            ctx.fillRect(
-              bar.x,
-              bar.y - bar.height / 2, // Adjust for height
-              chart.chartArea.right - bar.x, // Width is based on the chart area
-              bar.height
-            );
-          });
-        });
+      //       // Draw the shadowed bar
+      //       ctx.fillStyle = dataset.backgroundColor; // Use the dataset color
+      //       ctx.fillRect(
+      //         bar.x,
+      //         bar.y - bar.height / 2, // Adjust for height
+      //         chart.chartArea.right - bar.x, // Width is based on the chart area
+      //         bar.height
+      //       );
+      //     });
+      //   });
 
-        ctx.restore();
-      },
+      //   ctx.restore();
+      // },
       legend: {
         display: false,
         labels: {
@@ -131,89 +132,101 @@ export const BarChartHorizontal = ({
       },
       y: {
         display: false, // Display y-axis for labels
-        categoryPercentage: 1,
-        barPercentage: 0.5, // Adjust bar width
+        categoryPercentage: 0.8, // Adjust space taken by bars
+        barPercentage: 0.6, // Adjust bar width within category
       },
     },
   };
 
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: "100%", height: "100%", position: "relative" }}>
       <div
         style={{
-          width: "80%",
-          display: "flex",
-          justifyContent: "start",
-          alignItems: "center",
-          position: "absolute",
-          top: "20px",
-          left: "20px",
+          width: "100%",
+          height: "100%",
+          position: "relative",
         }}
       >
-        <span
+        <div
           style={{
-            fontSize: "24px",
-            fontWeight: "700",
-            lineHeight: "33.6px",
-            color: "#202223",
-            textAlign: "left",
+            width: "80%",
+            display: "flex",
+            justifyContent: "start",
+            alignItems: "center",
+            position: "absolute",
+            top: "20px",
+            left: "20px",
           }}
         >
-          {title}
-        </span>
-        <span>
-          {description.length > 0 && (
-            <CustomTooltip description={description} />
-          )}
-        </span>
-      </div>
-      <Bar data={data} options={options} />
-      <div
-        style={{
-          display: "flex",
-          margin: "auto",
-          marginTop: "20px",
-          justifyContent: "center",
-          width: "65%",
-        }}
-      >
-        {dataset.map((item, index) => {
-          const truncatedLabel =
-            item.label.length > 12
-              ? `${item.label.substring(0, 13)}...`
-              : item.label;
-          return (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                justifyContent: "center",
-                width: "100%",
-              }}
-            >
+          <span
+            style={{
+              fontSize: "24px",
+              fontWeight: "700",
+              lineHeight: "33.6px",
+              color: "#202223",
+              textAlign: "left",
+            }}
+          >
+            {title}
+          </span>
+          <span>
+            {description.length > 0 && (
+              <CustomTooltip description={description} />
+            )}
+          </span>
+        </div>
+        <div style={{ width: "100%", height: "80%" , position:"absolute" , top:"30px" }}>
+          <Bar data={data} options={options} />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            margin: "auto",
+            marginTop: "20px",
+            justifyContent: "center",
+            width: "100%",
+            position:"absolute" ,
+            bottom:"10px"
+          }}
+        >
+          {dataset.map((item, index) => {
+            const truncatedLabel =
+              item.label.length > 12
+                ? `${item.label.substring(0, 13)}...`
+                : item.label;
+            return (
               <div
+                key={index}
                 style={{
-                  background: item.backgroundColor,
-                  width: "15px",
-                  height: "15px",
-                  borderRadius: "3px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  justifyContent: "center",
+                  width: "100%",
                 }}
-              ></div>
-              <div
-                style={{
-                  fontSize: "14px",
-                  fontWeight: "400",
-                  color: "#6d7175",
-                }}
-                title={item.label}
               >
-                {truncatedLabel}
+                <div
+                  style={{
+                    background: item.backgroundColor,
+                    width: "15px",
+                    height: "15px",
+                    borderRadius: "3px",
+                  }}
+                ></div>
+                <div
+                  style={{
+                    fontSize: "14px",
+                    fontWeight: "400",
+                    color: "#6d7175",
+                  }}
+                  title={item.label}
+                >
+                  {item.label}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );

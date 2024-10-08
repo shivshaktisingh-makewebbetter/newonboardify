@@ -13,6 +13,7 @@ import { BarChartHorizontal } from "../common/BarChartHorizontal";
 import { BarChartVertical } from "../common/BarChartVertical";
 import { Button } from "antd";
 import { toast, ToastContainer } from "react-toastify";
+import { PieChart } from "../common/PieChart";
 
 
 const SESSION_STORAGE_KEY = "draggableResizableStateCompliance"; // Key to save data in sessionStorage
@@ -428,6 +429,42 @@ export const ComplianceReportAdminView = () => {
     return percentageChange.toFixed(1);
   };
 
+
+  const getPieChartDataSet = (subItem) => {
+    let tempData = [];
+    subItem.selectedColumns.forEach((item) => {
+      tempData.push(getColumnValueForTextChart(item));
+    });
+    return tempData;
+  };
+
+  const getPieChartBg = (subItem) => {
+    let tempData = [];
+
+    subItem.selectedColumns.forEach((item) => {
+      tempData.push(getBgColorForBarChart(subItem, item));
+    });
+    return tempData;
+  };
+
+  const getPieChartBorder = (subItem) => {
+    let tempData = [];
+
+    subItem.selectedColumns.forEach((item) => {
+      tempData.push("#fff");
+    });
+    return tempData;
+  };
+
+  const getPieChartLabel = (subItem) => {
+    let tempData = [];
+    subItem.selectedColumns.forEach((item) => {
+      tempData.push(getColumnTitleForTextChart(item));
+    });
+
+    return tempData;
+  };
+
   const handleBackNavigation = () => {
     navigate(-1);
   };
@@ -743,6 +780,99 @@ export const ComplianceReportAdminView = () => {
                     </Draggable>
                   );
                 }
+                if (subItem.type === "Pie Chart") {
+                  return (
+                    <Draggable
+                      bounds="parent"
+                      key={subItem.id}
+                      handle=".drag-handle"
+                      position={subItem.position}
+                      grid={[25, 25]}
+                      scale={1}
+                      onStop={(e, data) =>
+                        handleDragStop(e, data, containerIndex, boxIndex)
+                      }
+                    >
+                      <div
+                        style={{ position: "absolute" }}
+                        onMouseEnter={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            true
+                          )
+                        }
+                        onMouseLeave={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            false
+                          )
+                        }
+                      >
+                        <ResizableBox
+                          width={subItem.size.width}
+                          height={subItem.size.height}
+                          minConstraints={[100, 100]}
+                          maxConstraints={[
+                            window.innerWidth - subItem.position.x,
+                            1000,
+                          ]}
+                          resizeHandles={["se"]}
+                          onResizeStop={(e, data) =>
+                            handleResize(e, data, containerIndex, boxIndex)
+                          }
+                          style={{
+                            background: "white",
+                            border: "1px solid #E3E3E3",
+                            borderRadius: "8px",
+                            padding: "10px",
+                            position: "relative",
+                            marginBottom: "10px",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "flex-end",
+                            alignItems: "center",
+                          }}
+                        >
+                          {subItem.showDragHandle && (
+                            <div
+                              className="drag-handle"
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                width: "30px",
+                                height: "30px",
+                                backgroundColor: "#ccc",
+                                cursor: "move",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                borderBottom: "1px solid black",
+                                borderRight: "1px solid black",
+                                zIndex: 1,
+                              }}
+                            >
+                              <DragOutlined />
+                            </div>
+                          )}
+
+                          <PieChart
+                            title={subItem.heading}
+                            dataset={getPieChartDataSet(subItem)}
+                            bgSet={getPieChartBg(subItem)}
+                            pieChartLabel={getPieChartLabel(subItem)}
+                            borderColorSetPie={getPieChartBorder(subItem)}
+                            description={subItem.description}
+                            width={subItem.size.width} // Pass the updated width
+                            height={subItem.size.height} // Pass the updated height
+                          />
+                        </ResizableBox>
+                      </div>
+                    </Draggable>
+                  );
+                }
                 if (subItem.type === "Multi Value Chart") {
                   return (
                     <Draggable
@@ -1011,6 +1141,90 @@ export const ComplianceReportAdminView = () => {
                     </Draggable>
                   );
                 }
+                if (subItem.type === "Recommendation Chart") {
+                  return (
+                    <Draggable
+                      bounds="parent"
+                      key={subItem.id}
+                      handle=".drag-handle"
+                      position={subItem.position}
+                      grid={[25, 25]}
+                      scale={1}
+                      onStop={(e, data) =>
+                        handleDragStop(e, data, containerIndex, boxIndex)
+                      }
+                    >
+                      <div
+                        style={{ position: "absolute" }}
+                        onMouseEnter={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            true
+                          )
+                        }
+                        onMouseLeave={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            false
+                          )
+                        }
+                      >
+                        <ResizableBox
+                          width={Number(subItem.size.width)}
+                          height={Number(subItem.size.height)}
+                          minConstraints={[100, 100]}
+                          maxConstraints={[
+                            window.innerWidth - subItem.position.x,
+                            window.innerHeight - subItem.position.y,
+                          ]}
+                          resizeHandles={["se"]}
+                          onResizeStop={(e, data) =>
+                            handleResize(e, data, containerIndex, boxIndex)
+                          }
+                          style={{
+                            background: "white",
+                            border: "1px solid #E3E3E3",
+                            borderRadius: "8px",
+                            padding: "10px",
+                            position: "relative",
+                            marginBottom: "10px",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          {subItem.showDragHandle && (
+                            <div
+                              className="drag-handle"
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                width: "30px",
+                                height: "30px",
+                                backgroundColor: "#ccc",
+                                cursor: "move",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                borderBottom: "1px solid black",
+                                borderRight: "1px solid black",
+                                zIndex: 1,
+                              }}
+                            >
+                              <DragOutlined />
+                            </div>
+                          )}
+                         <div>{getColumnValueForTextChart(subItem.column)}</div>
+                        </ResizableBox>
+                      </div>
+                    </Draggable>
+                  );
+                }
+
               })}
             </div>
           </ResizableBox>
