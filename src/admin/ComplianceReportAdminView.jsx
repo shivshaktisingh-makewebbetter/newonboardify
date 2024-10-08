@@ -905,10 +905,7 @@ export const ComplianceReportAdminView = () => {
                           width={Number(subItem.size.width)}
                           height={Number(subItem.size.height)}
                           minConstraints={[100, 100]}
-                          maxConstraints={[
-                            window.innerWidth - subItem.position.x,
-                            window.innerHeight - subItem.position.y,
-                          ]}
+                          maxConstraints={[Infinity, Infinity]}
                           resizeHandles={["se"]}
                           onResizeStop={(e, data) =>
                             handleResize(e, data, containerIndex, boxIndex)
@@ -953,7 +950,6 @@ export const ComplianceReportAdminView = () => {
                               width: "70%",
                               borderBottom:
                                 "1px solid rgba(201, 204, 207, 0.7)",
-                              
                             }}
                           >
                             <p
@@ -970,12 +966,13 @@ export const ComplianceReportAdminView = () => {
                             >
                               {subItem.heading}
                               <span>
-                              {subItem.description.length > 0 && (
-                                <CustomTooltip description={subItem.description} />
-                              )}
-                            </span>
+                                {subItem.description.length > 0 && (
+                                  <CustomTooltip
+                                    description={subItem.description}
+                                  />
+                                )}
+                              </span>
                             </p>
-                           
                           </div>
                           <div
                             style={{

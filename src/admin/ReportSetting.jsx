@@ -700,7 +700,7 @@ export const ReportSettings = () => {
         } else if (subItem.type === "Bar Chart") {
           subItem.size = { width: 751, height: 480 };
           subItem.position = currentPos;
-          position.y = position.y + 505;
+          position.y = position.y + 500;
         } else if (subItem.type === "Pie Chart") {
           subItem.size = { width: 365, height: 420 };
           subItem.position = currentPos;
