@@ -94,11 +94,11 @@ export const ComplianceReportSettings = ({
 
   const handleSelectChartTypeText = (title) => {
     let tempData = [...sectionData];
-    tempData.forEach((item) => {
+    tempData.forEach((item , index) => {
       if (item.title === title) {
         item.boxes.push({
           type: "Text Chart",
-          title: "Text Chart",
+          title: `Text Chart ${item.boxes.length + 1}`,
           column1: "",
           column2: "",
           color: "",
@@ -119,7 +119,7 @@ export const ComplianceReportSettings = ({
       if (item.title === title) {
         item.boxes.push({
           type: "Bar Chart",
-          title: "Bar Chart",
+          title: `Bar Chart ${item.boxes.length + 1}`,
           horizontal: false,
           selectedColumns: [],
           selectedColor: [],
@@ -142,7 +142,7 @@ export const ComplianceReportSettings = ({
       if (item.title === title) {
         item.boxes.push({
           type: "Value Chart",
-          title: "Value Chart",
+          title: `Value Chart ${item.boxes.length + 1}`,
           id: item.boxes.length + 1,
           position: { x: 0, y: 20 },
           column: "",
@@ -173,11 +173,11 @@ export const ComplianceReportSettings = ({
 
   const handleSelectChartTypePercentage = (title) => {
     let tempData = [...sectionData];
-    tempData.forEach((item) => {
+    tempData.forEach((item , index) => {
       if (item.title === title) {
         item.boxes.push({
           type: "Multi Value Chart",
-          title: "Multi Value Chart",
+          title: `Multi Value Chart ${item.boxes.length + 1}`,
           selectedColumns: [],
           heading: "",
           description:"" ,
@@ -195,11 +195,11 @@ export const ComplianceReportSettings = ({
 
   const handleSelectChartTypePie = (title) => {
     let tempData = [...sectionData];
-    tempData.forEach((item) => {
+    tempData.forEach((item , index) => {
       if (item.title === title) {
         item.boxes.push({
           type: "Pie Chart",
-          title: "Pie Chart",
+          title: `Pie Chart ${item.boxes.length + 1}`,
           horizontal: false,
           selectedColumns: [],
           selectedColor: [],
@@ -222,7 +222,7 @@ export const ComplianceReportSettings = ({
       if (item.title === title) {
         item.boxes.push({
           type: "Recommendation Chart",
-          title: "Recommendation Chart",
+          title: `Recommendation Chart ${item.boxes.length + 1}`,
           column: "",
           heading: "",
           description: "",
@@ -297,72 +297,6 @@ export const ComplianceReportSettings = ({
     setChangeRecommendationTitleModal(tempChangeTitleModal);
   };
 
-  // const fetchData = async () => {
-  //   try {
-  //     const response = await getAllColumnsOfBoard(location.state.boardId);
-  //     const response1 = await getProfileListing();
-
-  //     if (response.success) {
-  //       const tempData = [];
-  //       response.data.response.forEach((item) => {
-  //         tempData.push({ label: item.title, value: item.id });
-  //       });
-  //       setColumnOptions(tempData);
-  //     }
-  //     if (response1.success) {
-  //       response1.data.response.forEach((item) => {
-  //         if (item.id.toString() === location.state.profileId.toString()) {
-  //           const tempData = JSON.parse(item.governify_compliance_report);
-  //           if (tempData === null) {
-  //             setRecommendationText({
-  //               type: "Recommendation",
-  //               title: "Recommendation",
-  //               column: "",
-  //             });
-  //             setSectionData([
-  //               {
-  //                 id: 0,
-  //                 title: "About Company",
-  //                 height: 500,
-  //                 boxes: [],
-  //               },
-  //               {
-  //                 id: 1,
-  //                 title: "Saudization",
-  //                 height: 1800,
-  //                 boxes: [],
-  //               },
-  //               {
-  //                 id: 2,
-  //                 title: "Visa",
-  //                 height: 500,
-  //                 boxes: [],
-  //               },
-  //               {
-  //                 id: 4,
-  //                 title: "Employees",
-  //                 height: 500,
-  //                 boxes: [],
-  //               },
-  //             ]);
-  //           } else {
-  //             const filteredArray = tempData.filter(
-  //               (item) => item.type === "Recommendation"
-  //             );
-  //             const newFilteredArray = tempData.filter(
-  //               (item) => item.type !== "Recommendation"
-  //             );
-  //             setSectionData(newFilteredArray);
-  //             setRecommendationText(filteredArray[0]);
-  //           }
-  //         }
-  //       });
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
   const getChartDataFormat = (data) => {
     // Initial position
 
@@ -411,46 +345,26 @@ export const ComplianceReportSettings = ({
     return tempData;
   };
 
-  const handleSubmit = async () => {
-    const payloadData = {
-      profile_id: location.state.profileId.toString(),
-      governify_compliance_report: JSON.stringify(
-        getChartDataFormat(sectionData)
-      ),
-    };
-
-    const payloadDataNew = {
-      governify_compliance_report_view: "",
-      profile_id: location.state.profileId.toString(),
-    };
-
-    try {
-      const response = await governifyComplianceReportAdminSetting(payloadData);
-      await delayFun();
-      const response1 = await saveAdminComplianceView(payloadDataNew);
-
-      if (response.success) {
-        sessionStorage.removeItem("draggableResizableStateCompliance");
-        toast.success(response.message);
-      } else {
-        toast.error(response.message);
-      }
-    } catch (err) {
-      console.log(err, "err");
-    } finally {
-    }
-  };
-
-  const handleViewChart = () => {
-    navigate("/admin/complianceReportAdminView", { state: location.state });
-  };
-
+ 
+ 
   const handleSaveTitle = () => {
+    let nameAlreadyExist = false;
     if (changeTitleModal.updatedValue.length === 0) {
       toast.error("Please Enter the Title!");
       return;
     }
     let tempData = [...sectionData];
+
+    tempData.forEach((item) => {
+      if (item.title.trim() === changeTitleModal.updatedValue.trim()) {
+         nameAlreadyExist = true;
+      }
+    });
+
+    if(nameAlreadyExist){
+      toast.error('Title already exist!');
+      return;
+    }
     tempData.forEach((item) => {
       if (item.title === changeTitleModal.previousValue) {
         item.title = changeTitleModal.updatedValue;
@@ -484,13 +398,16 @@ export const ComplianceReportSettings = ({
   };
 
   const handleSaveSubTitle = () => {
+    let nameAlreadyExist = false;
     if (changeSubTitleModal.updatedValue.length === 0) {
       toast.error("Please Enter the Title!");
       return;
     }
+    let selectedSubSection ;
     let tempData = [...sectionData];
     tempData.forEach((item) => {
       if (item.title === changeSubTitleModal.parent) {
+        selectedSubSection = item;
         item.boxes.forEach((subItem) => {
           if (subItem.title === changeSubTitleModal.previousValue) {
             subItem.title = changeSubTitleModal.updatedValue;
@@ -498,6 +415,18 @@ export const ComplianceReportSettings = ({
         });
       }
     });
+
+    selectedSubSection.boxes.forEach((item)=>{
+     if(item.title.trim() === changeSubTitleModal.updatedValue.trim()){
+      nameAlreadyExist = true;
+     }
+    })
+
+    if(nameAlreadyExist){
+       toast.error('Title Already Exist!');
+       return;
+    }
+
     setSectionData(tempData);
 
     setChangeSubTitleModal({
@@ -1341,8 +1270,18 @@ export const ComplianceReportSettings = ({
   };
 
   const handleSaveNewSection = () => {
+    let nameAlreadyExist = false;
     if (createSectionModal.title.length === 0) {
       toast.error("Please Enter The Title Name!");
+      return;
+    }
+    sectionData.forEach((item) =>{
+      if(item.title.trim() === createSectionModal.title.trim()){
+        nameAlreadyExist = true;
+      }
+    })
+    if(nameAlreadyExist){
+      toast.error("Title already exist!");
       return;
     }
     let tempData = [...sectionData];
