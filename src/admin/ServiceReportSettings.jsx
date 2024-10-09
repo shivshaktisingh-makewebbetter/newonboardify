@@ -288,45 +288,27 @@ export const ServiceReportSettings = ({
       }, 2000);
     });
   };
-
-  const handleSubmit = async () => {
-    const payloadData = {
-      profile_id: location.state.profileId.toString(),
-      governify_service_report: JSON.stringify(getChartDataFormat(sectionData)),
-    };
-
-    const payloadDataNew = {
-      governify_service_report_view: "",
-      profile_id: location.state.profileId.toString(),
-    };
-    setLoading(true);
-    try {
-      const response = await governifyServiceReportAdminSetting(payloadData);
-      await delayFun();
-      const response1 = await saveAdminServiceView(payloadDataNew);
-      if (response.success) {
-        sessionStorage.removeItem("draggableResizableStateService");
-        toast.success(response.message);
-      } else {
-        toast.error(response.message);
-      }
-    } catch (err) {
-      console.log(err, "err");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleViewChart = () => {
-    navigate("/admin/serviceReportAdminView", { state: location.state });
-  };
-
+ 
   const handleSaveTitle = () => {
+    let nameAlreadyExist = false;
     if (changeTitleModal.updatedValue.length === 0) {
       toast.error("Please Enter the Title!");
       return;
     }
     let tempData = [...sectionData];
+
+    tempData.forEach((item) => {
+      if (item.title.trim() === changeTitleModal.updatedValue.trim()) {
+        nameAlreadyExist = true;
+      }
+    });
+
+    if(nameAlreadyExist){
+      toast.error('Title already exist!');
+      return;
+    }
+
+
     tempData.forEach((item) => {
       if (item.title === changeTitleModal.previousValue) {
         item.title = changeTitleModal.updatedValue;
@@ -343,13 +325,31 @@ export const ServiceReportSettings = ({
   };
 
   const handleSaveSubTitle = () => {
+    let nameAlreadyExist = false;
+    let selectedItem ;
     if (changeSubTitleModal.updatedValue.length === 0) {
       toast.error("Please Enter the Title!");
       return;
     }
     let tempData = [...sectionData];
+
     tempData.forEach((item) => {
       if (item.title === changeSubTitleModal.parent) {
+        selectedItem = item;
+      }
+    });
+
+ 
+    selectedItem.boxes.forEach((item)=>{
+      if(item.title.trim() === changeSubTitleModal.updatedValue.trim()){
+        nameAlreadyExist = true;
+      }
+    });
+
+
+    tempData.forEach((item) => {
+      if (item.title === changeSubTitleModal.parent) {
+        selectedItem = item;
         item.boxes.forEach((subItem) => {
           if (subItem.title === changeSubTitleModal.previousValue) {
             subItem.title = changeSubTitleModal.updatedValue;
@@ -357,6 +357,13 @@ export const ServiceReportSettings = ({
         });
       }
     });
+
+
+    if(nameAlreadyExist){
+      toast.error('Title already exist!');
+      return;
+    }
+
     setSectionData(tempData);
 
     setChangeSubTitleModal({
@@ -953,11 +960,24 @@ export const ServiceReportSettings = ({
   };
 
   const handleSaveNewSection = () => {
+    let nameAlreadyExist = false;
     if (createSectionModal.title.length === 0) {
       toast.error("Please Enter The Title Name!");
       return;
     }
     let tempData = [...sectionData];
+
+    tempData.forEach((item)=>{
+      if(item.title.trim() === createSectionModal.title.trim()){
+        nameAlreadyExist  = true;
+      }
+    })
+
+    if(nameAlreadyExist){
+      toast.error("Title already exist!");
+      return;
+    }
+
     tempData.push({
       id: 0,
       title: createSectionModal.title,
