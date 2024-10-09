@@ -7,31 +7,22 @@ import {
   Modal,
   Select,
 } from "antd";
-import { useEffect, useState } from "react";
-// import Hero from "../common/Hero";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Hero } from "../components/Hero";
-import {
-  getAllColumnsOfBoard,
-  getProfileListing,
-  governifyServiceReportAdminSetting,
-  saveAdminServiceView,
-} from "../apiservice/ApiService";
-import { toast, ToastContainer } from "react-toastify";
-import { DeleteOutlined, EditOutlined, LeftOutlined } from "@ant-design/icons";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { Loader } from "../common/Loader";
-
-// import { fetcher } from "../../utils/helper";
 
 export const ServiceReportSettings = ({
   sectionData,
   setSectionData,
   columnOptions,
+  serviceNewSection,
+  serviceEditedSection,
+  serviceDeletedSection,
+  setServiceNewSection,
+  setServiceEditedSection,
+  setServiceDeletedSection,
 }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [changeTitleModal, setChangeTitleModal] = useState({
     flag: false,
     type: "",
@@ -99,6 +90,7 @@ export const ServiceReportSettings = ({
         });
       }
     });
+    updateServiceEditSectionArray(title);
 
     setSectionData(tempData);
   };
@@ -122,7 +114,7 @@ export const ServiceReportSettings = ({
         });
       }
     });
-
+    updateServiceEditSectionArray(title);
     setSectionData(tempData);
   };
 
@@ -145,7 +137,7 @@ export const ServiceReportSettings = ({
         });
       }
     });
-
+    updateServiceEditSectionArray(title);
     setSectionData(tempData);
   };
 
@@ -177,6 +169,7 @@ export const ServiceReportSettings = ({
         detail.boxes = tempBoxesData;
       }
     });
+    updateServiceEditSectionArray(item.title);
 
     setSectionData(tempData);
   };
@@ -203,92 +196,6 @@ export const ServiceReportSettings = ({
     setChangeSubTitleModal(tempChangeTitleModal);
   };
 
-  // const fetchData = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await getAllColumnsOfBoard(location.state.boardId);
-  //     const response1 = await getProfileListing();
-
-  //     if (response.success) {
-  //       const tempData = [];
-  //       response.data.response.forEach((item) => {
-  //         tempData.push({ label: item.title, value: item.id });
-  //       });
-  //       setColumnOptions(tempData);
-  //     }
-  //     if (response1.success) {
-  //       response1.data.response.forEach((item) => {
-  //         if (item.id.toString() === location.state.profileId.toString()) {
-  //           const tempData = JSON.parse(item.governify_service_report);
-  //           if (tempData === null) {
-  //             setSectionData([
-  //               {
-  //                 id: 0,
-  //                 title: "About Company",
-  //                 height: 400,
-  //                 boxes: [],
-  //               },
-  //               {
-  //                 id: 1,
-  //                 title: "Insights",
-  //                 height: 800,
-  //                 boxes: [],
-  //               },
-  //             ]);
-  //           } else {
-  //             setSectionData(tempData);
-  //           }
-  //         }
-  //       });
-  //     }
-  //   } catch (err) {
-  //     console.log(err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  const getChartDataFormat = (data) => {
-    // Initial position
-
-    let tempData = [...data];
-    tempData.forEach((item) => {
-      let position = { x: 0, y: 20 };
-      item.boxes.forEach((subItem) => {
-        // Create a copy of the current position before modifying it
-        let currentPos = { ...position };
-
-        if (subItem.type === "Value Chart") {
-          subItem.size = { width: 360, height: 100 };
-          subItem.position = currentPos;
-        } else if (subItem.type === "Pie Chart") {
-          subItem.size = { width: 365, height: 417 };
-          subItem.position = currentPos;
-          position.y = position.y + 437;
-        } else if (subItem.type === "Bar Chart") {
-          subItem.size = { width: 751, height: 480 };
-          subItem.position = currentPos;
-          position.y = position.y + 500;
-        } else if (subItem.type === "Text Chart") {
-          subItem.size = { width: 360, height: 100 };
-          subItem.position = currentPos;
-          position.y = position.y + 120;
-        }
-      });
-      item.height = position.y + 40;
-    });
-
-    return tempData;
-  };
-
-  const delayFun = async () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 2000);
-    });
-  };
- 
   const handleSaveTitle = () => {
     let nameAlreadyExist = false;
     if (changeTitleModal.updatedValue.length === 0) {
@@ -303,17 +210,42 @@ export const ServiceReportSettings = ({
       }
     });
 
-    if(nameAlreadyExist){
-      toast.error('Title already exist!');
+    if (nameAlreadyExist) {
+      toast.error("Title already exist!");
       return;
     }
-
 
     tempData.forEach((item) => {
       if (item.title === changeTitleModal.previousValue) {
         item.title = changeTitleModal.updatedValue;
       }
     });
+
+    if (serviceNewSection.includes(changeTitleModal.previousValue.trim())) {
+      const index = serviceNewSection.indexOf(
+        changeTitleModal.previousValue.trim()
+      );
+      let updatedServiceNewSection = [...serviceNewSection];
+      updatedServiceNewSection[index] = changeTitleModal.updatedValue.trim();
+      setServiceNewSection(updatedServiceNewSection);
+    } else {
+      if (
+        serviceEditedSection.includes(changeTitleModal.previousValue.trim())
+      ) {
+        const index = serviceEditedSection.indexOf(
+          changeTitleModal.previousValue.trim()
+        );
+        let updatedServiceEditedSection = [...serviceEditedSection];
+        updatedServiceEditedSection[index] =
+          changeTitleModal.updatedValue.trim();
+        setServiceEditedSection(updatedServiceEditedSection);
+      } else {
+        let tempEditSection = [...serviceEditedSection];
+        tempEditSection.push(changeTitleModal.updatedValue.trim());
+        setServiceEditedSection(tempEditSection);
+      }
+    }
+
     setSectionData(tempData);
 
     setChangeTitleModal({
@@ -326,7 +258,7 @@ export const ServiceReportSettings = ({
 
   const handleSaveSubTitle = () => {
     let nameAlreadyExist = false;
-    let selectedItem ;
+    let selectedItem;
     if (changeSubTitleModal.updatedValue.length === 0) {
       toast.error("Please Enter the Title!");
       return;
@@ -339,13 +271,11 @@ export const ServiceReportSettings = ({
       }
     });
 
- 
-    selectedItem.boxes.forEach((item)=>{
-      if(item.title.trim() === changeSubTitleModal.updatedValue.trim()){
+    selectedItem.boxes.forEach((item) => {
+      if (item.title.trim() === changeSubTitleModal.updatedValue.trim()) {
         nameAlreadyExist = true;
       }
     });
-
 
     tempData.forEach((item) => {
       if (item.title === changeSubTitleModal.parent) {
@@ -358,11 +288,12 @@ export const ServiceReportSettings = ({
       }
     });
 
-
-    if(nameAlreadyExist){
-      toast.error('Title already exist!');
+    if (nameAlreadyExist) {
+      toast.error("Title already exist!");
       return;
     }
+
+    updateServiceEditSectionArray(changeSubTitleModal.parent);
 
     setSectionData(tempData);
 
@@ -390,6 +321,7 @@ export const ServiceReportSettings = ({
   };
 
   const handleChangeSubSectionTitle = (item, subItem) => {
+    updateServiceEditSectionArray(item.title);
     setChangeSubTitleModal({
       flag: true,
       type: subItem.title,
@@ -412,6 +344,9 @@ export const ServiceReportSettings = ({
       }
     });
 
+    updateServiceEditSectionArray(item.title);
+
+
     setSectionData(tempData);
   };
 
@@ -428,6 +363,8 @@ export const ServiceReportSettings = ({
         detail.boxes = tempBoxes;
       }
     });
+    updateServiceEditSectionArray(item.title);
+
     setSectionData(tempData);
   };
 
@@ -444,6 +381,8 @@ export const ServiceReportSettings = ({
         detail.boxes = tempBoxes;
       }
     });
+    updateServiceEditSectionArray(item.title);
+
     setSectionData(tempData);
   };
 
@@ -460,6 +399,8 @@ export const ServiceReportSettings = ({
         detail.boxes = tempBoxes;
       }
     });
+    updateServiceEditSectionArray(item.title);
+
     setSectionData(tempData);
   };
 
@@ -476,6 +417,8 @@ export const ServiceReportSettings = ({
         detail.boxes = tempBoxes;
       }
     });
+    updateServiceEditSectionArray(item.title);
+
     setSectionData(tempData);
   };
 
@@ -492,6 +435,8 @@ export const ServiceReportSettings = ({
         detail.boxes = tempBoxes;
       }
     });
+    updateServiceEditSectionArray(item.title);
+
     setSectionData(tempData);
   };
 
@@ -508,6 +453,8 @@ export const ServiceReportSettings = ({
         detail.boxes = tempBoxes;
       }
     });
+    updateServiceEditSectionArray(item.title);
+
     setSectionData(tempData);
   };
 
@@ -545,8 +492,24 @@ export const ServiceReportSettings = ({
         detail.boxes = tempBoxes;
       }
     });
+    updateServiceEditSectionArray(item.title);
 
     setSectionData(tempData);
+  };
+
+  const updateServiceEditSectionArray = (title) => {
+    let existInNewSection = false;
+    if (serviceNewSection.includes(title.trim())) {
+      existInNewSection = true;
+    }
+
+    if (!existInNewSection) {
+      if (!serviceEditedSection.includes(title.trim())) {
+        let tempEditedSection = [...serviceEditedSection];
+        tempEditedSection.push(title.trim());
+        setServiceEditedSection(tempEditedSection);
+      }
+    }
   };
 
   const getCollapseSubItems = (item, subItem, index, subIndex) => {
@@ -855,6 +818,17 @@ export const ServiceReportSettings = ({
     const filterData = sectionData.filter(
       (subItem) => subItem.title !== item.title
     );
+
+    if (serviceNewSection.includes(item.title)) {
+      const updatedServiceNewSection = serviceNewSection.filter(
+        (section) => section !== item.title
+      );
+      setServiceNewSection(updatedServiceNewSection);
+    } else {
+      const tempDeletedSection = [...serviceDeletedSection];
+      tempDeletedSection.push(item.title);
+      setServiceDeletedSection(tempDeletedSection);
+    }
     setSectionData(filterData);
   };
 
@@ -967,13 +941,13 @@ export const ServiceReportSettings = ({
     }
     let tempData = [...sectionData];
 
-    tempData.forEach((item)=>{
-      if(item.title.trim() === createSectionModal.title.trim()){
-        nameAlreadyExist  = true;
+    tempData.forEach((item) => {
+      if (item.title.trim() === createSectionModal.title.trim()) {
+        nameAlreadyExist = true;
       }
-    })
+    });
 
-    if(nameAlreadyExist){
+    if (nameAlreadyExist) {
       toast.error("Title already exist!");
       return;
     }
@@ -984,6 +958,10 @@ export const ServiceReportSettings = ({
       height: 400,
       boxes: [],
     });
+
+    const tempNewSection = [...serviceNewSection];
+    tempNewSection.push(createSectionModal.title.trim());
+    setServiceNewSection(tempNewSection);
     setSectionData(tempData);
     setCreateSectionModal({ flag: false, title: "" });
   };

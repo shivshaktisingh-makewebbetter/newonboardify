@@ -52,6 +52,18 @@ export const ReportSettings = () => {
   const [sectionDataCompliance, setSectionDataCompliance] = useState([]);
   const [sectionDataServies, setSectionDataServices] = useState([]);
 
+  const [complianceNewSection, setComplianceNewSection] = useState([]);
+  const [complianceEditedSection, setComplianceEditedSection] = useState([]);
+  const [complianceDeletedSection, setComplianceDeletedSection] = useState([]);
+  const [previousViewDataCompliance, setPreviousViewDataCompliance] = useState(
+    []
+  );
+
+  const [serviceNewSection, setServiceNewSection] = useState([]);
+  const [serviceEditedSection, setServiceEditedSection] = useState([]);
+  const [serviceDeletedSection, setServiceDeletedSection] = useState([]);
+  const [previousViewDataService, setPreviousViewDataService] = useState([]);
+
   const navigate = useNavigate();
 
   const filterOption = (input, option) => {
@@ -96,6 +108,12 @@ export const ReportSettings = () => {
             const tempDataCompliance = JSON.parse(
               item.governify_compliance_report
             );
+            const tempViewDataCompliance = JSON.parse(
+              item.governify_compliance_report_view
+            );
+            const tempViewDataService = JSON.parse(
+              item.governify_service_report_view
+            );
             const tempComplianceTableData = JSON.parse(
               item.governify_table_settings
             );
@@ -108,6 +126,18 @@ export const ReportSettings = () => {
             const tempServiceFilterKey = JSON.parse(
               item.governify_service_filter_key
             );
+
+            if (!(tempViewDataCompliance === null)) {
+              setPreviousViewDataCompliance(
+                JSON.parse(JSON.stringify(tempViewDataCompliance))
+              );
+            }
+
+            if (!(tempViewDataService === null)) {
+              setPreviousViewDataService(
+                JSON.parse(JSON.stringify(tempViewDataService))
+              );
+            }
 
             if (tempBoardIdService === null) {
               selectedBoardIdService = undefined;
@@ -443,7 +473,7 @@ export const ReportSettings = () => {
       profile_id: location.state.toString(),
       governify_compliance_report:
         sectionDataCompliance.length > 0
-          ? JSON.stringify(getChartDataFormat(sectionDataCompliance))
+          ? JSON.stringify(getChartDataFormatCompliance(sectionDataCompliance))
           : null,
     };
     const payload4 = {
@@ -459,8 +489,6 @@ export const ReportSettings = () => {
       const response2 = await governifyFilterKeyAssociationCompliance(payload2);
       await delayFun();
       const response3 = await governifyComplianceReportAdminSetting(payload3);
-      await delayFun();
-      const response4 = await saveAdminComplianceView(payload4);
 
       if (
         response.success &&
@@ -639,13 +667,12 @@ export const ReportSettings = () => {
             ? null
             : selectedFilterColumnService.date_key,
       },
-    
     });
 
     const payload3 = {
       profile_id: location.state.toString(),
       governify_service_report: JSON.stringify(
-        getChartDataFormat(sectionDataServies)
+        getChartDataFormatService(sectionDataServies)
       ),
     };
 
@@ -716,7 +743,16 @@ export const ReportSettings = () => {
     return labelOfItem;
   };
 
-  const getChartDataFormat = (data) => {
+  const copyObjectsBasedOnTitle = (arr1, arr2) => {
+    return arr1.map((obj1) => {
+      // Find the corresponding object from arr2 that matches the title
+      const matchingObj = arr2.find((obj2) => obj2.title === obj1.title);
+      // If a match is found, copy it; otherwise, keep the original object from arr1
+      return matchingObj ? { ...matchingObj } : { ...obj1 };
+    });
+  };
+
+  const getChartDataFormatCompliance = (data) => {
     // Initial position
 
     let tempData = [...data];
@@ -755,7 +791,124 @@ export const ReportSettings = () => {
       item.height = position.y + 40;
     });
 
-    return tempData;
+    if (previousViewDataCompliance.length === 0) {
+      return tempData;
+    } else {
+      if (
+        complianceNewSection.length === 0 &&
+        complianceEditedSection.length === 0
+      ) {
+        let previousData = [...previousViewDataCompliance];
+        const finalArray = copyObjectsBasedOnTitle(tempData, previousData);
+        return finalArray;
+      } else {
+        let previousData = [...previousViewDataCompliance];
+        const filteredData = previousData.filter(
+          (item) => !complianceDeletedSection.includes(item.title)
+        );
+        const newTempData = [];
+        filteredData.forEach((item) => {
+          if (complianceEditedSection.includes(item.title)) {
+            const tempFilteredArray = tempData.filter(
+              (subItem) => subItem.title === item.title
+            );
+            newTempData.push(tempFilteredArray[0]);
+          } else {
+            newTempData.push(item);
+          }
+        });
+
+        tempData.forEach((item) => {
+          if (complianceNewSection.includes(item.title)) {
+            newTempData.push(item);
+          }
+        });
+
+        const finalArray = copyObjectsBasedOnTitle(tempData, newTempData);
+        return finalArray;
+      }
+    }
+  };
+
+  const getChartDataFormatService = (data) => {
+    // Initial position
+
+    let tempData = [...data];
+    tempData.forEach((item) => {
+      let position = { x: 0, y: 20 };
+      item.boxes.forEach((subItem) => {
+        // Create a copy of the current position before modifying it
+        let currentPos = { ...position };
+
+        if (subItem.type === "Value Chart") {
+          subItem.size = { width: 360, height: 100 };
+          subItem.position = currentPos;
+          position.y = position.y + 125;
+        } else if (subItem.type === "Bar Chart") {
+          subItem.size = { width: 751, height: 480 };
+          subItem.position = currentPos;
+          position.y = position.y + 500;
+        } else if (subItem.type === "Pie Chart") {
+          subItem.size = { width: 365, height: 420 };
+          subItem.position = currentPos;
+          position.y = position.y + 445;
+        } else if (subItem.type === "Text Chart") {
+          subItem.size = { width: 360, height: 100 };
+          subItem.position = currentPos;
+          position.y = position.y + 125;
+        } else if (subItem.type === "Multi Value Chart") {
+          subItem.size = { width: 366, height: 480 };
+          subItem.position = currentPos;
+          position.y = position.y + 505;
+        } else if (subItem.type === "Recommendation Chart") {
+          subItem.size = { width: 800, height: 300 };
+          subItem.position = currentPos;
+          position.y = position.y + 325;
+        }
+      });
+      item.height = position.y + 40;
+    });
+
+
+
+    if (previousViewDataService.length === 0) {
+      return tempData;
+    } else {
+      if (
+        serviceNewSection.length === 0 &&
+        serviceEditedSection.length === 0
+      ) {
+        let previousData = [...previousViewDataService];
+        const finalArray = copyObjectsBasedOnTitle(tempData, previousData);
+        return finalArray;
+      } else {
+        let previousData = [...previousViewDataService];
+        const filteredData = previousData.filter(
+          (item) => !serviceDeletedSection.includes(item.title)
+        );
+        const newTempData = [];
+        filteredData.forEach((item) => {
+          if (serviceEditedSection.includes(item.title)) {
+            const tempFilteredArray = tempData.filter(
+              (subItem) => subItem.title === item.title
+            );
+            newTempData.push(tempFilteredArray[0]);
+          } else {
+            newTempData.push(item);
+          }
+        });
+
+        tempData.forEach((item) => {
+          if (serviceNewSection.includes(item.title)) {
+            newTempData.push(item);
+          }
+        });
+
+        const finalArray = copyObjectsBasedOnTitle(tempData, newTempData);
+        return finalArray;
+      }
+    }
+
   };
 
   const getCollapseSubItemsCompliance = () => {
@@ -903,6 +1056,12 @@ export const ReportSettings = () => {
               setSectionData={setSectionDataCompliance}
               columnOptions={columnOptionsCompliance}
               selectedBoardIdCompliance={selectedBoardIdCompliance}
+              complianceNewSection={complianceNewSection}
+              complianceEditedSection={complianceEditedSection}
+              complianceDeletedSection={complianceDeletedSection}
+              setComplianceNewSection={setComplianceNewSection}
+              setComplianceEditedSection={setComplianceEditedSection}
+              setComplianceDeletedSection={setComplianceDeletedSection}
             />
           </div>
         ),
@@ -991,6 +1150,12 @@ export const ReportSettings = () => {
               sectionData={sectionDataServies}
               setSectionData={setSectionDataServices}
               columnOptions={columnOptionsService}
+              serviceNewSection={serviceNewSection}
+              serviceEditedSection={serviceEditedSection}
+              serviceDeletedSection={serviceDeletedSection}
+              setServiceNewSection={setServiceNewSection}
+              setServiceEditedSection={setServiceEditedSection}
+              setServiceDeletedSection={setServiceDeletedSection}
             />
           </div>
         ),

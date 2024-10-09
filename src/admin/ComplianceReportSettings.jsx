@@ -8,27 +8,22 @@ import {
   Select,
 } from "antd";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-
-import {
-
-  governifyComplianceReportAdminSetting,
-  saveAdminComplianceView,
-} from "../apiservice/ApiService";
-import { toast, } from "react-toastify";
+import { toast } from "react-toastify";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-
 
 export const ComplianceReportSettings = ({
   sectionData,
   setSectionData,
   columnOptions,
-  selectedBoardIdCompliance
+  selectedBoardIdCompliance,
+  complianceNewSection,
+  complianceEditedSection,
+  complianceDeletedSection,
+  setComplianceNewSection,
+  setComplianceEditedSection,
+  setComplianceDeletedSection,
 }) => {
-  const location = useLocation();
-  const navigate = useNavigate();
-
   const [changeTitleModal, setChangeTitleModal] = useState({
     flag: false,
     type: "",
@@ -65,7 +60,6 @@ export const ComplianceReportSettings = ({
     { label: "Vertical Chart", value: false },
   ];
 
-
   // const [columnOptions, setColumnOptions] = useState([]);
 
   const data = JSON.parse(sessionStorage.getItem("settings")) || {
@@ -94,7 +88,7 @@ export const ComplianceReportSettings = ({
 
   const handleSelectChartTypeText = (title) => {
     let tempData = [...sectionData];
-    tempData.forEach((item , index) => {
+    tempData.forEach((item, index) => {
       if (item.title === title) {
         item.boxes.push({
           type: "Text Chart",
@@ -109,6 +103,8 @@ export const ComplianceReportSettings = ({
         });
       }
     });
+
+    updateComplianceEditSectionArray(title);
 
     setSectionData(tempData);
   };
@@ -132,6 +128,7 @@ export const ComplianceReportSettings = ({
         });
       }
     });
+    updateComplianceEditSectionArray(title);
 
     setSectionData(tempData);
   };
@@ -151,6 +148,7 @@ export const ComplianceReportSettings = ({
         });
       }
     });
+    updateComplianceEditSectionArray(title);
 
     setSectionData(tempData);
   };
@@ -168,19 +166,20 @@ export const ComplianceReportSettings = ({
         detail.boxes = tempBoxes;
       }
     });
+    updateComplianceEditSectionArray(item.title);
     setSectionData(tempData);
   };
 
   const handleSelectChartTypePercentage = (title) => {
     let tempData = [...sectionData];
-    tempData.forEach((item , index) => {
+    tempData.forEach((item, index) => {
       if (item.title === title) {
         item.boxes.push({
           type: "Multi Value Chart",
           title: `Multi Value Chart ${item.boxes.length + 1}`,
           selectedColumns: [],
           heading: "",
-          description:"" ,
+          description: "",
           selectedColor: [],
           id: item.boxes.length + 1,
           position: { x: 0, y: 20 },
@@ -189,13 +188,14 @@ export const ComplianceReportSettings = ({
         });
       }
     });
+    updateComplianceEditSectionArray(title);
 
     setSectionData(tempData);
   };
 
   const handleSelectChartTypePie = (title) => {
     let tempData = [...sectionData];
-    tempData.forEach((item , index) => {
+    tempData.forEach((item, index) => {
       if (item.title === title) {
         item.boxes.push({
           type: "Pie Chart",
@@ -212,6 +212,7 @@ export const ComplianceReportSettings = ({
         });
       }
     });
+    updateComplianceEditSectionArray(title);
 
     setSectionData(tempData);
   };
@@ -233,6 +234,7 @@ export const ComplianceReportSettings = ({
         });
       }
     });
+    updateComplianceEditSectionArray(title);
 
     setSectionData(tempData);
   };
@@ -265,6 +267,7 @@ export const ComplianceReportSettings = ({
         detail.boxes = tempBoxesData;
       }
     });
+    updateComplianceEditSectionArray(item.title);
 
     setSectionData(tempData);
   };
@@ -297,56 +300,21 @@ export const ComplianceReportSettings = ({
     setChangeRecommendationTitleModal(tempChangeTitleModal);
   };
 
-  const getChartDataFormat = (data) => {
-    // Initial position
+  const updateComplianceEditSectionArray = (title) => {
+    let existInNewSection = false;
+    if (complianceNewSection.includes(title.trim())) {
+      existInNewSection = true;
+    }
 
-    let tempData = [...data];
-    tempData.forEach((item) => {
-      let position = { x: 0, y: 20 };
-      item.boxes.forEach((subItem) => {
-        // Create a copy of the current position before modifying it
-        let currentPos = { ...position };
-
-        if (subItem.type === "Value Chart") {
-          subItem.size = { width: 360, height: 100 };
-          subItem.position = currentPos;
-
-          // Update the position for the next item
-
-          position.y = position.y + 120;
-        } else if (subItem.type === "Bar Chart") {
-          subItem.size = { width: 751, height: 480 };
-          subItem.position = currentPos;
-
-          // Update the position for the next item
-
-          position.y = position.y + 500;
-        } else if (subItem.type === "Text Chart") {
-          subItem.size = { width: 360, height: 100 };
-          subItem.position = currentPos;
-
-          // Update the position for the next item
-
-          position.y = position.y + 120;
-        } else if (subItem.type === "Multi Value Chart") {
-          subItem.size = { width: 366, height: 478 };
-          subItem.position = currentPos;
-
-          // Update the position for the next item
-
-          position.y = position.y + 498;
-        }
-      });
-      item.height = position.y + 40;
-    });
-
-    tempData.push(recommendationText);
-
-    return tempData;
+    if (!existInNewSection) {
+      if (!complianceEditedSection.includes(title.trim())) {
+        let tempEditedSection = [...complianceEditedSection];
+        tempEditedSection.push(title.trim());
+        setComplianceEditedSection(tempEditedSection);
+      }
+    }
   };
 
- 
- 
   const handleSaveTitle = () => {
     let nameAlreadyExist = false;
     if (changeTitleModal.updatedValue.length === 0) {
@@ -357,14 +325,40 @@ export const ComplianceReportSettings = ({
 
     tempData.forEach((item) => {
       if (item.title.trim() === changeTitleModal.updatedValue.trim()) {
-         nameAlreadyExist = true;
+        nameAlreadyExist = true;
       }
     });
 
-    if(nameAlreadyExist){
-      toast.error('Title already exist!');
+    if (nameAlreadyExist) {
+      toast.error("Title already exist!");
       return;
     }
+
+    if (complianceNewSection.includes(changeTitleModal.previousValue.trim())) {
+      const index = complianceNewSection.indexOf(
+        changeTitleModal.previousValue.trim()
+      );
+      let updatedComplianceNewSection = [...complianceNewSection];
+      updatedComplianceNewSection[index] = changeTitleModal.updatedValue.trim();
+      setComplianceNewSection(updatedComplianceNewSection);
+    } else {
+      if (
+        complianceEditedSection.includes(changeTitleModal.previousValue.trim())
+      ) {
+        const index = complianceEditedSection.indexOf(
+          changeTitleModal.previousValue.trim()
+        );
+        let updatedComplianceEditedSection = [...complianceEditedSection];
+        updatedComplianceEditedSection[index] =
+          changeTitleModal.updatedValue.trim();
+        setComplianceEditedSection(updatedComplianceEditedSection);
+      } else {
+        let tempEditSection = [...complianceEditedSection];
+        tempEditSection.push(changeTitleModal.updatedValue.trim());
+        setComplianceEditedSection(tempEditSection);
+      }
+    }
+
     tempData.forEach((item) => {
       if (item.title === changeTitleModal.previousValue) {
         item.title = changeTitleModal.updatedValue;
@@ -403,8 +397,26 @@ export const ComplianceReportSettings = ({
       toast.error("Please Enter the Title!");
       return;
     }
-    let selectedSubSection ;
+    let selectedSubSection;
     let tempData = [...sectionData];
+
+    tempData.forEach((item) => {
+      if (item.title === changeSubTitleModal.parent) {
+        selectedSubSection = item;
+      }
+    });
+
+    selectedSubSection.boxes.forEach((item) => {
+      if (item.title.trim() === changeSubTitleModal.updatedValue.trim()) {
+        nameAlreadyExist = true;
+      }
+    });
+
+    if (nameAlreadyExist) {
+      toast.error("Title Already Exist!");
+      return;
+    }
+
     tempData.forEach((item) => {
       if (item.title === changeSubTitleModal.parent) {
         selectedSubSection = item;
@@ -416,16 +428,7 @@ export const ComplianceReportSettings = ({
       }
     });
 
-    selectedSubSection.boxes.forEach((item)=>{
-     if(item.title.trim() === changeSubTitleModal.updatedValue.trim()){
-      nameAlreadyExist = true;
-     }
-    })
-
-    if(nameAlreadyExist){
-       toast.error('Title Already Exist!');
-       return;
-    }
+    updateComplianceEditSectionArray(changeSubTitleModal.parent);
 
     setSectionData(tempData);
 
@@ -475,6 +478,8 @@ export const ComplianceReportSettings = ({
       }
     });
 
+    updateComplianceEditSectionArray(item.title);
+
     setSectionData(tempData);
   };
 
@@ -491,6 +496,8 @@ export const ComplianceReportSettings = ({
         detail.boxes = tempBoxes;
       }
     });
+    updateComplianceEditSectionArray(item.title);
+
     setSectionData(tempData);
   };
 
@@ -507,6 +514,7 @@ export const ComplianceReportSettings = ({
         detail.boxes = tempBoxes;
       }
     });
+    updateComplianceEditSectionArray(item.title);
     setSectionData(tempData);
   };
 
@@ -523,6 +531,7 @@ export const ComplianceReportSettings = ({
         detail.boxes = tempBoxes;
       }
     });
+    updateComplianceEditSectionArray(item.title);
     setSectionData(tempData);
   };
 
@@ -539,6 +548,7 @@ export const ComplianceReportSettings = ({
         detail.boxes = tempBoxes;
       }
     });
+    updateComplianceEditSectionArray(item.title);
     setSectionData(tempData);
   };
 
@@ -555,6 +565,7 @@ export const ComplianceReportSettings = ({
         detail.boxes = tempBoxes;
       }
     });
+    updateComplianceEditSectionArray(item.title);
     setSectionData(tempData);
   };
 
@@ -571,6 +582,7 @@ export const ComplianceReportSettings = ({
         detail.boxes = tempBoxes;
       }
     });
+    updateComplianceEditSectionArray(item.title);
     setSectionData(tempData);
   };
 
@@ -608,13 +620,12 @@ export const ComplianceReportSettings = ({
         detail.boxes = tempBoxes;
       }
     });
+    updateComplianceEditSectionArray(item.title);
 
     setSectionData(tempData);
   };
 
   const getCollapseSubItems = (item, subItem, index, subIndex) => {
-
-
     if (subItem.type === "Text Chart") {
       return [
         {
@@ -1129,13 +1140,24 @@ export const ComplianceReportSettings = ({
         },
       ];
     }
-
   };
 
   const handleDeleteSection = (item) => {
     const filterData = sectionData.filter(
       (subItem) => subItem.title !== item.title
     );
+
+    if (complianceNewSection.includes(item.title)) {
+      const updatedComplianceNewSection = complianceNewSection.filter(
+        (section) => section !== item.title
+      );
+      setComplianceNewSection(updatedComplianceNewSection);
+    } else {
+      const tempDeletedSection = [...complianceDeletedSection];
+      tempDeletedSection.push(item.title);
+      setComplianceDeletedSection(tempDeletedSection);
+    }
+
     setSectionData(filterData);
   };
 
@@ -1275,12 +1297,12 @@ export const ComplianceReportSettings = ({
       toast.error("Please Enter The Title Name!");
       return;
     }
-    sectionData.forEach((item) =>{
-      if(item.title.trim() === createSectionModal.title.trim()){
+    sectionData.forEach((item) => {
+      if (item.title.trim() === createSectionModal.title.trim()) {
         nameAlreadyExist = true;
       }
-    })
-    if(nameAlreadyExist){
+    });
+    if (nameAlreadyExist) {
       toast.error("Title already exist!");
       return;
     }
@@ -1291,17 +1313,11 @@ export const ComplianceReportSettings = ({
       height: 400,
       boxes: [],
     });
+    const tempNewSection = [...complianceNewSection];
+    tempNewSection.push(createSectionModal.title);
+    setComplianceNewSection(tempNewSection);
     setSectionData(tempData);
     setCreateSectionModal({ flag: false, title: "" });
-  };
-
-
-  const delayFun = async () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 2000);
-    });
   };
 
   return (
@@ -1315,7 +1331,12 @@ export const ComplianceReportSettings = ({
           width: "100%",
         }}
       >
-        <Button onClick={handleCreateSection} disabled={selectedBoardIdCompliance === undefined}>Create Section</Button>
+        <Button
+          onClick={handleCreateSection}
+          disabled={selectedBoardIdCompliance === undefined}
+        >
+          Create Section
+        </Button>
       </div>
 
       <DragDropContext onDragEnd={onDragEnd}>
