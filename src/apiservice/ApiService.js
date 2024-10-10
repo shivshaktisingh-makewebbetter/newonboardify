@@ -104,7 +104,7 @@ export const requestTrackingWithOrCondition = (id, data) => {
   );
 };
 export const exportServiceData = (id) => {
-  return Services.GET(`newonboardify/customer/exportDataByBoardId/${id}`);
+  return Services.GET(`newonboardify/customer/exportCSVDataByBoardId/${id}`);
 };
 export const getUserFormAndChart = () =>
   Services.GET(`newonboardify/customer/getUserFormAndChart`);

@@ -111,33 +111,80 @@ export const Track = () => {
     setStatusItems(updatedFilterColumn);
   };
 
+  const arrayToCsv = (data) => {
+    return data.map((row) => row.join(",")).join("\n");
+  };
+
   const handleExport = async () => {
     setLoading(true);
     try {
       const data = [];
+      let tempColumns = [];
       const response = await exportServiceData(boardId);
-      const tempResult = response.data.split("\n");
-      tempResult.forEach((item) => {
-        data.push(item);
-      });
+      if (response.success) {
+        if (
+          columnIdData.hasOwnProperty("sub_headings_column") &&
+          columnIdData.sub_headings_column.length > 0
+        ) {
+          columnIdData.sub_headings_column.forEach((item) => {
+            if (!tempColumns.includes(item.id)) {
+              tempColumns.push(item.id);
+            }
+          });
+        }
 
-      const csvContent = data.join("\n");
+        if (
+          columnIdData.hasOwnProperty("candidate_coulmns") &&
+          columnIdData.candidate_coulmns.length > 0
+        ) {
+          columnIdData.candidate_coulmns.forEach((item) => {
+            if (!tempColumns.includes(item.id)) {
+              tempColumns.push(item.id);
+            }
+          });
+        }
 
-      // Create a Blob from the CSV string
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", "data.csv");
+        if (
+          columnIdData.hasOwnProperty("onboarding_columns") &&
+          columnIdData.onboarding_columns.length > 0
+        ) {
+          columnIdData.onboarding_columns.forEach((item) => {
+            if (!tempColumns.includes(item.id)) {
+              tempColumns.push(item.id);
+            }
+          });
+        }
+        data.push(tempColumns);
+        response.data.response.data.boards[0].items_page.items.forEach(
+          (item) => {
+            let newTempData = Array(tempColumns.length).fill("");
 
-      // Append the link to the body (necessary for Firefox)
-      document.body.appendChild(link);
+            let newItem = item.column_values;
+            newItem.push({ id: "name", text: item.name, value: item.name });
+            newItem.forEach((subItem) => {
+              if (tempColumns.includes(subItem.id)) {
+                let index = tempColumns.indexOf(subItem.id);
+                newTempData[index] = subItem.text;
+              }
+            });
+            data.push(newTempData);
+          }
+        );
 
-      // Trigger the download by simulating a click on the link
-      link.click();
+        const csvData = arrayToCsv(data);
+        const blob = new Blob([csvData], { type: "text/csv" });
+        const url = window.URL.createObjectURL(blob);
 
-      // Remove the link from the document
-      document.body.removeChild(link);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "data.csv");
+        document.body.appendChild(link);
+        link.click();
+
+        // Clean up
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }
     } catch (err) {
     } finally {
       setLoading(false);
@@ -266,7 +313,7 @@ export const Track = () => {
             }
           });
 
-          if ((tempBoardId === "")) {
+          if (tempBoardId === "") {
             setSelectedService(tempData[0].key);
             setBoardId(tempData[0].boardId);
             tempBoardId = tempData[0].boardId;
@@ -439,7 +486,6 @@ export const Track = () => {
           setCursor(null);
         }
       }
-
     } catch (err) {
     } finally {
       setLoading(false);
