@@ -154,7 +154,15 @@ export const Track = () => {
             }
           });
         }
-        data.push(tempColumns);
+        let columnWithLabels = Array(tempColumns.length).fill("");
+        response.data.response.data.boards[0].columns.forEach((subItem)=>{
+          if (tempColumns.includes(subItem.id)) {
+            let index = tempColumns.indexOf(subItem.id);
+            columnWithLabels[index] = subItem.title;
+          }         
+        })
+
+        data.push(columnWithLabels);
         response.data.response.data.boards[0].items_page.items.forEach(
           (item) => {
             let newTempData = Array(tempColumns.length).fill("");
