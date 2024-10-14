@@ -177,7 +177,6 @@ export const Check = () => {
     return tempValue;
   };
 
-
   const getBgColorForBarChart = (subItem, item) => {
     let hexColor = "#d20e0e";
     subItem.selectedColor.forEach((detail) => {
@@ -342,8 +341,6 @@ export const Check = () => {
     return tempData;
   };
 
-
-
   function getRandomColor() {
     // Generate a random integer between 0 and 255
     return Math.floor(Math.random() * 256);
@@ -372,12 +369,11 @@ export const Check = () => {
   const getColumnTitleForTextChart = (id) => {
     let tempValue = "";
 
-      allColumnTitle.forEach((item) => {
-        if (item.id === id) {
-          tempValue = item.title;
-        }
-      });
-    
+    allColumnTitle.forEach((item) => {
+      if (item.id === id) {
+        tempValue = item.title;
+      }
+    });
 
     return tempValue;
   };
@@ -407,14 +403,30 @@ export const Check = () => {
 
     previousData.forEach((item) => {
       if (tempData.selectedColumns.includes(item.id)) {
-        tempPreviousArr.push({ key: getKeyFromAllColumn(item.id), value: item.text });
+        tempPreviousArr.push({
+          key: getKeyFromAllColumn(item.id),
+          value: item.text,
+        });
       }
     });
     return { tempCurrentArr, tempPreviousArr };
   };
 
+
   const handleChangeService = async () => {};
-  const handleChangeRequest = async () => {};
+  const handleChangeDate = async (e) => {
+    dateOptions.forEach((item, index) => {
+      if (item.value === e) {
+        setCurrentData(item.data);
+        if (index === dateOptions.length - 1) {
+          setPreviousData([]);
+        } else {
+          setPreviousData(dateOptions[index + 1].data);
+        }
+      }
+    });
+    setSelectedDate(e);
+  };
 
   useEffect(() => {
     fetchProfiledata();
@@ -471,13 +483,8 @@ export const Check = () => {
           />
 
           <Select
-            style={
-              {
-                // width: "100%",
-              }
-            }
             placeholder="Select Date"
-            onChange={handleChangeRequest}
+            onChange={handleChangeDate}
             options={dateOptions}
             value={selectedDate || undefined}
           />

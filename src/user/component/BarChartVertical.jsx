@@ -136,7 +136,6 @@ export const BarChartVertical = ({
             });
 
             bodyLines.forEach(function (body) {
-              console.log(body, "body");
               innerHtml += `<div style="font-family:Graphie-Thin ; font-size: 12px ; font-weight: 400;">${"vs last month"}</div>`;
             });
 
