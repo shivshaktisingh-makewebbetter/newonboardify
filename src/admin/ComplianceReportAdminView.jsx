@@ -208,6 +208,7 @@ export const ComplianceReportAdminView = () => {
 
   const getColumnValueForTextChart = (id) => {
     let tempValue = "";
+    // console.log(nameValue , 'asfas')
     if (id === "name") {
       tempValue = nameValue.currentName;
     } else {
