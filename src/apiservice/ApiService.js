@@ -71,12 +71,16 @@ export const governifyServiceBoardAssociation = (data) =>
   Services.POST(`governify/admin/governifyServiceBoardAssociation`, data);
 export const governifyFilterKeyAssociationCompliance = (data) =>
   Services.POST(`governify/admin/governifyComplianceFilterKey`, data);
+export const onboardifyFilterKeyAssociationService = (data) =>
+  Services.POST(`newonboardify/admin/onboardifyServiceFilterKey`, data);
 export const governifyFilterKeyAssociationService = (data) =>
   Services.POST(`governify/admin/governifyServiceFilterKey`, data);
 export const governifyComplianceReportAdminSetting = (data) =>
   Services.POST(`governify/admin/governifyComplianceReport`, data);
 export const governifyServiceReportAdminSetting = (data) =>
   Services.POST(`governify/admin/governifyServiceReport`, data);
+export const onboardifyServiceReportAdminSetting = (data) =>
+  Services.POST(`newonboardify/admin/onboardifyServiceReport`, data);
 export const getComplianceReportDataAdmin = (boardId, dateColumn) =>
   Services.GET(
     `governify/admin/getComplianceReportForAdmin?board_id=${boardId}&date_column=${dateColumn}`
@@ -87,6 +91,8 @@ export const getServiceReportDataAdmin = (boardId, dateColumn) =>
   );
 export const saveAdminComplianceView = (data) =>
   Services.POST(`governify/admin/governifyComplianceReportView`, data);
+export const saveAdminServiceViewOnboardify = (data) =>
+  Services.POST(`newonboardify/admin/onboardifyServiceReportView`, data);
 export const saveAdminServiceView = (data) =>
   Services.POST(`governify/admin/governifyServiceReportView`, data);
 
@@ -168,6 +174,7 @@ export const getLastServiceUsedByUser = () =>
 
 export const getEmailData = (data) =>
   Services.POST("/tasc360/getEmailData", data);
+export const getAllCustomerData = (boardId) => Services.GET(`newonboardify/customer/getAllBoardDataForCustomer/${boardId}`)
 
 // Common Endpoints
 export const loginApi = (data) => Services.POST(`commom-login`, data);

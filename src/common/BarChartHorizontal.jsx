@@ -22,31 +22,6 @@ export const BarChartHorizontal = ({
     maintainAspectRatio: false,
     indexAxis: "y", // Set indexAxis to 'y' for horizontal bars
     plugins: {
-      // beforeDraw: function (chart) {
-      //   const ctx = chart.ctx;
-      //   ctx.save();
-
-      //   chart.data.datasets.forEach((dataset, i) => {
-      //     const meta = chart.getDatasetMeta(i);
-      //     meta.data.forEach((bar, index) => {
-      //       ctx.shadowColor = "rgba(0, 0, 0, 0.5)"; // Shadow color
-      //       ctx.shadowBlur = 10; // Blur effect
-      //       ctx.shadowOffsetX = 5; // Horizontal offset
-      //       ctx.shadowOffsetY = 5; // Vertical offset
-
-      //       // Draw the shadowed bar
-      //       ctx.fillStyle = dataset.backgroundColor; // Use the dataset color
-      //       ctx.fillRect(
-      //         bar.x,
-      //         bar.y - bar.height / 2, // Adjust for height
-      //         chart.chartArea.right - bar.x, // Width is based on the chart area
-      //         bar.height
-      //       );
-      //     });
-      //   });
-
-      //   ctx.restore();
-      // },
       legend: {
         display: false,
         labels: {
@@ -154,7 +129,7 @@ export const BarChartHorizontal = ({
             justifyContent: "start",
             alignItems: "center",
             position: "absolute",
-            top: "20px",
+            top: "16px",
             left: "20px",
           }}
         >
@@ -165,6 +140,7 @@ export const BarChartHorizontal = ({
               lineHeight: "33.6px",
               color: "#202223",
               textAlign: "left",
+             
             }}
           >
             {title}
@@ -175,7 +151,14 @@ export const BarChartHorizontal = ({
             )}
           </span>
         </div>
-        <div style={{ width: "100%", height: "80%" , position:"absolute" , top:"30px" }}>
+        <div
+          style={{
+            width: "100%",
+            height: "80%",
+            position: "absolute",
+            top: "40px",
+          }}
+        >
           <Bar data={data} options={options} />
         </div>
         <div
@@ -185,8 +168,8 @@ export const BarChartHorizontal = ({
             marginTop: "20px",
             justifyContent: "center",
             width: "100%",
-            position:"absolute" ,
-            bottom:"10px"
+            position: "absolute",
+            bottom: "0px",
           }}
         >
           {dataset.map((item, index) => {

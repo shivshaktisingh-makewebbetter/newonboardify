@@ -14,8 +14,6 @@ import {
   governifyFilterKeyAssociationService,
   governifyServiceBoardAssociation,
   governifyServiceReportAdminSetting,
-  saveAdminComplianceView,
-  saveAdminServiceView,
 } from "../apiservice/ApiService";
 import { Loader } from "../common/Loader";
 import { LeftOutlined } from "@ant-design/icons";
@@ -676,10 +674,6 @@ export const ReportSettings = () => {
       ),
     };
 
-    const payload4 = {
-      governify_service_report_view: "",
-      profile_id: location.state.toString(),
-    };
 
     try {
       const response = await governifyServiceBoardAssociation(payload);
@@ -687,14 +681,12 @@ export const ReportSettings = () => {
       const response1 = await governifyFilterKeyAssociationService(payload1);
       await delayFun();
       const response2 = await governifyServiceReportAdminSetting(payload3);
-      await delayFun();
-      const response3 = await saveAdminServiceView(payload4);
+
 
       if (
         response.success &&
         response1.success &&
-        response2.success &&
-        response3.success
+        response2.success 
       ) {
         toast.success("Governify Service Settings Updated!");
       }

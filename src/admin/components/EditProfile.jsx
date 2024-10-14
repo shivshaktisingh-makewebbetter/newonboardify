@@ -201,7 +201,6 @@ export const EditProfile = () => {
     setProfileData({ ...profileData, users: e });
   };
 
-
   function startsWithHttp(url) {
     return (
       url.toLowerCase().startsWith("http://") ||
@@ -215,12 +214,10 @@ export const EditProfile = () => {
       let tempProfileData = {
         title: profileData.title,
         users: profileData.users.join(","),
-        image:startsWithHttp(profileData.image)
-        ? ""
-        : profileData.image,
+        image: startsWithHttp(profileData.image) ? "" : profileData.image,
         image_name: startsWithHttp(profileData.image)
-        ? ""
-        : profileData.image_name,
+          ? ""
+          : profileData.image_name,
       };
 
       const response = await updateProfile(
@@ -241,7 +238,6 @@ export const EditProfile = () => {
   const handleOpenService = () => {
     setOpenService(true);
   };
-
 
   const getAllServiceListing = async () => {
     const allAlreadyAssignedBoard = [];
@@ -375,6 +371,16 @@ export const EditProfile = () => {
     setProfileData({ ...profileData, image: data, image_name: imageName });
   };
 
+  const navigateToReportSetting = (item) => {
+    const dataToPass = {
+      boardId: item.board_id,
+      profileId: item.profile_id,
+      serviceId: item.id,
+    };
+
+    navigate("/admin/onboardifyReportSetting", { state: dataToPass });
+  };
+
   useEffect(() => {
     getAllServiceListing();
     getListOfAllCustomers();
@@ -500,6 +506,9 @@ export const EditProfile = () => {
                   <th style={styles.header}>
                     <span style={styles.spanPadding}>|</span>Visibility
                   </th>
+                  <th style={styles.header}>
+                    <span style={styles.spanPadding}>|</span>Report
+                  </th>
                   <th style={styles.headerLast}>
                     <span style={styles.spanPadding}>|</span>Action
                   </th>
@@ -532,6 +541,11 @@ export const EditProfile = () => {
                           }
                           onChange={(e) => onChange(e, item)}
                         />
+                      </td>
+                      <td style={styles.cell}>
+                        <Button onClick={() => navigateToReportSetting(item)}>
+                          Open
+                        </Button>
                       </td>
                       <td>
                         {" "}

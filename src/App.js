@@ -33,6 +33,8 @@ import { ComplianceReportSettings } from "./admin/ComplianceReportSettings";
 import { ServiceReportSettings } from "./admin/ServiceReportSettings";
 import { ComplianceReportAdminView } from "./admin/ComplianceReportAdminView";
 import { ServiceReportAdminView } from "./admin/ServiceReportAdminView";
+import { OnboardifyReportSetting } from "./admin/OnboardifyReportSetting";
+import { OnboardifyServiceReportAdminView } from "./admin/OnboardifyServiceReportAdminView";
 
 function App() {
   const router = createBrowserRouter([
@@ -218,12 +220,39 @@ function App() {
           ),
         },
         {
+          path: "onboardifyReportSetting",
+          element: (
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <OnboardifyReportSetting />
+                </ErrorBoundary>
+              }
+              allowedRoles={["superAdmin", "admin"]}
+            />
+          ),
+        },
+         
+        {
           path: "complianceReportAdminView",
           element: (
             <ProtectedRoute
               element={
                 <ErrorBoundary>
                   <ComplianceReportAdminView />
+                </ErrorBoundary>
+              }
+              allowedRoles={["superAdmin", "admin"]}
+            />
+          ),
+        },
+        {
+          path: "onboardifyServiceReportAdminView",
+          element: (
+            <ProtectedRoute
+              element={
+                <ErrorBoundary>
+                  <OnboardifyServiceReportAdminView />
                 </ErrorBoundary>
               }
               allowedRoles={["superAdmin", "admin"]}
