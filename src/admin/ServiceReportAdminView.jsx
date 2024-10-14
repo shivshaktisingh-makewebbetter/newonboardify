@@ -14,12 +14,14 @@ import { BarChartVertical } from "../common/BarChartVertical";
 import { Button } from "antd";
 import { PieChart } from "../common/PieChart";
 import { toast, ToastContainer } from "react-toastify";
+import { CustomTooltip } from "../common/CustomToolTip";
 const SESSION_STORAGE_KEY = "draggableResizableStateService"; // Key to save data in sessionStorage
 
 export const ServiceReportAdminView = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [currentData, setCurrentData] = useState([]);
+  const [previousData, setPreviousData] = useState([]);
   const [allColumnTitle, setAllColumnTitle] = useState([]);
   const [nameValue, setNameValue] = useState({
     currentName: "",
@@ -122,7 +124,6 @@ export const ServiceReportAdminView = () => {
         location.state.filterKey.date_key
       );
 
-
       if (response1.success) {
         setAllColumnTitle(response1.data.response.data.boards[0].columns);
         response1.data.response.data.boards[0].items_page.items.forEach(
@@ -161,7 +162,6 @@ export const ServiceReportAdminView = () => {
           }
         );
       } else {
-        
       }
 
       if (response.success) {
@@ -405,24 +405,86 @@ export const ServiceReportAdminView = () => {
     navigate(-1);
   };
 
+  const getColumnPercentage = (column, data) => {
+    let tempData = 0;
+    const valueOfSelected = getColumnValueForTextChart(column);
+
+    // Calculate total from the data
+    data.forEach((item) => {
+      tempData += Number(getColumnValueForTextChart(item));
+    });
+
+    // Calculate the percentage
+    const percentage = tempData > 0 ? (valueOfSelected / tempData) * 100 : 0; // Avoid division by zero
+
+    return parseFloat(percentage.toFixed(2)) + " %";
+  };
+
+  const getDescriptionForColumn = (column) => {
+    let description = "";
+    allColumnTitle.forEach((item) => {
+      if (item.id === column) {
+        if (item.hasOwnProperty("description") && item.description !== null) {
+          description = item.description;
+        } else {
+          description = "";
+        }
+        // description = item.desc;
+      }
+    });
+
+    if (description === undefined) {
+      description = "";
+    }
+    return description;
+  };
+
+  const getPreviousMonthChange = (id) => {
+    if (id === undefined) {
+      return "1 %";
+    }
+    if (previousData.length === 0 || currentData.length === 0) {
+      return "";
+    }
+
+    const currentResult = currentData.find((item) => item.id === id);
+    const previousResult = previousData.find((item) => item.id === id);
+    if (currentResult === undefined || previousResult === undefined) {
+      return "";
+    }
+    const percentageChange =
+      ((Number(currentResult.text) - Number(previousResult.text)) /
+        Number(previousResult.text)) *
+      100;
+    return percentageChange.toFixed(1);
+  };
+
+  const getBgSquareColor = (id, data) => {
+    let tempColor = "#000000";
+    data.forEach((item) => {
+      if (item.key === id) {
+        tempColor = item.value;
+      }
+    });
+    return tempColor;
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
 
   return (
     <div style={{ maxWidth: "1200px" }}>
-        <div
+      <div
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent:"start" ,
+          justifyContent: "start",
           paddingBottom: "10px",
-          width:"100%"
+          width: "100%",
         }}
       >
-        <Button icon={<LeftOutlined
-         />} onClick={handleBackNavigation}></Button>
-  
+        <Button icon={<LeftOutlined />} onClick={handleBackNavigation}></Button>
       </div>
       {containers.map((container, containerIndex) => {
         return (
@@ -798,6 +860,369 @@ export const ServiceReportAdminView = () => {
                             borderColorSetPie={getPieChartBorder(subItem)}
                             description={subItem.description}
                           />
+                        </ResizableBox>
+                      </div>
+                    </Draggable>
+                  );
+                }
+                if (subItem.type === "Value Chart") {
+                  const description = getDescriptionForColumn(subItem.column);
+                  const changePreviousMonth = getPreviousMonthChange(
+                    subItem.column
+                  );
+                  return (
+                    <Draggable
+                      bounds="parent"
+                      key={subItem.id}
+                      handle=".drag-handle"
+                      position={subItem.position}
+                      grid={[25, 25]}
+                      scale={1}
+                      onStop={(e, data) =>
+                        handleDragStop(e, data, containerIndex, boxIndex)
+                      }
+                    >
+                      <div
+                        style={{ position: "absolute" }}
+                        onMouseEnter={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            true
+                          )
+                        }
+                        onMouseLeave={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            false
+                          )
+                        }
+                      >
+                        <ResizableBox
+                          width={Number(subItem.size.width)}
+                          height={Number(subItem.size.height)}
+                          minConstraints={[100, 100]}
+                          maxConstraints={[500, 500]}
+                          resizeHandles={["se"]}
+                          onResizeStop={(e, data) =>
+                            handleResize(e, data, containerIndex, boxIndex)
+                          }
+                          style={{
+                            background: "white",
+                            border: "1px solid #E3E3E3",
+                            borderRadius: "8px",
+                            padding: "10px",
+                            position: "relative",
+                            marginBottom: "10px",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          {subItem.showDragHandle && (
+                            <div
+                              className="drag-handle"
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                width: "30px",
+                                height: "30px",
+                                backgroundColor: "#ccc",
+                                cursor: "move",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                borderBottom: "1px solid black",
+                                borderRight: "1px solid black",
+                                zIndex: 1,
+                              }}
+                            >
+                              <DragOutlined />
+                            </div>
+                          )}
+                          <div style={{ width: "100%" }}>
+                            <p
+                              style={{
+                                textAlign: "left",
+                                fontSize: "14px",
+                                fontWeight: "400",
+                                color: "#6d7175",
+                                marginBottom: "6px",
+                              }}
+                            >
+                              {getColumnTitleForTextChart(subItem.column)}
+                            </p>
+                            <p
+                              style={{
+                                textAlign: "left",
+                                fontSize: "24px",
+                                fontWeight: "600",
+                                color: "#202223",
+                              }}
+                            >
+                              {getColumnValueForTextChart(subItem.column)}
+                            </p>
+                          </div>
+                        </ResizableBox>
+                      </div>
+                    </Draggable>
+                  );
+                }
+                if (subItem.type === "Multi Value Chart") {
+                  return (
+                    <Draggable
+                      bounds="parent"
+                      key={subItem.id}
+                      handle=".drag-handle"
+                      position={subItem.position}
+                      grid={[25, 25]}
+                      scale={1}
+                      onStop={(e, data) =>
+                        handleDragStop(e, data, containerIndex, boxIndex)
+                      }
+                    >
+                      <div
+                        style={{ position: "absolute" }}
+                        onMouseEnter={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            true
+                          )
+                        }
+                        onMouseLeave={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            false
+                          )
+                        }
+                      >
+                        <ResizableBox
+                          width={Number(subItem.size.width)}
+                          height={Number(subItem.size.height)}
+                          minConstraints={[100, 100]}
+                          maxConstraints={[Infinity, Infinity]}
+                          resizeHandles={["se"]}
+                          onResizeStop={(e, data) =>
+                            handleResize(e, data, containerIndex, boxIndex)
+                          }
+                          style={{
+                            background: "white",
+                            border: "1px solid #E3E3E3",
+                            borderRadius: "8px",
+                            padding: "10px",
+                            position: "relative",
+                            marginBottom: "10px",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            gap: "44px",
+                          }}
+                        >
+                          {subItem.showDragHandle && (
+                            <div
+                              className="drag-handle"
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                width: "30px",
+                                height: "30px",
+                                backgroundColor: "#ccc",
+                                cursor: "move",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                zIndex: 1,
+                              }}
+                            >
+                              <DragOutlined />
+                            </div>
+                          )}
+
+                          <div
+                            style={{
+                              width: "70%",
+                              borderBottom:
+                                "1px solid rgba(201, 204, 207, 0.7)",
+                            }}
+                          >
+                            <p
+                              style={{
+                                textAlign: "center",
+                                fontSize: "24px",
+                                fontWeight: "700",
+                                color: "#202223",
+                                position: "absolute",
+                                top: "20px",
+                                left: "20px",
+                                width: "90%",
+                              }}
+                            >
+                              {subItem.heading}
+                              <span>
+                                {subItem.description.length > 0 && (
+                                  <CustomTooltip
+                                    description={subItem.description}
+                                  />
+                                )}
+                              </span>
+                            </p>
+                          </div>
+                          <div
+                            style={{
+                              display: "flex",
+                              gap: "26px",
+                              flexDirection: "column",
+                              width: "70%",
+                            }}
+                          >
+                            {subItem.selectedColumns.map((column, index) => (
+                              <div key={index} style={{ marginBottom: "10px" }}>
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    gap: "24px",
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      width: "16px",
+                                      height: "16px",
+                                      background: getBgSquareColor(
+                                        column,
+                                        subItem.selectedColor
+                                      ),
+                                      borderRadius: "4px",
+                                    }}
+                                  ></div>
+                                  <div
+                                    style={{
+                                      color: "#202223",
+                                      fontSize: "20px",
+                                      fontWeight: "600",
+                                    }}
+                                  >
+                                    {getColumnTitleForTextChart(column)}
+                                  </div>
+                                </div>
+                                <p
+                                  style={{
+                                    fontSize: "45px",
+                                    fontWeight: "700",
+                                    color: "#202223",
+                                  }}
+                                >
+                                  {getColumnPercentage(
+                                    column,
+                                    subItem.selectedColumns
+                                  )}
+                                </p>
+                                {subItem.selectedColumns.length - 1 > index && (
+                                  <div
+                                    style={{
+                                      marginTop: "15px",
+                                      marginBottom: "15px",
+                                      borderBottom:
+                                        "1px solid rgba(201, 204, 207, 0.7)",
+                                    }}
+                                  ></div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </ResizableBox>
+                      </div>
+                    </Draggable>
+                  );
+                }
+                if (subItem.type === "Recommendation Chart") {
+                  return (
+                    <Draggable
+                      bounds="parent"
+                      key={subItem.id}
+                      handle=".drag-handle"
+                      position={subItem.position}
+                      grid={[25, 25]}
+                      scale={1}
+                      onStop={(e, data) =>
+                        handleDragStop(e, data, containerIndex, boxIndex)
+                      }
+                    >
+                      <div
+                        style={{ position: "absolute" }}
+                        onMouseEnter={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            true
+                          )
+                        }
+                        onMouseLeave={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            false
+                          )
+                        }
+                      >
+                        <ResizableBox
+                          width={Number(subItem.size.width)}
+                          height={Number(subItem.size.height)}
+                          minConstraints={[100, 100]}
+                          maxConstraints={[
+                            window.innerWidth - subItem.position.x,
+                            window.innerHeight - subItem.position.y,
+                          ]}
+                          resizeHandles={["se"]}
+                          onResizeStop={(e, data) =>
+                            handleResize(e, data, containerIndex, boxIndex)
+                          }
+                          style={{
+                            background: "white",
+                            border: "1px solid #E3E3E3",
+                            borderRadius: "8px",
+                            padding: "10px",
+                            position: "relative",
+                            marginBottom: "10px",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          {subItem.showDragHandle && (
+                            <div
+                              className="drag-handle"
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                width: "30px",
+                                height: "30px",
+                                backgroundColor: "#ccc",
+                                cursor: "move",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                borderBottom: "1px solid black",
+                                borderRight: "1px solid black",
+                                zIndex: 1,
+                              }}
+                            >
+                              <DragOutlined />
+                            </div>
+                          )}
+                          <div>
+                            {getColumnValueForTextChart(subItem.column)}
+                          </div>
                         </ResizableBox>
                       </div>
                     </Draggable>

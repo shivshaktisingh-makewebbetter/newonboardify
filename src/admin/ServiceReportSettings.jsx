@@ -141,6 +141,71 @@ export const ServiceReportSettings = ({
     setSectionData(tempData);
   };
 
+  const handleSelectChartTypePercentage = (title) => {
+    let tempData = [...sectionData];
+    tempData.forEach((item, index) => {
+      if (item.title === title) {
+        item.boxes.push({
+          type: "Multi Value Chart",
+          title: `Multi Value Chart ${item.boxes.length + 1}`,
+          selectedColumns: [],
+          heading: "",
+          description: "",
+          selectedColor: [],
+          id: item.boxes.length + 1,
+          position: { x: 0, y: 20 },
+          size: { width: 200, height: 800 },
+          showDragHandle: false,
+        });
+      }
+    });
+    updateServiceEditSectionArray(title);
+
+    setSectionData(tempData);
+  };
+
+  const handleSelectChartTypeValue = (title) => {
+    let tempData = [...sectionData];
+    tempData.forEach((item) => {
+      if (item.title === title) {
+        item.boxes.push({
+          type: "Value Chart",
+          title: `Value Chart ${item.boxes.length + 1}`,
+          id: item.boxes.length + 1,
+          position: { x: 0, y: 20 },
+          column: "",
+          size: { width: 360, height: 100 },
+          showDragHandle: false,
+        });
+      }
+    });
+    updateServiceEditSectionArray(title);
+
+    setSectionData(tempData);
+  };
+
+  const handleSelectChartTypeRecommendation = (title) => {
+    let tempData = [...sectionData];
+    tempData.forEach((item) => {
+      if (item.title === title) {
+        item.boxes.push({
+          type: "Recommendation Chart",
+          title: `Recommendation Chart ${item.boxes.length + 1}`,
+          column: "",
+          heading: "",
+          description: "",
+          id: item.boxes.length + 1,
+          position: { x: 0, y: 20 },
+          size: { width: 800, height: 300 },
+          showDragHandle: false,
+        });
+      }
+    });
+    updateServiceEditSectionArray(title);
+
+    setSectionData(tempData);
+  };
+
   const filterOption = (input, option) => {
     return (
       option.label.toLowerCase().includes(input.toLowerCase()) ||
@@ -512,6 +577,23 @@ export const ServiceReportSettings = ({
     }
   };
 
+  const handlChangeValueColumn = (e, item, subItem) => {
+    const tempBoxes = [...item.boxes];
+    tempBoxes.forEach((detail) => {
+      if (detail.id === subItem.id) {
+        detail.column = e;
+      }
+    });
+    let tempData = [...sectionData];
+    tempData.forEach((detail) => {
+      if (detail.title === item.title) {
+        detail.boxes = tempBoxes;
+      }
+    });
+    updateServiceEditSectionArray(item.title);
+    setSectionData(tempData);
+  };
+
   const getCollapseSubItems = (item, subItem, index, subIndex) => {
     if (subItem.type === "Text Chart") {
       return [
@@ -812,6 +894,221 @@ export const ServiceReportSettings = ({
         },
       ];
     }
+
+    if (subItem.type === "Value Chart") {
+      return [
+        {
+          key: subIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <span>{subItem.title}</span>{" "}
+                <Button
+                  style={{ marginLeft: "10px" }}
+                  type="text"
+                  icon={<EditOutlined />}
+                  iconPosition="start"
+                  onClick={() => handleChangeSubSectionTitle(item, subItem)}
+                ></Button>
+              </div>
+              <Button onClick={() => handleChangeDeleteChart(item, subItem)}>
+                Delete
+              </Button>
+            </div>
+          ),
+          children: (
+            <>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <Select
+                  showSearch
+                  placeholder="Select Column"
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) => handlChangeValueColumn(e, item, subItem)}
+                  options={columnOptions}
+                  filterOption={filterOption}
+                  value={subItem.column}
+                />
+              </div>
+            </>
+          ),
+        },
+      ];
+    }
+
+    if (subItem.type === "Multi Value Chart") {
+      return [
+        {
+          key: subIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <span>{subItem.title}</span>{" "}
+                <Button
+                  style={{ marginLeft: "10px" }}
+                  type="text"
+                  icon={<EditOutlined />}
+                  iconPosition="start"
+                  onClick={() => handleChangeSubSectionTitle(item, subItem)}
+                ></Button>
+              </div>
+              <Button onClick={() => handleChangeDeleteChart(item, subItem)}>
+                Delete
+              </Button>
+            </div>
+          ),
+          children: (
+            <>
+              <div style={{ marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Heading"}
+                  value={subItem.heading}
+                  onChange={(e) => handlChangeChartHeading(e, item, subItem)}
+                />
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Description"}
+                  value={subItem.description}
+                  onChange={(e) =>
+                    handlChangeChartDescription(e, item, subItem)
+                  }
+                />
+              </div>
+
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <Select
+                  showSearch
+                  mode="multiple"
+                  placeholder="Select Column"
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) => handlChangeChartColumn(e, item, subItem)}
+                  options={columnOptions}
+                  filterOption={filterOption}
+                  value={subItem.selectedColumns}
+                />
+              </div>
+
+              <div>
+                {subItem.selectedColor.map((color, colorIndex) => {
+                  return (
+                    <div
+                      style={{
+                        marginTop: "20px",
+                        textAlign: "left",
+                        width: "50%",
+                        display: "flex",
+                        gap: "20px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>
+                        {getAddOnBeforeForColor(
+                          subItem.selectedColumns[colorIndex]
+                        )}
+                      </span>
+                      <ColorPicker
+                        value={color.value}
+                        size="large"
+                        showText
+                        onChange={(value) =>
+                          handlChangeChartColor(
+                            value,
+                            item,
+                            subItem,
+                            subItem.selectedColumns[colorIndex]
+                          )
+                        }
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          ),
+        },
+      ];
+    }
+
+    if (subItem.type === "Recommendation Chart") {
+      return [
+        {
+          key: subIndex,
+          label: (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <span>{subItem.title}</span>{" "}
+                <Button
+                  style={{ marginLeft: "10px" }}
+                  type="text"
+                  icon={<EditOutlined />}
+                  iconPosition="start"
+                  onClick={() => handleChangeSubSectionTitle(item, subItem)}
+                ></Button>
+              </div>
+              <Button onClick={() => handleChangeDeleteChart(item, subItem)}>
+                Delete
+              </Button>
+            </div>
+          ),
+          children: (
+            <>
+              <div style={{ marginTop: "20px", marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Heading"}
+                  value={subItem.heading}
+                  onChange={(e) => handlChangeChartHeading(e, item, subItem)}
+                />
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <Input
+                  addonBefore={"Description"}
+                  value={subItem.description}
+                  onChange={(e) =>
+                    handlChangeChartDescription(e, item, subItem)
+                  }
+                />
+              </div>
+              <div style={{ marginTop: "20px", textAlign: "left" }}>
+                <Select
+                  showSearch
+                  placeholder="Select Column"
+                  allowClear
+                  style={{
+                    width: "50%",
+                  }}
+                  onChange={(e) => handlChangeValueColumn(e, item, subItem)}
+                  options={columnOptions}
+                  filterOption={filterOption}
+                  value={item.column}
+                />
+              </div>
+            </>
+          ),
+        },
+      ];
+    }
   };
 
   const handleDeleteSection = (item) => {
@@ -842,22 +1139,53 @@ export const ServiceReportSettings = ({
           </span>
         ),
       },
+
       {
         key: "2",
-        label: (
-          <span onClick={() => handleSelectChartTypePie(item.title)}>
-            Pie Chart
-          </span>
-        ),
-      },
-      {
-        key: "3",
         label: (
           <span onClick={() => handleSelectChartTypeBar(item.title)}>
             Bar Chart
           </span>
         ),
       },
+
+      {
+        key: "3",
+        label: (
+          <span onClick={() => handleSelectChartTypePie(item.title)}>
+            Pie Chart
+          </span>
+        ),
+      },
+
+      {
+        key: "4",
+        label: (
+          <span onClick={() => handleSelectChartTypeValue(item.title)}>
+            Value Chart
+          </span>
+        ),
+      },
+
+      {
+        key: "5",
+        label: (
+          <span onClick={() => handleSelectChartTypePercentage(item.title)}>
+            Multi Value Chart
+          </span>
+        ),
+      },
+
+      {
+        key: "6",
+        label: (
+          <span onClick={() => handleSelectChartTypeRecommendation(item.title)}>
+            Recommendation Chart
+          </span>
+        ),
+      },
+
+     
     ];
   };
 
