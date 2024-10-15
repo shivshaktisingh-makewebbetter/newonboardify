@@ -509,7 +509,6 @@ export const Check = () => {
     } else {
       try {
         const serviceResponse = await getAllCustomerData(tempBoardId);
-        console.log(serviceResponse, "df");
         if (!serviceResponse.success) {
           setNoData(true);
         } else {
