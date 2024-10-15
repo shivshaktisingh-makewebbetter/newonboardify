@@ -7,6 +7,7 @@ import {
 import { Select } from "antd";
 import { EmptyReports } from "../common/EmptyReports";
 import { ServiceReportViewChart } from "./component/ServiceReportViewChart";
+import { Loader } from "../common/Loader";
 
 export const Check = () => {
   const [serviceOptions, setServiceOptions] = useState([]);
@@ -20,6 +21,7 @@ export const Check = () => {
   const [currentData, setCurrentData] = useState([]);
   const [previousData, setPreviousData] = useState([]);
   const [serviceReportViewData, setServiceReportViewData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   function getMonthAndYear(dateString) {
     const inputDate = new Date(dateString);
@@ -43,6 +45,7 @@ export const Check = () => {
   }
 
   const fetchProfiledata = async () => {
+    setLoading(true);
     const tempFilteredData = [];
     let tempAllServiceData = [];
     const tempServiceOptions = [];
@@ -159,6 +162,7 @@ export const Check = () => {
     } catch (err) {
     } finally {
       setNoData(noDataService);
+      setLoading(false);
     }
   };
 
@@ -412,8 +416,165 @@ export const Check = () => {
     return { tempCurrentArr, tempPreviousArr };
   };
 
+  const getPreviousMonthChange = (id) => {
+    if (id === undefined) {
+      return "1 %";
+    }
+    if (previousData.length === 0 || currentData.length === 0) {
+      return "";
+    }
 
-  const handleChangeService = async () => {};
+    const currentResult = currentData.find((item) => item.id === id);
+    const previousResult = previousData.find((item) => item.id === id);
+    if (currentResult === undefined || previousResult === undefined) {
+      return "";
+    }
+    const percentageChange =
+      ((Number(currentResult.text) - Number(previousResult.text)) /
+        Number(previousResult.text)) *
+      100;
+    return percentageChange.toFixed(1);
+  };
+
+  const getBgSquareColor = (id, data) => {
+    let tempColor = "#000000";
+    data.forEach((item) => {
+      if (item.key === id) {
+        tempColor = item.value;
+      }
+    });
+    return tempColor;
+  };
+
+  const getColumnPercentage = (column, data) => {
+    let tempData = 0;
+    const valueOfSelected = getColumnValueForTextChart(column);
+
+    // Calculate total from the data
+    data.forEach((item) => {
+      tempData += Number(getColumnValueForTextChart(item));
+    });
+
+    // Calculate the percentage
+    const percentage = tempData > 0 ? (valueOfSelected / tempData) * 100 : 0; // Avoid division by zero
+
+    return parseFloat(percentage.toFixed(2)) + " %";
+  };
+
+  const getDescriptionForColumn = (column) => {
+    let description = "";
+    allColumnTitle.forEach((item) => {
+      if (item.id === column) {
+        if (item.hasOwnProperty("description") && item.description !== null) {
+          description = item.description;
+        } else {
+          description = "";
+        }
+        // description = item.desc;
+      }
+    });
+
+    if (description === undefined) {
+      description = "";
+    }
+    return description;
+  };
+
+  const handleChangeService = async (e) => {
+    setLoading(true);
+    setSelectedRequest(e);
+    let tempSelectedServiceData = {};
+    allServiceData.forEach((item) => {
+      if (item.id === e) {
+        tempSelectedServiceData = item;
+      }
+    });
+    let tempFilterKey = JSON.parse(
+      tempSelectedServiceData.onboardify_service_filter_key
+    );
+    let tempServiceViewData = JSON.parse(
+      tempSelectedServiceData.onboardify_service_report_view
+    );
+    let tempBoardId = tempSelectedServiceData.board_id;
+    let tempFilteredData = [];
+    let tempDateOptions = [];
+
+    if (
+      tempFilterKey.key === null ||
+      tempFilterKey.value === null ||
+      tempFilterKey.date_key === null ||
+      tempServiceViewData === null
+    ) {
+      setNoData(true);
+    } else {
+      try {
+        const serviceResponse = await getAllCustomerData(tempBoardId);
+        console.log(serviceResponse, "df");
+        if (!serviceResponse.success) {
+          setNoData(true);
+        } else {
+          setServiceReportViewData(tempServiceViewData);
+          setAllColumnTitle(
+            serviceResponse.data.response.data.boards[0].columns
+          );
+          if (tempFilterKey.key === "name") {
+            serviceResponse.data.response.data.boards[0].items_page.items.forEach(
+              (item) => {
+                if (
+                  item.name.toLowerCase() === tempFilterKey.value.toLowerCase()
+                ) {
+                  tempFilteredData.push(item);
+                }
+              }
+            );
+          } else {
+            serviceResponse.data.response.data.boards[0].items_page.items.forEach(
+              (item) => {
+                item.column_values.forEach((subItem) => {
+                  if (subItem.text !== null) {
+                    if (
+                      subItem.id === tempFilterKey.key &&
+                      subItem.text.toLowerCase() ===
+                        tempFilterKey.value.toLowerCase()
+                    ) {
+                      tempFilteredData.push(item);
+                    }
+                  }
+                });
+              }
+            );
+          }
+
+          if (tempFilteredData.length > 0) {
+            tempFilteredData.forEach((item) => {
+              item.column_values.forEach((subItem) => {
+                if (subItem.id === tempFilterKey.date_key) {
+                  tempDateOptions.push({
+                    label: getMonthAndYear(subItem.text),
+                    value: getMonthAndYear(subItem.text),
+                    data: item.column_values,
+                    name: item.name,
+                  });
+                }
+              });
+            });
+          }
+
+          setFinalData(tempFilteredData);
+          let newDateDataOptions = reorderByDate(tempDateOptions, "value");
+          setSelectedDate(newDateDataOptions[0].value);
+          setDateOptions(newDateDataOptions);
+          setCurrentData(tempDateOptions[0].data);
+          setPreviousData(tempDateOptions[1].data);
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
   const handleChangeDate = async (e) => {
     dateOptions.forEach((item, index) => {
       if (item.value === e) {
@@ -441,6 +602,7 @@ export const Check = () => {
           forHome={true}
         />
       </div>
+      {loading && <Loader />}
       <div
         style={{
           marginTop: "12px",
@@ -506,64 +668,13 @@ export const Check = () => {
           getColumnTitleForTextChart={getColumnTitleForTextChart}
           getColumnValueForTextChart={getColumnValueForTextChart}
           getTooltipData={getTooltipData}
+          previousData={previousData}
+          getPreviousMonthChange={getPreviousMonthChange}
+          getBgSquareColor={getBgSquareColor}
+          getColumnPercentage={getColumnPercentage}
+          getDescriptionForColumn={getDescriptionForColumn}
         />
       )}
-
-      {/* {!mobileView && (
-        <div style={{ maxWidth: "200px" }}>
-          <Select
-            style={{
-              width: "100%",
-            }}
-            placeholder="Please select Request"
-            onChange={handleChangeRequest}
-            options={options}
-            value={selectedRequest || undefined}
-            disabled={mobileView}
-          />
-        </div>
-      )} */}
-
-      {/* {mobileView ? (
-        <div
-          style={{
-            minHeight: "40vh",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <div class="responsive-image-container">
-            <img src="/img.png" alt="Chart Not Available" />
-          </div>
-
-          <div>
-            This feature is currently unavailable on mobile. Please go to
-            desktop to use it.
-          </div>
-        </div>
-      ) : (
-        <div className="w-100 mt-5" style={{ position: "relative" }}>
-          <div
-            id="loader"
-            className="blurry w-100"
-            style={{ height: "100vh", display: "none" }}
-          ></div>
-
-          <div
-            style={{
-              margin: "0px",
-              height: "130vh",
-              position: "relative",
-              transition: "filter 0.5s", // Smooth transition for filter change
-              filter: isBlurry ? "blur(5px)" : "none",
-            }}
-            className="w-100"
-            id="iframe-chart"
-          ></div>
-        </div>
-      )} */}
     </div>
   );
 };
