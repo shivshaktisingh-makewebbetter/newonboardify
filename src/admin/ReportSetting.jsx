@@ -758,11 +758,16 @@ export const ReportSettings = () => {
           subItem.size = { width: 360, height: 100 };
           subItem.position = currentPos;
           position.y = position.y + 125;
-        } else if (subItem.type === "Bar Chart") {
+        } else if (subItem.type === "Bar Chart" && !subItem.horizontal) {
           subItem.size = { width: 751, height: 480 };
           subItem.position = currentPos;
           position.y = position.y + 500;
-        } else if (subItem.type === "Pie Chart") {
+        }else if (subItem.type === "Bar Chart" && subItem.horizontal) {
+          subItem.size = { width: 751, height: 225 };
+          subItem.position = currentPos;
+          position.y = position.y + 250;
+        } 
+        else if (subItem.type === "Pie Chart") {
           subItem.size = { width: 365, height: 420 };
           subItem.position = currentPos;
           position.y = position.y + 445;
@@ -836,10 +841,14 @@ export const ReportSettings = () => {
           subItem.size = { width: 360, height: 100 };
           subItem.position = currentPos;
           position.y = position.y + 125;
-        } else if (subItem.type === "Bar Chart") {
+        } else if (subItem.type === "Bar Chart" && !subItem.horizontal) {
           subItem.size = { width: 751, height: 480 };
           subItem.position = currentPos;
           position.y = position.y + 500;
+        }else if (subItem.type === "Bar Chart" && subItem.horizontal) {
+          subItem.size = { width: 751, height: 225 };
+          subItem.position = currentPos;
+          position.y = position.y + 250;
         } else if (subItem.type === "Pie Chart") {
           subItem.size = { width: 365, height: 420 };
           subItem.position = currentPos;
