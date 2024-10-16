@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ResizableBox } from "react-resizable";
 import Draggable from "react-draggable";
 import "react-resizable/css/styles.css";
-import { DragOutlined, LeftOutlined } from "@ant-design/icons";
+import { DragOutlined, FallOutlined, InfoCircleOutlined, LeftOutlined, RiseOutlined } from "@ant-design/icons";
 import {
   getComplianceReportDataAdmin,
   getProfileListing,
@@ -11,7 +11,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { BarChartHorizontal } from "../common/BarChartHorizontal";
 import { BarChartVertical } from "../common/BarChartVertical";
-import { Button } from "antd";
+import { Button, Tooltip } from "antd";
 import { toast, ToastContainer } from "react-toastify";
 import { PieChart } from "../common/PieChart";
 import { CustomTooltip } from "../common/CustomToolTip";
@@ -139,6 +139,9 @@ export const ComplianceReportAdminView = () => {
               }
             } else {
               item.column_values.forEach((subItem) => {
+                if(subItem.text !== null){
+
+                
                 if (
                   subItem.id === location.state.filterKey.key &&
                   subItem.text === location.state.filterKey.value
@@ -146,21 +149,12 @@ export const ComplianceReportAdminView = () => {
                   setCurrentData(item.column_values);
                   setNameValue({ ...nameValue, currentName: item.name });
                 }
+              }
               });
             }
           }
         );
-        response1.data.response.data.boards[0].items_page.previous_month_items.forEach(
-          (item) => {
-            if (
-              item.name.toLowerCase() ===
-              location.state.filterKey.value.toLowerCase()
-            ) {
-              setPreviousData(item.column_values);
-              setNameValue({ ...nameValue, previousName: item.name });
-            }
-          }
-        );
+      
       } else {
       }
 
@@ -203,6 +197,7 @@ export const ComplianceReportAdminView = () => {
       }
     } catch (err) {
     } finally {
+      sessionStorage.removeItem('draggableResizableStateCompliance');
     }
   };
 
@@ -398,6 +393,40 @@ export const ComplianceReportAdminView = () => {
     return parseFloat(percentage.toFixed(2)) + " %";
   };
 
+  const getKeyFromAllColumn = (key) => {
+    let tempValue;
+    allColumnTitle.forEach((item) => {
+      if (item.id === key) {
+        tempValue = item.title;
+      }
+    });
+    return tempValue;
+  };
+
+  const getTooltipData = (tempData) => {
+    let tempCurrentArr = [];
+    let tempPreviousArr = [];
+
+    currentData.forEach((item) => {
+      if (tempData.selectedColumns.includes(item.id)) {
+        tempCurrentArr.push({
+          key: getKeyFromAllColumn(item.id),
+          value: item.text,
+        });
+      }
+    });
+
+    previousData.forEach((item) => {
+      if (tempData.selectedColumns.includes(item.id)) {
+        tempPreviousArr.push({
+          key: getKeyFromAllColumn(item.id),
+          value: item.text,
+        });
+      }
+    });
+    return { tempCurrentArr, tempPreviousArr };
+  };
+
   const getDescriptionForColumn = (column) => {
     let description = "sdfsdfsd";
     allColumnTitle.forEach((item) => {
@@ -539,112 +568,6 @@ export const ComplianceReportAdminView = () => {
               </p>
 
               {container.boxes.map((subItem, boxIndex) => {
-                if (subItem.type === "Value Chart") {
-                  const description = getDescriptionForColumn(subItem.column);
-                  const changePreviousMonth = getPreviousMonthChange(
-                    subItem.column
-                  );
-                  return (
-                    <Draggable
-                      bounds="parent"
-                      key={subItem.id}
-                      handle=".drag-handle"
-                      position={subItem.position}
-                      grid={[25, 25]}
-                      scale={1}
-                      onStop={(e, data) =>
-                        handleDragStop(e, data, containerIndex, boxIndex)
-                      }
-                    >
-                      <div
-                        style={{ position: "absolute" }}
-                        onMouseEnter={() =>
-                          toggleDragHandleVisibility(
-                            containerIndex,
-                            boxIndex,
-                            true
-                          )
-                        }
-                        onMouseLeave={() =>
-                          toggleDragHandleVisibility(
-                            containerIndex,
-                            boxIndex,
-                            false
-                          )
-                        }
-                      >
-                        <ResizableBox
-                          width={Number(subItem.size.width)}
-                          height={Number(subItem.size.height)}
-                          minConstraints={[100, 100]}
-                          maxConstraints={[500, 500]}
-                          resizeHandles={["se"]}
-                          onResizeStop={(e, data) =>
-                            handleResize(e, data, containerIndex, boxIndex)
-                          }
-                          style={{
-                            background: "white",
-                            border: "1px solid #E3E3E3",
-                            borderRadius: "8px",
-                            padding: "10px",
-                            position: "relative",
-                            marginBottom: "10px",
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          {subItem.showDragHandle && (
-                            <div
-                              className="drag-handle"
-                              style={{
-                                position: "absolute",
-                                top: 0,
-                                left: 0,
-                                width: "30px",
-                                height: "30px",
-                                backgroundColor: "#ccc",
-                                cursor: "move",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                borderBottom: "1px solid black",
-                                borderRight: "1px solid black",
-                                zIndex: 1,
-                              }}
-                            >
-                              <DragOutlined />
-                            </div>
-                          )}
-                          <div style={{ width: "100%" }}>
-                            <p
-                              style={{
-                                textAlign: "left",
-                                fontSize: "14px",
-                                fontWeight: "400",
-                                color: "#6d7175",
-                                marginBottom: "6px",
-                              }}
-                            >
-                              {getColumnTitleForTextChart(subItem.column)}
-                            </p>
-                            <p
-                              style={{
-                                textAlign: "left",
-                                fontSize: "24px",
-                                fontWeight: "600",
-                                color: "#202223",
-                              }}
-                            >
-                              {getColumnValueForTextChart(subItem.column)}
-                            </p>
-                          </div>
-                        </ResizableBox>
-                      </div>
-                    </Draggable>
-                  );
-                }
                 if (subItem.type === "Text Chart") {
                   return (
                     <Draggable
@@ -676,8 +599,8 @@ export const ComplianceReportAdminView = () => {
                         }
                       >
                         <ResizableBox
-                          width={Number(subItem.size.width)}
-                          height={Number(subItem.size.height)}
+                          width={subItem.size.width}
+                          height={subItem.size.height}
                           minConstraints={[100, 100]}
                           maxConstraints={[
                             window.innerWidth - subItem.position.x,
@@ -696,7 +619,7 @@ export const ComplianceReportAdminView = () => {
                             marginBottom: "10px",
                             display: "flex",
                             flexDirection: "column",
-                            justifyContent: "center",
+                            justifyContent: "flex-end",
                             alignItems: "center",
                           }}
                         >
@@ -736,13 +659,13 @@ export const ComplianceReportAdminView = () => {
                                   width: "100%",
                                   textAlign: "left",
                                   fontSize: "14px",
-                                  fontWeight: "400",
                                   color: "#6d7175",
                                   marginBottom: "6px",
                                 }}
                               >
                                 {getColumnTitleForTextChart(subItem.column1)}
                               </p>
+
                               <p
                                 style={{
                                   width: "100%",
@@ -751,6 +674,7 @@ export const ComplianceReportAdminView = () => {
                                   fontWeight: "600",
                                   color: "#202223",
                                   marginBottom: "6px",
+                                  fontFamily: "Graphie-SemiBold",
                                 }}
                               >
                                 {getColumnValueForTextChart(subItem.column1)}
@@ -768,6 +692,7 @@ export const ComplianceReportAdminView = () => {
                                   background: hexToRgba(subItem.color, "0.2"),
                                   padding: "6px 12px",
                                   color: subItem.color,
+                                  fontFamily: "Graphie-Light",
                                 }}
                               >
                                 {getColumnValueForTextChart(subItem.column2)}
@@ -872,6 +797,194 @@ export const ComplianceReportAdminView = () => {
                     </Draggable>
                   );
                 }
+                if (subItem.type === "Value Chart") {
+                  const description = getDescriptionForColumn(subItem.column);
+                  const changePreviousMonth = getPreviousMonthChange(
+                    subItem.column
+                  );
+                  return (
+                    <Draggable
+                      bounds="parent"
+                      key={subItem.id}
+                      handle=".drag-handle"
+                      position={subItem.position}
+                      grid={[25, 25]}
+                      scale={1}
+                      onStop={(e, data) =>
+                        handleDragStop(e, data, containerIndex, boxIndex)
+                      }
+                    >
+                      <div
+                        style={{ position: "absolute" }}
+                        onMouseEnter={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            true
+                          )
+                        }
+                        onMouseLeave={() =>
+                          toggleDragHandleVisibility(
+                            containerIndex,
+                            boxIndex,
+                            false
+                          )
+                        }
+                      >
+                        <ResizableBox
+                          width={Number(subItem.size.width)}
+                          height={Number(subItem.size.height)}
+                          minConstraints={[100, 100]}
+                          maxConstraints={[500, 500]}
+                          resizeHandles={["se"]}
+                          onResizeStop={(e, data) =>
+                            handleResize(e, data, containerIndex, boxIndex)
+                          }
+                          style={{
+                            background: "white",
+                            border: "1px solid #E3E3E3",
+                            borderRadius: "8px",
+                            padding: "10px",
+                            position: "relative",
+                            marginBottom: "10px",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          {subItem.showDragHandle && (
+                            <div
+                              className="drag-handle"
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                width: "30px",
+                                height: "30px",
+                                backgroundColor: "#ccc",
+                                cursor: "move",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                borderBottom: "1px solid black",
+                                borderRight: "1px solid black",
+                                zIndex: 1,
+                              }}
+                            >
+                              <DragOutlined />
+                            </div>
+                          )}
+                          <div
+                            style={{
+                              display: "flex",
+                              width: "100%",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <div>
+                              <p
+                                style={{
+                                  width: "100%",
+                                  textAlign: "left",
+                                  fontSize: "14px",
+                                  color: "#6d7175",
+                                  marginBottom: "6px",
+                                  // fontFamily: "Graphie-SemiBold",
+                                }}
+                              >
+                                {getColumnTitleForTextChart(subItem.column)}
+                                <span>
+                                  {description.length > 0 && (
+                                    <Tooltip
+                                      placement="top"
+                                      title={description}
+                                    >
+                                      {" "}
+                                      <InfoCircleOutlined
+                                        style={{ fontSize: "14px" }}
+                                      />{" "}
+                                    </Tooltip>
+                                  )}
+                                </span>
+                              </p>
+                              <p
+                                style={{
+                                  width: "100%",
+                                  textAlign: "left",
+                                  fontSize: "24px",
+                                  fontWeight: "600",
+                                  color: "#202223",
+                                  marginBottom: "6px",
+                                  fontFamily: "Graphie-SemiBold",
+                                }}
+                              >
+                                {getColumnValueForTextChart(subItem.column)}
+                              </p>
+                            </div>
+                            <div>
+                              {previousData.length > 0 && (
+                                <p
+                                  style={{
+                                    width: "100%",
+                                    textAlign: "right",
+                                    fontSize: "16px",
+                                    fontWeight: "600",
+                                    marginBottom: "6px",
+                                    borderRadius: "100px",
+                                    padding: "6px 12px",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "4px",
+                                    justifyContent: "space-between",
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      textAlign: "right",
+                                      color:
+                                        changePreviousMonth > 0
+                                          ? "#22c55e"
+                                          : "#EF4444",
+                                      fontSize: "12px",
+                                      fotWeight: "600",
+                                      lineHeight: "16.8px",
+                                    }}
+                                  >
+                                    <span>
+                                      {changePreviousMonth > 0 ? (
+                                        <RiseOutlined color={"#22c55e"} />
+                                      ) : (
+                                        <FallOutlined color={"#ef4444"} />
+                                      )}
+                                    </span>{" "}
+                                    <span>
+                                      {" "}
+                                      {Math.abs(changePreviousMonth) +
+                                        " %"}{" "}
+                                    </span>
+                                  </span>
+                                  <span
+                                    style={{
+                                      fontWeight: "400",
+                                      fontSize: "12px",
+                                      color: "#6d7175",
+                                      lineHeight: "16.8px",
+                                      fontFamily: "Graphie-Regular",
+                                    }}
+                                  >
+                                    vs last time
+                                  </span>
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </ResizableBox>
+                      </div>
+                    </Draggable>
+                  );
+                }
                 if (subItem.type === "Multi Value Chart") {
                   return (
                     <Draggable
@@ -963,6 +1076,7 @@ export const ComplianceReportAdminView = () => {
                                 top: "20px",
                                 left: "20px",
                                 width: "90%",
+                                fontFamily: "Graphie-Regular",
                               }}
                             >
                               {subItem.heading}
@@ -975,6 +1089,7 @@ export const ComplianceReportAdminView = () => {
                               </span>
                             </p>
                           </div>
+
                           <div
                             style={{
                               display: "flex",
@@ -1009,6 +1124,7 @@ export const ComplianceReportAdminView = () => {
                                       color: "#202223",
                                       fontSize: "20px",
                                       fontWeight: "600",
+                                      fontFamily: "Graphie-SemiBold",
                                     }}
                                   >
                                     {getColumnTitleForTextChart(column)}
@@ -1019,6 +1135,7 @@ export const ComplianceReportAdminView = () => {
                                     fontSize: "45px",
                                     fontWeight: "700",
                                     color: "#202223",
+                                    fontFamily: "Graphie-Bold",
                                   }}
                                 >
                                   {getColumnPercentage(
@@ -1129,6 +1246,8 @@ export const ComplianceReportAdminView = () => {
                               max={getMaxForVerticalBarChart(subItem)}
                               title={subItem.heading}
                               description={subItem.description}
+                              toolTipData={getTooltipData(subItem)}
+                              previousData={previousData}
                             />
                           ) : (
                             <BarChartVertical
@@ -1137,6 +1256,8 @@ export const ComplianceReportAdminView = () => {
                               max={getMaxForVerticalBarChart(subItem)}
                               title={subItem.heading}
                               description={subItem.description}
+                              toolTipData={getTooltipData(subItem)}
+                              previousData={previousData}
                             />
                           )}
                         </ResizableBox>
@@ -1221,7 +1342,7 @@ export const ComplianceReportAdminView = () => {
                               <DragOutlined />
                             </div>
                           )}
-                          <div style={{textAlign:"left"}}>
+                          <div style={{ textAlign: "left" }}>
                             {getColumnValueForTextChart(subItem.column)}
                           </div>
                         </ResizableBox>

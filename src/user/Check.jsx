@@ -53,8 +53,25 @@ export const Check = () => {
     let noDataService = false;
     try {
       const response = await getAllProfileDataByUser();
+      console.log(response , 'response');
 
       if (response.success) {
+
+        ///set service options here
+        if(response.data.response[0].services.length > 0){
+          let tempNewOptions = [];
+          response.data.response[0].services.forEach((item) => {
+            tempNewOptions.push({
+              label: item.title,
+              value: item.id,
+              boardId: item.board_id,
+            });
+          });
+        
+          setServiceOptions(tempNewOptions);
+        }
+
+
         if (response.data.response.length > 0) {
           tempAllServiceData = response.data.response[0].services;
           const serviceFilterKeyData = JSON.parse(
@@ -158,6 +175,9 @@ export const Check = () => {
           setPreviousData(tempDateOptions[1].data);
           setServiceOptions(tempServiceOptions);
         }
+
+   
+       
       }
     } catch (err) {
     } finally {

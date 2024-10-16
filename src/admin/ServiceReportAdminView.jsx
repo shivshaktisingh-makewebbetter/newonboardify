@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import { ResizableBox } from "react-resizable";
 import Draggable from "react-draggable";
 import "react-resizable/css/styles.css";
-import { DragOutlined, LeftOutlined } from "@ant-design/icons";
+import {
+  DragOutlined,
+  FallOutlined,
+  InfoCircleOutlined,
+  LeftOutlined,
+  RiseOutlined,
+} from "@ant-design/icons";
 import {
   getProfileListing,
   getServiceReportDataAdmin,
@@ -11,7 +17,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { BarChartHorizontal } from "../common/BarChartHorizontal";
 import { BarChartVertical } from "../common/BarChartVertical";
-import { Button } from "antd";
+import { Button, Tooltip } from "antd";
 import { PieChart } from "../common/PieChart";
 import { toast, ToastContainer } from "react-toastify";
 import { CustomTooltip } from "../common/CustomToolTip";
@@ -138,26 +144,16 @@ export const ServiceReportAdminView = () => {
               }
             } else {
               item.column_values.forEach((subItem) => {
-                if (
-                  subItem.id === location.state.filterKey.key &&
-                  subItem.text === location.state.filterKey.value
-                ) {
-                  setCurrentData(item.column_values);
-                  setNameValue({ ...nameValue, currentName: item.name });
+                if (subItem.text !== null) {
+                  if (
+                    subItem.id === location.state.filterKey.key &&
+                    subItem.text === location.state.filterKey.value
+                  ) {
+                    setCurrentData(item.column_values);
+                    setNameValue({ ...nameValue, currentName: item.name });
+                  }
                 }
               });
-            }
-          }
-        );
-
-        response1.data.response.data.boards[0].items_page.items.forEach(
-          (item) => {
-            if (
-              item.name.toLowerCase() ===
-              location.state.filterKey.value.toLowerCase()
-            ) {
-              setCurrentData(item.column_values);
-              setNameValue({ ...nameValue, currentName: item.name });
             }
           }
         );
@@ -195,6 +191,7 @@ export const ServiceReportAdminView = () => {
       }
     } catch (err) {
     } finally {
+      sessionStorage.removeItem("draggableResizableStateService");
     }
   };
 
@@ -282,6 +279,40 @@ export const ServiceReportAdminView = () => {
       tempData.push(getBgColorForBarChart(subItem, item));
     });
     return tempData;
+  };
+
+  const getKeyFromAllColumn = (key) => {
+    let tempValue;
+    allColumnTitle.forEach((item) => {
+      if (item.id === key) {
+        tempValue = item.title;
+      }
+    });
+    return tempValue;
+  };
+
+  const getTooltipData = (tempData) => {
+    let tempCurrentArr = [];
+    let tempPreviousArr = [];
+
+    currentData.forEach((item) => {
+      if (tempData.selectedColumns.includes(item.id)) {
+        tempCurrentArr.push({
+          key: getKeyFromAllColumn(item.id),
+          value: item.text,
+        });
+      }
+    });
+
+    previousData.forEach((item) => {
+      if (tempData.selectedColumns.includes(item.id)) {
+        tempPreviousArr.push({
+          key: getKeyFromAllColumn(item.id),
+          value: item.text,
+        });
+      }
+    });
+    return { tempCurrentArr, tempPreviousArr };
   };
 
   const getPieChartBorder = (subItem) => {
@@ -631,13 +662,13 @@ export const ServiceReportAdminView = () => {
                                   width: "100%",
                                   textAlign: "left",
                                   fontSize: "14px",
-                                  fontWeight: "400",
                                   color: "#6d7175",
                                   marginBottom: "6px",
                                 }}
                               >
                                 {getColumnTitleForTextChart(subItem.column1)}
                               </p>
+
                               <p
                                 style={{
                                   width: "100%",
@@ -646,6 +677,7 @@ export const ServiceReportAdminView = () => {
                                   fontWeight: "600",
                                   color: "#202223",
                                   marginBottom: "6px",
+                                  fontFamily: "Graphie-SemiBold",
                                 }}
                               >
                                 {getColumnValueForTextChart(subItem.column1)}
@@ -663,6 +695,7 @@ export const ServiceReportAdminView = () => {
                                   background: hexToRgba(subItem.color, "0.2"),
                                   padding: "6px 12px",
                                   color: subItem.color,
+                                  fontFamily: "Graphie-Light",
                                 }}
                               >
                                 {getColumnValueForTextChart(subItem.column2)}
@@ -759,6 +792,8 @@ export const ServiceReportAdminView = () => {
                               max={getMaxForVerticalBarChart(subItem)}
                               title={subItem.heading}
                               description={subItem.description}
+                              toolTipData={getTooltipData(subItem)}
+                              previousData={previousData}
                             />
                           ) : (
                             <BarChartVertical
@@ -767,6 +802,8 @@ export const ServiceReportAdminView = () => {
                               max={getMaxForVerticalBarChart(subItem)}
                               title={subItem.heading}
                               description={subItem.description}
+                              toolTipData={getTooltipData(subItem)}
+                              previousData={previousData}
                             />
                           )}
                         </ResizableBox>
@@ -943,28 +980,110 @@ export const ServiceReportAdminView = () => {
                               <DragOutlined />
                             </div>
                           )}
-                          <div style={{ width: "100%" }}>
-                            <p
-                              style={{
-                                textAlign: "left",
-                                fontSize: "14px",
-                                fontWeight: "400",
-                                color: "#6d7175",
-                                marginBottom: "6px",
-                              }}
-                            >
-                              {getColumnTitleForTextChart(subItem.column)}
-                            </p>
-                            <p
-                              style={{
-                                textAlign: "left",
-                                fontSize: "24px",
-                                fontWeight: "600",
-                                color: "#202223",
-                              }}
-                            >
-                              {getColumnValueForTextChart(subItem.column)}
-                            </p>
+                          <div
+                            style={{
+                              display: "flex",
+                              width: "100%",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <div>
+                              <p
+                                style={{
+                                  width: "100%",
+                                  textAlign: "left",
+                                  fontSize: "14px",
+                                  color: "#6d7175",
+                                  marginBottom: "6px",
+                                  // fontFamily: "Graphie-SemiBold",
+                                }}
+                              >
+                                {getColumnTitleForTextChart(subItem.column)}
+                                <span>
+                                  {description.length > 0 && (
+                                    <Tooltip
+                                      placement="top"
+                                      title={description}
+                                    >
+                                      {" "}
+                                      <InfoCircleOutlined
+                                        style={{ fontSize: "14px" }}
+                                      />{" "}
+                                    </Tooltip>
+                                  )}
+                                </span>
+                              </p>
+                              <p
+                                style={{
+                                  width: "100%",
+                                  textAlign: "left",
+                                  fontSize: "24px",
+                                  fontWeight: "600",
+                                  color: "#202223",
+                                  marginBottom: "6px",
+                                  fontFamily: "Graphie-SemiBold",
+                                }}
+                              >
+                                {getColumnValueForTextChart(subItem.column)}
+                              </p>
+                            </div>
+                            <div>
+                              {previousData.length > 0 && (
+                                <p
+                                  style={{
+                                    width: "100%",
+                                    textAlign: "right",
+                                    fontSize: "16px",
+                                    fontWeight: "600",
+                                    marginBottom: "6px",
+                                    borderRadius: "100px",
+                                    padding: "6px 12px",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    gap: "4px",
+                                    justifyContent: "space-between",
+                                  }}
+                                >
+                                  <span
+                                    style={{
+                                      textAlign: "right",
+                                      color:
+                                        changePreviousMonth > 0
+                                          ? "#22c55e"
+                                          : "#EF4444",
+                                      fontSize: "12px",
+                                      fotWeight: "600",
+                                      lineHeight: "16.8px",
+                                    }}
+                                  >
+                                    <span>
+                                      {changePreviousMonth > 0 ? (
+                                        <RiseOutlined color={"#22c55e"} />
+                                      ) : (
+                                        <FallOutlined color={"#ef4444"} />
+                                      )}
+                                    </span>{" "}
+                                    <span>
+                                      {" "}
+                                      {Math.abs(changePreviousMonth) +
+                                        " %"}{" "}
+                                    </span>
+                                  </span>
+                                  <span
+                                    style={{
+                                      fontWeight: "400",
+                                      fontSize: "12px",
+                                      color: "#6d7175",
+                                      lineHeight: "16.8px",
+                                      fontFamily: "Graphie-Regular",
+                                    }}
+                                  >
+                                    vs last time
+                                  </span>
+                                </p>
+                              )}
+                            </div>
                           </div>
                         </ResizableBox>
                       </div>
@@ -1062,6 +1181,7 @@ export const ServiceReportAdminView = () => {
                                 top: "20px",
                                 left: "20px",
                                 width: "90%",
+                                fontFamily: "Graphie-Regular",
                               }}
                             >
                               {subItem.heading}
@@ -1074,6 +1194,7 @@ export const ServiceReportAdminView = () => {
                               </span>
                             </p>
                           </div>
+
                           <div
                             style={{
                               display: "flex",
@@ -1108,6 +1229,7 @@ export const ServiceReportAdminView = () => {
                                       color: "#202223",
                                       fontSize: "20px",
                                       fontWeight: "600",
+                                      fontFamily: "Graphie-SemiBold",
                                     }}
                                   >
                                     {getColumnTitleForTextChart(column)}
@@ -1118,6 +1240,7 @@ export const ServiceReportAdminView = () => {
                                     fontSize: "45px",
                                     fontWeight: "700",
                                     color: "#202223",
+                                    fontFamily: "Graphie-Bold",
                                   }}
                                 >
                                   {getColumnPercentage(

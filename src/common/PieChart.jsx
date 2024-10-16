@@ -4,6 +4,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels"; // Import the data labels plugin
 import { CustomTooltip } from "./CustomToolTip";
 
+
 // Register necessary components
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -15,6 +16,8 @@ export const PieChart = ({
   borderColorSetPie,
   description,
 }) => {
+  const total = dataset.reduce((acc, value) => acc + Number(value), 0); // Calculate total
+
   const data = {
     labels: pieChartLabel,
     datasets: [
@@ -71,7 +74,7 @@ export const PieChart = ({
         callbacks: {
           label: function (tooltipItem) {
             const value = tooltipItem.raw || 0;
-            return value;
+            return `${value}`; // Show value and percentage
           },
         },
         bodyAlign: "center",
@@ -80,7 +83,8 @@ export const PieChart = ({
       datalabels: {
         color: "white", // Set the text color here
         formatter: (value, context) => {
-          return value + "%"; // Show the label name
+          const percentage = ((value / total) * 100).toFixed(2); // Calculate percentage
+          return `${percentage}%`; // Show percentage
         },
         labels: {
           title: {
@@ -117,6 +121,7 @@ export const PieChart = ({
             lineHeight: "33.6px",
             color: "#202223",
             textAlign: "left",
+            fontFamily:"Graphie-SemiBold"
           }}
         >
           {title}
@@ -153,8 +158,8 @@ export const PieChart = ({
                 <div
                   style={{
                     background: bgSet[index],
-                    width: "15px",
-                    height: "15px",
+                    width: "10px",
+                    height: "10px",
                     borderRadius: "3px",
                   }}
                 ></div>
@@ -163,6 +168,7 @@ export const PieChart = ({
                     fontSize: "14px",
                     fontWeight: "400",
                     color: "#6d7175",
+                    fontFamily:"Graphie-Thin"
                   }}
                   title={item}
                 >

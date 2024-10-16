@@ -11,6 +11,7 @@ const axiosInstance = axios.create({
     httpsAgent: {
         rejectUnauthorized: false,
     },
+    timeout: 60000,
 });
 
 // Add request interceptor
