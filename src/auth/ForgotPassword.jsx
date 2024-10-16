@@ -162,7 +162,7 @@ export const ForgotPassword = () => {
               <div>
                 <div>
                   <img
-                     src="/1.png"
+                     src="/newLogo.svg"
                     alt="TASC logo"
                     style={{ maxWidth: "220px" }}
                   />
