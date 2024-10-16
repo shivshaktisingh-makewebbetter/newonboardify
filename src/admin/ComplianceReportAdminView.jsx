@@ -1211,7 +1211,7 @@ export const ComplianceReportAdminView = () => {
                                 backgroundColor: "#ccc",
                                 cursor: "move",
                                 display: "flex",
-                                justifyContent: "center",
+                                justifyContent: "left",
                                 alignItems: "center",
                                 borderBottom: "1px solid black",
                                 borderRight: "1px solid black",
@@ -1221,7 +1221,7 @@ export const ComplianceReportAdminView = () => {
                               <DragOutlined />
                             </div>
                           )}
-                          <div>
+                          <div style={{textAlign:"left"}}>
                             {getColumnValueForTextChart(subItem.column)}
                           </div>
                         </ResizableBox>

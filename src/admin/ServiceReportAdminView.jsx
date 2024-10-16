@@ -1220,7 +1220,7 @@ export const ServiceReportAdminView = () => {
                               <DragOutlined />
                             </div>
                           )}
-                          <div>
+                          <div style={{ textAlign: "left" }}>
                             {getColumnValueForTextChart(subItem.column)}
                           </div>
                         </ResizableBox>

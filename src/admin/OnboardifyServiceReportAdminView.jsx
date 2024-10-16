@@ -1213,7 +1213,7 @@ export const OnboardifyServiceReportAdminView = () => {
                               <DragOutlined />
                             </div>
                           )}
-                          <div>
+                          <div style={{ textAlign: "left" }}>
                             {getColumnValueForTextChart(subItem.column)}
                           </div>
                         </ResizableBox>
