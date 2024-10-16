@@ -166,91 +166,91 @@ export const Register = () => {
     }, 300);
   }, []);
 
-  useEffect(() => {
-    const loadIntercom = () => {
-      const userPresentOnSession = sessionStorage.getItem("userId");
-      if (userPresentOnSession === null) {
-        sessionStorage.setItem(
-          "userId",
-          Math.floor(100000 + Math.random() * 900000)
-        );
-      }
-      if (
-        location.pathname !== "/admin" &&
-        location.pathname !== "/admin/settings" &&
-        location.pathname !== "/admin/settings" &&
-        location.pathname !== "/admin/board" &&
-        location.pathname !== "/admin/createAdmin"
-      ) {
-        // Set up intercomSettings
-        window.intercomSettings = {
-          api_base: "https://api-iam.intercom.io",
-          app_id: "wk35gw8g",
-          name: sessionStorage.getItem("userName")
-            ? sessionStorage.getItem("userName")
-            : "", // Full name
-          user_id: sessionStorage.getItem("userId"),
-          email: sessionStorage.getItem("userEmail")
-            ? sessionStorage.getItem("userEmail")
-            : "",
-          created_at: sessionStorage.getItem("createdAt")
-            ? sessionStorage.getItem("createdAt")
-            : "",
-        };
+  // useEffect(() => {
+  //   const loadIntercom = () => {
+  //     const userPresentOnSession = sessionStorage.getItem("userId");
+  //     if (userPresentOnSession === null) {
+  //       sessionStorage.setItem(
+  //         "userId",
+  //         Math.floor(100000 + Math.random() * 900000)
+  //       );
+  //     }
+  //     if (
+  //       location.pathname !== "/admin" &&
+  //       location.pathname !== "/admin/settings" &&
+  //       location.pathname !== "/admin/settings" &&
+  //       location.pathname !== "/admin/board" &&
+  //       location.pathname !== "/admin/createAdmin"
+  //     ) {
+  //       // Set up intercomSettings
+  //       window.intercomSettings = {
+  //         api_base: "https://api-iam.intercom.io",
+  //         app_id: "wk35gw8g",
+  //         name: sessionStorage.getItem("userName")
+  //           ? sessionStorage.getItem("userName")
+  //           : "", // Full name
+  //         user_id: sessionStorage.getItem("userId"),
+  //         email: sessionStorage.getItem("userEmail")
+  //           ? sessionStorage.getItem("userEmail")
+  //           : "",
+  //         created_at: sessionStorage.getItem("createdAt")
+  //           ? sessionStorage.getItem("createdAt")
+  //           : "",
+  //       };
 
-        // Check if Intercom is already defined
-        if (typeof window.Intercom === "function") {
-          window.Intercom("reattach_activator");
-          window.Intercom("update", window.intercomSettings);
-        } else {
-          // Create the Intercom function if not already defined
-          const intercom = function () {
-            intercom.c(arguments);
-          };
-          intercom.q = [];
-          intercom.c = function (args) {
-            intercom.q.push(args);
-          };
-          window.Intercom = intercom;
+  //       // Check if Intercom is already defined
+  //       if (typeof window.Intercom === "function") {
+  //         window.Intercom("reattach_activator");
+  //         window.Intercom("update", window.intercomSettings);
+  //       } else {
+  //         // Create the Intercom function if not already defined
+  //         const intercom = function () {
+  //           intercom.c(arguments);
+  //         };
+  //         intercom.q = [];
+  //         intercom.c = function (args) {
+  //           intercom.q.push(args);
+  //         };
+  //         window.Intercom = intercom;
 
-          // Function to create and insert the script tag
-          const loadScript = () => {
-            const script = document.createElement("script");
-            script.type = "text/javascript";
-            script.async = true;
-            script.src = "https://widget.intercom.io/widget/wk35gw8g";
-            script.id = "intercom-script";
-            const firstScript = document.getElementsByTagName("script")[0];
-            firstScript.parentNode.insertBefore(script, firstScript);
-          };
+  //         // Function to create and insert the script tag
+  //         const loadScript = () => {
+  //           const script = document.createElement("script");
+  //           script.type = "text/javascript";
+  //           script.async = true;
+  //           script.src = "https://widget.intercom.io/widget/wk35gw8g";
+  //           script.id = "intercom-script";
+  //           const firstScript = document.getElementsByTagName("script")[0];
+  //           firstScript.parentNode.insertBefore(script, firstScript);
+  //         };
 
-          // Load the script either on load or immediately if the document is already ready
-          if (document.readyState === "complete") {
-            loadScript();
-          } else if (window.attachEvent) {
-            window.attachEvent("onload", loadScript);
-          } else {
-            window.addEventListener("load", loadScript, false);
-          }
-        }
-      }
-    };
+  //         // Load the script either on load or immediately if the document is already ready
+  //         if (document.readyState === "complete") {
+  //           loadScript();
+  //         } else if (window.attachEvent) {
+  //           window.attachEvent("onload", loadScript);
+  //         } else {
+  //           window.addEventListener("load", loadScript, false);
+  //         }
+  //       }
+  //     }
+  //   };
 
-    setTimeout(() => {
-      loadIntercom();
-    }, 2000);
+  //   setTimeout(() => {
+  //     loadIntercom();
+  //   }, 2000);
 
-    // Cleanup function to remove Intercom script
-    return () => {
-      const intercomScript = document.getElementById("intercom-script");
-      if (intercomScript && location.pathname === "/admin") {
-        intercomScript.remove();
-      }
-      if (typeof window.Intercom === "function") {
-        window.Intercom("shutdown");
-      }
-    };
-  }, []);
+  //   // Cleanup function to remove Intercom script
+  //   return () => {
+  //     const intercomScript = document.getElementById("intercom-script");
+  //     if (intercomScript && location.pathname === "/admin") {
+  //       intercomScript.remove();
+  //     }
+  //     if (typeof window.Intercom === "function") {
+  //       window.Intercom("shutdown");
+  //     }
+  //   };
+  // }, []);
 
   return (
     <div className="inc-auth-container">
