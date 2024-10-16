@@ -616,7 +616,6 @@ export const ComplianceReportAdminView = () => {
                             borderRadius: "8px",
                             padding: "10px",
                             position: "relative",
-                            marginBottom: "10px",
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "flex-end",
@@ -752,7 +751,7 @@ export const ComplianceReportAdminView = () => {
                             borderRadius: "8px",
                             padding: "10px",
                             position: "relative",
-                            marginBottom: "10px",
+                           
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "flex-end",
@@ -846,7 +845,7 @@ export const ComplianceReportAdminView = () => {
                             borderRadius: "8px",
                             padding: "10px",
                             position: "relative",
-                            marginBottom: "10px",
+                           
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "center",
@@ -1030,7 +1029,7 @@ export const ComplianceReportAdminView = () => {
                             borderRadius: "8px",
                             padding: "10px",
                             position: "relative",
-                            marginBottom: "10px",
+                         
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "center",
@@ -1209,7 +1208,7 @@ export const ComplianceReportAdminView = () => {
                             borderRadius: "8px",
                             padding: "10px",
                             position: "relative",
-                            marginBottom: "10px",
+                         
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "flex-end",
@@ -1313,7 +1312,7 @@ export const ComplianceReportAdminView = () => {
                             borderRadius: "8px",
                             padding: "10px",
                             position: "relative",
-                            marginBottom: "10px",
+                        
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "center",
