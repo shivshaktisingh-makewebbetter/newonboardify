@@ -3,9 +3,9 @@ import {
   InfoCircleOutlined,
   RiseOutlined,
 } from "@ant-design/icons";
-import { BarChartHorizontal } from "./BarChartHorizontal";
-import { BarChartVertical } from "./BarChartVertical";
-import { PieChart } from "./PieChart";
+import { BarChartHorizontal } from "../../common/BarChartHorizontal";
+import { BarChartVertical } from "../../common/BarChartVertical";
+import { PieChart } from "../../common/PieChart";
 import { Tooltip } from "antd";
 import { CustomTooltip } from "./CustomTooltip";
 
@@ -155,6 +155,7 @@ export const ServiceReportViewChart = ({
                             title={subItem.heading}
                             description={subItem.description}
                             toolTipData={getTooltipData(subItem)}
+                            previousData={previousData}
                           />
                         ) : (
                           <BarChartVertical
@@ -164,6 +165,7 @@ export const ServiceReportViewChart = ({
                             title={subItem.heading}
                             description={subItem.description}
                             toolTipData={getTooltipData(subItem)}
+                            previousData={previousData}
                           />
                         )}
                       </div>
@@ -325,7 +327,7 @@ export const ServiceReportViewChart = ({
                                     fontFamily: "Graphie-Thin",
                                   }}
                                 >
-                                  vs last Month
+                                  vs last time
                                 </span>
                               </p>
                             )}

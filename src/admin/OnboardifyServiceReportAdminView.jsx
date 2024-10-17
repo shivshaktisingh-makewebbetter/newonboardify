@@ -456,6 +456,40 @@ export const OnboardifyServiceReportAdminView = () => {
     return tempData;
   };
 
+  const getKeyFromAllColumn = (key) => {
+    let tempValue;
+    allColumnTitle.forEach((item) => {
+      if (item.id === key) {
+        tempValue = item.title;
+      }
+    });
+    return tempValue;
+  };
+
+  const getTooltipData = (tempData) => {
+    let tempCurrentArr = [];
+    let tempPreviousArr = [];
+
+    currentData.forEach((item) => {
+      if (tempData.selectedColumns.includes(item.id)) {
+        tempCurrentArr.push({
+          key: getKeyFromAllColumn(item.id),
+          value: item.text,
+        });
+      }
+    });
+
+    previousData.forEach((item) => {
+      if (tempData.selectedColumns.includes(item.id)) {
+        tempPreviousArr.push({
+          key: getKeyFromAllColumn(item.id),
+          value: item.text,
+        });
+      }
+    });
+    return { tempCurrentArr, tempPreviousArr };
+  };
+
   const handleBackNavigation = () => {
     navigate(-1);
   };
@@ -1121,6 +1155,8 @@ export const OnboardifyServiceReportAdminView = () => {
                               max={getMaxForVerticalBarChart(subItem)}
                               title={subItem.heading}
                               description={subItem.description}
+                              toolTipData={getTooltipData(subItem)}
+                              previousData={previousData}
                             />
                           ) : (
                             <BarChartVertical
@@ -1129,6 +1165,8 @@ export const OnboardifyServiceReportAdminView = () => {
                               max={getMaxForVerticalBarChart(subItem)}
                               title={subItem.heading}
                               description={subItem.description}
+                              toolTipData={getTooltipData(subItem)}
+                              previousData={previousData}
                             />
                           )}
                         </ResizableBox>

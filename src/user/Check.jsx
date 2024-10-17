@@ -4,10 +4,11 @@ import {
   getAllCustomerData,
   getAllProfileDataByUser,
 } from "../apiservice/ApiService";
-import { Select } from "antd";
+import { Button, Dropdown, Select, Space } from "antd";
 import { EmptyReports } from "../common/EmptyReports";
 import { ServiceReportViewChart } from "./component/ServiceReportViewChart";
 import { Loader } from "../common/Loader";
+import { DownOutlined } from "@ant-design/icons";
 
 export const Check = () => {
   const [serviceOptions, setServiceOptions] = useState([]);
@@ -23,7 +24,7 @@ export const Check = () => {
   const [serviceReportViewData, setServiceReportViewData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  function getMonthAndYear(dateString) {
+  const getMonthAndYear = (dateString) => {
     const inputDate = new Date(dateString);
 
     // Get the full month name
@@ -31,18 +32,7 @@ export const Check = () => {
     const result = inputDate.toLocaleDateString("en-US", options);
 
     return result;
-  }
-
-  function reorderByDate(arr, key) {
-    return arr.sort((a, b) => {
-      // Parse the date strings into actual Date objects
-      const dateA = new Date(a[key]);
-      const dateB = new Date(b[key]);
-
-      // Compare dates in descending order (latest to oldest)
-      return dateB - dateA;
-    });
-  }
+  };
 
   const fetchProfiledata = async () => {
     setLoading(true);
@@ -53,12 +43,10 @@ export const Check = () => {
     let noDataService = false;
     try {
       const response = await getAllProfileDataByUser();
-      console.log(response , 'response');
 
       if (response.success) {
-
         ///set service options here
-        if(response.data.response[0].services.length > 0){
+        if (response.data.response[0].services.length > 0) {
           let tempNewOptions = [];
           response.data.response[0].services.forEach((item) => {
             tempNewOptions.push({
@@ -67,10 +55,11 @@ export const Check = () => {
               boardId: item.board_id,
             });
           });
-        
-          setServiceOptions(tempNewOptions);
-        }
 
+          setServiceOptions(tempNewOptions);
+          setSelectedRequest(tempNewOptions[0].value);
+          setAllServiceData(response.data.response[0].services);
+        }
 
         if (response.data.response.length > 0) {
           tempAllServiceData = response.data.response[0].services;
@@ -152,11 +141,20 @@ export const Check = () => {
             if (tempFilteredData.length > 0) {
               tempFilteredData.forEach((item) => {
                 item.column_values.forEach((subItem) => {
-                  if (subItem.id === serviceFilterKeyData.date_key) {
+                  if (
+                    subItem.id === serviceFilterKeyData.date_key &&
+                    subItem.text !== null
+                  ) {
+                    let tempDataForColumnValues = [...item.column_values];
+                    tempDataForColumnValues.push({
+                      id: "name",
+                      value: item.name,
+                      text: item.name,
+                    });
                     tempDateOptions.push({
                       label: getMonthAndYear(subItem.text),
                       value: getMonthAndYear(subItem.text),
-                      data: item.column_values,
+                      data: tempDataForColumnValues,
                       name: item.name,
                     });
                   }
@@ -169,15 +167,14 @@ export const Check = () => {
             setFinalData(tempFilteredData);
           }
           let newDateDataOptions = reorderByDate(tempDateOptions, "value");
+          let tempNewDateOptions = createGroupedItems(newDateDataOptions);
+
           setSelectedDate(newDateDataOptions[0].value);
-          setDateOptions(newDateDataOptions);
+          setDateOptions(tempNewDateOptions);
           setCurrentData(tempDateOptions[0].data);
           setPreviousData(tempDateOptions[1].data);
           setServiceOptions(tempServiceOptions);
         }
-
-   
-       
       }
     } catch (err) {
     } finally {
@@ -189,15 +186,12 @@ export const Check = () => {
   const getColumnValueForTextChart = (id) => {
     let tempValue = "";
 
-    if (id === "name") {
-      // tempValue = nameValue.currentName;
-    } else {
-      currentData.forEach((item) => {
-        if (item.id === id) {
-          tempValue = item.text;
-        }
-      });
-    }
+    currentData.forEach((item) => {
+      if (item.id === id) {
+        tempValue = item.text;
+      }
+    });
+
     return tempValue;
   };
 
@@ -269,7 +263,7 @@ export const Check = () => {
     return tempData;
   };
 
-  function calculateStepSize(data) {
+  const calculateStepSize = (data) => {
     // Convert string data to numbers
     const numericData = data.map(Number);
 
@@ -290,9 +284,9 @@ export const Check = () => {
     stepSize = Math.ceil(stepSize / 50) * 50;
 
     return stepSize;
-  }
+  };
 
-  function calculateChartMax(data) {
+  const calculateChartMax = (data) => {
     const numericData = data.map(Number);
 
     // Find the maximum value in the data
@@ -305,7 +299,7 @@ export const Check = () => {
     const chartMax = Math.ceil(maxValue / stepSize) * stepSize + stepSize;
 
     return chartMax;
-  }
+  };
 
   const getStepSizeForVerticalBarChart = (subItem) => {
     let tempData = [];
@@ -365,12 +359,12 @@ export const Check = () => {
     return tempData;
   };
 
-  function getRandomColor() {
+  const getRandomColor = () => {
     // Generate a random integer between 0 and 255
     return Math.floor(Math.random() * 256);
-  }
+  };
 
-  function hexToRgba(hex, opacity = 1) {
+  const hexToRgba = (hex, opacity = 1) => {
     // Check if hex is undefined or invalid
     if (!hex || typeof hex !== "string" || hex.length !== 7 || hex[0] !== "#") {
       // Return a random RGBA color
@@ -388,7 +382,7 @@ export const Check = () => {
 
     // Return the RGBA string with opacity
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-  }
+  };
 
   const getColumnTitleForTextChart = (id) => {
     let tempValue = "";
@@ -500,9 +494,72 @@ export const Check = () => {
     return description;
   };
 
+  const getMonthDateYearFormat = (input) => {
+    const dateObj = new Date(input);
+
+    // Format the date
+    const options = { year: "numeric", month: "long", day: "numeric" };
+    const formattedDate = dateObj.toLocaleDateString("en-US", options);
+    return formattedDate;
+  };
+
+  const reorderByDate = (arr, key) => {
+    return arr.sort((a, b) => {
+      // Extract date strings and parse them into Date objects
+      const dateA = new Date(a[key]);
+      const dateB = new Date(b[key]);
+
+      // Compare dates in descending order (new to old)
+      return dateB - dateA; // Newest first, oldest last
+    });
+  };
+
+  const createGroupedItems = (dataArray) => {
+    // Helper function to get the month and year from a date string
+    function getMonthYear(dateStr) {
+      const date = new Date(dateStr);
+      const month = date.toLocaleString("en-US", { month: "long" });
+      const year = date.getFullYear();
+      return `${month} ${year}`;
+    }
+
+    // Group the data by month and year
+    const groupedItems = dataArray.reduce((acc, item) => {
+      const groupLabel = getMonthYear(item.value);
+
+      // Check if the group for this month and year exists
+      const existingGroup = acc.find((group) => group.label === groupLabel);
+
+      const child = {
+        key: item.value, // Use the value as the key
+        label: item.label,
+        data: item.data,
+        name: item.name,
+      };
+
+      if (existingGroup) {
+        // If the group exists, add the child to the group's children
+        existingGroup.children.push(child);
+      } else {
+        // If the group doesn't exist, create a new group
+        acc.push({
+          key: `${acc.length + 1}`, // Generate a unique key for the group
+          type: "group",
+          label: groupLabel,
+          children: [child],
+        });
+      }
+
+      return acc;
+    }, []);
+
+    return groupedItems;
+  };
+
   const handleChangeService = async (e) => {
     setLoading(true);
     setSelectedRequest(e);
+
     let tempSelectedServiceData = {};
     allServiceData.forEach((item) => {
       if (item.id === e) {
@@ -567,24 +624,43 @@ export const Check = () => {
           if (tempFilteredData.length > 0) {
             tempFilteredData.forEach((item) => {
               item.column_values.forEach((subItem) => {
-                if (subItem.id === tempFilterKey.date_key) {
-                  tempDateOptions.push({
-                    label: getMonthAndYear(subItem.text),
-                    value: getMonthAndYear(subItem.text),
-                    data: item.column_values,
-                    name: item.name,
-                  });
+                if (subItem.text !== null) {
+                  if (subItem.id === tempFilterKey.date_key) {
+                    let tempMonthName = getMonthDateYearFormat(subItem.text);
+                    let tempDataForColumnValues = [...item.column_values];
+                    tempDataForColumnValues.push({
+                      id: "name",
+                      value: item.name,
+                      text: item.name,
+                    });
+                    tempDateOptions.push({
+                      label: tempMonthName,
+                      value: tempMonthName,
+                      data: tempDataForColumnValues,
+                      name: item.name,
+                    });
+                  }
                 }
               });
             });
-          }
 
-          setFinalData(tempFilteredData);
-          let newDateDataOptions = reorderByDate(tempDateOptions, "value");
-          setSelectedDate(newDateDataOptions[0].value);
-          setDateOptions(newDateDataOptions);
-          setCurrentData(tempDateOptions[0].data);
-          setPreviousData(tempDateOptions[1].data);
+            if (tempDateOptions.length > 0) {
+              setNoData(false);
+
+              let newDateDataOptions = reorderByDate(tempDateOptions, "value");
+              let tempNewDateOptions = createGroupedItems(newDateDataOptions);
+              setFinalData(newDateDataOptions);
+              setSelectedDate(newDateDataOptions[0]);
+              setDateOptions(tempNewDateOptions);
+              setCurrentData(tempDateOptions[0].data);
+
+              if (newDateDataOptions.length > 1) {
+                setPreviousData(tempDateOptions[1].data);
+              } else {
+                setPreviousData([]);
+              }
+            }
+          }
         }
       } catch (err) {
         console.log(err);
@@ -594,18 +670,25 @@ export const Check = () => {
     }
   };
 
-  const handleChangeDate = async (e) => {
-    dateOptions.forEach((item, index) => {
-      if (item.value === e) {
-        setCurrentData(item.data);
-        if (index === dateOptions.length - 1) {
+  const handleMenuClick = (e) => {
+    finalData.forEach((item, index) => {
+      if (e.key === item.value) {
+        let tempColumnValues = [...item.data];
+        tempColumnValues.push({
+          id: "name",
+          text: item.name,
+          value: item.name,
+        });
+        setSelectedDate(item);
+        setCurrentData(tempColumnValues);
+
+        if (index === finalData.length - 1) {
           setPreviousData([]);
         } else {
-          setPreviousData(dateOptions[index + 1].data);
+          setPreviousData(finalData[index + 1].data);
         }
       }
     });
-    setSelectedDate(e);
   };
 
   useEffect(() => {
@@ -663,12 +746,14 @@ export const Check = () => {
             value={selectedRequest || undefined}
           />
 
-          <Select
-            placeholder="Select Date"
-            onChange={handleChangeDate}
-            options={dateOptions}
-            value={selectedDate || undefined}
-          />
+          <Dropdown menu={{ items: dateOptions, onClick: handleMenuClick }}>
+            <Button>
+              <Space>
+                {selectedDate ? selectedDate.label : "Select Date"}
+                <DownOutlined />
+              </Space>
+            </Button>
+          </Dropdown>
         </div>
       </div>
       {noData ? (

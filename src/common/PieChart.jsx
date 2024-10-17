@@ -166,7 +166,7 @@ export const PieChart = ({
                 <div
                   style={{
                     fontSize: "14px",
-                    fontWeight: "400",
+                    fontWeight: "600",
                     color: "#6d7175",
                     fontFamily:"Graphie-Thin"
                   }}
