@@ -116,11 +116,24 @@ export const Track = () => {
   };
 
   const handleExport = async () => {
+    const payload = {
+      query_params: {
+        rules: [
+          {
+            column_id: filterKeyData.key,
+            compare_value: [filterKeyData.value],
+            operator: "contains_text",
+          },
+        ],
+      },
+    };
+
     setLoading(true);
     try {
       const data = [];
       let tempColumns = [];
-      const response = await exportServiceData(boardId);
+      const response = await exportServiceData(boardId , payload);
+      console.log(response);
       if (response.success) {
         if (
           columnIdData.hasOwnProperty("sub_headings_column") &&
@@ -155,12 +168,12 @@ export const Track = () => {
           });
         }
         let columnWithLabels = Array(tempColumns.length).fill("");
-        response.data.response.data.boards[0].columns.forEach((subItem)=>{
+        response.data.response.data.boards[0].columns.forEach((subItem) => {
           if (tempColumns.includes(subItem.id)) {
             let index = tempColumns.indexOf(subItem.id);
             columnWithLabels[index] = subItem.title;
-          }         
-        })
+          }
+        });
 
         data.push(columnWithLabels);
         response.data.response.data.boards[0].items_page.items.forEach(
