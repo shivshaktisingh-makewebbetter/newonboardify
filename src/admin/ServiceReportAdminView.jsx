@@ -388,8 +388,8 @@ export const ServiceReportAdminView = () => {
     // Calculate the raw stepSize by dividing the range by number of steps
     let stepSize = range / numberOfSteps;
 
-    // Round stepSize up to the nearest multiple of 50
-    stepSize = Math.ceil(stepSize / 50) * 50;
+    // Round stepSize up to the nearest multiple of 10
+    stepSize = Math.ceil(stepSize / 10) * 10;
 
     return stepSize;
   }
