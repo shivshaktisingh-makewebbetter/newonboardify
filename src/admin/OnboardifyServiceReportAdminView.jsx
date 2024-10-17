@@ -196,6 +196,7 @@ export const OnboardifyServiceReportAdminView = () => {
       }
     } catch (err) {
     } finally {
+      sessionStorage.removeItem('draggableResizableStateServiceOnboardify');
     }
   };
 
