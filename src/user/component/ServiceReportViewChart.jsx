@@ -82,10 +82,8 @@ export const ServiceReportViewChart = ({
                                 width: "100%",
                                 textAlign: "left",
                                 fontSize: "14px",
-                                fontWeight: "600",
                                 color: "#6d7175",
                                 marginBottom: "6px",
-                                fontFamily: "Graphie-Thin",
                               }}
                             >
                               {getColumnTitleForTextChart(subItem.column1)}
@@ -251,7 +249,7 @@ export const ServiceReportViewChart = ({
                                 fontSize: "14px",
                                 color: "#6d7175",
                                 marginBottom: "6px",
-                                fontFamily: "Graphie-SemiBold",
+                                // fontFamily: "Graphie-SemiBold",
                               }}
                             >
                               {getColumnTitleForTextChart(subItem.column)}
