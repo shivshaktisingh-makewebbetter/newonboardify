@@ -257,11 +257,11 @@ export const OnboardifyReportSetting = () => {
       } else {
         let previousData = [...previousViewDataService];
         const filteredData = previousData.filter(
-          (item) => !serviceDeletedSection.includes(item.title)
+          (item) => !serviceDeletedSection.includes(item.title.trim())
         );
         const newTempData = [];
         filteredData.forEach((item) => {
-          if (serviceEditedSection.includes(item.title)) {
+          if (serviceEditedSection.includes(item.title.trim())) {
             const tempFilteredArray = tempData.filter(
               (subItem) => subItem.title === item.title
             );

@@ -474,10 +474,6 @@ export const ReportSettings = () => {
           ? JSON.stringify(getChartDataFormatCompliance(sectionDataCompliance))
           : null,
     };
-    const payload4 = {
-      governify_compliance_report_view: null,
-      profile_id: location.state.toString(),
-    };
 
     try {
       const response = await governifyComplianceBoardAssociation(payload);
@@ -749,6 +745,7 @@ export const ReportSettings = () => {
 
     let tempData = [...data];
     tempData.forEach((item) => {
+
       let position = { x: 0, y: 20 };
       item.boxes.forEach((subItem) => {
         // Create a copy of the current position before modifying it
@@ -799,13 +796,14 @@ export const ReportSettings = () => {
         const finalArray = copyObjectsBasedOnTitle(tempData, previousData);
         return finalArray;
       } else {
+        
         let previousData = [...previousViewDataCompliance];
         const filteredData = previousData.filter(
-          (item) => !complianceDeletedSection.includes(item.title)
+          (item) => !complianceDeletedSection.includes(item.title.trim()) 
         );
         const newTempData = [];
         filteredData.forEach((item) => {
-          if (complianceEditedSection.includes(item.title)) {
+          if (complianceEditedSection.includes(item.title.trim())) {
             const tempFilteredArray = tempData.filter(
               (subItem) => subItem.title === item.title
             );
@@ -821,7 +819,10 @@ export const ReportSettings = () => {
           }
         });
 
+
+
         const finalArray = copyObjectsBasedOnTitle(tempData, newTempData);
+
         return finalArray;
       }
     }
@@ -885,11 +886,11 @@ export const ReportSettings = () => {
       } else {
         let previousData = [...previousViewDataService];
         const filteredData = previousData.filter(
-          (item) => !serviceDeletedSection.includes(item.title)
+          (item) => !serviceDeletedSection.includes(item.title.trim())
         );
         const newTempData = [];
         filteredData.forEach((item) => {
-          if (serviceEditedSection.includes(item.title)) {
+          if (serviceEditedSection.includes(item.title.trim())) {
             const tempFilteredArray = tempData.filter(
               (subItem) => subItem.title === item.title
             );

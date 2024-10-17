@@ -166,14 +166,14 @@ export const ComplianceReportAdminView = () => {
         });
       }
 
-      tempData.forEach((item) => {
-        if (item.hasOwnProperty("type") && item.type === "Recommendation") {
-        } else {
-          tempContainerData.push(item);
-        }
-      });
+      // tempData.forEach((item) => {
+      //   if (item.hasOwnProperty("type") && item.type === "Recommendation") {
+      //   } else {
+      //     tempContainerData.push(item);
+      //   }
+      // });
 
-      setContainers(tempContainerData);
+      setContainers(tempData);
     } catch (err) {
     } finally {
       const savedState = sessionStorage.getItem(SESSION_STORAGE_KEY);
