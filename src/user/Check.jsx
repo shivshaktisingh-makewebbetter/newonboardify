@@ -97,6 +97,10 @@ export const Check = () => {
           const serviceResponse = await getAllCustomerData(
             tempServiceOptions[0].boardId
           );
+
+          if(!serviceResponse.success){
+            noDataService = true;
+          }
           if (serviceResponse.success && serviceChartData !== null) {
             setServiceReportViewData(serviceChartData);
             setSelectedRequest(tempServiceOptions[0].value);
@@ -164,12 +168,12 @@ export const Check = () => {
               noDataService = true;
             }
 
-            setFinalData(tempFilteredData);
+            
           }
           let newDateDataOptions = reorderByDate(tempDateOptions, "value");
           let tempNewDateOptions = createGroupedItems(newDateDataOptions);
-
-          setSelectedDate(newDateDataOptions[0].value);
+          setFinalData(newDateDataOptions);
+          setSelectedDate(newDateDataOptions[0]);
           setDateOptions(tempNewDateOptions);
           setCurrentData(tempDateOptions[0].data);
           setPreviousData(tempDateOptions[1].data);
@@ -671,6 +675,7 @@ export const Check = () => {
   };
 
   const handleMenuClick = (e) => {
+    console.log(e , 'e')
     finalData.forEach((item, index) => {
       if (e.key === item.value) {
         let tempColumnValues = [...item.data];
