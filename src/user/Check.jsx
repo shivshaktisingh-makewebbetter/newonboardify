@@ -22,6 +22,7 @@ export const Check = () => {
   const [currentData, setCurrentData] = useState([]);
   const [previousData, setPreviousData] = useState([]);
   const [serviceReportViewData, setServiceReportViewData] = useState([]);
+  const [mobileView, setMobileView] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const getMonthAndYear = (dateString) => {
@@ -98,7 +99,7 @@ export const Check = () => {
             tempServiceOptions[0].boardId
           );
 
-          if(!serviceResponse.success){
+          if (!serviceResponse.success) {
             noDataService = true;
           }
           if (serviceResponse.success && serviceChartData !== null) {
@@ -167,8 +168,6 @@ export const Check = () => {
             } else {
               noDataService = true;
             }
-
-            
           }
           let newDateDataOptions = reorderByDate(tempDateOptions, "value");
           let tempNewDateOptions = createGroupedItems(newDateDataOptions);
@@ -675,7 +674,7 @@ export const Check = () => {
   };
 
   const handleMenuClick = (e) => {
-    console.log(e , 'e')
+    console.log(e, "e");
     finalData.forEach((item, index) => {
       if (e.key === item.value) {
         let tempColumnValues = [...item.data];
@@ -696,12 +695,32 @@ export const Check = () => {
     });
   };
 
+  function checkScreenWidth() {
+    if (window.innerWidth < 1400) {
+      setMobileView(true);
+    } else {
+      setMobileView(false);
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("resize", checkScreenWidth);
+    window.addEventListener("load", checkScreenWidth);
+    checkScreenWidth();
+
+    // Cleanup function to remove the listeners on component unmount
+    return () => {
+      window.removeEventListener("resize", checkScreenWidth);
+      window.removeEventListener("load", checkScreenWidth);
+    };
+  }, []);
+
   useEffect(() => {
     fetchProfiledata();
   }, []);
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <div style={{ padding: mobileView?"0px":"1rem" }}>
       <div style={{ marginTop: "3rem", marginBottom: "1rem" }}>
         <Hero
           heading={"Overall Status"}
@@ -710,79 +729,167 @@ export const Check = () => {
         />
       </div>
       {loading && <Loader />}
-      <div
-        style={{
-          marginTop: "12px",
-          padding: "24px",
-          background: "white",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          borderBottom: "1px solid #858b932E",
-          borderTopLeftRadius: "8px",
-          borderTopRightRadius: "8px",
-          marginLeft: "20px",
-          marginRight: "20px",
-        }}
-      >
-        <span
-          style={{
-            fontWeight: "600",
-            fontSize: "24px",
-            lineHeight: "33.6px",
-            color: "#202223",
-            fontFamily: "Graphie-SemiBold",
-          }}
-        >
-          Reports
-        </span>
-        <div
-          style={{
-            display: "flex",
-            gap: "20px",
-            padding: "8px",
-            borderRadius: "8px",
-          }}
-        >
-          <Select
-            placeholder="Select Service"
-            onChange={handleChangeService}
-            options={serviceOptions}
-            value={selectedRequest || undefined}
-          />
+      {!mobileView ? (
+        <div>
+          <div
+            style={{
+              marginTop: "12px",
+              padding: "24px",
+              background: "white",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              borderBottom: "1px solid #858b932E",
+              borderTopLeftRadius: "8px",
+              borderTopRightRadius: "8px",
+              marginLeft: "20px",
+              marginRight: "20px",
+            }}
+          >
+            <span
+              style={{
+                fontWeight: "600",
+                fontSize: "24px",
+                lineHeight: "33.6px",
+                color: "#202223",
+                fontFamily: "Graphie-SemiBold",
+              }}
+            >
+              Reports
+            </span>
+            <div
+              style={{
+                display: "flex",
+                gap: "20px",
+                padding: "8px",
+                borderRadius: "8px",
+              }}
+            >
+              <Select
+                placeholder="Select Service"
+                onChange={handleChangeService}
+                options={serviceOptions}
+                value={selectedRequest || undefined}
+              />
 
-          <Dropdown menu={{ items: dateOptions, onClick: handleMenuClick }}>
-            <Button>
-              <Space>
-                {selectedDate ? selectedDate.label : "Select Date"}
-                <DownOutlined />
-              </Space>
-            </Button>
-          </Dropdown>
+              <Dropdown menu={{ items: dateOptions, onClick: handleMenuClick }}>
+                <Button>
+                  <Space>
+                    {selectedDate ? selectedDate.label : "Select Date"}
+                    <DownOutlined />
+                  </Space>
+                </Button>
+              </Dropdown>
+            </div>
+          </div>
+          {noData ? (
+            <EmptyReports />
+          ) : (
+            <ServiceReportViewChart
+              getPieChartDataSet={getPieChartDataSet}
+              getPieChartBg={getPieChartBg}
+              getPieChartLabel={getPieChartLabel}
+              getPieChartBorder={getPieChartBorder}
+              getDataSetForVerticalBarChart={getDataSetForVerticalBarChart}
+              getStepSizeForVerticalBarChart={getStepSizeForVerticalBarChart}
+              getMaxForVerticalBarChart={getMaxForVerticalBarChart}
+              hexToRgba={hexToRgba}
+              serviceReportViewData={serviceReportViewData}
+              getColumnTitleForTextChart={getColumnTitleForTextChart}
+              getColumnValueForTextChart={getColumnValueForTextChart}
+              getTooltipData={getTooltipData}
+              previousData={previousData}
+              getPreviousMonthChange={getPreviousMonthChange}
+              getBgSquareColor={getBgSquareColor}
+              getColumnPercentage={getColumnPercentage}
+              getDescriptionForColumn={getDescriptionForColumn}
+              mobileView={mobileView}
+            />
+          )}
         </div>
-      </div>
-      {noData ? (
-        <EmptyReports />
       ) : (
-        <ServiceReportViewChart
-          getPieChartDataSet={getPieChartDataSet}
-          getPieChartBg={getPieChartBg}
-          getPieChartLabel={getPieChartLabel}
-          getPieChartBorder={getPieChartBorder}
-          getDataSetForVerticalBarChart={getDataSetForVerticalBarChart}
-          getStepSizeForVerticalBarChart={getStepSizeForVerticalBarChart}
-          getMaxForVerticalBarChart={getMaxForVerticalBarChart}
-          hexToRgba={hexToRgba}
-          serviceReportViewData={serviceReportViewData}
-          getColumnTitleForTextChart={getColumnTitleForTextChart}
-          getColumnValueForTextChart={getColumnValueForTextChart}
-          getTooltipData={getTooltipData}
-          previousData={previousData}
-          getPreviousMonthChange={getPreviousMonthChange}
-          getBgSquareColor={getBgSquareColor}
-          getColumnPercentage={getColumnPercentage}
-          getDescriptionForColumn={getDescriptionForColumn}
-        />
+        <div>
+          <div
+            style={{
+              marginTop: "12px",
+              padding: "24px",
+              background: "white",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              borderBottom: "1px solid #858b932E",
+              borderTopLeftRadius: "8px",
+              borderTopRightRadius: "8px",
+              marginLeft: "20px",
+              marginRight: "20px",
+              flexWrap: "wrap", // Allow the content to wrap on smaller screens
+            }}
+          >
+            <span
+              style={{
+                fontWeight: "600",
+                fontSize: "24px",
+                lineHeight: "33.6px",
+                color: "#202223",
+                fontFamily: "Graphie-SemiBold",
+                flexBasis: "100%", // Span takes full width on small screens
+                marginBottom: "12px",
+              }}
+            >
+              Reports
+            </span>
+            <div
+              style={{
+                display: "flex",
+                gap: "20px",
+                padding: "8px",
+                borderRadius: "8px",
+                flexWrap: "wrap", // Allow the items inside to wrap
+              }}
+            >
+              <Select
+                placeholder="Select Service"
+                onChange={handleChangeService}
+                options={serviceOptions}
+                value={selectedRequest || undefined}
+                style={{ width: "100%", maxWidth: "200px" }} // Adjust width for small screens
+              />
+
+              <Dropdown menu={{ items: dateOptions, onClick: handleMenuClick }}>
+                <Button style={{ width: "100%", maxWidth: "200px" }}>
+                  <Space>
+                    {selectedDate ? selectedDate.label : "Select Date"}
+                    <DownOutlined />
+                  </Space>
+                </Button>
+              </Dropdown>
+            </div>
+          </div>
+          {noData ? (
+            <EmptyReports />
+          ) : (
+            <ServiceReportViewChart
+              getPieChartDataSet={getPieChartDataSet}
+              getPieChartBg={getPieChartBg}
+              getPieChartLabel={getPieChartLabel}
+              getPieChartBorder={getPieChartBorder}
+              getDataSetForVerticalBarChart={getDataSetForVerticalBarChart}
+              getStepSizeForVerticalBarChart={getStepSizeForVerticalBarChart}
+              getMaxForVerticalBarChart={getMaxForVerticalBarChart}
+              hexToRgba={hexToRgba}
+              serviceReportViewData={serviceReportViewData}
+              getColumnTitleForTextChart={getColumnTitleForTextChart}
+              getColumnValueForTextChart={getColumnValueForTextChart}
+              getTooltipData={getTooltipData}
+              previousData={previousData}
+              getPreviousMonthChange={getPreviousMonthChange}
+              getBgSquareColor={getBgSquareColor}
+              getColumnPercentage={getColumnPercentage}
+              getDescriptionForColumn={getDescriptionForColumn}
+              mobileView={mobileView}
+            />
+          )}
+        </div>
       )}
     </div>
   );

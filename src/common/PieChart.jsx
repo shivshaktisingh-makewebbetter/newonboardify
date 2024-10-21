@@ -4,7 +4,6 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels"; // Import the data labels plugin
 import { CustomTooltip } from "./CustomToolTip";
 
-
 // Register necessary components
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -15,6 +14,7 @@ export const PieChart = ({
   pieChartLabel,
   borderColorSetPie,
   description,
+  mobileView,
 }) => {
   const total = dataset.reduce((acc, value) => acc + Number(value), 0); // Calculate total
 
@@ -104,81 +104,168 @@ export const PieChart = ({
 
   return (
     <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "start",
-          alignItems: "center",
-          position: "absolute",
-          top: "20px",
-          left: "20px",
-        }}
-      >
-        <span
-          style={{
-            fontSize: "24px",
-            fontWeight: "700",
-            lineHeight: "33.6px",
-            color: "#202223",
-            textAlign: "left",
-            fontFamily:"Graphie-SemiBold"
-          }}
-        >
-          {title}
-        </span>
-        <span>
-          {description.length > 0 && (
-            <CustomTooltip description={description} />
-          )}
-        </span>
-      </div>
-      <div>
-        <Pie data={data} options={options} />
-        <div
-          style={{
-            display: "flex",
-            marginTop: "20px",
-            justifyContent: "center",
-          }}
-        >
-          {pieChartLabel.map((item, index) => {
-            const truncatedLabel =
-              item.length > 12 ? `${item.substring(0, 13)}...` : item;
-            return (
-              <div
-                key={index}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "4px",
-                  justifyContent: "center",
-                  width: "100%",
-                }}
-              >
-                <div
-                  style={{
-                    background: bgSet[index],
-                    width: "10px",
-                    height: "10px",
-                    borderRadius: "3px",
-                  }}
-                ></div>
-                <div
-                  style={{
-                    fontSize: "14px",
-                    fontWeight: "600",
-                    color: "#6d7175",
-                    fontFamily:"Graphie-Thin"
-                  }}
-                  title={item}
-                >
-                  {truncatedLabel}
-                </div>
-              </div>
-            );
-          })}
+      {mobileView ? (
+        <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              marginTop: "20px", // Removed absolute positioning for mobile
+              padding: "0 16px", // Added padding for mobile view
+            }}
+          >
+            <span
+              style={{
+                fontSize: "20px", // Adjusted for mobile
+                fontWeight: "700",
+                lineHeight: "30px",
+                color: "#202223",
+                textAlign: "left",
+                fontFamily: "Graphie-SemiBold",
+              }}
+            >
+              {title}
+            </span>
+            <span>
+              {description.length > 0 && (
+                <CustomTooltip description={description} />
+              )}
+            </span>
+          </div>
+          <div style={{ marginTop: "20px", padding: "0 16px"  , width:"100%"}}>
+            <Pie data={data} options={options} />
+            <div
+              style={{
+                display: "flex",
+                marginTop: "20px",
+                justifyContent: "center",
+                flexWrap: "wrap", // Allow labels to wrap for smaller screens
+                gap: "8px", // Add gap for mobile layout
+              }}
+            >
+              {pieChartLabel.map((item, index) => {
+                const truncatedLabel =
+                  item.length > 12 ? `${item.substring(0, 13)}...` : item;
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: "6px",
+                      // justifyContent: "center",
+                      width: "80%", // Responsive width
+                      textAlign: "center", // Center the label text
+                    }}
+                  >
+                    <div style={{display:"flex" , alignItems:"center"  , gap:"2px"}}>
+                      <div
+                        style={{
+                          background: bgSet[index],
+                          width: "12px",
+                          height: "12px",
+                          borderRadius: "3px",
+                        }}
+                      ></div>
+                      <div
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: "600",
+                          color: "#6d7175",
+                          fontFamily: "Graphie-Thin",
+                        }}
+                        title={item}
+                      >
+                        {truncatedLabel}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "start",
+              alignItems: "center",
+              position: "absolute",
+              top: "20px",
+              left: "20px",
+            }}
+          >
+            <span
+              style={{
+                fontSize: "24px",
+                fontWeight: "700",
+                lineHeight: "33.6px",
+                color: "#202223",
+                textAlign: "left",
+                fontFamily: "Graphie-SemiBold",
+              }}
+            >
+              {title}
+            </span>
+            <span>
+              {description.length > 0 && (
+                <CustomTooltip description={description} />
+              )}
+            </span>
+          </div>
+          <div>
+            <Pie data={data} options={options} />
+            <div
+              style={{
+                display: "flex",
+                marginTop: "20px",
+                justifyContent: "center",
+              }}
+            >
+              {pieChartLabel.map((item, index) => {
+                const truncatedLabel =
+                  item.length > 12 ? `${item.substring(0, 13)}...` : item;
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      justifyContent: "center",
+                      width: "100%",
+                    }}
+                  >
+                    <div
+                      style={{
+                        background: bgSet[index],
+                        width: "10px",
+                        height: "10px",
+                        borderRadius: "3px",
+                      }}
+                    ></div>
+                    <div
+                      style={{
+                        fontSize: "14px",
+                        fontWeight: "600",
+                        color: "#6d7175",
+                        fontFamily: "Graphie-Thin",
+                      }}
+                      title={item}
+                    >
+                      {truncatedLabel}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
