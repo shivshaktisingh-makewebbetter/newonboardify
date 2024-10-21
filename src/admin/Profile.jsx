@@ -138,7 +138,7 @@ export const Profile = () => {
       dataIndex: "users",
     },
     {
-      title: "Report Settings",
+      title: "Governify Report Settings",
       dataIndex: "report",
       render: (_, record) => (
         <Button onClick={() => openReportPage(record)}> Open</Button>

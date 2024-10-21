@@ -116,6 +116,7 @@ export const Track = () => {
   };
 
   const handleExport = async () => {
+
     const payload = {
       query_params: {
         rules: [
@@ -135,16 +136,16 @@ export const Track = () => {
       const response = await exportServiceData(boardId , payload);
       console.log(response);
       if (response.success) {
-        if (
-          columnIdData.hasOwnProperty("sub_headings_column") &&
-          columnIdData.sub_headings_column.length > 0
-        ) {
-          columnIdData.sub_headings_column.forEach((item) => {
-            if (!tempColumns.includes(item.id)) {
-              tempColumns.push(item.id);
-            }
-          });
-        }
+        // if (
+        //   columnIdData.hasOwnProperty("sub_headings_column") &&
+        //   columnIdData.sub_headings_column.length > 0
+        // ) {
+        //   columnIdData.sub_headings_column.forEach((item) => {
+        //     if (!tempColumns.includes(item.id)) {
+        //       tempColumns.push(item.id);
+        //     }
+        //   });
+        // }
 
         if (
           columnIdData.hasOwnProperty("candidate_coulmns") &&

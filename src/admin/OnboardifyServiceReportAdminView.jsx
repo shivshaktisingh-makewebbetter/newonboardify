@@ -1161,7 +1161,6 @@ export const OnboardifyServiceReportAdminView = () => {
                               toolTipData={getTooltipData(subItem)}
                               previousData={previousData}
                               mobileView={false}
-
                             />
                           ) : (
                             <BarChartVertical
