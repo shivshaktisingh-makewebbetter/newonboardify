@@ -134,19 +134,9 @@ export const Track = () => {
       const data = [];
       let tempColumns = [];
       const response = await exportServiceData(boardId , payload);
-      console.log(response);
+     
       if (response.success) {
-        // if (
-        //   columnIdData.hasOwnProperty("sub_headings_column") &&
-        //   columnIdData.sub_headings_column.length > 0
-        // ) {
-        //   columnIdData.sub_headings_column.forEach((item) => {
-        //     if (!tempColumns.includes(item.id)) {
-        //       tempColumns.push(item.id);
-        //     }
-        //   });
-        // }
-
+     
         if (
           columnIdData.hasOwnProperty("candidate_coulmns") &&
           columnIdData.candidate_coulmns.length > 0
