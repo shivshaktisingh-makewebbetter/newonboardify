@@ -132,7 +132,9 @@ export const OnboardifyServiceReportAdminView = () => {
                 item.name.toLowerCase() ===
                 location.state.filterKey.value.toLowerCase()
               ) {
-                setCurrentData(item.column_values);
+                let newTempColumns = [...item.column_values];
+                newTempColumns.push({id:'name' , text : item.name , value: item.name});
+                setCurrentData(newTempColumns);
                 setNameValue({ ...nameValue, currentName: item.name });
               }
             } else {
@@ -141,7 +143,9 @@ export const OnboardifyServiceReportAdminView = () => {
                   subItem.id === location.state.filterKey.key &&
                   subItem.text === location.state.filterKey.value
                 ) {
-                  setCurrentData(item.column_values);
+                  let newTempColumns = [...item.column_values];
+                  newTempColumns.push({id:'name' , text : item.name , value: item.name});
+                  setCurrentData(newTempColumns);
                   setNameValue({ ...nameValue, currentName: item.name });
                 }
               });
@@ -202,15 +206,13 @@ export const OnboardifyServiceReportAdminView = () => {
 
   const getColumnValueForTextChart = (id) => {
     let tempValue = "";
-    if (id === "name") {
-      tempValue = nameValue.currentName;
-    } else {
+  
       currentData.forEach((item) => {
         if (item.id === id) {
           tempValue = item.text;
         }
       });
-    }
+    
 
     return tempValue;
   };
