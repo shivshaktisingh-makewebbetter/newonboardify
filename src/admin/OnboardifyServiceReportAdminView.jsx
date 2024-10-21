@@ -893,6 +893,8 @@ export const OnboardifyServiceReportAdminView = () => {
                             description={subItem.description}
                             width={subItem.size.width} // Pass the updated width
                             height={subItem.size.height} // Pass the updated height
+                            mobileView={false}
+
                           />
                         </ResizableBox>
                       </div>
@@ -1158,6 +1160,8 @@ export const OnboardifyServiceReportAdminView = () => {
                               description={subItem.description}
                               toolTipData={getTooltipData(subItem)}
                               previousData={previousData}
+                              mobileView={false}
+
                             />
                           ) : (
                             <BarChartVertical
@@ -1168,6 +1172,8 @@ export const OnboardifyServiceReportAdminView = () => {
                               description={subItem.description}
                               toolTipData={getTooltipData(subItem)}
                               previousData={previousData}
+                              mobileView={false}
+
                             />
                           )}
                         </ResizableBox>

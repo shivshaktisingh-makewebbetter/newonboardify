@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import { ResizableBox } from "react-resizable";
 import Draggable from "react-draggable";
 import "react-resizable/css/styles.css";
-import { DragOutlined, FallOutlined, InfoCircleOutlined, LeftOutlined, RiseOutlined } from "@ant-design/icons";
+import {
+  DragOutlined,
+  FallOutlined,
+  InfoCircleOutlined,
+  LeftOutlined,
+  RiseOutlined,
+} from "@ant-design/icons";
 import {
   getComplianceReportDataAdmin,
   getProfileListing,
@@ -139,22 +145,19 @@ export const ComplianceReportAdminView = () => {
               }
             } else {
               item.column_values.forEach((subItem) => {
-                if(subItem.text !== null){
-
-                
-                if (
-                  subItem.id === location.state.filterKey.key &&
-                  subItem.text === location.state.filterKey.value
-                ) {
-                  setCurrentData(item.column_values);
-                  setNameValue({ ...nameValue, currentName: item.name });
+                if (subItem.text !== null) {
+                  if (
+                    subItem.id === location.state.filterKey.key &&
+                    subItem.text === location.state.filterKey.value
+                  ) {
+                    setCurrentData(item.column_values);
+                    setNameValue({ ...nameValue, currentName: item.name });
+                  }
                 }
-              }
               });
             }
           }
         );
-      
       } else {
       }
 
@@ -197,7 +200,7 @@ export const ComplianceReportAdminView = () => {
       }
     } catch (err) {
     } finally {
-      sessionStorage.removeItem('draggableResizableStateCompliance');
+      sessionStorage.removeItem("draggableResizableStateCompliance");
     }
   };
 
@@ -751,7 +754,7 @@ export const ComplianceReportAdminView = () => {
                             borderRadius: "8px",
                             padding: "10px",
                             position: "relative",
-                           
+
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "flex-end",
@@ -790,6 +793,7 @@ export const ComplianceReportAdminView = () => {
                             description={subItem.description}
                             width={subItem.size.width} // Pass the updated width
                             height={subItem.size.height} // Pass the updated height
+                            mobileView={false}
                           />
                         </ResizableBox>
                       </div>
@@ -845,7 +849,7 @@ export const ComplianceReportAdminView = () => {
                             borderRadius: "8px",
                             padding: "10px",
                             position: "relative",
-                           
+
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "center",
@@ -1029,7 +1033,7 @@ export const ComplianceReportAdminView = () => {
                             borderRadius: "8px",
                             padding: "10px",
                             position: "relative",
-                         
+
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "center",
@@ -1208,7 +1212,7 @@ export const ComplianceReportAdminView = () => {
                             borderRadius: "8px",
                             padding: "10px",
                             position: "relative",
-                         
+
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "flex-end",
@@ -1247,6 +1251,7 @@ export const ComplianceReportAdminView = () => {
                               description={subItem.description}
                               toolTipData={getTooltipData(subItem)}
                               previousData={previousData}
+                              mobileView={false}
                             />
                           ) : (
                             <BarChartVertical
@@ -1257,6 +1262,7 @@ export const ComplianceReportAdminView = () => {
                               description={subItem.description}
                               toolTipData={getTooltipData(subItem)}
                               previousData={previousData}
+                              mobileView={false}
                             />
                           )}
                         </ResizableBox>
@@ -1312,7 +1318,7 @@ export const ComplianceReportAdminView = () => {
                             borderRadius: "8px",
                             padding: "10px",
                             position: "relative",
-                        
+
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "center",

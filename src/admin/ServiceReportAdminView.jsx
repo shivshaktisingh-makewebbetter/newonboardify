@@ -619,7 +619,7 @@ export const ServiceReportAdminView = () => {
                             borderRadius: "8px",
                             padding: "10px",
                             position: "relative",
-                          
+
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "flex-end",
@@ -755,7 +755,7 @@ export const ServiceReportAdminView = () => {
                             borderRadius: "8px",
                             padding: "10px",
                             position: "relative",
-                          
+
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "flex-end",
@@ -794,6 +794,7 @@ export const ServiceReportAdminView = () => {
                               description={subItem.description}
                               toolTipData={getTooltipData(subItem)}
                               previousData={previousData}
+                              mobileView={false}
                             />
                           ) : (
                             <BarChartVertical
@@ -804,6 +805,7 @@ export const ServiceReportAdminView = () => {
                               description={subItem.description}
                               toolTipData={getTooltipData(subItem)}
                               previousData={previousData}
+                              mobileView={false}
                             />
                           )}
                         </ResizableBox>
@@ -895,6 +897,7 @@ export const ServiceReportAdminView = () => {
                             pieChartLabel={getPieChartLabel(subItem)}
                             borderColorSetPie={getPieChartBorder(subItem)}
                             description={subItem.description}
+                            mobileView={false}
                           />
                         </ResizableBox>
                       </div>
@@ -950,7 +953,7 @@ export const ServiceReportAdminView = () => {
                             borderRadius: "8px",
                             padding: "10px",
                             position: "relative",
-                      
+
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "center",
@@ -1134,7 +1137,7 @@ export const ServiceReportAdminView = () => {
                             borderRadius: "8px",
                             padding: "10px",
                             position: "relative",
-                     
+
                             display: "flex",
                             flexDirection: "column",
                             justifyContent: "center",
