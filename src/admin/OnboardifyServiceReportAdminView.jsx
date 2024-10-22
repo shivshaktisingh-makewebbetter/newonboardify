@@ -317,7 +317,7 @@ export const OnboardifyServiceReportAdminView = () => {
     return tempData;
   };
 
-  function calculateStepSize(data) {
+  const calculateStepSize = (data)=> {
     // Convert string data to numbers
     const numericData = data.map(Number);
 
@@ -340,7 +340,7 @@ export const OnboardifyServiceReportAdminView = () => {
     return stepSize;
   }
 
-  function calculateChartMax(data) {
+  const calculateChartMax =(data) => {
     const numericData = data.map(Number);
 
     // Find the maximum value in the data

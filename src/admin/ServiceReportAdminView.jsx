@@ -517,6 +517,7 @@ export const ServiceReportAdminView = () => {
       >
         <Button icon={<LeftOutlined />} onClick={handleBackNavigation}></Button>
       </div>
+      
       {containers.map((container, containerIndex) => {
         return (
           <ResizableBox
