@@ -58,7 +58,6 @@ export const ServiceReportViewChart = ({
                   {item.boxes.map((subItem) => {
                     const commonStyles = {
                       width: "100%", // Full width for responsiveness
-                   
                       background: "white",
                       border: "1px solid #E3E3E3",
                       borderRadius: "8px",
