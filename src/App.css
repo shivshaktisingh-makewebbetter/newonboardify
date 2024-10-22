@@ -1781,9 +1781,27 @@ body,
   }
 }
 
+
+.onboardify-footer-wrapper {
+  display: flex;
+  gap: 20px;
+  justify-content: end;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 @media (max-width: 480px) {
   .onboardify-filter-sort-container {
     flex-direction: column;
+  }
+
+  .onboardify-footer-wrapper {
+    display: flex;
+    gap: 20px;
+    justify-content: start;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top:10px;
   }
 
   .new-title {

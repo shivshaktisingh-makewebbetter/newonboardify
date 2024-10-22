@@ -10,7 +10,7 @@ export const Footer = () => {
         marginTop: "100px",
         borderTop: "2px solid #ececec",
         padding: "20px",
-		paddingTop:"30px" ,
+        paddingTop: "30px",
         flexWrap: "wrap",
       }}
     >
@@ -26,15 +26,7 @@ export const Footer = () => {
           Powered by TASC Outsourcing®
         </small>
       </div>
-      <div
-        className="align-center text-secondary fs-6"
-        style={{
-          display: "flex",
-          gap: "20px",
-          justifyContent: "end",
-          alignItems: "center",
-        }}
-      >
+      <div className="align-center text-secondary fs-6 onboardify-footer-wrapper">
         <a
           target="blank"
           href="https://tascoutsourcing.sa/en/terms-of-use"
