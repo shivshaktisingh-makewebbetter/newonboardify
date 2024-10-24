@@ -1,5 +1,5 @@
 // ProtectedRoute.js
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRole } from '../utils/helper';
 
