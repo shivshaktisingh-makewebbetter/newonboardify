@@ -143,6 +143,7 @@ export const CreateServices = ({
       onboarding_columns: [],
       required_columns: { profession: [], overall_status: "" },
       sub_headings_column: [],
+      export_setting_data: [],
     });
 
     try {
@@ -151,6 +152,7 @@ export const CreateServices = ({
       console.log(err);
     }
   };
+
   const handleChangeServiceColumnFilter = (e) => {
     if (e === undefined) {
       setServiceColumnValueFilter({
@@ -310,6 +312,7 @@ export const CreateServices = ({
       onboarding_columns: [],
       required_columns: { profession: [], overall_status: "" },
       sub_headings_column: [],
+      export_setting_data: [],
     });
 
     try {
@@ -319,6 +322,12 @@ export const CreateServices = ({
     }
     setTempBoardId("");
     setBoardChangeConfirmationModal(false);
+  };
+
+  const handleChangeExportColumn = (e) => {
+    const tempData = { ...boardVisiblityData };
+    tempData.export_setting_data = e;
+    setBoardVisibilityData(tempData);
   };
 
   return (
@@ -731,6 +740,28 @@ export const CreateServices = ({
                     placeholder="Please select Document Column"
                     value={imageKey}
                     onChange={handleChangeDocumentColumn}
+                    options={options}
+                    filterOption={filterOption}
+                  />
+                </div>
+                <div
+                  style={{
+                    marginTop: "10px",
+                    border: "1px solid #d9d9d9",
+                    padding: "10px",
+                    borderRadius: "10px",
+                  }}
+                >
+                  <p style={{ textAlign: "left" }}>Export Setting Columns</p>
+                  <Select
+                    mode="multiple"
+                    showSearch
+                    style={{
+                      width: "100%",
+                    }}
+                    placeholder="Please select Export Column"
+                    value={boardVisiblityData.export_setting_data}
+                    onChange={handleChangeExportColumn}
                     options={options}
                     filterOption={filterOption}
                   />

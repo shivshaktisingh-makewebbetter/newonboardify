@@ -346,6 +346,7 @@ export const EditServices = ({
         onboarding_columns: [],
         required_columns: { profession: [], overall_status: "" },
         sub_headings_column: [],
+        export_setting_data: [],
       });
       setDocumentFetchKey([]);
       setImageKey("");
@@ -359,6 +360,12 @@ export const EditServices = ({
     }
     setTempBoardId("");
     setBoardChangeConfirmationModal(false);
+  };
+
+  const handleChangeExportColumn = (e) => {
+    const tempData = { ...boardVisiblityData };
+    tempData.export_setting_data = e;
+    setBoardVisibilityData(tempData);
   };
 
   useEffect(() => {
@@ -776,6 +783,28 @@ export const EditServices = ({
                     placeholder="Please select Document Column"
                     value={imageKey}
                     onChange={handleChangeDocumentColumn}
+                    options={options}
+                    filterOption={filterOption}
+                  />
+                </div>
+                <div
+                  style={{
+                    marginTop: "10px",
+                    border: "1px solid #d9d9d9",
+                    padding: "10px",
+                    borderRadius: "10px",
+                  }}
+                >
+                  <p style={{ textAlign: "left" }}>Export Setting Columns</p>
+                  <Select
+                    mode="multiple"
+                    showSearch
+                    style={{
+                      width: "100%",
+                    }}
+                    placeholder="Please select Export Column"
+                    value={boardVisiblityData.export_setting_data}
+                    onChange={handleChangeExportColumn}
                     options={options}
                     filterOption={filterOption}
                   />
