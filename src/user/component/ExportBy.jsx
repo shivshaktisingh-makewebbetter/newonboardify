@@ -1,14 +1,14 @@
 import { Button } from "antd";
 import { ExportIcon } from "../../utils/icons";
 
-export const ExportBy = ({ handleExport }) => {
+export const ExportBy = ({ setOpenDrawer }) => {
   return (
     <>
       <Button
         style={{ display: "flex", alignItems: "center", gap: "5px" }}
         type="text"
         className="governify-sortby-button"
-        onClick={handleExport}
+        onClick={() => setOpenDrawer(true)}
       >
         {" "}
         <span>

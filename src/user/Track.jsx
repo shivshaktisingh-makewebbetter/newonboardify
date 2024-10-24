@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { SortBy } from "./component/SortBy";
 import { FilterBy } from "./component/FilterBy";
 import { ExportBy } from "./component/ExportBy";
-import { Button, Radio } from "antd";
+import { Button, Drawer, Radio } from "antd";
 import { RequestComponent } from "./component/RequestComponent";
 import {
   getAllProfileDataByUser,
@@ -21,6 +21,8 @@ import {
 import { Loader } from "../common/Loader";
 import { FilterByService } from "./component/FilterByService";
 import { CustomEmptyMessage } from "../common/CustomErrorComponent";
+import { Checkbox } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 
 export const Track = () => {
   const location = useLocation();
@@ -45,6 +47,8 @@ export const Track = () => {
   const [filterKeyData, setFilterKeyData] = useState({});
   const [placeHolderSearch, setPlaceHolderSearch] = useState("");
   const [profileId, setProfileId] = useState("");
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const [selectedExportColumns, setSelectedExportColumns] = useState([]);
 
   const onChangeRadio = (item) => {
     let tempSelectedOrder = "";
@@ -116,6 +120,7 @@ export const Track = () => {
   };
 
   const handleExport = async () => {
+  
 
     const payload = {
       query_params: {
@@ -132,36 +137,14 @@ export const Track = () => {
     setLoading(true);
     try {
       const data = [];
-      let tempColumns = [];
-      const response = await exportServiceData(boardId , payload);
-     
-      if (response.success) {
-     
-        if (
-          columnIdData.hasOwnProperty("candidate_coulmns") &&
-          columnIdData.candidate_coulmns.length > 0
-        ) {
-          columnIdData.candidate_coulmns.forEach((item) => {
-            if (!tempColumns.includes(item.id)) {
-              tempColumns.push(item.id);
-            }
-          });
-        }
+      // let tempColumns = [];
+      const response = await exportServiceData(boardId, payload);
 
-        if (
-          columnIdData.hasOwnProperty("onboarding_columns") &&
-          columnIdData.onboarding_columns.length > 0
-        ) {
-          columnIdData.onboarding_columns.forEach((item) => {
-            if (!tempColumns.includes(item.id)) {
-              tempColumns.push(item.id);
-            }
-          });
-        }
-        let columnWithLabels = Array(tempColumns.length).fill("");
+      if (response.success) {
+        let columnWithLabels = Array(selectedExportColumns.length).fill("");
         response.data.response.data.boards[0].columns.forEach((subItem) => {
-          if (tempColumns.includes(subItem.id)) {
-            let index = tempColumns.indexOf(subItem.id);
+          if (selectedExportColumns.includes(subItem.id)) {
+            let index = selectedExportColumns.indexOf(subItem.id);
             columnWithLabels[index] = subItem.title;
           }
         });
@@ -169,13 +152,13 @@ export const Track = () => {
         data.push(columnWithLabels);
         response.data.response.data.boards[0].items_page.items.forEach(
           (item) => {
-            let newTempData = Array(tempColumns.length).fill("");
+            let newTempData = Array(selectedExportColumns.length).fill("");
 
             let newItem = item.column_values;
             newItem.push({ id: "name", text: item.name, value: item.name });
             newItem.forEach((subItem) => {
-              if (tempColumns.includes(subItem.id)) {
-                let index = tempColumns.indexOf(subItem.id);
+              if (selectedExportColumns.includes(subItem.id)) {
+                let index = selectedExportColumns.indexOf(subItem.id);
                 newTempData[index] = subItem.text;
               }
             });
@@ -200,6 +183,7 @@ export const Track = () => {
     } catch (err) {
     } finally {
       setLoading(false);
+      setOpenDrawer(false);
     }
   };
 
@@ -526,6 +510,50 @@ export const Track = () => {
     // originalArray.slice(10 , 20);
   };
 
+  const onCloseDrawer = () => {
+    setOpenDrawer(false);
+  };
+
+  const handleChangeExportCheckBox = (e) => {
+    if (e.target.checked) {
+      if (
+        columnIdData.hasOwnProperty("export_setting_data") &&
+        columnIdData.export_setting_data.length > 0
+      ) {
+        setSelectedExportColumns(columnIdData.export_setting_data);
+      }
+    } else {
+      setSelectedExportColumns([]);
+    }
+  };
+
+  const handleChangeSingleExportCheckBox = (e, item) => {
+    if (e.target.checked) {
+      if (!selectedExportColumns.includes(item)) {
+        let tempSelectedExportColumns = [...selectedExportColumns];
+        tempSelectedExportColumns.push(item);
+        setSelectedExportColumns(tempSelectedExportColumns);
+      }
+    } else {
+      let tempSelectedExportColumns = selectedExportColumns.filter(
+        (subItem) => subItem !== item
+      );
+
+      setSelectedExportColumns(tempSelectedExportColumns);
+    }
+  };
+
+  const getColumnTitle = (id) => {
+    let title = "";
+    allColumns.forEach((item) => {
+      if (item.id === id) {
+        title = item.title;
+      }
+    });
+
+    return title;
+  };
+
   useEffect(() => {
     getTrackRequestData();
   }, []);
@@ -600,7 +628,7 @@ export const Track = () => {
             selectedFilter={selectedFilter}
             searchData={searchData}
           />
-          <ExportBy handleExport={handleExport} />
+          <ExportBy setOpenDrawer={setOpenDrawer} />
         </div>
       </div>
       {!loading && (
@@ -622,6 +650,175 @@ export const Track = () => {
           </Button>
         </div>
       )}
+
+      <Drawer
+        placement={"right"}
+        width={800}
+        closable={false}
+        onClose={onCloseDrawer}
+        open={openDrawer}
+        zIndex={9991}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+          }}
+        >
+          {/* Content Section */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "12px",
+              paddingBottom: "24px",
+            }}
+          >
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "24px",
+                  fontWeight: "600",
+                  fontFamily: "Graphie-SemiBold",
+                  color: "#202223",
+                }}
+              >
+                Export
+              </span>
+              <span>
+                <Button
+                  icon={<CloseOutlined />}
+                  iconPosition="end"
+                  type="text"
+                  onClick={() => setOpenDrawer(false)}
+                ></Button>
+              </span>
+            </div>
+            <span
+              style={{
+                fontSize: "16px",
+                fontWeight: "400",
+                fontFamily: "Graphie-Light",
+                color: "#6d7175",
+              }}
+            >
+              Please select the information you would like to export as an excel
+              sheet.
+            </span>
+          </div>
+
+          {/* Checkbox Section */}
+          {columnIdData.hasOwnProperty('export_setting_data') && columnIdData.export_setting_data.length > 0 && (
+            <div
+              style={{
+                paddingBottom: "14px",
+                borderBottom: "1px solid #E1E1E1",
+              }}
+            >
+              <Checkbox
+                onChange={handleChangeExportCheckBox}
+                checked={
+                  selectedExportColumns.length ===
+                  columnIdData.export_setting_data.length
+                }
+              >
+                <span
+                  style={{
+                    fontSize: "16px",
+                    fontWeight: "400",
+                    fontFamily: "Graphie-Book",
+                  }}
+                >
+                  Select all
+                </span>
+              </Checkbox>
+            </div>
+          )}
+
+          {columnIdData.hasOwnProperty('export_setting_data') && columnIdData.export_setting_data.length > 0 && (
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                paddingTop: "10px",
+              }}
+            >
+              {columnIdData.hasOwnProperty("export_setting_data") &&
+                columnIdData.export_setting_data.length > 0 &&
+                columnIdData.export_setting_data.map((item) => {
+                  return (
+                    <div style={{ width: "50%", paddingBottom: "20px" }}>
+                      <Checkbox
+                        onChange={(e) =>
+                          handleChangeSingleExportCheckBox(e, item)
+                        }
+                        checked={selectedExportColumns.includes(item)}
+                      >
+                        <span
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "400",
+                            fontFamily: "Graphie-Book",
+                          }}
+                        >
+                          {getColumnTitle(item)}
+                        </span>
+                      </Checkbox>
+                    </div>
+                  );
+                })}
+            </div>
+          )}
+
+          {/* Button Section at the bottom */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: "10px",
+              padding: "10px 0 0 0",
+              marginTop: "auto",
+            }}
+          >
+            <Button
+              style={{ height: "44px" }}
+              onClick={() => {
+                setOpenDrawer(false);
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  fontFamily: "Graphie-Light",
+                  color: "#202223",
+                }}
+              >
+                Cancel
+              </span>
+            </Button>
+            <Button style={{ height: "44px" }} type="primary" onClick={handleExport} disabled={selectedExportColumns.length === 0}>
+              <span
+                style={{
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  fontFamily: "Graphie-Light",
+                }}
+              >
+                Export
+              </span>
+            </Button>
+          </div>
+        </div>
+      </Drawer>
     </div>
   );
 };
