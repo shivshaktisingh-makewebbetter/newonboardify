@@ -237,7 +237,7 @@ export const OnboardifyServiceReportAdminView = () => {
     return tempColor;
   };
 
-  function hexToRgba(hex, opacity) {
+  const hexToRgba =(hex, opacity) => {
     // Remove the '#' if it's there
     hex = hex.replace("#", "");
 
